@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   const api_url = "API/public/index.php/api/";
 
-  $.getJSON( api_url+"dipartimenti", function( data ) {
+  $.getJSON(api_url + "dipartimenti", function(data) {
 
     var dip = $("#dipartimenti");
 
