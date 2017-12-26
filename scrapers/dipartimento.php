@@ -13,7 +13,7 @@
       $xpath = new DOMXPath(getDOM($link));
       $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length; // Lunghezza righe
 
-			$query = "INSERT INTO dipartimento (name, tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF) VALUES\n";
+			$query = "INSERT INTO dipartimento (nome, tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF) VALUES\n";
 
       for ($i = 2; $i < $lengthN; $i++) {
 
