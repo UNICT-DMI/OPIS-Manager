@@ -1,38 +1,34 @@
-PRAGMA foreign_keys=OFF;
-BEGIN TRANSACTION;
-CREATE TABLE IF NOT EXISTS "Dipartimento" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
-    "tot_moduli" INTEGER NOT NULL,
-    "tot_valutati" INTEGER NOT NULL,
-    "tot_schedeF" INTEGER NOT NULL,
-    "tot_schedeNF" INTEGER NOT NULL,
-    "id_opis" INTEGER NOT NULL
+CREATE TABLE IF NOT EXISTS `dipartimento` (
+    `id` INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `tot_moduli` INT(11) NOT NULL,
+    `tot_valutati` INT(11) NOT NULL,
+    `tot_schedeF` INT(11) NOT NULL,
+    `tot_schedeNF` INT(11) NOT NULL,
+    `id_opis` INT(11) NOT NULL
 );
-CREATE TABLE IF NOT EXISTS "cds" (
-    "id" INTEGER PRIMARY KEY NOT NULL,
-    "name" TEXT,
-    "class" TEXT,
-    "tot_moduli" INTEGER NOT NULL,
-    "tot_valutati" INTEGER NOT NULL,
-    "tot_schedeF" INTEGER NOT NULL,
-    "tot_schedeNF" INTEGER NOT NULL,
-    "id_dipartimento" INTEGER NOT NULL
+
+CREATE TABLE IF NOT EXISTS `cds` (
+    `id` INT(11) PRIMARY KEY NOT NULL,
+    `name` VARCHAR(255),
+    `class` VARCHAR(255),
+    `tot_moduli` INT(11) NOT NULL,
+    `tot_valutati` INT(11) NOT NULL,
+    `tot_schedeF` INT(11) NOT NULL,
+    `tot_schedeNF` INT(11) NOT NULL,
+    `id_dipartimento` INT(11) NOT NULL
 );
-CREATE TABLE IF NOT EXISTS "materia" (
-    "id" INTEGER PRIMARY KEY NOT NULL,
-    "name" TEXT NOT NULL,
-    "canale" TEXT,
-    "ssd" TEXT,
-    "tipo" TEXT,
-    "anno" INTEGER,
-    "semestre" INTEGER,
-    "CFU" INTEGER,
-    "docente" TEXT,
-    "assegn", TEXT,
-    "tot_schedeF" INTEGER NOT NULL,
-    "tot_schedeNF" INTEGER NOT NULL,
-    "id_cds" INTEGER NOT NULL
+
+CREATE TABLE IF NOT EXISTS `insegnamento` (
+    `id` INT(11) PRIMARY KEY NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `canale` VARCHAR(255),
+    `ssd` VARCHAR(255),
+    `tipo` VARCHAR(255),
+    `anno` INT(11),
+    `semestre` INT(11),
+    `CFU` INT(11),
+    `docente` VARCHAR(255),
+    `assegn` VARCHAR(255),
+    `id_cds` INT(11) NOT NULL
 );
-DELETE FROM sqlite_sequence;
-COMMIT;
