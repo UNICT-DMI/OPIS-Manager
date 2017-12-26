@@ -2,9 +2,7 @@
     include 'methods.php';
     include 'config.php';
 
-    $link = "http://www.rett.unict.it/nucleo/val_did/anno_1617/";
-    $doc = getDOM($link);
-
+    
     $mysqli = new mysqli($db_server, $name, $password, $db_name);
 
     if ($mysqli->connect_error)
@@ -12,12 +10,14 @@
 
     else {
       //$mysqli->select_db($db_name);
-      $xpath = new DOMXPath($doc);
+      $xpath = new DOMXPath(getDOM($link));
       $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length; // Lunghezza righe
       for ($i=2; $i<$lengthN; $i++) {
 
               $linkDipartimento = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[1]/a')->item(0)->attributes->item(0)->textContent."<br>"; //Link Dipartimento
               $_name = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[1]')->item(0)->textContent; // Nome dipartimento
+
+              $_tot_CdS = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[2]')->item(0)->textContent; // Tot CdS
 
               $_tot_moduli = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[3]')->item(0)->textContent; // Tot Moduli
 
