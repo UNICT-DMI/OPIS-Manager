@@ -12,7 +12,10 @@
       //$mysqli->select_db($db_name);
       $xpath = new DOMXPath(getDOM($link));
       $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length; // Lunghezza righe
-      for ($i=2; $i<$lengthN; $i++) {
+
+			$query = "INSERT INTO dipartimento (name, tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF) VALUES\n";
+
+      for ($i = 2; $i < $lengthN; $i++) {
 
               $linkDipartimento = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[1]/a')->item(0)->attributes->item(0)->textContent."<br>"; //Link Dipartimento
               $_name = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[1]')->item(0)->textContent; // Nome dipartimento
@@ -30,12 +33,17 @@
               $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr['.$i.']/td[8]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
 
 
-              $query = "INSERT INTO dipartimento (name, tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF) VALUES ('$_name','$_tot_moduli','$_tot_valutati',
-                 '$_tot_schedeF','$_tot_schedeNF');";
-
-              if (!$mysqli->query($query)) {
-                die($mysqli->error);
-              }
+              $query .= '("' . addslashes($_name) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';
+              $query .= "\n";
       }
+ 
+			$query = substr($query, 0, -2);
+			$query .= ";";
+
+//			echo "\n" . $query . "\n";
+      
+			if (!$mysqli->query($query))
+				die($mysqli->error);
+
     }
 ?>
