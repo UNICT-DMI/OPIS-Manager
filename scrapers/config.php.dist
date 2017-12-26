@@ -1,9 +1,8 @@
 <?php
-
-  $db_server = 'localhost';
-  $name = 'root';
+  $host = 'localhost';
+  $username = 'root';
   $password = 'password';
-  $db_name = 'opis_structure';
+  $db_name = 'opis_db';
 
 
   //_____________________VAR__________________________//

@@ -3,7 +3,7 @@
     include 'config.php';
 
     
-    $mysqli = new mysqli($db_server, $name, $password, $db_name);
+    $mysqli = new mysqli($host, $username, $password, $db_name);
 
     if ($mysqli->connect_error)
       die('Errore di connessione');
