@@ -10,7 +10,7 @@ This tool performs the data visualization of the OPIS results
 ## Install AMP
 
 This project to run need: PHP, MySQL, a webserver (like Apache2).
-This requirements are satisfied by the software stack ** \*AMP **:
+This requirements are satisfied by the software stack *\*AMP*:
 
 - LAMP for Linux
 - MAMP for Mac
