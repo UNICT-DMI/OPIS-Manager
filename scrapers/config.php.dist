@@ -1,11 +1,29 @@
 <?php
-  $host = 'localhost';
-  $username = 'root';
-  $password = 'password';
-  $db_name = 'opis_db';
+$host = 'localhost';
+$username = 'root';
+$password = 'password';
+$db_name = 'opis_db';
 
+$link = "http://www.rett.unict.it/nucleo/val_did/anno_1617/"; // const
 
-  //_____________________VAR__________________________//
-  $link = "http://www.rett.unict.it/nucleo/val_did/anno_1617/";
+$aPathCdS                 = array(); // Array contenente i link della lista dei corsi di studio di ogni dipartimento;
+$aPath_OPIS_Dipartimento  = array(); // Array contente i link delle schede opis del Dipartimento
 
- ?>
+$mysqli = new mysqli($host, $username, $password, $db_name);
+
+if ($mysqli->connect_error)
+    die('Errore di connessione');
+
+function getDOM($link)
+{
+    libxml_use_internal_errors(true);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $html = curl_exec($ch);
+    $dom  = new DOMDocument;
+    $dom->loadHTML($html);
+    curl_close($ch);
+    return $dom;
+}
+?>

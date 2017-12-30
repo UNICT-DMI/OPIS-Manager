@@ -1,14 +1,7 @@
 <?php
-$x=379;
-insegnamento($x);
 function cds($id_dip)
 {
-    include 'methods.php';
-    include 'globalVar.php';
-    include 'config.php';
-    $mysqli = new mysqli($host, $username, $password, $db_name);
-    if ($mysqli->connect_error)
-        die('Errore di connessione');
+    global $link, $mysqli;
 
     $query = "INSERT INTO cds (id, nome,classe,tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF,id_dipartimento) VALUES\n";
 
@@ -39,7 +32,6 @@ function cds($id_dip)
         }
     }
 
-
     $query = substr($query, 0, -2);
     $query .= ";";
     $endQuery = substr($query, strlen($query) - 6);
@@ -47,35 +39,14 @@ function cds($id_dip)
     if ($endQuery != 'VALUE;')
         if (!$mysqli->query($query))
             die($mysqli->error);
-
 }
 
 function insegnamento($id_cds) {
-  include 'methods.php';
-  include 'globalVar.php';
-  include 'config.php';
+  global $link;
 
-  $mysqli = new mysqli($host, $username, $password, $db_name);
-  if ($mysqli->connect_error)
-      die('Errore di connessione');
-
-  else {
-
-        $xpath   = new DOMXPath(getDOM($link .'insegn_cds.php?cod_corso='.$id_cds));
-        $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
-        echo $lengthN;
-  }
+  $xpath   = new DOMXPath(getDOM($link .'insegn_cds.php?cod_corso='.$id_cds));
+  $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
+  // echo $lengthN;
 }
-function getDOM($link)
-{
-    libxml_use_internal_errors(true);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $link);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $html = curl_exec($ch);
-    $dom  = new DOMDocument;
-    $dom->loadHTML($html);
-    curl_close($ch);
-    return $dom;
-}
- ?>
+insegnamento(379);
+?>
