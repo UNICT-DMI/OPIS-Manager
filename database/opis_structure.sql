@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `dipartimento` (
-    `id` INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `id` INT(11) PRIMARY KEY NOT NULL,
     `nome` VARCHAR(255) NOT NULL,
     `tot_cds` INT(11) NOT NULL,
     `tot_moduli` INT(11) NOT NULL,
