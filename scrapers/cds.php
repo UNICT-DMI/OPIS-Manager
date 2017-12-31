@@ -5,7 +5,7 @@ function cds($id_dip)
 
     $query = "INSERT INTO cds (id, nome,classe,tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF,id_dipartimento) VALUES\n";
 
-    $xpath   = new DOMXPath(getDOM($link .'cds_dip.php?id_dip='.$id_dip));
+    $xpath   = new DOMXPath(getDOM($link .'cds_dip.php?id_dip=' . $id_dip));
     $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
 
     for ($j = 2; $j < $lengthN; $j++) {
@@ -14,15 +14,11 @@ function cds($id_dip)
         $linkDipartimento = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[3]/a')->item(0)->attributes->item(0)->textContent;
         $_nome            = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[3]')->item(0)->textContent;
 
-        $_classe = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[4]')->item(0)->textContent;
-
-        $_tot_moduli = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[5]')->item(0)->textContent;
-
-        $_tot_valutati = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[6]')->item(0)->textContent;
-
-        $_tot_schedeF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[8]')->item(0)->textContent;
-
-        $_tot_schedeNF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[9]')->item(0)->textContent;
+        $_classe          = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[4]')->item(0)->textContent;
+        $_tot_moduli      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[5]')->item(0)->textContent;
+        $_tot_valutati    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[6]')->item(0)->textContent;
+        $_tot_schedeF     = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[8]')->item(0)->textContent;
+        $_tot_schedeNF    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[9]')->item(0)->textContent;
 
         $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[10]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
         if (!$mysqli->query('SELECT id FROM cds WHERE id=' . $_cod_corso . ';')->num_rows) {
@@ -48,5 +44,6 @@ function insegnamento($id_cds) {
   $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
   // echo $lengthN;
 }
+
 insegnamento(379);
 ?>

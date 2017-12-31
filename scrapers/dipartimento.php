@@ -5,9 +5,10 @@ include "cds.php";
 function parseID($str)
 {
     $x = substr($str, strlen($str) - 2);
-    if ($x[0] == '=') {
+
+    if ($x[0] == '=')
         $x = $x[1];
-    }
+
     return $x;
 }
 
@@ -29,17 +30,12 @@ function dip()
 
         $_id = parseID($linkDipartimento);
 
-        $_tot_CdS = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent; // Tot CdS
-
-        $_tot_moduli = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[3]')->item(0)->textContent; // Tot Moduli
-
-        $_tot_valutati = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[4]')->item(0)->textContent; // Tot Valutati
-
-        $_tot_schedeF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[6]')->item(0)->textContent; // Totale schede frequentanti
-
-        $_tot_schedeNF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[7]')->item(0)->textContent; // Totale schede NON frequentanti
-
-        $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
+        $_tot_CdS       = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent; // Tot CdS
+        $_tot_moduli    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[3]')->item(0)->textContent; // Tot Moduli
+        $_tot_valutati  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[4]')->item(0)->textContent; // Tot Valutati
+        $_tot_schedeF   = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[6]')->item(0)->textContent; // Totale schede frequentanti
+        $_tot_schedeNF  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[7]')->item(0)->textContent; // Totale schede NON frequentanti
+        $link_opis      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
 
         //$aPathOpis_Dipartimento[$] = $link_opis;
         cds($_id);
