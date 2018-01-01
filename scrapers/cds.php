@@ -1,4 +1,5 @@
 <?php
+include 'insegnamento.php';
 function cds($id_dip)
 {
     global $link, $mysqli;
@@ -26,6 +27,7 @@ function cds($id_dip)
             $query .= "\n";
 
         }
+        insegnamento($_cod_corso);
     }
 
     $query = substr($query, 0, -2);
@@ -37,13 +39,5 @@ function cds($id_dip)
             die($mysqli->error);
 }
 
-function insegnamento($id_cds) {
-  global $link;
 
-  $xpath   = new DOMXPath(getDOM($link .'insegn_cds.php?cod_corso='.$id_cds));
-  $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
-  // echo $lengthN;
-}
-
-insegnamento(379);
 ?>

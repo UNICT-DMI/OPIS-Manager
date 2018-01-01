@@ -20,17 +20,21 @@ CREATE TABLE IF NOT EXISTS `cds` (
 );
 
 CREATE TABLE IF NOT EXISTS `insegnamento` (
-    `id` INT(11) PRIMARY KEY NOT NULL,
+    `id` INT(11) NOT NULL,
     `nome` VARCHAR(255) NOT NULL,
-    `canale` VARCHAR(255),
+    `canale` VARCHAR(255) NOT NULL,
+    `id_modulo` VARCHAR(255) NOT NULL,
     `ssd` VARCHAR(255),
     `tipo` VARCHAR(255),
-    `anno` INT(11),
-    `semestre` INT(11),
-    `CFU` INT(11),
+    `anno` VARCHAR(255),
+    `semestre` VARCHAR(255),
+    `CFU` VARCHAR(255),
     `docente` VARCHAR(255),
     `assegn` VARCHAR(255),
-    `id_cds` INT(11) NOT NULL
+    `tot_schedeF` INT(11),
+    `tot_schedeNF` INT(11),
+    `id_cds` INT(11) NOT NULL,
+    primary key (id,canale,id_modulo)
 );
 
 CREATE TABLE IF NOT EXISTS `schede` (

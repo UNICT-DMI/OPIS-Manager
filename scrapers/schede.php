@@ -1,21 +1,8 @@
 <?php
-function getDOM($link)
-{
-    libxml_use_internal_errors(true);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $link);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $html = curl_exec($ch);
-    $dom  = new DOMDocument;
-    $dom->loadHTML($html);
-    curl_close($ch);
-    return $dom;
-}
 
-function schede($id_cds, $id_gomp) {
+function schede($pathScheda) {
   $link = "http://www.rett.unict.it/nucleo/val_did/anno_1617/"; // const
-
-  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=0&canale=no";
+  $url = $link . $pathScheda;
   $xpath = new DOMXPath(getDOM($url));
 
   $totaleSchede     = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[2]/td[2]')->item(0)->textContent;
