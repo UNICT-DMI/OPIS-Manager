@@ -1,16 +1,4 @@
 <?php
-function getDOM($link)
-{
-    libxml_use_internal_errors(true);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $link);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $html = curl_exec($ch);
-    $dom  = new DOMDocument;
-    $dom->loadHTML($html);
-    curl_close($ch);
-    return $dom;
-}
 
 function filter_graph($url, $fileName, $fieldName) {
 
@@ -43,8 +31,7 @@ function fill_arr($arr, $elements) {
 
 function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   $link = "http://www.rett.unict.it/nucleo/val_did/anno_1617/"; // const
-
-  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=0&canale=no";
+  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $cod_modulo . "&canale=" . $canale;
 
   $xpath = new DOMXPath(getDOM($url));
 
@@ -165,7 +152,7 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
               '"' . $id_gomp . '", ' .
               '"' . $canale . '");';
 
-  echo $query;
+  // echo $query;
 
 }
 schede(346, 72442, 0, "no");
