@@ -1,5 +1,6 @@
 <?php
 include "config.php";
+include "schede.php";
 include "cds.php";
 
 function parseID($str)

@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
 );
 
 CREATE TABLE IF NOT EXISTS `schede` (
-    `id` INT(11) PRIMARY KEY NOT NULL,
+    `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `totale_schede` INT(11),
     `totale_schede_nf` INT(11),
     `femmine` INT(11),
