@@ -13,4 +13,38 @@ class opisController extends Controller {
     return response()->json($result);
   }
 
+  public function getCds($department = "") {
+
+    if ($department != NULL && $department != "")
+      $result = DB::table("cds")->where("id_dipartimento", $department)->get();
+    else
+      $result = DB::table("cds")->get();
+
+    return response()->json($result);
+  }
+
+  public function getTeachings(Request $request) {
+
+    $result = DB::table("insegnamento")->get();
+
+    if ($request->has('cds')) {
+      $cds = $request->input('cds');
+      $result->where("id_cds", $cds);
+    }
+
+    if ($request->has('dipartimento')) {
+      $department = $request->input('dipartimento');
+
+      $departments = DB::table("cds")->select("id")->where("id_dipartimento", $department)->get();
+
+      $departs = array();
+      foreach ($departments as $dp)
+        array_push($departs, $dp->id);
+
+      $result->whereIn("id_cds", $departs);
+    }
+
+    return response()->json($result);
+  }
+
 }
