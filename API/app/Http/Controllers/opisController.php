@@ -25,14 +25,14 @@ class opisController extends Controller {
 
   public function getTeachings(Request $request) {
 
-    $result = DB::table("insegnamento")->get();
+    $result = DB::table("insegnamento");
 
-    if ($request->has('cds')) {
+    if ($request->has('cds') && $request->input("cds" != "")) {
       $cds = $request->input('cds');
       $result->where("id_cds", $cds);
     }
 
-    if ($request->has('dipartimento')) {
+    if ($request->has('dipartimento') && $request->input("dipartimento") != "") {
       $department = $request->input('dipartimento');
 
       $departments = DB::table("cds")->select("id")->where("id_dipartimento", $department)->get();
@@ -43,6 +43,8 @@ class opisController extends Controller {
 
       $result->whereIn("id_cds", $departs);
     }
+
+    $result = $result->get();
 
     return response()->json($result);
   }
