@@ -25,6 +25,8 @@
             $_assegn      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[12]')->item(0)->textContent;
             $_tot_schedeF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[13]')->item(0)->textContent;
 
+            echo "\033[1m" . ($i-1) . "/" . ($lengthN-1) . "\033[0m\t" .  $_nome . " \n";
+
             if ($_tot_schedeF == '')
               $_tot_schedeF = 0;
 
@@ -51,8 +53,6 @@
               $params = str_replace("cod_modulo=", "", $params);
               $params = str_replace("canale=", "", $params);
               $params = explode("&", $params);
-
-              echo "\n" . $link_opis;
 
               $params[3] = str_replace(" ", "%20", $params[3]);
 

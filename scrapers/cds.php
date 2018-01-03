@@ -1,5 +1,5 @@
 <?php
-include 'insegnamento.php';
+
 function cds($id_dip)
 {
     global $link, $mysqli;
@@ -27,6 +27,8 @@ function cds($id_dip)
             $query .= "\n";
 
         }
+
+        echo "\n\n ###  " . ($j-1) . "/" . ($lengthN-1) . "\t \033[36m"  . $_nome . "\033[0m\n";
         insegnamento($_cod_corso);
     }
 
@@ -38,6 +40,5 @@ function cds($id_dip)
         if (!$mysqli->query($query))
             die($mysqli->error);
 }
-
 
 ?>
