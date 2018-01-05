@@ -27,7 +27,7 @@ class opisController extends Controller {
 
     $result = DB::table("insegnamento");
 
-    if ($request->has('cds') && $request->input("cds" != "")) {
+    if ($request->has('cds') && $request->input("cds") != "") {
       $cds = $request->input('cds');
       $result->where("id_cds", $cds);
     }
@@ -48,5 +48,6 @@ class opisController extends Controller {
 
     return response()->json($result);
   }
+
 
 }
