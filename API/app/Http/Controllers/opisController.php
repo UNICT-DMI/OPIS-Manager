@@ -72,10 +72,15 @@ class opisController extends Controller {
           $result->whereIn("id_cds", $departs);
         }
 
-        $result = $result->rightJoin('schede', 'insegnamento.id', '=', 'schede.id_insegnamento')->get();
+        $result = $result->rightJoin('schede', 'insegnamento.id', '=', 'schede.id_insegnamento');
       }
       else
-        $result = DB::table("schede")->get();
+        $result = DB::table("schede")->leftJoin("insegnamento", "schede.id_insegnamento", "=", "insegnamento.id");
+
+      if ($request->has("insegnamento") && $request->input("insegnamento") != "")
+        $result->where("id_insegnamento", $request->input("insegnamento"));
+
+      $result = $result->get();
 
       return response()->json($result);
     }
