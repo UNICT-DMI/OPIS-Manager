@@ -49,5 +49,35 @@ class opisController extends Controller {
     return response()->json($result);
   }
 
+    public function getResults(Request $request) {
+
+      if ($request->has('cds') || $request->has('dipartimento')) {
+
+        $result = DB::table("insegnamento");
+
+        if ($request->has('cds') && $request->input("cds") != "") {
+          $cds = $request->input('cds');
+          $result->where("id_cds", $cds);
+        }
+
+        if ($request->has('dipartimento') && $request->input("dipartimento") != "") {
+          $department = $request->input('dipartimento');
+
+          $departments = DB::table("cds")->select("id")->where("id_dipartimento", $department)->get();
+
+          $departs = array();
+          foreach ($departments as $dp)
+            array_push($departs, $dp->id);
+
+          $result->whereIn("id_cds", $departs);
+        }
+
+        $result = $result->rightJoin('schede', 'insegnamento.id', '=', 'schede.id_insegnamento')->get();
+      }
+      else
+        $result = DB::table("schede")->get();
+
+      return response()->json($result);
+    }
 
 }
