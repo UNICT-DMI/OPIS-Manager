@@ -43,8 +43,11 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   $totaleSchede_nf  = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[2]')->item(0)->textContent;
   // $femmine_nf       = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[3]')->item(0)->textContent; // "non prevista"
   $femmine_nf       = 0; // "non prevista"
-  $fuoriCorso_nf    = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[4]')->item(0)->textContent;
+  //$fuoriCorso_nf    = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[4]')->item(0)->textContent;
+  $fuoriCorso_nf    = 0;
   $inattivi_nf      = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[5]')->item(0)->textContent;
+  if ($inattivi_nf=='')
+    $inattivi_nf = 0;
 
   /* data from graphs */
   $eta = "";
@@ -174,30 +177,34 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   $motivi_nf = serialize($motivi_nf);
   $sugg = serialize($sugg);
   $sugg_nf = serialize($sugg_nf);
+  if ($mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';')->num_rows <= 0) {
+    $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`) VALUES";
+    $query .= "\n";
+    $query .= '("' . addslashes($totaleSchede) . '", "' . addslashes($totaleSchede_nf) . '", ' .
+                '"' . addslashes($femmine) . '", "' . addslashes($femmine_nf) . '", ' .
+                '"' . addslashes($fuoriCorso) . '", ' .
+                '"' . addslashes($inattivi) . '", "' . addslashes($inattivi_nf) . '", ' .
+                '"' . addslashes($eta) . '", ' .
+                '"' . addslashes($anno_iscr) . '", ' .
+                '"' . addslashes($n_studenti) . '", ' .
+                '"' . addslashes($ragg_uni) . '", ' .
+                '"' . addslashes($studio_gg) . '", ' .
+                '"' . addslashes($studio_tot) . '", ' .
+                '"' . addslashes($domande) . '", ' .
+                '"' . addslashes($domande_nf) . '", ' .
+                '"' . addslashes($motivi_nf) . '", ' .
+                '"' . addslashes($sugg) . '", ' .
+                '"' . addslashes($sugg_nf) . '", ' .
+                '"' . $id_gomp . '", ' .
+                '"' . $cod_modulo . '", ' .
+                '"' . $canale . '");';
 
-  $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `fc_nf`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`) VALUES";
-  $query .= "\n";
-  $query .= '("' . addslashes($totaleSchede) . '", "' . addslashes($totaleSchede_nf) . '", ' .
-              '"' . addslashes($femmine) . '", "' . addslashes($femmine_nf) . '", ' .
-              '"' . addslashes($fuoriCorso) . '", "' . addslashes($fuoriCorso_nf) . '", ' .
-              '"' . addslashes($inattivi) . '", "' . addslashes($inattivi_nf) . '", ' .
-              '"' . addslashes($eta) . '", ' .
-              '"' . addslashes($anno_iscr) . '", ' .
-              '"' . addslashes($n_studenti) . '", ' .
-              '"' . addslashes($ragg_uni) . '", ' .
-              '"' . addslashes($studio_gg) . '", ' .
-              '"' . addslashes($studio_tot) . '", ' .
-              '"' . addslashes($domande) . '", ' .
-              '"' . addslashes($domande_nf) . '", ' .
-              '"' . addslashes($motivi_nf) . '", ' .
-              '"' . addslashes($sugg) . '", ' .
-              '"' . addslashes($sugg_nf) . '", ' .
-              '"' . $id_gomp . '", ' .
-              '"' . $canale . '");';
+  if (!$mysqli->query($query))
+    die($mysqli->error);
+  }
+
 
   // echo $query;
 
-  if (!$mysqli->query($query))
-      die($mysqli->error);
 }
 ?>
