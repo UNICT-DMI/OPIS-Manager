@@ -44,7 +44,14 @@ Download [EasyPHP](http://www.easyphp.org/download.php)
 
 ## Import the database structure
 
-In the *database* directory there is the sql structure of the database, so import it.
+If you just installed *AMP and have no mysql database create one with:
+```
+$ mysql -u root -p
+$ CREATE DATABASE db_name;
+$ exit;
+```
+
+In the *database* directory there is the sql structure of the database, so import it into your database.
 
 ```
 $ mysql -u root -p db_name < project/path/OPIS-Manager/database/opis_structure.sql
