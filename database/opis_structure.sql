@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `schede` (
     `femmine` INT(11),
     `femmine_nf` INT(11) DEFAULT NULL,
     `fc` INT(11),
-    `fc_nf` INT(11),
     `inatt` INT(11),
     `inatt_nf` INT(11),
     `eta` TEXT,
@@ -59,5 +58,6 @@ CREATE TABLE IF NOT EXISTS `schede` (
     `sugg` TEXT,
     `sugg_nf` TEXT,
     `id_insegnamento` INT(11),
+    `id_modulo` VARCHAR(255),
     `canale` VARCHAR(255)
 );
