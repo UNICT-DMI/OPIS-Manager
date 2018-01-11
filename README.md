@@ -44,14 +44,14 @@ Download [EasyPHP](http://www.easyphp.org/download.php)
 
 ## Import the database structure
 
-If you just installed *AMP and have no mysql database create one with:
+If you just installed *AMP and have no mysql database, create one with:
 ```
 $ mysql -u root -p
 $ CREATE DATABASE db_name;
 $ exit;
 ```
 
-In the *database* directory there is the sql structure of the database, so import it into your database.
+In the *database* directory there is the sql structure of the database in *opis_structure.sql*, so import it into your database with:
 
 ```
 $ mysql -u root -p db_name < project/path/OPIS-Manager/database/opis_structure.sql
@@ -65,19 +65,24 @@ The tools in the scrapers directory can extract the public OPIS data from the [o
 
 To use them go to scrapers, copy the file **config.php.dist** into **config.php** and configure it for the database mysql.
 
-Well, run the related files to extract data like **dipartimento.php**, it will extract the opis data and it will import them in the database.
+Well, run the main file **dipartimento.php**, it will extract the opis data and it will import them in the database.
+You can run it from the terminal with:
+
+```
+$ php dipartimento.php
+```
 
 --- 
 
 ## Install the API
 
-To install the Laravel API, run the setup_api.sh
+To install the Laravel API, run the setup_api.sh, it will change the permissions of some files inside the API directory and create the *.env* file.
+
 ```
 $ sh setup_api.sh
 ```
 
 Configure the database parameters opening the file **API/.env**
-
 
 ```
 DB_CONNECTION=mysql
@@ -95,7 +100,7 @@ $ cd API
 $ composer install
 ```
 
-Run this command to fill the APP_KEY parameter (this key will be used from JWTAuth for the authentication):
+Run this command to fill the APP_KEY parameter:
 ```
 php artisan key:generate
 ```
