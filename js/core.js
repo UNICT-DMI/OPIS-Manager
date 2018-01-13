@@ -6,10 +6,13 @@ $(document).ready(function() {
 
     var dip = $("#dipartimenti");
 
-    $.each(data, function(key, val) {
-      dip.append(new Option(data[key].nome, data[key].id));
-    });
+    for (var i in data)
+      dip.append(new Option(data[i].nome, data[i].id));
 
   });
 
 });
+
+function showCds(dipartimento) {
+  alert(dipartimento);
+}
