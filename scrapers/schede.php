@@ -164,19 +164,20 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   /* Serializing data */
 
   // graphs
-  $eta = serialize($eta);
-  $anno_iscr = serialize($anno_iscr);
-  $n_studenti = serialize($n_studenti);
-  $ragg_uni = serialize($ragg_uni);
-  $studio_gg = serialize($studio_gg);
-  $studio_tot = serialize($studio_tot);
+  $eta        = json_encode($eta);
+  $anno_iscr  = json_encode($anno_iscr);
+  $n_studenti = json_encode($n_studenti);
+  $ragg_uni   = json_encode($ragg_uni);
+  $studio_gg  = json_encode($studio_gg);
+  $studio_tot = json_encode($studio_tot);
 
   // questions
-  $domande = serialize($domande);
-  $domande_nf = serialize($domande_nf);
-  $motivi_nf = serialize($motivi_nf);
-  $sugg = serialize($sugg);
-  $sugg_nf = serialize($sugg_nf);
+  $domande    = json_encode($domande);
+  $domande_nf = json_encode($domande_nf);
+  $motivi_nf  = json_encode($motivi_nf);
+  $sugg       = json_encode($sugg);
+  $sugg_nf    = json_encode($sugg_nf);
+
   if ($mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';')->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`) VALUES";
     $query .= "\n";
@@ -201,8 +202,8 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
 
   if (!$mysqli->query($query))
     die($mysqli->error);
-  }
 
+  }
 
   // echo $query;
 

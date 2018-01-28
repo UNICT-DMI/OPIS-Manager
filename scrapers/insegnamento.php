@@ -4,13 +4,20 @@
 
     $xpath   = new DOMXPath(getDOM($link .'insegn_cds.php?cod_corso='.$id_cds));
     $lengthN = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length;
+    $num     = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($lengthN-2) . ']/td[1]')->item(0)->textContent;
+
+    if (intval($num) == 0)
+      $num = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($lengthN-3) . ']/td[1]')->item(0)->textContent;
 
     $query    = "INSERT INTO insegnamento (id,nome,canale,id_modulo, ssd,tipo,anno,semestre,cfu,docente,assegn,tot_schedeF,tot_schedeNF,id_cds) VALUES\n";
-      for ($i=2; $i<$lengthN; $i++) {
+
+      $j = 0;
+      for ($i = 2; $i < $lengthN; $i++) {
 
         $fields = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td')->length;
 
-          if ($fields>=15) {
+          if ($fields >= 15) {
+            $j++;
 
             $_id          = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent;
             $_nome        = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[3]')->item(0)->textContent;
@@ -25,7 +32,7 @@
             $_assegn      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[12]')->item(0)->textContent;
             $_tot_schedeF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[13]')->item(0)->textContent;
 
-            echo "\033[1m" . ($i-1) . "/" . ($lengthN-1) . "\033[0m\t" .  $_nome . " \n";
+            echo "\033[1m" . ($j) . "/" . $num . "\033[0m\t" .  $_nome . " \n";
 
             if ($_tot_schedeF == '')
               $_tot_schedeF = 0;
@@ -71,7 +78,7 @@
 
         }
 
-  }
+    }
     $query = substr($query, 0, -2);
     $query .= ";";
     // echo $query;

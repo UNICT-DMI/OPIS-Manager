@@ -28,8 +28,9 @@ function cds($id_dip)
 
         }
 
-        echo "\n\n ###  " . ($j-1) . "/" . ($lengthN-1) . "\t \033[36m"  . $_nome . "\033[0m\n";
+        echo "\n\n ###  " . ($j-1) . "/" . ($lengthN-2) . "\t \033[36m"  . $_nome . "\033[0m\n";
         insegnamento($_cod_corso);
+
     }
 
     $query = substr($query, 0, -2);

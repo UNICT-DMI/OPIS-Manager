@@ -40,7 +40,7 @@ function dip()
         $link_opis      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
 
         //$aPathOpis_Dipartimento[$] = $link_opis;
-        echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-1) . "\033[33m\t " . $_nome . "\033[0m";
+        echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
         cds($_id);
 
@@ -61,6 +61,8 @@ function dip()
     return $arr;
 }
 dip();
+
+echo "\n";
 
 mysqli_close($mysqli);
 ?>
