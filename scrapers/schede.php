@@ -181,21 +181,21 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   if ($mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';')->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`) VALUES";
     $query .= "\n";
-    $query .= '("' . addslashes($totaleSchede) . '", "' . addslashes($totaleSchede_nf) . '", ' .
-                '"' . addslashes($femmine) . '", "' . addslashes($femmine_nf) . '", ' .
-                '"' . addslashes($fuoriCorso) . '", ' .
-                '"' . addslashes($inattivi) . '", "' . addslashes($inattivi_nf) . '", ' .
-                '"' . addslashes($eta) . '", ' .
-                '"' . addslashes($anno_iscr) . '", ' .
-                '"' . addslashes($n_studenti) . '", ' .
-                '"' . addslashes($ragg_uni) . '", ' .
-                '"' . addslashes($studio_gg) . '", ' .
-                '"' . addslashes($studio_tot) . '", ' .
-                '"' . addslashes($domande) . '", ' .
-                '"' . addslashes($domande_nf) . '", ' .
-                '"' . addslashes($motivi_nf) . '", ' .
-                '"' . addslashes($sugg) . '", ' .
-                '"' . addslashes($sugg_nf) . '", ' .
+    $query .= '("' . str_replace('"', "'", $totaleSchede) . '", "' . str_replace('"', "'", $totaleSchede_nf) . '", ' .
+                '"' . str_replace('"', "'", $femmine) . '", "' . str_replace('"', "'", $femmine_nf) . '", ' .
+                '"' . str_replace('"', "'", $fuoriCorso) . '", ' .
+                '"' . str_replace('"', "'", $inattivi) . '", "' . str_replace('"', "'", $inattivi_nf) . '", ' .
+                '"' . str_replace('"', "'", $eta) . '", ' .
+                '"' . str_replace('"', "'", $anno_iscr) . '", ' .
+                '"' . str_replace('"', "'", $n_studenti) . '", ' .
+                '"' . str_replace('"', "'", $ragg_uni) . '", ' .
+                '"' . str_replace('"', "'", $studio_gg) . '", ' .
+                '"' . str_replace('"', "'", $studio_tot) . '", ' .
+                '"' . str_replace('"', "'", $domande) . '", ' .
+                '"' . str_replace('"', "'", $domande_nf) . '", ' .
+                '"' . str_replace('"', "'", $motivi_nf) . '", ' .
+                '"' . str_replace('"', "'", $sugg) . '", ' .
+                '"' . str_replace('"', "'", $sugg_nf) . '", ' .
                 '"' . $id_gomp . '", ' .
                 '"' . $cod_modulo . '", ' .
                 '"' . $canale . '");';
@@ -203,9 +203,9 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   if (!$mysqli->query($query))
     die($mysqli->error);
 
-  }
+    // echo $query;
 
-  // echo $query;
+  }
 
 }
 ?>
