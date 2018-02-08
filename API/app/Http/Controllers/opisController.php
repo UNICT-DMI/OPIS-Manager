@@ -85,29 +85,38 @@ class opisController extends Controller {
     // convert string to JSON
     foreach ($result as $key=>$value) {
       $result[$key]->eta = str_replace("'", '"', $result[$key]->eta);
+      $result[$key]->eta = str_replace("u00a0", " ", $result[$key]->eta);
       $result[$key]->eta = (array) json_decode($result[$key]->eta);
 
+      $result[$key]->anno_iscr = str_replace("u00a0", " ", $result[$key]->anno_iscr);
       $result[$key]->anno_iscr = str_replace("'", '"', $result[$key]->anno_iscr);
       $result[$key]->anno_iscr = (array) json_decode($result[$key]->anno_iscr);
 
+      $result[$key]->num_studenti = str_replace("u00a0", " ", $result[$key]->num_studenti);
       $result[$key]->num_studenti = str_replace("'", '"', $result[$key]->num_studenti);
       $result[$key]->num_studenti = (array) json_decode($result[$key]->num_studenti);
 
+      $result[$key]->ragg_uni = str_replace("u00a0", " ", $result[$key]->ragg_uni);
       $result[$key]->ragg_uni = str_replace("'", '"', $result[$key]->ragg_uni);
       $result[$key]->ragg_uni = (array) json_decode($result[$key]->ragg_uni);
 
+      $result[$key]->studio_gg = str_replace("u00a0", " ", $result[$key]->studio_gg);
       $result[$key]->studio_gg = str_replace("'", '"', $result[$key]->studio_gg);
       $result[$key]->studio_gg = (array) json_decode($result[$key]->studio_gg);
 
+      $result[$key]->studio_tot = str_replace("u00a0", " ", $result[$key]->studio_tot);
       $result[$key]->studio_tot = str_replace("'", '"', $result[$key]->studio_tot);
       $result[$key]->studio_tot = (array) json_decode($result[$key]->studio_tot);
 
+      $result[$key]->domande = str_replace("u00a0", " ", $result[$key]->domande);
       $result[$key]->domande = str_replace("'", '"', $result[$key]->domande);
       $result[$key]->domande = (array) json_decode($result[$key]->domande);
 
+      $result[$key]->domande_nf = str_replace("u00a0", " ", $result[$key]->domande_nf);
       $result[$key]->domande_nf = str_replace("'", '"', $result[$key]->domande_nf);
       $result[$key]->domande_nf = (array) json_decode($result[$key]->domande_nf);
 
+      $result[$key]->motivo_nf = str_replace("u00a0", " ", $result[$key]->motivo_nf);
       $result[$key]->motivo_nf = str_replace("l'esame", "l esame", $result[$key]->motivo_nf);
       $result[$key]->motivo_nf = str_replace("l'att", "l att", $result[$key]->motivo_nf);
       $result[$key]->motivo_nf = str_replace("'", '"', $result[$key]->motivo_nf);
@@ -116,6 +125,8 @@ class opisController extends Controller {
       $result[$key]->motivo_nf = str_replace("l att", "l'att", $result[$key]->motivo_nf);
       $result[$key]->motivo_nf = (array) json_decode($result[$key]->motivo_nf);
 
+      $result[$key]->sugg = str_replace("u00a0", " ", $result[$key]->sugg);
+      $result[$key]->sugg = str_replace("u00e0", "à", $result[$key]->sugg);
       $result[$key]->sugg = str_replace("l'att", "l att", $result[$key]->sugg);
       $result[$key]->sugg = str_replace("d'esame", "d esame", $result[$key]->sugg);
       $result[$key]->sugg = str_replace("'", '"', $result[$key]->sugg);
@@ -123,6 +134,8 @@ class opisController extends Controller {
       $result[$key]->sugg = str_replace("d esame", "d'esame", $result[$key]->sugg);
       $result[$key]->sugg = (array) json_decode($result[$key]->sugg);
 
+      $result[$key]->sugg_nf = str_replace("u00a0", " ", $result[$key]->sugg_nf);
+      $result[$key]->sugg_nf = str_replace("u00e0", "à", $result[$key]->sugg_nf);
       $result[$key]->sugg_nf = str_replace("l'att", "l att", $result[$key]->sugg_nf);
       $result[$key]->sugg_nf = str_replace("d'esame", "d esame", $result[$key]->sugg_nf);
       $result[$key]->sugg_nf = str_replace("'", '"', $result[$key]->sugg_nf);
