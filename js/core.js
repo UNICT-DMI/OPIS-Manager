@@ -43,31 +43,31 @@ function showCds(dipartimento) {
 
       for (x = 0; x < cds.length; x++) {
         tmp += `
-        <li class="nav-item active" OnClick="loadResults(${cds[x].id}, ${x})">
-          <a class="nav-link text-success" data-toggle="tab" href="#tab${x}" role="tab" aria-controls="tab${x}" aria-selected="true">
+        <li class="nav-item active ml" OnClick="loadResults(${cds[x].id}, ${x})">
+          <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}" role="tab" aria-controls="tab${x}" aria-selected="true">
             ${cds[x].nome} ${cds[x].classe}
           </a>
         </li>
         `;
         tmp2 += `
         <div class="tab-pane fade" id="tab${x}" role="tabpanel" aria-labelledby="tab${x}-tab">
+          <br>
           <ul class="nav nav-tabs" id="tabs_${x}">
-          <li class="nav-item">
-            <a class="nav-link text-primary" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true">
-              V1
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-primary" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true">
-              V2
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-primary" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true">
-              V3
-            </a>
-          </li>
-
+            <li class="nav-item ml">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true">
+                V1
+              </a>
+            </li>
+            <li class="nav-item ml">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true">
+                V2
+              </a>
+            </li>
+            <li class="nav-item ml">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true">
+                V3
+              </a>
+            </li>
           </ul>
           <div class="tab-content" id="tabs_content${x}">
             <div class="tab-pane fade" id="tab${x}v1" role="tabpanel" aria-labelledby="tab${x}v1-tab">

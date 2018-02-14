@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `dipartimento` (
     `tot_valutati` INT(11) NOT NULL,
     `tot_schedeF` INT(11) NOT NULL,
     `tot_schedeNF` INT(11) NOT NULL
-);
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `cds` (
     `id` INT(11) PRIMARY KEY NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `cds` (
     `tot_schedeF` INT(11) NOT NULL,
     `tot_schedeNF` INT(11) NOT NULL,
     `id_dipartimento` INT(11) NOT NULL
-);
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `insegnamento` (
     `id` INT(11) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
     `tot_schedeNF` INT(11),
     `id_cds` INT(11) NOT NULL,
     primary key (id,canale,id_modulo)
-);
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `schede` (
     `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -60,4 +60,4 @@ CREATE TABLE IF NOT EXISTS `schede` (
     `id_insegnamento` INT(11),
     `id_modulo` VARCHAR(255),
     `canale` VARCHAR(255)
-);
+) DEFAULT CHARSET=utf8;
