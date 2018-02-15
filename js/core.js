@@ -140,19 +140,19 @@ function loadResults(id_cds, tab_position) {
 
     var canvs = document.createElement('canvas');
     canvs.id = tab_position + "v1";
-    canvs.style.width = "800px";
+    canvs.style.width = "1200px";
     canvs.style.height = "500px";
     parents[0].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v2";
-    canvs.style.width = "800px";
+    canvs.style.width = "1200px";
     canvs.style.height = "500px";
     parents[1].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v3";
-    canvs.style.width = "800px";
+    canvs.style.width = "1200px";
     canvs.style.height = "500px";
     parents[2].appendChild(canvs);
 
@@ -173,7 +173,8 @@ function loadResults(id_cds, tab_position) {
           }
         }]
       },
-      responsive: false
+      responsive: false,
+      legend: { display: false }
     };
 
     var materie = []; // labels chartjs
@@ -187,20 +188,23 @@ function loadResults(id_cds, tab_position) {
 
       materie.push(insegnamenti[i].nome);
 
-      for (let j = 0; j < insegnamenti[i].domande.length; j++) {
+      if (N > 0) {
 
-        d = 0;
-        d += insegnamenti[i].domande[j][0] * risposte[0]; // Decisamente no
-        d += insegnamenti[i].domande[j][1] * risposte[1]; // Più no che sì
-        d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
-        d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
+        for (let j = 0; j < insegnamenti[i].domande.length; j++) {
 
-        if (j == 0 || j == 1)                           // V1 domande: 1,2
-          _v1 += (d/N) * pesi[j%12];
-        else if (j == 3 || j == 4 || j == 8 || j == 9)  // V2 domande: 4,5,9,10
-          _v2 += (d/N) * pesi[j%12];
-        else if (j == 2 || j == 5 || j == 6)            // V3 domande: 3,6,7
-          _v3 += (d/N) * pesi[j%12];
+          d = 0;
+          d += insegnamenti[i].domande[j][0] * risposte[0]; // Decisamente no
+          d += insegnamenti[i].domande[j][1] * risposte[1]; // Più no che sì
+          d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
+          d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
+
+          if (j == 0 || j == 1)                           // V1 domande: 1,2
+            _v1 += (d/N) * pesi[j%12];
+          else if (j == 3 || j == 4 || j == 8 || j == 9)  // V2 domande: 4,5,9,10
+            _v2 += (d/N) * pesi[j%12];
+          else if (j == 2 || j == 5 || j == 6)            // V3 domande: 3,6,7
+            _v3 += (d/N) * pesi[j%12];
+        }
       }
 
       v1.push(_v1.toFixed(2));
@@ -210,12 +214,17 @@ function loadResults(id_cds, tab_position) {
 
     values.push(v1, v2, v3);
 
-    // Need to fix this "infinity" value
-    for (var x in values[0])
-      if (!isFinite(values[0][x]))
-        values[0][x] = 0;
+    var means = [0, 0, 0];
 
-    console.log(values[0]);
+    for (let x in v1) {
+      means[0] += parseInt(v1[x]);
+      means[1] += parseInt(v2[x]);
+      means[2] += parseInt(v3[x]);
+    }
+
+    means[0] = means[0] / v1.length;
+    means[1] = means[1] / v2.length;
+    means[2] = means[2] / v3.length;
 
     for (let c in ctx) {
       // chartjs data
@@ -230,14 +239,15 @@ function loadResults(id_cds, tab_position) {
         }]
       };
 
+      let opt = Object.assign({}, _options);
+      opt["lineAtIndex"] = means[c];
+
       charts.push(new Chart(ctx[c], {
           type: 'horizontalBar',
           data: _data,
-          options: _options
+          options: opt
       }));
-
     }
-
 
   });
 
