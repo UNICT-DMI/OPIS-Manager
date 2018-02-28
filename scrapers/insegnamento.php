@@ -42,7 +42,7 @@
               $_tot_schedeNF = 0;
 
             if ($_canale == ' ')
-              $_canale = 'nd';
+              $_canale = 'no';
 
             // extract link_opis
             $link_opis = "";

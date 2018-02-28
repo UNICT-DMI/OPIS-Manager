@@ -181,24 +181,24 @@ function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
   if ($mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';')->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`) VALUES";
     $query .= "\n";
-    $query .= '("' . str_replace('"', "'", $totaleSchede) . '", "' . str_replace('"', "'", $totaleSchede_nf) . '", ' .
-                '"' . str_replace('"', "'", $femmine) . '", "' . str_replace('"', "'", $femmine_nf) . '", ' .
-                '"' . str_replace('"', "'", $fuoriCorso) . '", ' .
-                '"' . str_replace('"', "'", $inattivi) . '", "' . str_replace('"', "'", $inattivi_nf) . '", ' .
-                '"' . str_replace('"', "'", $eta) . '", ' .
-                '"' . str_replace('"', "'", $anno_iscr) . '", ' .
-                '"' . str_replace('"', "'", $n_studenti) . '", ' .
-                '"' . str_replace('"', "'", $ragg_uni) . '", ' .
-                '"' . str_replace('"', "'", $studio_gg) . '", ' .
-                '"' . str_replace('"', "'", $studio_tot) . '", ' .
-                '"' . str_replace('"', "'", $domande) . '", ' .
-                '"' . str_replace('"', "'", $domande_nf) . '", ' .
-                '"' . str_replace('"', "'", $motivi_nf) . '", ' .
-                '"' . str_replace('"', "'", $sugg) . '", ' .
-                '"' . str_replace('"', "'", $sugg_nf) . '", ' .
-                '"' . $id_gomp . '", ' .
-                '"' . $cod_modulo . '", ' .
-                '"' . $canale . '");';
+    $query .= '("' . urldecode(str_replace('"', "'", $totaleSchede)) . '", "' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $femmine)) . '", "' . urldecode(str_replace('"', "'", $femmine_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $fuoriCorso)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $inattivi)) . '", "' . urldecode(str_replace('"', "'", $inattivi_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $eta)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $anno_iscr)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $n_studenti)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $ragg_uni)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $studio_gg)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $studio_tot)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $domande)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $domande_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $motivi_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $sugg)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $sugg_nf)) . '", ' .
+                '"' . urldecode($id_gomp) . '", ' .
+                '"' . urldecode($cod_modulo) . '", ' .
+                '"' . urldecode($canale) . '");';
 
   if (!$mysqli->query($query))
     die($mysqli->error);

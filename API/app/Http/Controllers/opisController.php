@@ -51,36 +51,42 @@ class opisController extends Controller {
 
   public function getResults(Request $request) {
 
-    if ($request->has('cds') || $request->has('dipartimento')) {
+    $dip = "";
+    $cds = DB::table("cds")->select("id");
+    $ins = DB::table("insegnamento")->select("id");
+    $schede = DB::table("schede");
 
-      $result = DB::table("insegnamento");
-
-      if ($request->has('cds') && $request->input("cds") != "") {
-        $cds = $request->input('cds');
-        $result->where("id_cds", $cds);
-      }
-
-      if ($request->has('dipartimento') && $request->input("dipartimento") != "") {
-        $department = $request->input('dipartimento');
-
-        $departments = DB::table("cds")->select("id")->where("id_dipartimento", $department)->get();
-
-        $departs = array();
-        foreach ($departments as $dp)
-          array_push($departs, $dp->id);
-
-        $result->whereIn("id_cds", $departs);
-      }
-
-      $result = $result->rightJoin('schede', 'insegnamento.id', '=', 'schede.id_insegnamento');
+    if ($request->has("dipartimento") && $request->input("dipartimento") != "") {
+      $dip = $request->input("dipartimento");
+      $cds->where("id_dipartimento", $dip);
     }
-    else
-      $result = DB::table("schede")->leftJoin("insegnamento", "schede.id_insegnamento", "=", "insegnamento.id");
+
+    if ($request->has("cds") && $request->input("cds") != "")
+      $cds->where("id", $request->input("cds"));
 
     if ($request->has("insegnamento") && $request->input("insegnamento") != "")
-      $result->where("id_insegnamento", $request->input("insegnamento"));
+      $ins->where("id", $request->input("insegnamento"));
 
-    $result = $result->get();
+    $cds = $cds->get();
+
+    $cds_ids = array();
+    foreach($cds as $id)
+      array_push($cds_ids, $id->id);
+
+    $ins->whereIn("id_cds", $cds_ids);
+    $ins = $ins->get();
+
+    $ins_ids = array();
+    foreach($ins as $id)
+      array_push($ins_ids, $id->id);
+
+    $schede->whereIn("id_insegnamento", $ins_ids);
+
+    $schede->leftJoin('insegnamento', function($q) {
+      $q->on('schede.id_insegnamento', '=', 'insegnamento.id')->on('schede.canale', '=', 'insegnamento.canale');
+    });
+
+    $result = $schede->get();
 
     // convert string to JSON
     foreach ($result as $key=>$value) {
@@ -143,6 +149,7 @@ class opisController extends Controller {
       $result[$key]->sugg_nf = str_replace("d esame", "d'esame", $result[$key]->sugg_nf);
       $result[$key]->sugg_nf = (array) json_decode($result[$key]->sugg_nf);
     }
+
 
     return response()->json($result);
   }

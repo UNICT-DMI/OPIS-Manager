@@ -42,6 +42,11 @@ function dip()
         //$aPathOpis_Dipartimento[$] = $link_opis;
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
+
+        // debugging
+        // if ($_id == 1)
+        //   cds($_id);
+
         cds($_id);
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) {

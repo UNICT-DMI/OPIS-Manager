@@ -97,10 +97,16 @@ function loadResults(id_cds, tab_position) {
 
     var labels = ["V1", "V2", "V3"];
 
-    for (let i in data) {
+    console.log(data[0]);
+
+    for (var i in data) {
       insegnamenti[i] = {};
 
-      insegnamenti[i].nome          = data[i].nome;
+      if (data[i].canale != "no")
+        insegnamenti[i].nome          = data[i].nome + "  (" + data[i].canale + ")";
+      else
+        insegnamenti[i].nome          = data[i].nome;
+
       insegnamenti[i].canale        = data[i].canale;
       insegnamenti[i].id_modulo     = data[i].id_modulo;
       insegnamenti[i].docente       = data[i].docente;
@@ -189,6 +195,7 @@ function loadResults(id_cds, tab_position) {
       materie.push(insegnamenti[i].nome);
 
       if (N > 0) {
+        console.log("N > 0");
 
         for (let j = 0; j < insegnamenti[i].domande.length; j++) {
 
