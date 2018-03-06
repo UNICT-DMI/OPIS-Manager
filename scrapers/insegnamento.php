@@ -63,8 +63,8 @@
 
               $params[3] = str_replace(" ", "%20", $params[3]);
 
-              // schede(cod_corso, cod_gomp, cod_modulo, canale);
-              schede($params[0], $params[1], $params[2], $params[3]);
+              // schede(cod_corso, cod_gomp, id_modulo, canale, cod_modulo);
+              schede($params[0], $params[1], $params[2], $params[3], $_cod_modulo);
             }
 
             if (!$mysqli->query('SELECT id FROM insegnamento WHERE id=' . $_id . ';')->num_rows) {

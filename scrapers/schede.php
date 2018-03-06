@@ -28,10 +28,10 @@ function fill_arr($arr, $elements) {
   return $arr;
 }
 
-function schede($id_cds, $id_gomp, $cod_modulo, $canale) {
+function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
   global $link, $mysqli;
 
-  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $cod_modulo . "&canale=" . $canale;
+  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $id_modulo . "&canale=" . $canale;
 
   $xpath = new DOMXPath(getDOM($url));
 

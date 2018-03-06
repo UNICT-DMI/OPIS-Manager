@@ -97,15 +97,19 @@ function loadResults(id_cds, tab_position) {
 
     var labels = ["V1", "V2", "V3"];
 
-    console.log(data[0]);
-
     for (var i in data) {
       insegnamenti[i] = {};
 
+      insegnamenti[i].nome = data[i].nome;
+
+      if (insegnamenti[i].nome.length > 40)
+        insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 40) + "... ";
+
       if (data[i].canale != "no")
-        insegnamenti[i].nome          = data[i].nome + "  (" + data[i].canale + ")";
-      else
-        insegnamenti[i].nome          = data[i].nome;
+        insegnamenti[i].nome += "(" + data[i].canale + ")";
+
+      if (data[i].id_modulo.indexOf("Â") == -1)
+        insegnamenti[i].nome += "(" + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf("-")) + ")";
 
       insegnamenti[i].canale        = data[i].canale;
       insegnamenti[i].id_modulo     = data[i].id_modulo;
@@ -195,7 +199,6 @@ function loadResults(id_cds, tab_position) {
       materie.push(insegnamenti[i].nome);
 
       if (N > 0) {
-        console.log("N > 0");
 
         for (let j = 0; j < insegnamenti[i].domande.length; j++) {
 
@@ -204,6 +207,16 @@ function loadResults(id_cds, tab_position) {
           d += insegnamenti[i].domande[j][1] * risposte[1]; // Più no che sì
           d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
           d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
+
+          if (insegnamenti[i].nome == "SISTEMI CENTRALI") {
+            console.log("d: " + d);
+            console.log("N: " + N);
+            console.log("j%12: " + j%12);
+            console.log("peso: " + pesi[j%12]);
+            console.log(d + "/" + N + " * " + pesi[j%12]);
+            console.log("v1: " + _v1);
+            console.log("######################");
+          }
 
           if (j == 0 || j == 1)                           // V1 domande: 1,2
             _v1 += (d/N) * pesi[j%12];
@@ -218,6 +231,8 @@ function loadResults(id_cds, tab_position) {
       v2.push(_v2.toFixed(2));
       v3.push(_v3.toFixed(2));
     }
+
+    console.log(v1);
 
     values.push(v1, v2, v3);
 
