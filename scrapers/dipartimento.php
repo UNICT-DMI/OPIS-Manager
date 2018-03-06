@@ -44,10 +44,10 @@ function dip()
         echo "";
 
         // debugging
-        if ($_id == 1)
-          cds($_id);
+        // if ($_id == 1)
+        //   cds($_id);
 
-        // cds($_id);
+        cds($_id);
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) {
             $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';
