@@ -1,5 +1,8 @@
 const api_url = "API/public/index.php/api/";
 
+var normalize = false;
+var lastResult = [];
+
 // pesi singole domande
 var pesi = [];
 pesi[0] = 0.7;
@@ -36,6 +39,8 @@ $(document).ready(function() {
 });
 
 function showCds(dipartimento) {
+
+  $("#normcheckbox").hide();
 
     $.getJSON(api_url + "cds/" + dipartimento , function(cds) {
 
@@ -89,7 +94,10 @@ function showCds(dipartimento) {
     });
 }
 
-function loadResults(id_cds, tab_position) {
+function loadResults(id_cds, tab_position, norm) {
+
+  $("#normcheckbox").show();
+  lastResult = [id_cds, tab_position];
 
   $.getJSON(api_url + "schede?cds=" + id_cds , function(data) {
 
@@ -98,6 +106,9 @@ function loadResults(id_cds, tab_position) {
     var labels = ["V1", "V2", "V3"];
 
     for (var i in data) {
+
+      if (data[i].tot_schedeF < 6) continue;
+
       insegnamenti[i] = {};
 
       insegnamenti[i].nome = data[i].nome;
@@ -150,19 +161,19 @@ function loadResults(id_cds, tab_position) {
 
     var canvs = document.createElement('canvas');
     canvs.id = tab_position + "v1";
-    canvs.style.width = "1200px";
+    canvs.style.width = "1024px";
     canvs.style.height = "500px";
     parents[0].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v2";
-    canvs.style.width = "1200px";
+    canvs.style.width = "1024px";
     canvs.style.height = "500px";
     parents[1].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v3";
-    canvs.style.width = "1200px";
+    canvs.style.width = "1024px";
     canvs.style.height = "500px";
     parents[2].appendChild(canvs);
 
@@ -234,16 +245,35 @@ function loadResults(id_cds, tab_position) {
       v3.push(_v3.toFixed(2));
     }
 
-    // console.log(v1);
+    if (normalize) {
+      var min1 = v1[0], min2 = v2[0], min3 = v3[0];
+      var max1 = v1[0], max2 = v2[0], max3 = v3[0];
+
+      for (var i in v1) {
+        if (min1 > v1[i] && v1[i] != 0) min1 = v1[i];
+        if (min2 > v2[i] && v2[i] != 0) min2 = v2[i];
+        if (min3 > v3[i] && v3[i] != 0) min3 = v3[i];
+
+        if (max1 < v1[i]) max1 = v1[i];
+        if (max2 < v2[i]) max2 = v2[i];
+        if (max3 < v3[i]) max3 = v3[i];
+      }
+
+      for (var i in v1) {
+        if (v1[i] != 0) v1[i] = (v1[i] - min1) / (max1 - min1);
+        if (v2[i] != 0) v2[i] = (v2[i] - min2) / (max2 - min2);
+        if (v3[i] != 0) v3[i] = (v3[i] - min3) / (max3 - min3);
+      }
+    }
 
     values.push(v1, v2, v3);
 
     var means = [0, 0, 0];
 
     for (let x in v1) {
-      means[0] += parseInt(v1[x]);
-      means[1] += parseInt(v2[x]);
-      means[2] += parseInt(v3[x]);
+      means[0] += parseFloat(v1[x]);
+      means[1] += parseFloat(v2[x]);
+      means[2] += parseFloat(v3[x]);
     }
 
     means[0] = means[0] / v1.length;
@@ -274,7 +304,13 @@ function loadResults(id_cds, tab_position) {
     }
 
     // select V1 tab
-    $('#tabs_' + tab_position + ' a[href="#tab' + tab_position + 'v1"]').tab('show')
+    if (!norm)
+      $('#tabs_' + tab_position + ' a[href="#tab' + tab_position + 'v1"]').tab('show')
   });
 
+}
+
+function normalizing() {
+  normalize = !normalize;
+  loadResults(lastResult[0], lastResult[1], true);
 }
