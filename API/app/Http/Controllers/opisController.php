@@ -82,11 +82,10 @@ class opisController extends Controller {
 
     $schede->whereIn("id_insegnamento", $ins_ids);
 
-    $schede->leftJoin('insegnamento', function($q) {
+    $schede->rightJoin('insegnamento', function($q) {
       $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
         ->on('schede.canale', '=', 'insegnamento.canale')
-        ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
-        ;
+        ->on('schede.id_modulo', '=', 'insegnamento.id_modulo');
     });
 
     $result = $schede->get();
