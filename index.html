@@ -25,41 +25,73 @@
     <div class="container-fluid">
 
       <br>
-      <h2 class="text-center text-success">OPIS Manager</h2>
+      <nav class="navbar navbar-expand-lg opis-nav">
+        <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">OPIS-Manager</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#formula" role="tab" aria-controls="formula" aria-selected="false">Formula</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">Info</a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </nav>
       <br>
+      <div class="container">
 
-      <div class="row">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
-        <div class="col text-center">
+            <div class="row">
 
-          <select id="dipartimenti" class="btn btn-success" OnChange="showCds(this.value)">
-            <option>--</option>
-          </select>
+              <div class="col text-center">
 
+                <select id="dipartimenti" class="btn btn-success" OnChange="showCds(this.value)">
+                  <option>--</option>
+                </select>
+
+              </div>
+
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-12">
+                <center>
+                  <ul class="nav nav-tabs" id="tabs"></ul>
+
+                  <label class="container-checkbox normalize" id="normcheckbox" style="display: none">Normalizza dati
+                    <input type="checkbox" OnChange="normalizing()">
+                    <span class="checkmark"></span>
+                  </label>
+
+                  <div class="tab-content" id="tabs_content"></div>
+                </center>
+              </div>
+            </div>
+
+          </div>
+          <div class="tab-pane fade" id="formula" role="tabpanel" aria-labelledby="formula-tab">
+            FORMULA
+          </div>
+          <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">INFO</div>
         </div>
 
       </div>
 
-    <br>
-
-    <div class="row">
-      <div class="col-8">
-        <center>
-          <ul class="nav nav-tabs" id="tabs"></ul>
-
-          <label class="container-checkbox normalize" id="normcheckbox" style="display: none">Normalizza dati
-            <input type="checkbox" OnChange="normalizing()">
-            <span class="checkmark"></span>
-          </label>
-
-          <div class="tab-content" id="tabs_content"></div>
-        </center>
-      </div>
-      <div class="col-4">
-        V1, V2, V3 formula
-      </div>
     </div>
-  </div>
 
   </body>
 </html>

@@ -1,3 +1,8 @@
+// enable tooltips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
+
 const api_url = "API/public/index.php/api/";
 
 var normalize = false;
@@ -48,7 +53,7 @@ function showCds(dipartimento) {
 
       for (x = 0; x < cds.length; x++) {
         tmp += `
-        <li class="nav-item active ml" OnClick="loadResults(${cds[x].id}, ${x})">
+        <li class="nav-item active tabs_button" OnClick="loadResults(${cds[x].id}, ${x})">
           <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}" role="tab" aria-controls="tab${x}" aria-selected="true">
             ${cds[x].nome} ${cds[x].classe}
           </a>
@@ -58,18 +63,18 @@ function showCds(dipartimento) {
         <div class="tab-pane fade" id="tab${x}" role="tabpanel" aria-labelledby="tab${x}-tab">
           <br>
           <ul class="nav nav-tabs" id="tabs_${x}">
-            <li class="nav-item ml">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true">
+            <li class="nav-item tabs_button">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come lo studente vede il corso">
                 V1
               </a>
             </li>
-            <li class="nav-item ml">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true">
+            <li class="nav-item tabs_button">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come lo studente vede il docente">
                 V2
               </a>
             </li>
-            <li class="nav-item ml">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true">
+            <li class="nav-item tabs_button">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come il docente interagisce con lo studente">
                 V3
               </a>
             </li>
@@ -91,6 +96,9 @@ function showCds(dipartimento) {
 
       $("#tabs").html(tmp);
       $("#tabs_content").html(tmp2);
+
+      // enable tooltips
+      $('[data-togglex="tooltip"]').tooltip();
     });
 }
 

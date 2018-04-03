@@ -1,5 +1,6 @@
-.ml {
+.tabs_button {
   margin-left: 5px;
+  padding: 5px 0px;
 }
 
 /* Custom checkbox */
@@ -51,4 +52,26 @@
 .normalize {
   position: absolute;
   margin: 25px 0px 0px 300px;
+}
+
+/* bootstrap 4 tooltips restyling */
+.tooltip-inner {
+    max-width: 200px;
+    padding: 3px 8px;
+    color: #fff;
+    text-align: center;
+    background-color: #1e7e34;
+    border-radius: .25rem;
+}
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
+    margin-left: -3px;
+    content: "";
+    border-width: 5px 5px 0;
+    border-top-color: #1e7e34;
+}
+
+.opis-nav, .opis-nav a {
+  background-color: #28a745;
+  color: #fff;
+  font-size: 1.25rem;
 }
