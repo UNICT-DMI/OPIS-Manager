@@ -75,3 +75,9 @@
   color: #fff;
   font-size: 1.25rem;
 }
+
+.nav-link.active {
+  color: #fff !important;
+  background-color: #1e7e34 !important;
+  border: 0px solid !important;
+}
