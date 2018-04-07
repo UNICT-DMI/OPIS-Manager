@@ -167,22 +167,24 @@ function loadResults(id_cds, tab_position, norm) {
     parents[1].removeChild(canv[1]);
     parents[2].removeChild(canv[2]);
 
+    var canv_width = "90vw", canv_height = (insegnamenti.length*25)+"px";
+
     var canvs = document.createElement('canvas');
     canvs.id = tab_position + "v1";
-    canvs.style.width = "100vw";
-    canvs.style.height = (insegnamenti.length*25)+"px";
+    canvs.style.width = canv_width;
+    canvs.style.height = canv_height;
     parents[0].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v2";
-    canvs.style.width = "100vw";
-    canvs.style.height = (insegnamenti.length*25)+"px";
+    canvs.style.width = canv_width;
+    canvs.style.height = canv_height;
     parents[1].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = tab_position + "v3";
-    canvs.style.width = "100vw";
-    canvs.style.height = (insegnamenti.length*25)+"px";
+    canvs.style.width = canv_width;
+    canvs.style.height = canv_height;
     parents[2].appendChild(canvs);
 
     canv = [];

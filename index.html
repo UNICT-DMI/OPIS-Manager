@@ -16,6 +16,7 @@
     <script src="js/horizontalBarPlugin.js"></script>
     <script src="js/popper.min.js"      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"   integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/fontawesome.js"></script>
 
     <script src="js/core.js"></script>
 
@@ -30,7 +31,6 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-
             <ul class="navbar-nav nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item">
                 <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">OPIS-Manager</a>
@@ -42,7 +42,11 @@
                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">Info</a>
               </li>
             </ul>
-
+          </div>
+          <div class="justify-content-end">
+            <a href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank">
+              Codice Sorgente <i class="fab fa-github fa-lg"></i>
+            </a>
           </div>
         </div>
       </nav>
@@ -78,45 +82,56 @@
                   </label>
 
                   <div class="tab-content" id="tabs_content"></div>
+
+                  <br>
+                  <br>
                 </center>
               </div>
             </div>
 
           </div>
           <div class="tab-pane fade text-center" id="formula" role="tabpanel" aria-labelledby="formula-tab">
-            <h2 class="text-danger">Modello per l'individuazione di indici atti a monitorare i servizi didattici</h2>
-            <p>La scheda OPIS viene suddivisa in tre parti, ciascuna contenente un gruppo di n domande e viene effettuata una prima valutazione relativamente a ciascun gruppo. Consideriamo la generica domanda D<sub>j</sub> del gruppo e assegniamo valori numerici agli esiti secondo la seguente</p>
+            <div class="container">
+              <h2 class="text-danger">Modello per l'individuazione di indici atti a monitorare i servizi didattici</h2>
+              <p>La scheda OPIS viene suddivisa in tre parti, ciascuna contenente un gruppo di n domande e viene effettuata una prima valutazione relativamente a ciascun gruppo. Consideriamo la generica domanda D<sub>j</sub> del gruppo e assegniamo valori numerici agli esiti secondo la seguente</p>
 
-            <br>
+              <br>
 
-            <center>
-              <table class="table table-bordered" style="width: 300px">
-                <tr>
-                  <td>DECISAMENTE NO</td>
-                  <td>E<sub>1</sub></td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>PIÙ NO CHE SÌ</td>
-                  <td>E<sub>2</sub></td>
-                  <td>4</td>
-                </tr>
-                <tr>
-                  <td>PIÙ SÌ CHE NO</td>
-                  <td>E<sub>3</sub></td>
-                  <td>7</td>
-                </tr>
-                <tr>
-                  <td>DECISAMENTE SI</td>
-                  <td>E<sub>4</sub></td>
-                  <td>10</td>
-                </tr>
-              </table>
-            </center>
+              <center>
+                <table class="table table-bordered" style="width: 300px">
+                  <tr>
+                    <td>DECISAMENTE NO</td>
+                    <td>E<sub>1</sub></td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>PIÙ NO CHE SÌ</td>
+                    <td>E<sub>2</sub></td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <td>PIÙ SÌ CHE NO</td>
+                    <td>E<sub>3</sub></td>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <td>DECISAMENTE SI</td>
+                    <td>E<sub>4</sub></td>
+                    <td>10</td>
+                  </tr>
+                </table>
+              </center>
 
-            <!-- <img src="images/formula.png"> -->
+              <!-- <img src="images/formula.png"> -->
+            </div>
           </div>
-          <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">INFO</div>
+          <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+            <div class="container">
+
+              INFO
+
+            </div>
+          </div>
         </div>
 
     </div>
