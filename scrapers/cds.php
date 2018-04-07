@@ -23,7 +23,7 @@ function cds($id_dip)
 
         $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[10]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
         if (!$mysqli->query('SELECT id FROM cds WHERE id=' . $_cod_corso . ';')->num_rows) {
-            $query .= '("' . addslashes($_cod_corso) . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '","' . addslashes($_tot_schedeNF) . '","' . addslashes($id_dip) . '"),';
+            $query .= utf8_decode('("' . addslashes($_cod_corso) . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '","' . addslashes($_tot_schedeNF) . '","' . addslashes($id_dip) . '"),');
             $query .= "\n";
 
         }

@@ -68,10 +68,10 @@
             }
 
             if (!$mysqli->query('SELECT id FROM insegnamento WHERE id=' . $_id . ';')->num_rows) {
-                  $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_canale) . '","' . addslashes($_cod_modulo) . '", "'
+                  $query .= utf8_decode('("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_canale) . '","' . addslashes($_cod_modulo) . '", "'
                    . addslashes($_ssd) . '", "' . addslashes($_tipo) . '", "' . addslashes($_anno) . '","' . addslashes($_semestre) . '",
                    "' . addslashes($_cfu) . '", "' . addslashes($_docente) . '", "' . addslashes($_assegn) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '",
-                    "' . addslashes($id_cds) . '"),';
+                    "' . addslashes($id_cds) . '"),');
                   $query .= "\n";
 
             }

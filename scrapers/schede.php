@@ -179,13 +179,11 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
   $sugg_nf    = json_encode($sugg_nf);
 
 
-  // $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';');
-  // if ($res && $res->num_rows) {}
-
-  if ($mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';')->num_rows <= 0) {
+  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';');
+  if ($res && $res->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`) VALUES";
     $query .= "\n";
-    $query .= '("' . urldecode(str_replace('"', "'", $totaleSchede)) . '", "' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
+    $query .= utf8_decode('("' . urldecode(str_replace('"', "'", $totaleSchede)) . '", "' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
                 '"' . urldecode(str_replace('"', "'", $femmine)) . '", "' . urldecode(str_replace('"', "'", $femmine_nf)) . '", ' .
                 '"' . urldecode(str_replace('"', "'", $fuoriCorso)) . '", ' .
                 '"' . urldecode(str_replace('"', "'", $inattivi)) . '", "' . urldecode(str_replace('"', "'", $inattivi_nf)) . '", ' .
@@ -202,7 +200,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
                 '"' . urldecode(str_replace('"', "'", $sugg_nf)) . '", ' .
                 '"' . urldecode($id_gomp) . '", ' .
                 '"' . urldecode($cod_modulo) . '", ' .
-                '"' . urldecode($canale) . '");';
+                '"' . urldecode($canale) . '");');
 
   if (!$mysqli->query($query))
     die($mysqli->error);

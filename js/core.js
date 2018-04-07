@@ -127,8 +127,8 @@ function loadResults(id_cds, tab_position, norm) {
       if (data[i].canale != "no")
         insegnamenti[i].nome += " (" + data[i].canale + ")";
 
-      if (data[i].id_modulo.indexOf("Â") == -1)
-        insegnamenti[i].nome += " (" + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf("-")) + ")";
+      if (data[i].id_modulo.length > 2)
+        insegnamenti[i].nome += " (" + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf("-")-1) + ")";
 
       insegnamenti[i].canale        = data[i].canale;
       insegnamenti[i].id_modulo     = data[i].id_modulo;

@@ -75,8 +75,11 @@ function getDOM($link)
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $html = curl_exec_utf8($ch);
+    $html = utf8_encode($html);
     $dom  = new DOMDocument;
-    $dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+    $dom->substituteEntities = false;
+    $dom->loadHTML('<?xml version="1.0" encoding="utf-8"?>' . $html);
+    $dom->encoding = 'utf-8';
     curl_close($ch);
     return $dom;
 }
