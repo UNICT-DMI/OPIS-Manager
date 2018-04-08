@@ -17,7 +17,7 @@
     <script src="js/popper.min.js"      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"   integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="js/fontawesome.js"></script>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
     <script src="js/core.js"></script>
 
   </head>
@@ -122,7 +122,17 @@
                 </table>
               </center>
 
-              <!-- <img src="images/formula.png"> -->
+              <p>Sia X<sub>ij</sub>  il numero di studenti che hanno dato la risposta E<sub>i</sub> alla domanda D<sub>j</sub> e sia N il numero complessivo di studenti.</p>
+
+              <p>Il numero \(D_j = \frac{1}{N} \sum_{i=1}^{4} X_{ij} \) \(E_i\)  \(p_j\) rappresenta la valutazione pesata relativa alla domanda D<sub>j</sub> secondo il peso p<sub>j</sub>.</p>
+
+              <p>I pesi sono numeri compresi tra zero e uno e vengono assegnati – all'interno di un singolo gruppo di domande – in modo che la loro somma sia pari ad uno.
+              La valutazione complessiva del corso – relativamente al gruppo di domande considerato – si ottiene sommando le valutazioni ottenute secondo la formula</p>
+
+              \(V = \frac{1}{N} \sum_{j=1}^{n} \sum_{i=1}^{4} X_{ij} \) \(E_i\)  \(p_j\)
+
+              <p>La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo - (V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>).</p>
+
             </div>
           </div>
           <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">

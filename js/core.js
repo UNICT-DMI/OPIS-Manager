@@ -229,24 +229,26 @@ function loadResults(id_cds, tab_position, norm) {
           d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
           d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
 
-          // debugging
-          // if (insegnamenti[i].nome == "SISTEMI CENTRALI" || insegnamenti[i].nome == "FISICA") {
-          //   console.log(insegnamenti[i].nome == "SISTEMI CENTRALI" ? "SISTEMI CENTRALI" : "FISICA")
-          //   console.log("d: " + d);
-          //   console.log("N: " + N);
-          //   console.log("j%12: " + j%12);
-          //   console.log("peso: " + pesi[j%12]);
-          //   console.log(d + "/" + N + " * " + pesi[j%12]);
-          //   console.log("v1: " + _v1);
-          //   console.log("######################");
-          // }
-
           if (j == 0 || j == 1)                           // V1 domande: 1,2
-            _v1 += (d/N) * pesi[j%12];
+            _v1 += ((d/N) * pesi[j%12]);
           else if (j == 3 || j == 4 || j == 8 || j == 9)  // V2 domande: 4,5,9,10
             _v2 += (d/N) * pesi[j%12];
           else if (j == 2 || j == 5 || j == 6)            // V3 domande: 3,6,7
             _v3 += (d/N) * pesi[j%12];
+
+          // debugging
+          // if (insegnamenti[i].nome == "SISTEMI CENTRALI" || insegnamenti[i].nome == "FISICA" || insegnamenti[i].nome == "LINGUA INGLESE") {
+          // if (_v1 > 20) {
+            // console.log(insegnamenti[i].nome)
+            // console.log("d: " + d);
+            // console.log("N: " + N);
+            // console.log("j%12: " + j%12);
+            // console.log("peso: " + pesi[j%12]);
+            // console.log(d + "/" + N + " * " + pesi[j%12]);
+            // console.log("v1: " + _v1);
+            // console.log("######################");
+          // }
+
         }
       }
 
@@ -260,19 +262,19 @@ function loadResults(id_cds, tab_position, norm) {
       var max1 = v1[0], max2 = v2[0], max3 = v3[0];
 
       for (var i in v1) {
-        if (min1 > v1[i] && v1[i] != 0) min1 = v1[i];
-        if (min2 > v2[i] && v2[i] != 0) min2 = v2[i];
-        if (min3 > v3[i] && v3[i] != 0) min3 = v3[i];
+        if (min1 > parseFloat(v1[i]) && v1[i] != 0) min1 = parseFloat(v1[i]);
+        if (min2 > parseFloat(v2[i]) && v2[i] != 0) min2 = parseFloat(v2[i]);
+        if (min3 > parseFloat(v3[i]) && v3[i] != 0) min3 = parseFloat(v3[i]);
 
-        if (max1 < v1[i]) max1 = v1[i];
-        if (max2 < v2[i]) max2 = v2[i];
-        if (max3 < v3[i]) max3 = v3[i];
+        if (max1 < parseFloat(v1[i])) max1 = parseFloat(v1[i]);
+        if (max2 < parseFloat(v2[i])) max2 = parseFloat(v2[i]);
+        if (max3 < parseFloat(v3[i])) max3 = parseFloat(v3[i]);
       }
 
       for (var i in v1) {
-        if (v1[i] != 0) v1[i] = (v1[i] - min1) / (max1 - min1);
-        if (v2[i] != 0) v2[i] = (v2[i] - min2) / (max2 - min2);
-        if (v3[i] != 0) v3[i] = (v3[i] - min3) / (max3 - min3);
+        if (v1[i] != 0) v1[i] = (parseFloat(v1[i]) - min1) / (max1 - min1);
+        if (v2[i] != 0) v2[i] = (parseFloat(v2[i]) - min2) / (max2 - min2);
+        if (v3[i] != 0) v3[i] = (parseFloat(v3[i]) - min3) / (max3 - min3);
       }
     }
 
