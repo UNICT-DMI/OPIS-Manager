@@ -4,6 +4,7 @@ function cds($id_dip)
 {
     global $link, $mysqli;
 
+    $link = str_replace("index.php", "", $link);
     $query = "INSERT INTO cds (id, nome,classe,tot_moduli,tot_valutati,tot_schedeF,tot_schedeNF,id_dipartimento) VALUES\n";
 
     $xpath   = new DOMXPath(getDOM($link .'cds_dip.php?id_dip=' . $id_dip));
