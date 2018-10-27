@@ -6,10 +6,9 @@ include "cds.php";
 
 function parseID($str)
 {
-    $x = substr($str, strlen($str) - 2);
-
-    if ($x[0] == '=')
-        $x = $x[1];
+    $x = substr($str, strlen($str) - 3);
+    $x = str_replace("=", "", $x);
+    $x = str_replace("p", "", $x);
 
     return $x;
 }
@@ -29,7 +28,6 @@ function dip()
 
         $linkDipartimento = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[1]/a')->item(0)->attributes->item(0)->textContent; //Link Dipartimento
         $_nome            = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[1]')->item(0)->textContent; // Nome dipartimento
-
         $_id = parseID($linkDipartimento);
 
         $_tot_CdS       = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent; // Tot CdS
