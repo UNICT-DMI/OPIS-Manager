@@ -83,6 +83,21 @@
     border-top-color: #1e7e34;
 }
 
+.opis-style {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.opis-contact {
+  border: 2px solid #28a745;
+  border-radius: 2em;
+  padding: 25px;
+}
+
+.opis-icon {
+  color: #28a745;
+}
+
 .opis-nav, .opis-nav a {
   background-color: #28a745;
   color: #fff;
