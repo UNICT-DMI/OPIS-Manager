@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
     `tot_schedeF` INT(11),
     `tot_schedeNF` INT(11),
     `id_cds` INT(11) NOT NULL,
-    primary key (id,canale,id_modulo)
+    `anno_accademico` VARCHAR(9),
+    primary key (`id`, `canale`, `id_modulo`, `anno_accademico`)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `schede` (
@@ -59,5 +60,6 @@ CREATE TABLE IF NOT EXISTS `schede` (
     `sugg_nf` TEXT,
     `id_insegnamento` INT(11),
     `id_modulo` VARCHAR(255),
-    `canale` VARCHAR(255)
+    `canale` VARCHAR(255),
+    `anno_accademico` VARCHAR(9)
 ) DEFAULT CHARSET=utf8;
