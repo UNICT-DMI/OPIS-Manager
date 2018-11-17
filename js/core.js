@@ -368,7 +368,7 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             anni_accademici[i].v1 = 0;
             anni_accademici[i].v2 = 0;
             anni_accademici[i].v3 = 0;
-            var anno = data[0].anno_accademico;
+            var anno = data[i].anno_accademico;
             var first = anno.substr(0,2);
             var second = anno.substr(2,2);
             var correctFirst = "20"+first+"/";
@@ -381,7 +381,7 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             valori.domande = [];
             valori.domande[0] = [];
             index = 0;    
-            for (let j in data[0].domande) {
+            for (let j in data[i].domande) {
                 if (j % 5 == 0 && j !=0) {
                     index++;
                     valori.domande[index] = [];

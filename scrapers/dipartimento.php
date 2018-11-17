@@ -82,11 +82,11 @@ function dip()
 // dip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-$year = "2016/2017";
+$year = "1617";
 dip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
-$year = "2017/2018";
+$year = "1718";
 dip();
 
 echo "\n";
