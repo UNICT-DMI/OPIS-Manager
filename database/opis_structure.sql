@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `cds` (
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `insegnamento` (
-    `id` INT(11) NOT NULL,
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(255) NOT NULL,
     `canale` VARCHAR(255) NOT NULL,
     `id_modulo` VARCHAR(255) NOT NULL,
