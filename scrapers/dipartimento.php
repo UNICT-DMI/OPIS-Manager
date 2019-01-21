@@ -15,7 +15,7 @@ function parseID($str)
 
 function dip()
 {
-    global $link, $mysqli, $year;
+    global $link, $mysqli, $year, $debug;
 
     $arr      = array();
 
@@ -42,15 +42,12 @@ function dip()
         echo "";
 
         // debugging
-        // if ($_id == 1) {
-        //    echo "\n\n";
-        //    echo $year . "\n";
-        //    echo $link . "\n";
-   
-        //    cds($_id);
-        // }
-
-       cds($_id);
+        if ($debug && $_id == 1) {   
+           cds($_id);
+        }
+        else if(!$debug) {
+            //cds($_id);
+        }
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) {
             $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';
@@ -81,9 +78,9 @@ function dip()
 // $year = "2015/2016";
 // dip();
 
-$link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-$year = "1617";
-dip();
+// $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
+// $year = "1617";
+// dip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
 $year = "1718";
