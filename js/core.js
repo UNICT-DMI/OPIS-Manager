@@ -3,7 +3,7 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 });
 
-const api_url = "API/public/index.php/api/";
+const api_url = "https://localhost/OPIS-Manager/API/public/index.php/api/";
 
 
 var normalize = false;
@@ -289,8 +289,8 @@ function showTeachingChart(){
             console.log(yearsArray[i]);
             console.log(val1);
             val1 = Math.round(lastTeachingResults[j].v1 * 100) / 100
-            val2 = Math.round(lastTeachingResults[j].v1 * 100) / 100
-            val3 = Math.round(lastTeachingResults[j].v1 * 100) / 100
+            val2 = Math.round(lastTeachingResults[j].v2 * 100) / 100
+            val3 = Math.round(lastTeachingResults[j].v3 * 100) / 100
             j++;
         }
         matr[0].push(val1);
@@ -360,8 +360,9 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
     canale = $("#dynamicSelect option:selected").attr("data-canale");    
     if (canale == undefined || canale == "") canale = "no";
     //ti prendi la option selezionata prendi i valori nel data- della option e lanci la richiesta get
-    $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data){
 
+    $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data){
+        console.log(data);
         var anni_accademici = [];
         for (i in data){
             anni_accademici[i] = {};
@@ -379,14 +380,19 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             var valori = [];
             valori.tot_schedeF   = data[i].totale_schede;
             valori.domande = [];
-            valori.domande[0] = [];
+            console.log("inizializzo val domande inidice ,"+ i);
+            valori.domande[i] = [];
             index = 0;    
             for (let j in data[i].domande) {
                 if (j % 5 == 0 && j !=0) {
                     index++;
+                    console.log("accedo a indixe"+ index);
                     valori.domande[index] = [];
                 }
+                if(valori.domande[index] == undefined) valori.domande[index] = [];
                 valori.domande[index].push(data[i].domande[j]);
+                
+                
             }
 
 
@@ -410,6 +416,9 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
                 }
               }
             //abbiamo v1 v2 e v3
+            console.log("v1",_v1);
+            console.log("v2",_v2);
+            console.log("v3",_v3);
             anni_accademici[i].v1 = _v1
             anni_accademici[i].v2 = _v2
             anni_accademici[i].v3 = _v3
