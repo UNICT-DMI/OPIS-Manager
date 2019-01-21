@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS `cds` (
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `insegnamento` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `id_ins` INT(11) NOT NULL,
     `nome` VARCHAR(255) NOT NULL,
     `canale` VARCHAR(255) NOT NULL,
     `id_modulo` VARCHAR(255) NOT NULL,
@@ -34,8 +35,7 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
     `tot_schedeF` INT(11),
     `tot_schedeNF` INT(11),
     `id_cds` INT(11) NOT NULL,
-    `anno_accademico` VARCHAR(9),
-    primary key (`id`, `canale`, `id_modulo`, `anno_accademico`)
+    `anno_accademico` VARCHAR(9)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `schede` (

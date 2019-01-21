@@ -116,8 +116,8 @@ function createSelectFromTeachings(id_cds,tab_position,savedSelectVal){
         html += '<option>--</option>';   
         //questo riempie la select con gli insegnamenti relativi al corso di studi
          for (let i = 0; i< ins.length; i++){
-             if(ins[i].canale == "no")  html += '<option data-pos = '+i+' data-id_ins = '+ins[i].id+' >'+ins[i].nome+'</option>';
-             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id+' data-canale="'+ins[i].canale+'">'+ins[i].nome+'('+ins[i].canale+')</option>';
+             if(ins[i].canale == "no")  html += '<option data-pos = '+i+' data-id_ins = '+ins[i].id_ins+' >'+ins[i].nome+'</option>';
+             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id_ins+' data-canale="'+ins[i].canale+'">'+ins[i].nome+'('+ins[i].canale+')</option>';
          }
         html += '</select>';
         cont.html(html);

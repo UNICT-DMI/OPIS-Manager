@@ -78,9 +78,9 @@ function dip()
 // $year = "2015/2016";
 // dip();
 
-// $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-// $year = "1617";
-// dip();
+$link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
+$year = "1617";
+dip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
 $year = "1718";

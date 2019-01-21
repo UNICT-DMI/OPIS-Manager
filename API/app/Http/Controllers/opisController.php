@@ -50,7 +50,8 @@ class opisController extends Controller {
             str_replace("%20"," ",$canale);
         }
         $result = DB::select("SELECT * FROM schede S  WHERE S.id_insegnamento ='".$id_ins."' AND S.canale = '".$canale."' ORDER BY anno_accademico");
-        foreach ($result as $key=>$value) {
+
+    foreach ($result as $key=>$value) {
       $result[$key]->eta = str_replace("'", '"', $result[$key]->eta);
       $result[$key]->eta = str_replace("u00a0", " ", $result[$key]->eta);
       $result[$key]->eta = (array) json_decode($result[$key]->eta);
@@ -120,7 +121,7 @@ class opisController extends Controller {
 
     $dip = "";
     $cds = DB::table("cds")->select("id");
-    $ins = DB::table("insegnamento")->select("id");
+    $ins = DB::table("insegnamento")->select("id_ins");
     $schede = DB::table("schede");
 
     /*if ($request->has("dipartimento") && $request->input("dipartimento") != "") {
@@ -134,7 +135,7 @@ class opisController extends Controller {
       $cds->where("id", $request->input("cds"));
 
     if ($request->has("insegnamento") && $request->input("insegnamento") != "")
-      $ins->where("id", $request->input("insegnamento"));
+      $ins->where("id_ins", $request->input("insegnamento"));
 
     //inserisco selezione anno 
       
@@ -142,6 +143,8 @@ class opisController extends Controller {
         $ins->where("insegnamento.anno_accademico", $request->input("anno_accademico"));
 
         $schede->where("schede.anno_accademico", $request->input("anno_accademico") );
+    } else {
+      return "Inserisci anno_accademico";
     }
   
     $cds = $cds->get();
@@ -155,12 +158,12 @@ class opisController extends Controller {
 
     $ins_ids = array();
     foreach($ins as $id)
-      array_push($ins_ids, $id->id);
+      array_push($ins_ids, $id->id_ins);
 
     $schede->whereIn("id_insegnamento", $ins_ids);
 
     $schede->rightJoin('insegnamento', function($q) {
-      $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
+      $q->on('schede.id_insegnamento', '=', 'insegnamento.id_ins')
         ->on('schede.canale', '=', 'insegnamento.canale')
         ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
         ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
