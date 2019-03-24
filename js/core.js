@@ -471,14 +471,16 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 
       insegnamenti[i].nome = data[i].nome;
 
-      if (insegnamenti[i].nome.length > 40)
-        insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 40) + "... " + insegnamenti[i].nome.substring(insegnamenti[i].nome.length-5, insegnamenti[i].nome.length);
+      if (insegnamenti[i].nome.length > 35)
+        insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 35) + "... " + insegnamenti[i].nome.substring(insegnamenti[i].nome.length-5, insegnamenti[i].nome.length);
 
       if (data[i].canale != "no")
         insegnamenti[i].nome += " (" + data[i].canale + ")";
 
       if (data[i].id_modulo.length > 2)
         insegnamenti[i].nome += " (" + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf("-")-1) + ")";
+
+      insegnamenti[i].nome += " - " + data[i].tot_schedeF;
 
       insegnamenti[i].canale        = data[i].canale;
       insegnamenti[i].id_modulo     = data[i].id_modulo;
@@ -650,7 +652,7 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 
     for (let c in ctx) {
       // chartjs data
-      data = {
+      let _data = {
         labels: materie,
         datasets: [{
           label: labels[c],
