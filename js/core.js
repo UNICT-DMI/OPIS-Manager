@@ -65,12 +65,18 @@ function getSwitcherVal(){
 function resetValutations(tab_position){
     var x =  tab_position;
     var tmp = `<div class="tab-pane fade" id="tab${x}v1" role="tabpanel" aria-labelledby="tab${x}v1-tab">
+              <br>
+              <h2>Come lo studente vede il corso</h2>
               <canvas id="${x}v1" style="width: 800px; height: 500px"></canvas>
             </div>
             <div class="tab-pane fade" id="tab${x}v2" role="tabpanel" aria-labelledby="tab${x}v2-tab">
+              <br>
+              <h2>Come lo studente vede il docente</h2>
               <canvas id="${x}v2" style="width: 800px; height: 500px"></canvas>
             </div>
             <div class="tab-pane fade" id="tab${x}v3" role="tabpanel" aria-labelledby="tab${x}v3-tab">
+              <br>
+              <h2>Come il docente interagisce con lo studente</h2>
               <canvas id="${x}v3" style="width: 800px; height: 500px"></canvas>
             </div>`;
     $("#tabs_content"+tab_position).html(tmp);
