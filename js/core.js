@@ -226,17 +226,17 @@ function showValutations(cds){
           <br>
           <ul class="nav nav-tabs" id="tabs_${x}">
             <li class="nav-item tabs_button">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come lo studente vede il corso">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v1" role="tab" aria-controls="tab${x}" aria-selected="true">
                 V1
               </a>
             </li>
             <li class="nav-item tabs_button">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come lo studente vede il docente">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v2" role="tab" aria-controls="tab${x}" aria-selected="true">
                 V2
               </a>
             </li>
             <li class="nav-item tabs_button">
-              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true" data-togglex="tooltip" data-placement="top" title="Come il docente interagisce con lo studente">
+              <a class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}v3" role="tab" aria-controls="tab${x}" aria-selected="true">
                 V3
               </a>
             </li>
