@@ -6,12 +6,11 @@ $(function () {
 const api_url = "https://localhost/OPIS-Manager/API/public/index.php/api/";
 
 
-var normalize = false;
-var selectedCDSTabPosition = 0;
-
+let normalize = false;
+let selectedCDSTabPosition = 0;
 
 // pesi singole domande
-var pesi = [];
+let pesi = [];
 pesi[0] = 0.7;
 pesi[1] = 0.3;
 pesi[2] = 0.1;
@@ -26,35 +25,35 @@ pesi[10] = 0.3;
 pesi[11] = 0;   // questa domanda non viene considerata
 
 // pesi risposte
-var risposte = [];
+let risposte = [];
 risposte[0] = 1;  // Decisamente no
 risposte[1] = 4;  // Più no che sì
 risposte[2] = 7;  // Più sì che no
 risposte[3] = 10; // Decisamente sì
 
-var optionsForSelectFromYears = `<option>--</option>
+let optionsForSelectFromYears = `<option>--</option>
 <option data-pos="0">2013/2014</option>
 <option data-pos="1">2014/2015</option>
 <option data-pos="2">2015/2016</option>
 <option data-pos="3">2016/2017</option>
 <option data-pos="4">2017/2018</option>`;
 
-yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
-var lastTeachingResults = []; // per ogni insegnamento ha anno, v1 e v2
+let yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
+let lastTeachingResults = []; // per ogni insegnamento ha anno, v1 e v2
 
 
 
 $(document).ready(function() {
   $.getJSON(api_url + "dipartimento", function(data) {
-    var dip = $("#dipartimenti");
-    for (var i in data)
+    let dip = $("#dipartimenti");
+    for (let i in data)
       dip.append(new Option(data[i].nome, data[i].id));
   });
     
 });
 
-function getSwitcherVal(){
-    var selected = 0;
+function getSwitcherVal() {
+    let selected = 0;
     $(".segmented label  input[type=radio]").each(function(){
         if($(this).parent().attr("class") == "checked"){
             selected = $(this).attr("data-val");
@@ -62,9 +61,9 @@ function getSwitcherVal(){
     });
     return selected;
 }
-function resetValutations(tab_position){
-    var x =  tab_position;
-    var tmp = `<div class="tab-pane fade" id="tab${x}v1" role="tabpanel" aria-labelledby="tab${x}v1-tab">
+function resetValutations(tab_position) {
+    let x =  tab_position;
+    let tmp = `<div class="tab-pane fade" id="tab${x}v1" role="tabpanel" aria-labelledby="tab${x}v1-tab">
               <br>
               <h2>Come lo studente vede il corso</h2>
               <canvas id="${x}v1" style="width: 800px; height: 500px"></canvas>
@@ -81,25 +80,25 @@ function resetValutations(tab_position){
             </div>`;
     $("#tabs_content"+tab_position).html(tmp);
 }
-function unSetValutationsTab(tab_position){
-    for(var i = 1; i< 4;i++){
-        var v = $('#tabs_' + tab_position + ' a[href="#tab' + tab_position + 'v'+i+'"]');
-        var className = v.attr("class");
+
+function unSetValutationsTab(tab_position) {
+    for(let i = 1; i< 4;i++) {
+        let v = $('#tabs_' + tab_position + ' a[href="#tab' + tab_position + 'v'+i+'"]');
+        let className = v.attr("class");
         className.replace("active","");
         className = className.replace("active","");
         v.attr("class",className);
     }
 }
 
-
-function switcherObserver(){
+function switcherObserver() {
      $(".segmented label input[type=radio]").each(function(){
         $(this).on("change", function(){
-            var id_cds = $(".segmented").attr("data-id_cds");
-            var tab_position = $(".segmented").attr("data-tab_position");
-            var selectedPos = $("#tabs li").eq(tab_position).attr("data-select");
-            var selectedSwitcherVal = $("#tabs li").eq(tab_position).attr("data-switcher");
-            var switcherVal = $(this).attr("data-val");
+            let id_cds = $(".segmented").attr("data-id_cds");
+            let tab_position = $(".segmented").attr("data-tab_position");
+            let selectedPos = $("#tabs li").eq(tab_position).attr("data-select");
+            let selectedSwitcherVal = $("#tabs li").eq(tab_position).attr("data-switcher");
+            let switcherVal = $(this).attr("data-val");
             
             if(selectedSwitcherVal != switcherVal) selectedPos = "";
             if( switcherVal ==  0){
@@ -123,8 +122,8 @@ function switcherObserver(){
 
 function createSelectFromTeachings(id_cds,tab_position,savedSelectVal){
      $.getJSON(api_url + "insegnamento/" + id_cds, function(ins) {
-        cont = $("#dynamicSelectContainer");
-        html = '<select id="dynamicSelect" style = "width:450px;" class="btn btn-success" OnChange=" loadResults('+id_cds+','+tab_position+',this)">';
+        let cont = $("#dynamicSelectContainer");
+        let html = '<select id="dynamicSelect" style = "width:450px;" class="btn btn-success" OnChange=" loadResults('+id_cds+','+tab_position+',this)">';
         html += '<option>--</option>';   
         //questo riempie la select con gli insegnamenti relativi al corso di studi
          for (let i = 0; i< ins.length; i++){
@@ -143,8 +142,8 @@ function createSelectFromTeachings(id_cds,tab_position,savedSelectVal){
 
 function createSelectFromYears(id_cds,tab_position,savedSelectVal){
     //questa si può migliorare facendo una query che scarica gli anni piuttosto che fissarli qui come stringa in optionsForSelectFromYears
-    cont = $("#dynamicSelectContainer");
-    html = '<select id="dynamicSelect" style = "width:450px;" class="btn btn-success" OnChange=" loadResults('+id_cds+','+tab_position+',this,false)")">';
+    let cont = $("#dynamicSelectContainer");
+    let html = '<select id="dynamicSelect" style = "width:450px;" class="btn btn-success" OnChange=" loadResults('+id_cds+','+tab_position+',this,false)")">';
     html += optionsForSelectFromYears;
     html += '</select>';       
     cont.html(html);
@@ -158,9 +157,9 @@ function createSelectFromYears(id_cds,tab_position,savedSelectVal){
 
 function showSwitcherAndSelect(id_cds, tab_position){
     selectedCDSTabPosition = tab_position;
-    var savedSelectVal = $("#tabs li").eq(tab_position).attr("data-select");
-    var savedSwitcherVal = $("#tabs li").eq(tab_position).attr("data-switcher");
-    var savedNormVal = $("#tabs li").eq(tab_position).attr("data-normalized");
+    let savedSelectVal = $("#tabs li").eq(tab_position).attr("data-select");
+    let savedSwitcherVal = $("#tabs li").eq(tab_position).attr("data-switcher");
+    let savedNormVal = $("#tabs li").eq(tab_position).attr("data-normalized");
     console.log("normalizzato = ", savedNormVal);
     if(savedNormVal == "true"){
         //check
@@ -172,8 +171,8 @@ function showSwitcherAndSelect(id_cds, tab_position){
          normalize = false;
         $("#normcheckbox input").prop("checked",false);
     }
-    var cont = $(".container-switcher");
-    var html = '<div class="segmented" data-id_cds ='+id_cds+' data-tab_position = '+tab_position+'>';
+    let cont = $(".container-switcher");
+    let html = '<div class="segmented" data-id_cds ='+id_cds+' data-tab_position = '+tab_position+'>';
     if (savedSwitcherVal == 0) {
          html+= '<label class="checked"><input type="radio"  name="segmented" data-val="0" checked />Anno accademico</label><label><input type="radio"  name="segmented" data-val= "1" />Insegnamento</label>';
     }
@@ -204,8 +203,8 @@ function showCds(dipartimento) {
     $("#dynamicSelectContainer").html("");
 
     $.getJSON(api_url + "cds/" + dipartimento , function(cds) {
-      var tmp = "",tmp1 = "", x = 0;
-      for (x = 0; x < cds.length; x++) {
+      let tmp = "";
+      for (let x = 0; x < cds.length; x++) {
         tmp += `
         <li data-normalized = "false" data-idCds = "${cds[x].id}" class="nav-item active tabs_button" data-switcher="0" data-select = "--" >
           <a  class="nav-link btn btn-success" data-toggle="tab" href="#tab${x}" role="tab" aria-controls="tab${x}" aria-selected="true" OnClick="showSwitcherAndSelect(${cds[x].id}, ${x})">
@@ -220,9 +219,8 @@ function showCds(dipartimento) {
 }
 
 function showValutations(cds){
-    var tmp = "";
-    var tmp2 = "";
-    for (x in cds){
+    let tmp = "";
+    for (let x in cds){
     tmp += `
         <div class="tab-pane fade" id="tab${x}" role="tabpanel" aria-labelledby="tab${x}-tab">
           <br>
@@ -265,10 +263,10 @@ function showValutations(cds){
 function loadResults(id_cds, tab_position, dynamicSelect, norm) {
     //elimino i valori scaricati attualmente
     if (!norm) resetValutations(tab_position);
-    var nowSwitcherVal = getSwitcherVal();
-    var dsVal = $(dynamicSelect).val();
-    var dsPos = $("#dynamicSelect option:selected").attr("data-pos")
-    var dynamicSelectVal = dsVal.replace("20","");
+    let nowSwitcherVal = getSwitcherVal();
+    let dsVal = $(dynamicSelect).val();
+    let dsPos = $("#dynamicSelect option:selected").attr("data-pos")
+    let dynamicSelectVal = dsVal.replace("20","");
     dynamicSelectVal = dynamicSelectVal.replace("/","");
     dynamicSelectVal = dynamicSelectVal.replace("20","");   
     //prendo il valore dello switcher
@@ -286,16 +284,18 @@ function loadResults(id_cds, tab_position, dynamicSelect, norm) {
 
 function showTeachingChart(){
     console.log("SHOWCHARTS");
+
     $("#normcheckbox").hide();
-    var charts = [];
+    let charts = [];
     unSetValutationsTab(selectedCDSTabPosition);
-    var matr = [];
+    let matr = [];
     matr[0] = [];
     matr[1] = [];
     matr[2] = [];
-    var j = 0;
-    for (i in yearsArray){
-        var val1 = 0 ,val2 = 0, val3 = 0;
+
+    let j = 0;
+    for (let i in yearsArray) {
+        let val1 = 0 ,val2 = 0, val3 = 0;
         if(j < lastTeachingResults.length && yearsArray[i] == lastTeachingResults[j].anno) {
             console.log(lastTeachingResults[j].anno);
             console.log(yearsArray[i]);
@@ -309,64 +309,68 @@ function showTeachingChart(){
         matr[1].push(val2);
         matr[2].push(val3);
     }
-    if(j != 0) console.log("esistono elementi");
+
+    if (j != 0) console.log("esistono elementi");
+
     //configuro grafici
-    for(var i = 1; i< 4 ; i++){
-        var config = {
-			type: 'line',
-			data: {
-				labels: yearsArray,
-				datasets: [{
-					label: 'V'+i,
-					fill: false,
-					backgroundColor: "#28a745",
-					borderColor: "#28a745",
-					data: matr[i-1],
-				}]
-			},
-			options: {
-               // maintainAspectRatio: false,
-				responsive: true,
-				title: {
-					display: true,
-					text: $("#dynamicSelect option:selected").val() + ' V'+i
-				},
-				tooltips: {
-					mode: 'index',
-					intersect: false,
-				},
-				hover: {
-					mode: 'nearest',
-					intersect: true
-				},
-				scales: {
-					xAxes: [{
-						display: true,
-            ticks: {
-              beginAtZero: true,
-            },
-						scaleLabel: {
-							display: true,
-							labelString: 'Anno accademico'
-						}
-					}],
-					yAxes: [{
+    for (let i = 1; i< 4 ; i++) {
+      let config = {
+        type: 'line',
+        data: {
+          labels: yearsArray,
+          datasets: [{
+            label: 'V'+i,
+            fill: false,
+            backgroundColor: "#28a745",
+            borderColor: "#28a745",
+            data: matr[i-1],
+          }]
+        },
+        options: {
+          // maintainAspectRatio: false,
+          responsive: true,
+          title: {
             display: true,
-            ticks: {
-              beginAtZero: true,
-            },
-						scaleLabel: {
-							display: true,
-							labelString: 'V'+i
-						}
-					}]
-				}
-			}
-		};
-        console.log("innerhtml del grafico")
-        $("#tab"+selectedCDSTabPosition+"v"+i).html("<div style = 'width:70%;height:70%;'><canvas id='yearsChart"+selectedCDSTabPosition+"V"+i+"'></canvas></div>");
-        var ctx = document.getElementById('yearsChart'+selectedCDSTabPosition+'V'+i).getContext('2d');
-        charts.push(new Chart(ctx, config));
+            text: $("#dynamicSelect option:selected").val() + ' V'+i
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+          scales: {
+            xAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Anno accademico'
+              }
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'V'+i
+              }
+            }]
+          }
+        }
+      };
+
+      console.log("innerhtml del grafico")
+
+      $("#tab"+selectedCDSTabPosition+"v"+i).html("<div style = 'width:70%;height:70%;'><canvas id='yearsChart"+selectedCDSTabPosition+"V"+i+"'></canvas></div>");
+      let ctx = document.getElementById('yearsChart'+selectedCDSTabPosition+'V'+i).getContext('2d');
+      charts.push(new Chart(ctx, config));
     }
     $('#tabs_' +selectedCDSTabPosition+ ' a[href="#tab'+selectedCDSTabPosition+ 'v1"]').tab('show');        
 }
@@ -374,33 +378,33 @@ function showTeachingChart(){
 
 
 function getDataForTeaching(id_cds, tab_position, dynamicSelect){
-    id_ins = $("#dynamicSelect option:selected").attr("data-id_ins");
-    canale = $("#dynamicSelect option:selected").attr("data-canale");    
+    let id_ins = $("#dynamicSelect option:selected").attr("data-id_ins");
+    let canale = $("#dynamicSelect option:selected").attr("data-canale");    
     if (canale == undefined || canale == "") canale = "no";
     //ti prendi la option selezionata prendi i valori nel data- della option e lanci la richiesta get
 
     $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data){
         console.log(data);
-        var anni_accademici = [];
-        for (i in data){
+        let anni_accademici = [];
+        for (let i in data) {
             anni_accademici[i] = {};
             anni_accademici[i].v1 = 0;
             anni_accademici[i].v2 = 0;
             anni_accademici[i].v3 = 0;
-            var anno = data[i].anno_accademico;
-            var first = anno.substr(0,2);
-            var second = anno.substr(2,2);
-            var correctFirst = "20"+first+"/";
-            var correctSecond = "20"+second;
-            var correctAnno = correctFirst+correctSecond;
+            let anno = data[i].anno_accademico;
+            let first = anno.substr(0,2);
+            let second = anno.substr(2,2);
+            let correctFirst = "20"+first+"/";
+            let correctSecond = "20"+second;
+            let correctAnno = correctFirst+correctSecond;
             anni_accademici[i].anno = correctAnno
             //console.log(data[i]);
-            var valori = [];
+            let valori = [];
             valori.tot_schedeF   = data[i].totale_schede;
             valori.domande = [];
             console.log("inizializzo val domande inidice ,"+ i);
             valori.domande[i] = [];
-            index = 0;    
+            let index = 0;    
             for (let j in data[i].domande) {
                 if (j % 5 == 0 && j !=0) {
                     index++;
@@ -414,8 +418,8 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             }
 
 
-            var N = valori.tot_schedeF;
-            var d = 0, _v1 = 0, _v2 = 0, _v3 = 0;
+            let N = valori.tot_schedeF;
+            let d = 0, _v1 = 0, _v2 = 0, _v3 = 0;
             if (N > 5) {
                 for (let j = 0; j < valori.domande.length; j++) {
                   d = 0;
@@ -455,11 +459,11 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
     
   $.getJSON(api_url + "schede?cds=" + id_cds + "&anno_accademico="+ dynamicSelectVal , function(data) {
 
-    var insegnamenti = [], index = 0;
+    let insegnamenti = [], index = 0;
 
-    var labels = ["V1", "V2", "V3"];
+    let labels = ["V1", "V2", "V3"];
 
-    for (var i in data) {
+    for (let i in data) {
 
       if (data[i].tot_schedeF < 6) continue;
 
@@ -498,25 +502,25 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
     }
 
     // chartjs stuff
-    var charts = [];
-    var ctx = [];
+    let charts = [];
+    let ctx = [];
 
     // Destroy and recreate canvas to clear (need refactoring)
-    var canv = [];
+    let canv = [];
     canv.push(document.getElementById(tab_position + "v1"));
     canv.push(document.getElementById(tab_position + "v2"));
     canv.push(document.getElementById(tab_position + "v3"));
 
-    var parents = [];
+    let parents = [];
     parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
 
     parents[0].removeChild(canv[0]);
     parents[1].removeChild(canv[1]);
     parents[2].removeChild(canv[2]);
 
-    var canv_width = "90vw", canv_height = (insegnamenti.length*25)+"px";
+    let canv_width = "90vw", canv_height = (insegnamenti.length*25)+"px";
 
-    var canvs = document.createElement('canvas');
+    let canvs = document.createElement('canvas');
     canvs.id = tab_position + "v1";
     canvs.style.width = canv_width;
     canvs.style.height = canv_height;
@@ -543,7 +547,7 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
     ctx.push(canv[1].getContext("2d"));
     ctx.push(canv[2].getContext("2d"));
 
-    var _options = {
+    let _options = {
       scales: {
         xAxes: [{
           ticks: {
@@ -560,14 +564,14 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
       legend: { display: false }
     };
 
-    var materie = []; // labels chartjs
-    var values = []; // data chartjs
-    var v1 = [], v2 = [], v3 = [];
+    let materie = []; // labels chartjs
+    let values = []; // data chartjs
+    let v1 = [], v2 = [], v3 = [];
 
     for (let i in insegnamenti) {
 
-      var N = insegnamenti[i].tot_schedeF;
-      var d = 0, _v1 = 0, _v2 = 0, _v3 = 0;
+      let N = insegnamenti[i].tot_schedeF;
+      let d = 0, _v1 = 0, _v2 = 0, _v3 = 0;
 
       materie.push(insegnamenti[i].nome);
 
@@ -610,10 +614,10 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
     }
 
     if (normalize) {
-      var min1 = v1[0], min2 = v2[0], min3 = v3[0];
-      var max1 = v1[0], max2 = v2[0], max3 = v3[0];
+      let min1 = v1[0], min2 = v2[0], min3 = v3[0];
+      let max1 = v1[0], max2 = v2[0], max3 = v3[0];
 
-      for (var i in v1) {
+      for (let i in v1) {
         if (min1 > parseFloat(v1[i]) && v1[i] != 0) min1 = parseFloat(v1[i]);
         if (min2 > parseFloat(v2[i]) && v2[i] != 0) min2 = parseFloat(v2[i]);
         if (min3 > parseFloat(v3[i]) && v3[i] != 0) min3 = parseFloat(v3[i]);
@@ -623,7 +627,7 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
         if (max3 < parseFloat(v3[i])) max3 = parseFloat(v3[i]);
       }
 
-      for (var i in v1) {
+      for (let i in v1) {
         if (v1[i] != 0) v1[i] = (parseFloat(v1[i]) - min1) / (max1 - min1);
         if (v2[i] != 0) v2[i] = (parseFloat(v2[i]) - min2) / (max2 - min2);
         if (v3[i] != 0) v3[i] = (parseFloat(v3[i]) - min3) / (max3 - min3);
@@ -632,7 +636,7 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 
     values.push(v1, v2, v3);
 
-    var means = [0, 0, 0];
+    let means = [0, 0, 0];
 
     for (let x in v1) {
       means[0] += parseFloat(v1[x]);
@@ -646,7 +650,7 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 
     for (let c in ctx) {
       // chartjs data
-      _data = {
+      data = {
         labels: materie,
         datasets: [{
           label: labels[c],
@@ -675,12 +679,12 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 function normalizing() {
  
   console.log("normalizing")
-  norm = $("#tabs li").eq(selectedCDSTabPosition).attr("data-normalized");
+  let norm = $("#tabs li").eq(selectedCDSTabPosition).attr("data-normalized");
   if (norm == "false")  normalize = true
   else normalize = false
   $("#tabs li").eq(selectedCDSTabPosition).attr("data-normalized",normalize);
-  var dSelect =  $("#dynamicSelect");
-  var idCds =  $("#tabs li").eq(selectedCDSTabPosition).attr("data-idCds");
+  let dSelect =  $("#dynamicSelect");
+  let idCds =  $("#tabs li").eq(selectedCDSTabPosition).attr("data-idCds");
   loadResults(idCds, selectedCDSTabPosition ,dSelect, true);
   
 }
