@@ -32,8 +32,14 @@ risposte[1] = 4;  // Più no che sì
 risposte[2] = 7;  // Più sì che no
 risposte[3] = 10; // Decisamente sì
 
-var optionsForSelectFromYears = '<option>--</option><option data-pos ="0">2014/2015</option><option data-pos ="1">2015/2016</option><option data-pos ="2">2016/2017</option><option data-pos ="3">2017/2018</option>';
-yearsArray = ["2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
+var optionsForSelectFromYears = `<option>--</option>
+<option data-pos="0">2013/2014</option>
+<option data-pos="1">2014/2015</option>
+<option data-pos="2">2015/2016</option>
+<option data-pos="3">2016/2017</option>
+<option data-pos="4">2017/2018</option>`;
+
+yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
 var lastTeachingResults = []; // per ogni insegnamento ha anno, v1 e v2
 
 
@@ -330,13 +336,19 @@ function showTeachingChart(){
 				scales: {
 					xAxes: [{
 						display: true,
+            ticks: {
+              beginAtZero: true,
+            },
 						scaleLabel: {
 							display: true,
 							labelString: 'Anno accademico'
 						}
 					}],
 					yAxes: [{
-						display: true,
+            display: true,
+            ticks: {
+              beginAtZero: true,
+            },
 						scaleLabel: {
 							display: true,
 							labelString: 'V'+i
@@ -527,6 +539,11 @@ function getDataForYear(id_cds, tab_position, dynamicSelectVal, norm) {
 
     var _options = {
       scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+          },
+        }],
         yAxes: [{
           ticks: {
             beginAtZero: true
