@@ -76,7 +76,7 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
 
 function dip()
 {
-    global $link, $mysqli, $year;
+    global $link, $mysqli, $year, $debug;
 
     $arr      = array();
 
@@ -102,15 +102,12 @@ function dip()
         echo "";
 
         // debugging
-        // if ($_id == 1) {
-        //    echo "\n\n";
-        //    echo $year . "\n";
-        //    echo $link . "\n";
-   
-        //    cds($_id);
-        // }
-
-       cds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
+        if ($debug && $_id == 1) {   
+           cds($_id);
+        }
+        else if(!$debug) {
+            //cds($_id);
+        }
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) { //se il dipartimento NON ESISTE
             $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';

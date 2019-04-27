@@ -6,6 +6,7 @@ $db_name = 'opis_db';
 
 $link = "";
 $year = "";
+$debug = false;
 
 $aPathCdS                 = array(); // Array contenente i link della lista dei corsi di studio di ogni dipartimento;
 $aPath_OPIS_Dipartimento  = array(); // Array contente i link delle schede opis del Dipartimento
