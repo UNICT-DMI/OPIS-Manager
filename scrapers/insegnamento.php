@@ -10,7 +10,7 @@
     if (intval($num) == 0)
       $num = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($lengthN-3) . ']/td[1]')->item(0)->textContent;*/
 
-    $query    = "INSERT INTO insegnamento (id,nome,id_modulo,canale,anno,semestre,cfu,tot_schedeF,tot_schedeNF,id_cds, anno_accademico) VALUES\n";
+    $query    = "INSERT INTO insegnamento (id_ins,nome,id_modulo,canale,anno,semestre,cfu,tot_schedeF,tot_schedeNF,id_cds, anno_accademico) VALUES\n";
 
       $j = 0;
       for ($i = 2; $i < $lengthN; $i++) {
@@ -29,7 +29,6 @@
             $_cfu         = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]')->item(0)->textContent;
             $_mutuaz      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[9]')->item(0)->textContent;
             $_tot_schede  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[10]')->item(0)->textContent; // "X + Y"
-            
 
             echo "\033[1m" . ($j) . "\033[0m\t" .  $_nome . " \n";
             
@@ -73,13 +72,16 @@
             if($year != "2013/2014")
               $_id = substr($_id, 0, -2);
 
-            if (!$mysqli->query('SELECT id FROM insegnamento WHERE id=' . $_id . ';')->num_rows) {
+              $_year = str_replace("20", "", $year);
+              $_year = str_replace("/", "", $_year);
+              if (!$mysqli->query('SELECT id_ins FROM insegnamento WHERE id_ins=' . $_id . ' AND anno_accademico='.$_year.';')->num_rows) {
+
+
                   $query .= utf8_decode('("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes(' ') . '","' 
                   . addslashes($_canale) . '","' . addslashes($_anno) . '","' . addslashes($_semestre) . '","' . addslashes($_cfu) 
                   . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '","'
-                  . addslashes($id_cds) . '", "' . $year . '"),');
+                  . addslashes($id_cds) . '", "' . $_year . '"),');
                   $query .= "\n";
-
             }
         }
 

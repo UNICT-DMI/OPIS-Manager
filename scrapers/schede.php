@@ -28,10 +28,11 @@ function fill_arr($arr, $elements) {
   return $arr;
 }
 
-function controlla_caratteri_strani(&$stringa){
-  for($j=0; $j<strlen($stringa)-1; $j++)
-    if(strlen(mb_substr($stringa, $j, 1, 'utf-8')) == 2) //se il carattere della stringa occupa 2 caratteri vuol dire che è un carattere "strano"
-      $stringa = substr($stringa, 0, $j)."0".substr($stringa, $j+2); //togliamo i primi 2 (che sarebbe il primo, ma quello strano) caratteri della stringa e concateniamo lo 0
+function check_special_chars(&$str){
+  for($j=0; $j<strlen($str)-1; $j++)
+    if(strlen(mb_substr($str, $j, 1, 'utf-8')) == 2) {             //se il carattere della stringa occupa 2 caratteri vuol dire che è un carattere "strano"
+      $str = substr($str, 0, $j)."0".substr($str, $j+2);    //togliamo i primi 2 (che sarebbe il primo, ma quello strano) caratteri della stringa e concateniamo lo 0
+    }
 }
 
 function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
@@ -184,8 +185,9 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
   $sugg       = json_encode($sugg);
   $sugg_nf    = json_encode($sugg_nf);
 
-
-  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\';');
+  $_year = str_replace("20", "", $year);
+  $_year = str_replace("/", "", $_year);
+  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\' AND anno_accademico='.$_year.';');
   if ($res && $res->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
@@ -276,26 +278,35 @@ function oldschede($id_cds, $id_gomp, $canale) {
   $domande = array();
   $valutazioni_f = array();
   $valutazioni_nf = array();
-  
 
-  for($i=1; $i<=11; $i++){
-    if($xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/td/table/tr[' . $i . ']/td[2]')->item(0) != NULL)
-      $domande[$i-1] = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent;
+  $year_idx = ($year == "2013/2014" ? 4 : 6);
+  
+  // questions answers
+  for ($i=1; $i<=11; $i++) {
+
+    if ($xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/td/table/tr[' . $i . ']/td[2]')->item(0) != NULL) {
+      $domande[$i-1] = $xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent;
+    }
+
     $valutazioni_f[$i-1] = "";
     $valutazioni_nf[$i-1] = "";
-    for($j = 2; $j <= ($year == "2013/2014" ? 5 : 6); $j++){
-      if($xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/tr/td[1]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0) != NULL)
-        $valutazioni_f[$i-1] .= $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/tr/td[1]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0)->textContent . "-";
-      if($xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/tr/td[2]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0) != NULL){
-        $valutazioni_nf[$i-1] .= $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 4 : 6) . ']/tr/td[2]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0)->textContent . "-";
+
+    for ($j = 2; $j <= ($year == "2013/2014" ? 5 : 6); $j++) {
+
+      if ($xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/tr/td[1]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0) != NULL) {
+        $valutazioni_f[$i-1] .= $xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/tr/td[1]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0)->textContent . "-";
+      }
+
+      if ($xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/tr/td[2]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0) != NULL) {
+        $valutazioni_nf[$i-1] .= $xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/tr/td[2]/table/tr[' . ($i+1) . ']/td[' . $j . ']')->item(0)->textContent . "-";
       }
     }
+
     $valutazioni_f[$i-1] = substr($valutazioni_f[$i-1], 0, -1);
     $valutazioni_nf[$i-1] = substr($valutazioni_nf[$i-1], 0, -1);
 
-    controlla_caratteri_strani($valutazioni_nf[$i-1]);
-    controlla_caratteri_strani($valutazioni_f[$i-1]);
-
+    check_special_chars($valutazioni_nf[$i-1]);
+    check_special_chars($valutazioni_f[$i-1]);
   }
 
   $motivi_nf = array();
@@ -320,7 +331,7 @@ function oldschede($id_cds, $id_gomp, $canale) {
 
   // Serializing data 
 
-  //$domande = json_encode($domande);
+  // $domande = json_encode($domande);
   for($i = 0; $i<count($valutazioni_f); $i++){
     $valutazioni_f[$i] =  explode("-", $valutazioni_f[$i]);
     $valutazioni_nf[$i] = explode("-", $valutazioni_nf[$i]);
@@ -336,6 +347,16 @@ function oldschede($id_cds, $id_gomp, $canale) {
   $sugg_f     = json_encode($sugg_f);
   $sugg_nf    = json_encode($sugg_nf);
 
+
+  // TO REMOVE
+  $valutazioni_f  = str_replace("[", "", $valutazioni_f);
+  $valutazioni_nf = str_replace("[", "", $valutazioni_nf);
+  $valutazioni_f  = str_replace("]", "", $valutazioni_f);
+  $valutazioni_nf = str_replace("]", "", $valutazioni_nf);
+
+  $valutazioni_f  = "[" . $valutazioni_f . "]";
+  $valutazioni_nf = "[" . $valutazioni_nf . "]";
+
   if($fuoriCorso == '')
     $fuoriCorso = 0;
   if($fuoriCorso_nf == '')
@@ -347,19 +368,23 @@ function oldschede($id_cds, $id_gomp, $canale) {
 
   $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. explode('-', $cod_modulo)[0] . '\' AND canale=\''. $canale .'\';');
   if ($res && $res->num_rows <= 0) {
+    $_year = str_replace("20", "", $year);
+    $_year = str_replace("/", "", $_year);
+
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('("' . urldecode(str_replace('"', "'", $totaleSchede_f)) . '", "' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $fuoriCorso)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $inattivi)) . '", "' . urldecode(str_replace('"', "'", $inattivi_nf)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $valutazioni_f)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $fuoriCorso))     . '", ' .
+                '"' . urldecode(str_replace('"', "'", $inattivi))       . '", ' .
+                '"' . urldecode(str_replace('"', "'", $inattivi_nf))    . '", ' .
+                '"' . urldecode(str_replace('"', "'", $valutazioni_f))  . '", ' .
                 '"' . urldecode(str_replace('"', "'", $valutazioni_nf)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $motivi_nf)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $sugg_f)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $sugg_nf)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $motivi_nf))      . '", ' .
+                '"' . urldecode(str_replace('"', "'", $sugg_f))         . '", ' .
+                '"' . urldecode(str_replace('"', "'", $sugg_nf))        . '", ' .
                 '"' . urldecode($id_gomp) . '", ' .
-                '"' . urldecode($canale) . '",
-              "' . $year . '");');
+                '"' . urldecode($canale)  . '",
+              "' . $_year . '");');
 
   if (!$mysqli->query($query))
     die($mysqli->error);

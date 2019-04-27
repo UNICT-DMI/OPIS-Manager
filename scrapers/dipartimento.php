@@ -46,15 +46,11 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
         echo "";
 
         // debugging
-        // if ($_id == 1) {
-        //    echo "\n\n";
-        //    echo $year . "\n";
-        //    echo $link . "\n";
-   
-        //    cds($_id);
-        // }
+        if ($_id == 1) {
+           oldcds($_id);
+        }
 
-        oldcds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
+        // oldcds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) { //se il dipartimento NON ESISTE
             $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';
@@ -102,15 +98,11 @@ function dip()
         echo "";
 
         // debugging
-        // if ($_id == 1) {
-        //    echo "\n\n";
-        //    echo $year . "\n";
-        //    echo $link . "\n";
-   
-        //    cds($_id);
-        // }
+        if ($_id == 1) {
+           cds($_id);
+        }
 
-       cds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
+    //    cds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
 
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ';')->num_rows) { //se il dipartimento NON ESISTE
             $query .= '("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '"),';
@@ -129,25 +121,25 @@ function dip()
     return $arr;
 }
 
- $link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
- $year = "2013/2014";
- olddip();
+// $link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
+// $year = "2013/2014";
+// olddip();
 
- $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
- $year = "2014/2015";
- olddip();
+//  $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
+//  $year = "2014/2015";
+//  olddip();
 
 // $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
 // $year = "2015/2016";
 // olddip();
 
-//$link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-//$year = "1617";
-//dip();
+$link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
+$year = "1617";
+dip();
 
-//$link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
-//$year = "1718";
-//dip();
+// $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
+// $year = "1718";
+// dip();
 
 echo "\n";
 
