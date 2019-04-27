@@ -139,10 +139,12 @@ class opisController extends Controller {
 
     //inserisco selezione anno 
       
-    if($request->has("anno_accademico") && $request->input("anno_accademico") != "")  {
-        $ins->where("insegnamento.anno_accademico", $request->input("anno_accademico"));
+    $anno_accademico = "";
+    if ($request->has("anno_accademico") && $request->input("anno_accademico") != "")  {
+        $anno_accademico = $request->input("anno_accademico");
+        $ins->where("insegnamento.anno_accademico", $anno_accademico);
 
-        $schede->where("schede.anno_accademico", $request->input("anno_accademico") );
+        $schede->where("schede.anno_accademico", $anno_accademico);
     } else {
       return "Inserisci anno_accademico";
     }
@@ -162,13 +164,23 @@ class opisController extends Controller {
 
     $schede->whereIn("id_insegnamento", $ins_ids);
 
+    // if ($anno_accademico != "" && ($anno_accademico == "1314" || $anno_accademico == "1415")) {
     $schede->rightJoin('insegnamento', function($q) {
       $q->on('schede.id_insegnamento', '=', 'insegnamento.id_ins')
         ->on('schede.canale', '=', 'insegnamento.canale')
-        ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
+        // ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
         ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
     });
+    // } else {
+    //   $schede->rightJoin('insegnamento', function($q) {
+    //     $q->on('schede.id_insegnamento', '=', 'insegnamento.id_ins')
+    //       ->on('schede.canale', '=', 'insegnamento.canale')
+    //       ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
+    //       ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
+    //   });
+    // }
 
+    // echo str_replace_array('?', $schede->getBindings(), $schede->toSql());
     $result = $schede->get();
 
     // convert string to JSON
