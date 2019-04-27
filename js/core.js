@@ -3,7 +3,7 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 });
 
-const api_url = "https://localhost/OPIS-Manager/API/public/index.php/api/";
+const api_url = "https://localhost/OPIS-Managers/OPIS-Manager/API/public/index.php/api/";
 
 
 let normalize = false;
@@ -40,7 +40,6 @@ let optionsForSelectFromYears = `<option>--</option>
 
 let yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
 let lastTeachingResults = []; // per ogni insegnamento ha anno, v1 e v2
-
 
 
 $(document).ready(function() {
@@ -127,8 +126,8 @@ function createSelectFromTeachings(id_cds,tab_position,savedSelectVal){
         html += '<option>--</option>';   
         //questo riempie la select con gli insegnamenti relativi al corso di studi
          for (let i = 0; i< ins.length; i++){
-             if(ins[i].canale == "no")  html += '<option data-pos = '+i+' data-id_ins = '+ins[i].id_ins+' >'+ins[i].nome+'</option>';
-             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id_ins+' data-canale="'+ins[i].canale+'">'+ins[i].nome+'('+ins[i].canale+')</option>';
+             if(ins[i].canale == "no")  html += '<option data-pos = '+i+' data-id_ins = '+ins[i].id+' >'+ins[i].nome+'</option>';
+             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id+' data-canale="'+ins[i].canale+'">'+ins[i].nome+'('+ins[i].canale+')</option>';
          }
         html += '</select>';
         cont.html(html);
@@ -263,17 +262,16 @@ function showValutations(cds){
 function loadResults(id_cds, tab_position, dynamicSelect, norm) {
     //elimino i valori scaricati attualmente
     if (!norm) resetValutations(tab_position);
+
     let nowSwitcherVal = getSwitcherVal();
     let dsVal = $(dynamicSelect).val();
     let dsPos = $("#dynamicSelect option:selected").attr("data-pos")
-    let dynamicSelectVal = dsVal.replace("20","");
-    dynamicSelectVal = dynamicSelectVal.replace("/","");
-    dynamicSelectVal = dynamicSelectVal.replace("20","");   
-    //prendo il valore dello switcher
+
     $("#tabs li").eq(tab_position).attr("data-switcher",nowSwitcherVal);
     $("#tabs li").eq(tab_position).attr("data-select",dsPos);
-    if (nowSwitcherVal == 0){ // query per anno
-        getDataForYear(id_cds,tab_position,dynamicSelectVal,norm);
+
+    if (nowSwitcherVal == 0) { // query per anno
+        getDataForYear(id_cds, tab_position, dsVal,norm);
     }  
     else{  // query insegnamento 
         console.log("query insegnamento");
@@ -384,13 +382,15 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
     //ti prendi la option selezionata prendi i valori nel data- della option e lanci la richiesta get
 
     $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data){
-        console.log(data);
+
         let anni_accademici = [];
         for (let i in data) {
+
             anni_accademici[i] = {};
             anni_accademici[i].v1 = 0;
             anni_accademici[i].v2 = 0;
             anni_accademici[i].v3 = 0;
+
             let anno = data[i].anno_accademico;
             let first = anno.substr(0,2);
             let second = anno.substr(2,2);
@@ -398,11 +398,11 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             let correctSecond = "20"+second;
             let correctAnno = correctFirst+correctSecond;
             anni_accademici[i].anno = correctAnno
-            //console.log(data[i]);
+
             let valori = [];
             valori.tot_schedeF   = data[i].totale_schede;
             valori.domande = [];
-            console.log("inizializzo val domande inidice ,"+ i);
+
             valori.domande[i] = [];
             let index = 0;    
             for (let j in data[i].domande) {
@@ -411,10 +411,10 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
                     console.log("accedo a indixe"+ index);
                     valori.domande[index] = [];
                 }
-                if(valori.domande[index] == undefined) valori.domande[index] = [];
+
+                if (valori.domande[index] == undefined) valori.domande[index] = [];
+
                 valori.domande[index].push(data[i].domande[j]);
-                
-                
             }
 
 

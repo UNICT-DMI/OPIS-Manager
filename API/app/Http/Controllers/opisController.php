@@ -121,7 +121,7 @@ class opisController extends Controller {
 
     $dip = "";
     $cds = DB::table("cds")->select("id");
-    $ins = DB::table("insegnamento")->select("id_ins");
+    $ins = DB::table("insegnamento")->select("id");
     $schede = DB::table("schede");
 
     /*if ($request->has("dipartimento") && $request->input("dipartimento") != "") {
@@ -135,7 +135,7 @@ class opisController extends Controller {
       $cds->where("id", $request->input("cds"));
 
     if ($request->has("insegnamento") && $request->input("insegnamento") != "")
-      $ins->where("id_ins", $request->input("insegnamento"));
+      $ins->where("id", $request->input("insegnamento"));
 
     //inserisco selezione anno 
       
@@ -159,26 +159,26 @@ class opisController extends Controller {
     $ins = $ins->get();
 
     $ins_ids = array();
-    foreach($ins as $id)
-      array_push($ins_ids, $id->id_ins);
+    foreach($ins as $i)
+      array_push($ins_ids, $i->id);
 
     $schede->whereIn("id_insegnamento", $ins_ids);
 
-    // if ($anno_accademico != "" && ($anno_accademico == "1314" || $anno_accademico == "1415")) {
+    if ($anno_accademico != "" && ($anno_accademico == "2013/2014" || $anno_accademico == "2014/2015")) {
     $schede->rightJoin('insegnamento', function($q) {
-      $q->on('schede.id_insegnamento', '=', 'insegnamento.id_ins')
+      $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
         ->on('schede.canale', '=', 'insegnamento.canale')
         // ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
         ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
     });
-    // } else {
-    //   $schede->rightJoin('insegnamento', function($q) {
-    //     $q->on('schede.id_insegnamento', '=', 'insegnamento.id_ins')
-    //       ->on('schede.canale', '=', 'insegnamento.canale')
-    //       ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
-    //       ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
-    //   });
-    // }
+    } else {
+      $schede->rightJoin('insegnamento', function($q) {
+        $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
+          ->on('schede.canale', '=', 'insegnamento.canale')
+          ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
+          ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
+      });
+    }
 
     // echo str_replace_array('?', $schede->getBindings(), $schede->toSql());
     $result = $schede->get();

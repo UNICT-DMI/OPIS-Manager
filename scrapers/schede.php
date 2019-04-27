@@ -185,9 +185,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale, $cod_modulo) {
   $sugg       = json_encode($sugg);
   $sugg_nf    = json_encode($sugg_nf);
 
-  $_year = str_replace("20", "", $year);
-  $_year = str_replace("/", "", $_year);
-  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\' AND anno_accademico='.$_year.';');
+  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. $cod_modulo . '\' AND canale=\''. $canale .'\' AND anno_accademico='.$year.';');
   if ($res && $res->num_rows <= 0) {
     $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
@@ -234,11 +232,21 @@ function oldschede($id_cds, $id_gomp, $canale) {
   $docente    = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 2 : 3) . ']/tr[2]/td[' . ($year == "2013/2014" ? 12 : 9) . ']')->item(0)->textContent;
   $assegn     = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 2 : 3) . ']/tr[2]/td[' . ($year == "2013/2014" ? 13 : 10) . ']')->item(0)->textContent;
   
-  $query =  'UPDATE insegnamento SET id_modulo = "' . explode('-', $cod_modulo)[0] . '", ssd = "' . explode('-', $ssd)[0] . '", tipo = "' . explode('-', $tipo)[0] . '", docente = "' . explode('-', $docente)[0] . '", assegn = "' . explode('-', $assegn)[0] . '" ' .
-            'WHERE id_cds = ' . $id_cds . ' AND id = ' . $id_gomp . ' AND anno_accademico = "' . $year . '";';
+  $query =  'UPDATE insegnamento SET '.
+      'id_modulo = "' . explode('-', $cod_modulo)[0] . '", ' .
+      'ssd       = "' . explode('-', $ssd)[0]        . '", ' .
+      'tipo      = "' . explode('-', $tipo)[0]       . '", ' .
+      'docente   = "' . explode('-', $docente)[0]    . '", ' .
+      'assegn    = "' . explode('-', $assegn)[0]     . '" '  .
+      'WHERE '.
+        'id_cds          =  ' . $id_cds  . ' AND ' .
+        'id              =  ' . $id_gomp . ' AND ' .
+        'anno_accademico = "' . $year    . '" AND ' .
+        'canale          = "' . $canale . '";';
   
-  if (!$mysqli->query($query))
+  if (!$mysqli->query($query)) {
     die($mysqli->error);
+  }
 
   if($xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 2 : 3) . ']/tr[3]')->item(0) != NULL){ // c'è un altro modulo
     $cod_modulo .= '-' . $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 2 : 3) . ']/tr[3]/td[' . ($year == "2013/2014" ? 5 : 2) . ']')->item(0)->textContent;
@@ -258,9 +266,9 @@ function oldschede($id_cds, $id_gomp, $canale) {
   //$anno = substr(explode("/", $year)[0], 2) . substr(explode("/", $year)[1], 2);
 
 
-  $totaleSchede_f = $totaleSchede_nf = $inattivi = $inattivi_nf = $fuoriCorso = $fuoriCorso_nf = 0;
+  $totaleSchede_f   = $totaleSchede_nf = $inattivi = $inattivi_nf = $fuoriCorso = $fuoriCorso_nf = 0;
 
-  $totaleSchede_f     = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[2]/td[2]/b')->item(0)->textContent;
+  $totaleSchede_f   = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[2]/td[2]/b')->item(0)->textContent;
   $totaleSchede_nf  = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[3]/td[2]/b')->item(0)->textContent;
   
   $inattivi         = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[2]/td[3]')->item(0)->textContent;
@@ -269,10 +277,10 @@ function oldschede($id_cds, $id_gomp, $canale) {
   $fuoriCorso       = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[2]/td[4]')->item(0)->textContent;
   $fuoriCorso_nf    = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2013/2014" ? 3 : 5) . ']/tr[3]/td[4]')->item(0)->textContent;
 
-  if($inattivi_nf == '' )
+  if ($inattivi_nf == '' ) {
     $inattivi_nf = 0;
-  
-    
+  }
+
   // data from graphs 
   
   $domande = array();
@@ -336,58 +344,71 @@ function oldschede($id_cds, $id_gomp, $canale) {
     $valutazioni_f[$i] =  explode("-", $valutazioni_f[$i]);
     $valutazioni_nf[$i] = explode("-", $valutazioni_nf[$i]);
   }
+
   for($i = 0; $i<count($motivi_nf); $i++){
     $motivi_nf[$i] = explode("-", $motivi_nf[$i]);
-
   }
 
   $valutazioni_f  = json_encode($valutazioni_f);
   $valutazioni_nf = json_encode($valutazioni_nf);
-  $motivi_nf  = json_encode($motivi_nf);
-  $sugg_f     = json_encode($sugg_f);
-  $sugg_nf    = json_encode($sugg_nf);
+  $motivi_nf      = json_encode($motivi_nf);
+  $sugg_f         = json_encode($sugg_f);
+  $sugg_nf        = json_encode($sugg_nf);
 
 
-  // TO REMOVE
+  // TO IMPROVE
   $valutazioni_f  = str_replace("[", "", $valutazioni_f);
   $valutazioni_nf = str_replace("[", "", $valutazioni_nf);
   $valutazioni_f  = str_replace("]", "", $valutazioni_f);
   $valutazioni_nf = str_replace("]", "", $valutazioni_nf);
 
-  $valutazioni_f  = "[" . $valutazioni_f . "]";
-  $valutazioni_nf = "[" . $valutazioni_nf . "]";
+  $valutazioni_f  = str_replace('"', '', $valutazioni_f);
+  $valutazioni_f  = explode(",", $valutazioni_f);
+  $valutazioni_f  = json_encode($valutazioni_f);
 
-  if($fuoriCorso == '')
-    $fuoriCorso = 0;
-  if($fuoriCorso_nf == '')
-    $fuoriCorso_nf = 0;
-  if($inattivi == '')
-    $inattivi = 0;
-  if($inattivi_nf == '')
-    $inattivi_nf = 0;
+  $valutazioni_nf = str_replace('"', '', $valutazioni_nf);
+  $valutazioni_nf = explode(",", $valutazioni_nf);
+  $valutazioni_nf = json_encode($valutazioni_nf);
 
-  $res = $mysqli->query('SELECT * FROM schede WHERE id_insegnamento=\'' . $id_gomp . '\' AND  id_modulo=\''. explode('-', $cod_modulo)[0] . '\' AND canale=\''. $canale .'\';');
+
+  // $valutazioni_f  = "[" . $valutazioni_f . "]";
+  // $valutazioni_nf = "[" . $valutazioni_nf . "]";
+
+  if ($fuoriCorso == '')    { $fuoriCorso = 0;    }
+  if ($fuoriCorso_nf == '') { $fuoriCorso_nf = 0; }
+  if ($inattivi == '')      { $inattivi = 0;      }
+  if ($inattivi_nf == '')   { $inattivi_nf = 0;   }
+
+  $res = $mysqli->query('SELECT * '.
+    ' FROM schede ' . 
+    ' WHERE id_insegnamento="' . $id_gomp .
+    '" AND  id_modulo="'       . explode('-', $cod_modulo)[0] .
+    '" AND  anno_accademico="'   . $year .
+    '" AND  id_cds="'          . $id_cds .
+    '" AND  canale="'          . $canale .'";');
+
   if ($res && $res->num_rows <= 0) {
-    $_year = str_replace("20", "", $year);
-    $_year = str_replace("/", "", $_year);
 
-    $query = "INSERT INTO `schede` (`totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
+    $query = "INSERT INTO `schede` (`id_cds`, `totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
-    $query .= utf8_decode('("' . urldecode(str_replace('"', "'", $totaleSchede_f)) . '", "' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
+    $query .= utf8_decode('(' .
+                $id_cds . ', ' .
+                '"' . urldecode(str_replace('"', "'", $totaleSchede_f)) . '", ' .
+                '"' . urldecode(str_replace('"', "'", $totaleSchede_nf)) . '", ' .
                 '"' . urldecode(str_replace('"', "'", $fuoriCorso))     . '", ' .
-                '"' . urldecode(str_replace('"', "'", $inattivi))       . '", ' .
-                '"' . urldecode(str_replace('"', "'", $inattivi_nf))    . '", ' .
-                '"' . urldecode(str_replace('"', "'", $valutazioni_f))  . '", ' .
-                '"' . urldecode(str_replace('"', "'", $valutazioni_nf)) . '", ' .
-                '"' . urldecode(str_replace('"', "'", $motivi_nf))      . '", ' .
-                '"' . urldecode(str_replace('"', "'", $sugg_f))         . '", ' .
-                '"' . urldecode(str_replace('"', "'", $sugg_nf))        . '", ' .
+                '"' . str_replace('"', "'",  $inattivi)       . '", ' .
+                '"' . str_replace('"', "'",  $inattivi_nf)    . '", ' .
+                "'" .                        $valutazioni_f   . "', " .
+                "'" .                        $valutazioni_nf  . "', " .
+                "'" . str_replace("'", "\'", $motivi_nf)      . "', " .
+                "'" . str_replace("'", "\'", $sugg_f)         . "', " .
+                "'" . str_replace("'", "\'", $sugg_nf)         . "', " .
                 '"' . urldecode($id_gomp) . '", ' .
                 '"' . urldecode($canale)  . '",
-              "' . $_year . '");');
+              "' . $year . '");');
 
-  if (!$mysqli->query($query))
-    die($mysqli->error);
+    if (!$mysqli->query($query))
+      die($mysqli->error);
 
     // echo $query;
 

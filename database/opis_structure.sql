@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `dipartimento` (
     `id`               INT(11)          NOT NULL,
-    `anno_accademico`  VARCHAR(255)     NOT NULL,
+    `anno_accademico`  VARCHAR(9)       NOT NULL,
     `nome`             VARCHAR(255)     NOT NULL,
     `tot_cds`          INT(11)          NOT NULL,
     `tot_moduli`       INT(11)          NOT NULL,           -- tot. insegn/ moduli
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `dipartimento` (
 
 CREATE TABLE IF NOT EXISTS `cds` (
     `id`                INT(11)         NOT NULL,       -- cod. corso
-    `anno_accademico`   VARCHAR(255)    NOT NULL,
+    `anno_accademico`   VARCHAR(9)      NOT NULL,
     `nome`              VARCHAR(255),
     `classe`            VARCHAR(255),
     `tot_moduli`        INT(11)         NOT NULL,       -- tot. insegn/ moduli
