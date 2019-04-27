@@ -67,7 +67,7 @@ The tools in the scrapers directory can extract the public OPIS data from the [o
 
 These tools require PHP with mbstring, curl, dom, mysql and mysqli. On Ubuntu you can install them using:
 
-```sudo apt-get install php php-mbstring php-curl php-dom php-mysql mysqli```
+```sudo apt-get install php php-mbstring php-curl php-dom php-mysql php-mysqli```
 
 To use them go to scrapers, copy the file **config.php.dist** into **config.php** and configure it for the database mysql.
 
