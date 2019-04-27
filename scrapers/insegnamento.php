@@ -108,7 +108,7 @@
     if (intval($num) == 0)
       $num = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($lengthN-3) . ']/td[1]')->item(0)->textContent;
 
-    $query    = "INSERT INTO insegnamento (id,nome,canale,id_modulo, ssd,tipo,anno,semestre,cfu,docente,assegn,tot_schedeF,tot_schedeNF,id_cds, anno_accademico) VALUES\n";
+    $query    = "INSERT INTO insegnamento (id_ins,nome,canale,id_modulo, ssd,tipo,anno,semestre,cfu,docente,assegn,tot_schedeF,tot_schedeNF,id_cds, anno_accademico) VALUES\n";
 
       $j = 0;
       for ($i = 2; $i < $lengthN; $i++) {
@@ -166,7 +166,7 @@
               schede($params[0], $params[1], $params[2], $params[3], $_cod_modulo);
             }
 
-            if (!$mysqli->query('SELECT id FROM insegnamento WHERE id=' . $_id . ';')->num_rows) {
+            if (!$mysqli->query('SELECT id_ins FROM insegnamento WHERE id_ins=' . $_id . ' AND anno_accademico='.$year.';')->num_rows) {
                   $query .= utf8_decode('("' . addslashes($_id) . '","' . addslashes($_nome) . '","' . addslashes($_canale) . '","' . addslashes($_cod_modulo) . '", "'
                    . addslashes($_ssd) . '", "' . addslashes($_tipo) . '", "' . addslashes($_anno) . '","' . addslashes($_semestre) . '",
                    "' . addslashes($_cfu) . '", "' . addslashes($_docente) . '", "' . addslashes($_assegn) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '",
