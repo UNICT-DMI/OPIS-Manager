@@ -1,65 +1,76 @@
 CREATE TABLE IF NOT EXISTS `dipartimento` (
-    `id` INT(11) PRIMARY KEY NOT NULL,
-    `nome` VARCHAR(255) NOT NULL,
-    `tot_cds` INT(11) NOT NULL,
-    `tot_moduli` INT(11) NOT NULL,
-    `tot_valutati` INT(11) NOT NULL,
-    `tot_schedeF` INT(11) NOT NULL,
-    `tot_schedeNF` INT(11) NOT NULL
+    `id`               INT(11)          NOT NULL,
+    `anno_accademico`  VARCHAR(255)     NOT NULL,
+    `nome`             VARCHAR(255)     NOT NULL,
+    `tot_cds`          INT(11)          NOT NULL,
+    `tot_moduli`       INT(11)          NOT NULL,           -- tot. insegn/ moduli
+    `tot_valutati`     INT(11)          NOT NULL,           -- insegnamenti valutati almeno da 1 studente (scheda1 o scheda3)
+    `report`           INT(11)          DEFAULT NULL,       -- insegnamenti valutati almeno da 5 studenti (scheda1 o scheda3)
+    `tot_schedeF`      INT(11)          NOT NULL,           -- valutazioni degli studenti frequentanti
+    `tot_schedeNF`     INT(11)          NOT NULL,           -- valutazioni degli studenti non-frequentanti
+    PRIMARY KEY (`id`, `anno_accademico`)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `cds` (
-    `id` INT(11) PRIMARY KEY NOT NULL,
-    `nome` VARCHAR(255),
-    `classe` VARCHAR(255),
-    `tot_moduli` INT(11) NOT NULL,
-    `tot_valutati` INT(11) NOT NULL,
-    `tot_schedeF` INT(11) NOT NULL,
-    `tot_schedeNF` INT(11) NOT NULL,
-    `id_dipartimento` INT(11) NOT NULL
+    `id`                INT(11)         NOT NULL,       -- cod. corso
+    `anno_accademico`   VARCHAR(255)    NOT NULL,
+    `nome`              VARCHAR(255),
+    `classe`            VARCHAR(255),
+    `tot_moduli`        INT(11)         NOT NULL,       -- tot. insegn/ moduli
+    `tot_valutati`      INT(11)         NOT NULL,       -- insegnamenti valutati almeno da 1 studente (scheda1 o scheda3)
+    `report`            INT(11)         DEFAULT NULL,   -- insegnamenti valutati almeno da 5 studenti (scheda1 o scheda3)
+    `tot_schedeF`       INT(11)         NOT NULL,       -- valutazioni degli studenti frequentanti
+    `tot_schedeNF`      INT(11)         NOT NULL,       -- valutazioni degli studenti non-frequentanti
+    `id_dipartimento`   INT(11)         NOT NULL,
+    PRIMARY KEY (`id`, `anno_accademico`, `id_dipartimento`), -- (id_dipartimento)
+    FOREIGN KEY (`id_dipartimento`) REFERENCES `dipartimento`(`id`)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `insegnamento` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `id_ins` INT(11) NOT NULL,
-    `nome` VARCHAR(255) NOT NULL,
-    `canale` VARCHAR(255) NOT NULL,
-    `id_modulo` VARCHAR(255) NOT NULL,
-    `ssd` VARCHAR(255),
-    `tipo` VARCHAR(255),
-    `anno` VARCHAR(255),
-    `semestre` VARCHAR(255),
-    `CFU` VARCHAR(255),
-    `docente` VARCHAR(255),
-    `assegn` VARCHAR(255),
-    `tot_schedeF` INT(11),
-    `tot_schedeNF` INT(11),
-    `id_cds` INT(11) NOT NULL,
-    `anno_accademico` VARCHAR(9)
+    `id`                INT(11)         NOT NULL,       -- codice gomp
+    `anno_accademico`   VARCHAR(9),
+    `nome`              VARCHAR(255)    NOT NULL,
+    `canale`            VARCHAR(255)    DEFAULT "no",
+    `id_modulo`         VARCHAR(255)    DEFAULT "0",
+    `ssd`               VARCHAR(255),
+    `tipo`              VARCHAR(255),
+    `anno`              VARCHAR(255),
+    `semestre`          VARCHAR(255),
+    `CFU`               VARCHAR(255),
+    `docente`           VARCHAR(255),
+    `assegn`            VARCHAR(255),
+    `tot_schedeF`       INT(11),
+    `tot_schedeNF`      INT(11),
+    `id_cds`            INT(11)         NOT NULL,
+    PRIMARY KEY (`id`, `anno_accademico`, `canale`, `id_cds`, `id_modulo`), -- (`id_modulo`)
+    FOREIGN KEY (`id_cds`) REFERENCES `cds`(`id`)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `schede` (
-    `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `totale_schede` INT(11),
-    `totale_schede_nf` INT(11),
-    `femmine` INT(11),
-    `femmine_nf` INT(11) DEFAULT NULL,
-    `fc` INT(11),
-    `inatt` INT(11),
-    `inatt_nf` INT(11),
-    `eta` TEXT,
-    `anno_iscr` TEXT,
-    `num_studenti` TEXT,
-    `ragg_uni` TEXT,
-    `studio_gg` TEXT,
-    `studio_tot` TEXT,
-    `domande` TEXT,
-    `domande_nf` TEXT,
-    `motivo_nf` TEXT,
-    `sugg` TEXT,
-    `sugg_nf` TEXT,
-    `id_insegnamento` INT(11),
-    `id_modulo` VARCHAR(255),
-    `canale` VARCHAR(255),
-    `anno_accademico` VARCHAR(9)
+    `totale_schede`      INT(11),
+    `totale_schede_nf`   INT(11),
+    `femmine`            INT(11),
+    `femmine_nf`         INT(11)        DEFAULT NULL,
+    `fc`                 INT(11),
+    `inatt`              INT(11),
+    `inatt_nf`           INT(11),
+    `eta`                JSON,
+    `anno_iscr`          JSON,
+    `num_studenti`       JSON,
+    `ragg_uni`           JSON,
+    `studio_gg`          JSON,
+    `studio_tot`         JSON,
+    `domande`            JSON,
+    `domande_nf`         JSON,
+    `motivo_nf`          JSON,
+    `sugg`               JSON,
+    `sugg_nf`            JSON,
+    `id_cds`             INT(11)        NOT NULL,
+    `id_insegnamento`    INT(11)        NOT NULL,
+    `id_modulo`          VARCHAR(255)   DEFAULT "0",
+    `canale`             VARCHAR(255)   DEFAULT "no",
+    `anno_accademico`    VARCHAR(9),
+    PRIMARY KEY (`anno_accademico`, `canale`, `id_cds`, `id_insegnamento`, `id_modulo`),
+    FOREIGN KEY (`id_insegnamento`) REFERENCES `insegnamento`(`id`),
+    FOREIGN KEY (`id_cds`)          REFERENCES `cds`(`id`)
 ) DEFAULT CHARSET=utf8;
