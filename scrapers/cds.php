@@ -20,9 +20,16 @@ function oldcds($id_dip) // come cds() ma serve per gli anni accademici prima de
         $_classe          = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+2) . ']')->item(0)->textContent;
         $_tot_moduli      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+3) . ']')->item(0)->textContent;
         $_tot_valutati    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+4) . ']')->item(0)->textContent;
+        if($year == "2015/2016"){
+			$_tot_report = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+5) . ']')->item(0)->textContent;
+			$e++;
+		}
         $_tot_schedeF     = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+5) . ']')->item(0)->textContent;
         $_tot_schedeNF    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+6) . ']')->item(0)->textContent;
 
+		if($year == "2015/2016"){ //sbrigativa ma va tolta il prima possibile come l'if precedente
+			$e--;
+		}
         if ($_tot_schedeF == '') {
             $_tot_schedeF = 0;
         }
