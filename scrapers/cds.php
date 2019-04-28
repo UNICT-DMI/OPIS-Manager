@@ -41,7 +41,7 @@ function oldcds($id_dip) // come cds() ma serve per gli anni accademici prima de
             }
         }
 
-        echo "\n\n ###  " . ($j-1) . "/" . ($lengthN-2) . "\t \033[36m"  . $_nome . "\033[0m\n";
+        echo "\n\n ###  " . ($j-1) . "/" . ($lengthN-2) . "\t \033[36m"  . $_nome . " ". $_classe ."\033[0m\n";
         oldinsegnamento($_cod_corso);
     }
 }

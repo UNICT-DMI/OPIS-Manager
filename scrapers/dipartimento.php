@@ -15,7 +15,7 @@ function parseID($str)
 
 function olddip() // come dip() ma serve per gli anni accademici prima del 16/17 che usano una struttura HTML diversa
 {
-    global $link, $mysqli, $year;
+    global $link, $mysqli, $year, $debug;
 
     $arr      = array();
 
@@ -44,22 +44,28 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
 
-        // debugging
-        if ($_id == 1) {
-           oldcds($_id);
-        }
+        if (!$mysqli->query('SELECT id '.
+        'FROM dipartimento ' .
+        'WHERE ' .
+        'id=' . $_id . 
+        ' AND anno_accademico="' . $year .
+        '";')->num_rows) { // se il dipartimento NON ESISTE
 
-        // oldcds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
-
-        if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ' AND anno_accademico="' . $year . '";')->num_rows) { // se il dipartimento NON ESISTE
             $query  = "INSERT INTO dipartimento (id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
             $query .= '("' . addslashes($_id) . '","' . $year . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '");';
+
             if (!$mysqli->query($query)) {
                 die($mysqli->error);
             }
-        
         }
 
+        // debugging
+        if ($debug && $_id == 1) {
+           oldcds($_id);
+        }
+        else if (!$debug) {
+            oldcds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
+        }
     }
 
     return $arr;
@@ -91,14 +97,6 @@ function dip()
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
 
-        // debugging
-        if ($debug && $_id == 1) {   
-           cds($_id);
-        }
-        else if(!$debug) {
-            //cds($_id);
-        }
-
         if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ' AND anno_accademico="' . $year . '";')->num_rows) { // se il dipartimento NON ESISTE
             $query  = "INSERT INTO dipartimento (id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
             $query .= '("' . addslashes($_id) . '","' . $year . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '");';
@@ -107,6 +105,15 @@ function dip()
                 die($mysqli->error);
             }
         }
+
+        // debugging
+        if ($debug && $_id == 1) {   
+            cds($_id);
+        }
+        else if(!$debug) {
+            cds($_id);
+        }
+
     }
 
     return $arr;
@@ -120,17 +127,17 @@ function dip()
 //  $year = "2014/2015";
 //  olddip();
 
-// $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
-// $year = "2015/2016";
-// olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
+$year = "2015/2016";
+olddip();
 
 // $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-// $year = "1617";
+// $year = "2016/2017";
 // dip();
 
-$link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
-$year = "1718";
-dip();
+// $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
+// $year = "2017/2018";
+// dip();
 
 echo "\n";
 

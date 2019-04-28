@@ -60,6 +60,7 @@ function getSwitcherVal() {
     });
     return selected;
 }
+
 function resetValutations(tab_position) {
     let x =  tab_position;
     let tmp = `<div class="tab-pane fade" id="tab${x}v1" role="tabpanel" aria-labelledby="tab${x}v1-tab">
@@ -127,7 +128,7 @@ function createSelectFromTeachings(id_cds,tab_position,savedSelectVal){
         //questo riempie la select con gli insegnamenti relativi al corso di studi
          for (let i = 0; i< ins.length; i++){
              if(ins[i].canale == "no")  html += '<option data-pos = '+i+' data-id_ins = '+ins[i].id+' >'+ins[i].nome+'</option>';
-             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id+' data-canale="'+ins[i].canale+'">'+ins[i].nome+'('+ins[i].canale+')</option>';
+             else html += '<option data-pos ='+i+' data-id_ins = '+ins[i].id+' data-canale="'+ins[i].canale+'">' + ins[i].nome + ' ('+ins[i].canale+')</option>';
          }
         html += '</select>';
         cont.html(html);
@@ -291,16 +292,18 @@ function showTeachingChart(){
     matr[1] = [];
     matr[2] = [];
 
+    console.log(lastTeachingResults);
+
     let j = 0;
     for (let i in yearsArray) {
         let val1 = 0 ,val2 = 0, val3 = 0;
-        if(j < lastTeachingResults.length && yearsArray[i] == lastTeachingResults[j].anno) {
-            console.log(lastTeachingResults[j].anno);
-            console.log(yearsArray[i]);
-            console.log(val1);
-            val1 = Math.round(lastTeachingResults[j].v1 * 100) / 100
-            val2 = Math.round(lastTeachingResults[j].v2 * 100) / 100
-            val3 = Math.round(lastTeachingResults[j].v3 * 100) / 100
+
+        console.log(yearsArray[i]);
+
+        if (j < lastTeachingResults.length && yearsArray[i] == lastTeachingResults[j].anno) {
+            val1 = Math.round(lastTeachingResults[j].v1 * 100) / 100;
+            val2 = Math.round(lastTeachingResults[j].v2 * 100) / 100;
+            val3 = Math.round(lastTeachingResults[j].v3 * 100) / 100;
             j++;
         }
         matr[0].push(val1);
@@ -381,7 +384,7 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
     if (canale == undefined || canale == "") canale = "no";
     //ti prendi la option selezionata prendi i valori nel data- della option e lanci la richiesta get
 
-    $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data){
+    $.getJSON(api_url + "schedeInsegnamento?id_ins="+id_ins+"&canale="+canale, function (data) {
 
         let anni_accademici = [];
         for (let i in data) {
@@ -390,14 +393,7 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             anni_accademici[i].v1 = 0;
             anni_accademici[i].v2 = 0;
             anni_accademici[i].v3 = 0;
-
-            let anno = data[i].anno_accademico;
-            let first = anno.substr(0,2);
-            let second = anno.substr(2,2);
-            let correctFirst = "20"+first+"/";
-            let correctSecond = "20"+second;
-            let correctAnno = correctFirst+correctSecond;
-            anni_accademici[i].anno = correctAnno
+            anni_accademici[i].anno = data[i].anno_accademico;;
 
             let valori = [];
             valori.tot_schedeF   = data[i].totale_schede;

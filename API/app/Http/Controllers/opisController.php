@@ -159,26 +159,19 @@ class opisController extends Controller {
     $ins = $ins->get();
 
     $ins_ids = array();
-    foreach($ins as $i)
+    foreach($ins as $i) {
       array_push($ins_ids, $i->id);
+    }
 
     $schede->whereIn("id_insegnamento", $ins_ids);
 
-    if ($anno_accademico != "" && ($anno_accademico == "2013/2014" || $anno_accademico == "2014/2015")) {
     $schede->rightJoin('insegnamento', function($q) {
       $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
-        ->on('schede.canale', '=', 'insegnamento.canale')
-        // ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
-        ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
+        ->on('schede.canale',          '=', 'insegnamento.canale')
+        ->on('schede.id_modulo',       '=', 'insegnamento.id_modulo')
+        ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico')
+        ->on('schede.id_cds',          '=', 'insegnamento.id_cds');
     });
-    } else {
-      $schede->rightJoin('insegnamento', function($q) {
-        $q->on('schede.id_insegnamento', '=', 'insegnamento.id')
-          ->on('schede.canale', '=', 'insegnamento.canale')
-          ->on('schede.id_modulo', '=', 'insegnamento.id_modulo')
-          ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico');
-      });
-    }
 
     // echo str_replace_array('?', $schede->getBindings(), $schede->toSql());
     $result = $schede->get();
