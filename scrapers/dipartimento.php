@@ -129,13 +129,13 @@ function dip()
     return $arr;
 }
 
-// $link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
-// $year = "2013/2014";
-// olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
+$year = "2013/2014";
+olddip();
 
-//  $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
-//  $year = "2014/2015";
-//  olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
+$year = "2014/2015";
+olddip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
 $year = "2015/2016";
