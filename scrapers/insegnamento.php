@@ -307,7 +307,7 @@ function oldinsegnamento($id_cds) {
                 $params[2] = str_replace(" ", "%20", $params[2]);
 
                 //oldschede(cod_corso, cod_gomp canale);
-                //oldschede($params[0], $params[1], $params[2]);
+                oldschede($params[0], $params[1], $params[2]);
             }
 
         }

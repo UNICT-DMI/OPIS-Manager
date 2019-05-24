@@ -38,15 +38,16 @@ let optionsForSelectFromYears = `<option>--</option>
 <option data-pos="3">2016/2017</option>
 <option data-pos="4">2017/2018</option>`;
 
-let yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"]; //basta agire su questo array e il grafico si modifica da solo.
+let yearsArray = ["2013/2014", "2014/2015","2015/2016","2016/2017","2017/2018"];
 let lastTeachingResults = []; // per ogni insegnamento ha anno, v1 e v2
 
 
 $(document).ready(function() {
   $.getJSON(api_url + "dipartimento", function(data) {
     let dip = $("#dipartimenti");
-    for (let i in data)
+    for (let i in data) {
       dip.append(new Option(data[i].nome, data[i].id));
+    }
   });
     
 });

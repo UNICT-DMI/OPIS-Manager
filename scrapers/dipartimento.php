@@ -137,9 +137,9 @@ $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
 $year = "2014/2015";
 olddip();
 
-$link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
-$year = "2015/2016";
-olddip();
+// $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
+// $year = "2015/2016";
+// olddip();
 
 // $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
 // $year = "2016/2017";
