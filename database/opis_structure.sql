@@ -30,19 +30,19 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
     `id`                INT(11)         NOT NULL,       -- codice gomp
     `anno_accademico`   VARCHAR(9),
     `nome`              VARCHAR(255)    NOT NULL,
-    `canale`            VARCHAR(255)    DEFAULT "no",
+    `canale`            VARCHAR(10)     DEFAULT "no",
     `id_modulo`         VARCHAR(255)    DEFAULT "0",
-    `ssd`               VARCHAR(255),
-    `tipo`              VARCHAR(255),
-    `anno`              VARCHAR(255),
+    `ssd`               VARCHAR(20),
+    `tipo`              VARCHAR(10)     DEFAULT "",
+    `anno`              VARCHAR(10),
     `semestre`          VARCHAR(255),
     `CFU`               VARCHAR(255),
-    `docente`           VARCHAR(255),
-    `assegn`            VARCHAR(255),
+    `docente`           VARCHAR(255)    DEFAULT "",
+    `assegn`            VARCHAR(20)     DEFAULT "",
     `tot_schedeF`       INT(11),
     `tot_schedeNF`      INT(11),
     `id_cds`            INT(11)         NOT NULL,
-    PRIMARY KEY (`id`, `anno_accademico`, `canale`, `id_cds`, `id_modulo`), -- (`id_modulo`)
+    PRIMARY KEY (`id`, `anno_accademico`, `canale`, `id_cds`, `id_modulo`, `docente`, `assegn`, `tipo`, `anno`), -- (`id_modulo`)
     FOREIGN KEY (`id_cds`) REFERENCES `cds`(`id`)
 ) DEFAULT CHARSET=utf8;
 

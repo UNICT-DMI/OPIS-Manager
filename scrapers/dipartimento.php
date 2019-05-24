@@ -30,26 +30,36 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
 
         $_tot_CdS       = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[2]')->item(0)->textContent; // Tot CdS (Corsi di Studio)
         $_tot_moduli    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[3]')->item(0)->textContent; // Tot Moduli
-        $_tot_valutati  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[5]')->item(0)->textContent; // Tot Valutati
-        $_tot_schedeF   = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[7]')->item(0)->textContent; // Totale schede frequentanti
-        $_tot_schedeNF  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]')->item(0)->textContent; // Totale schede NON frequentanti
-        $link_opis      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[9]/a');//->item(0)->attributes->item(0)->textContent; // Link OPIS
 
-        if ($_tot_schedeF == '')
-            $_tot_schedeF = 0;
- 
-        if ($_tot_schedeNF == '')
-            $_tot_schedeNF = 0;
+        if($year == "2015/2016") {
+            $_tot_valutati  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[4]')->item(0)->textContent; // Tot Valutati
+            $_tot_report  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[5]')->item(0)->textContent; // Tot Valutati
+            $_tot_schedeF   = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[6]')->item(0)->textContent; // Totale schede frequentanti
+            $_tot_schedeNF  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[7]')->item(0)->textContent; // Totale schede NON frequentanti
+            $link_opis      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]/a');//->item(0)->attributes->item(0)->textContent; // Link OPIS
 
+        }
+        else {
+            $_tot_valutati  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[5]')->item(0)->textContent; // Tot Valutati
+            $_tot_schedeF   = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[7]')->item(0)->textContent; // Totale schede frequentanti
+            $_tot_schedeNF  = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]')->item(0)->textContent; // Totale schede NON frequentanti
+            $link_opis      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[9]/a');//->item(0)->attributes->item(0)->textContent; // Link OPIS
+
+            if ($_tot_schedeF == '')
+                $_tot_schedeF = 0;
+
+            if ($_tot_schedeNF == '')
+                $_tot_schedeNF = 0;
+        }
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
 
         if (!$mysqli->query('SELECT id '.
-        'FROM dipartimento ' .
-        'WHERE ' .
-        'id=' . $_id . 
-        ' AND anno_accademico="' . $year .
-        '";')->num_rows) { // se il dipartimento NON ESISTE
+                            'FROM dipartimento ' .
+                            'WHERE ' .
+                            'id=' . $_id .
+                            ' AND anno_accademico="' . $year .
+                            '";')->num_rows) { // se il dipartimento NON ESISTE
 
             $query  = "INSERT INTO dipartimento (id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
             $query .= '("' . addslashes($_id) . '","' . $year . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '");';
@@ -61,7 +71,7 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
 
         // debugging
         if ($debug && $_id == 1) {
-           oldcds($_id);
+            oldcds($_id);
         }
         else if (!$debug) {
             oldcds($_id); // funzione che per ogni dipartimento scorre i suoi corsi di studio
@@ -107,7 +117,7 @@ function dip()
         }
 
         // debugging
-        if ($debug && $_id == 1) {   
+        if ($debug && $_id == 1) {
             cds($_id);
         }
         else if(!$debug) {
@@ -119,13 +129,13 @@ function dip()
     return $arr;
 }
 
-// $link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
-// $year = "2013/2014";
-// olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1314/index.php";
+$year = "2013/2014";
+olddip();
 
-//  $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
-//  $year = "2014/2015";
-//  olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
+$year = "2014/2015";
+olddip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
 $year = "2015/2016";
