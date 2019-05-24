@@ -1,0 +1,216 @@
+@import '~katex/dist/katex.css';
+
+$color_1: #167efb;
+$color_2: #1e7e34;
+$color_3: #fff;
+$color_4: #28a745;
+$font_family_1: "Helvetica Neue";
+$background_color_1: #28a745;
+$background_color_2: #1e7e34;
+$border_top_color_1: #1e7e34;
+
+#tvContent {
+	width: 100%;
+	height: 700px;
+}
+#dynamicSelectContainer {
+	select {
+		width: 150px;
+	}
+	height: 70px;
+	width: 250px;
+	position: relative;
+	left: 430px;
+	top: -20px;
+}
+#dynamicSelect {
+	width: 250px;
+}
+.container-switcher {
+	float: left;
+	position: relative;
+	padding: 3px;
+	top: 13px;
+	margin: 0px 0;
+	width: 290px;
+}
+.bg {
+	background: #167efb;
+	color: $color_1;
+}
+.segmented {
+	display: flex;
+	flex-flow: row wrap;
+	box-sizing: border-box;
+	font-family: $font_family_1;
+	font-size: 90%;
+	text-align: center;
+	label {
+		display: block;
+		flex: 1;
+		box-sizing: border-box;
+		border: 1px solid darkgrey;
+		border-right: none;
+		color: $color_2;
+		margin: 0;
+		padding: .4em;
+		cursor: pointer;
+		user-select: none;
+		-webkit-user-select: none;
+		&:first-child {
+			border-radius: .4em 0 0 .4em;
+			border-right: 0;
+		}
+		&:last-child {
+			border-radius: 0 .4em .4em 0;
+			border-right: 1px solid;
+		}
+	}
+	label.checked {
+		background: #1e7e34;
+		color: $color_3;
+	}
+	input[type="radio"] {
+		appearance: none;
+		-webkit-appearance: none;
+		margin: 0;
+		position: absolute;
+	}
+}
+.container-fluid {
+	padding-right: 0;
+	padding-left: 0;
+	margin-right: auto;
+	margin-left: auto;
+}
+.row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.tabs_button {
+	margin-left: 5px;
+	padding: 5px 0px;
+}
+.container-checkbox {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		&:checked {
+			&~.checkmark {
+				background-color: $background_color_1;
+				&:after {
+					display: block;
+				}
+			}
+		}
+	}
+	&:hover {
+		input {
+			&~.checkmark {
+				background-color: $background_color_2;
+			}
+		}
+	}
+	.checkmark {
+		&:after {
+			left: 9px;
+			top: 5px;
+			width: 5px;
+			height: 10px;
+			border: solid white;
+			border-width: 0 3px 3px 0;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+	}
+}
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin-top: 2px;
+	height: 22px;
+	width: 22px;
+	background-color: $background_color_1;
+	&:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+}
+.normalize {
+	position: absolute;
+	margin: 25px 0px 0px 300px;
+}
+.tooltip-inner {
+	max-width: 200px;
+	padding: 3px 8px;
+	color: $color_3;
+	text-align: center;
+	background-color: $background_color_2;
+	border-radius: .25rem;
+}
+.tooltip.bs-tooltip-auto[x-placement^=top] {
+	.arrow {
+		&::before {
+			margin-left: -3px;
+			content: "";
+			border-width: 5px 5px 0;
+			border-top-color: $border_top_color_1;
+		}
+	}
+}
+.tooltip.bs-tooltip-top {
+	.arrow {
+		&::before {
+			margin-left: -3px;
+			content: "";
+			border-width: 5px 5px 0;
+			border-top-color: $border_top_color_1;
+		}
+	}
+}
+.opis-contact {
+	border: 2px solid #28a745;
+	border-radius: 2em;
+	padding: 25px;
+}
+.opis-icon {
+	color: $color_4;
+}
+.opis-nav {
+	background-color: $background_color_1;
+	color: $color_3;
+	font-size: 1.25rem;
+	a {
+		background-color: $background_color_1;
+		color: $color_3;
+        font-size: 1.25rem;
+        &:hover {
+            color: $color_3;
+        }
+	}
+}
+.nav-link.active {
+	color: $color_3 !important;
+	background-color: $background_color_2 !important;
+	border: 0px solid !important;
+}
+
+router-outlet ~ * {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+  }
+  

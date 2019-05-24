@@ -1,0 +1,40 @@
+<div class="container">
+  <br>
+
+  <h2 class="text-danger">Modello per l'individuazione di indici atti a monitorare i servizi didattici</h2>
+  <p>La scheda OPIS viene suddivisa in tre parti, ciascuna contenente un gruppo di n domande e viene effettuata una prima valutazione relativamente a ciascun gruppo. Consideriamo la generica domanda D<sub>j</sub> del gruppo e assegniamo valori numerici agli esiti secondo la seguente</p>
+
+  <br>
+
+  <table class="table table-bordered formula-table">
+    <tr>
+      <td>DECISAMENTE NO</td>
+      <td>E<sub>1</sub></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>PIÙ NO CHE SÌ</td>
+      <td>E<sub>2</sub></td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>PIÙ SÌ CHE NO</td>
+      <td>E<sub>3</sub></td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>DECISAMENTE SI</td>
+      <td>E<sub>4</sub></td>
+      <td>10</td>
+    </tr>
+  </table>
+
+
+  <br>
+  <p>Sia X<sub>ij</sub>  il numero di studenti che hanno dato la risposta E<sub>i</sub> alla domanda D<sub>j</sub> e sia N il numero complessivo di studenti.</p>
+
+  <ng-katex-paragraph [paragraph]="paragraphContent"></ng-katex-paragraph>
+
+  <p align="center">La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo - (V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>).</p>
+
+</div>

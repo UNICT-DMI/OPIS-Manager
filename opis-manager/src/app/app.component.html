@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg opis-nav">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">OPIS-Manager</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" routerLink="/formula" role="tab" aria-controls="formula" aria-selected="false">Formula</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" routerLink="/info" role="tab" aria-controls="info" aria-selected="false">Info</a>
+        </li>
+      </ul>
+    </div>
+    <div class="justify-content-end">
+      <a href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank">
+        GitHub <fa name="github" size="lg"></fa>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">
+  <router-outlet #o="outlet"></router-outlet>
+</main>
+
