@@ -1,0 +1,47 @@
+<div class="container">
+
+
+  <div class="row">
+
+    <div class="col-12 text-center">
+
+      <br>
+      <p>Scegli un dipartimento:</p>
+
+      <select id="dipartimenti" class="btn btn-success" OnChange="showCds(this.value)">
+        <option>--</option>
+      </select>
+
+    </div>
+
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-12">
+
+      <br><br>
+
+      <ul class="nav nav-tabs" id="tabs"></ul>
+
+      <br>
+      <div class="container-switcher"> </div>
+      <div id="dynamicSelectContainer"> </div>
+      <br>
+
+      <label class="container-checkbox normalize" id="normcheckbox" style="display: none">Normalizza dati
+        <input type="checkbox" OnChange="normalizing()">
+        <span class="checkmark"></span>
+      </label>
+
+      <div class="tab-content" id="tabs_content"></div>
+
+
+      <br>
+      <br>
+
+    </div>
+  </div>
+
+</div>

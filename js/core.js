@@ -394,7 +394,7 @@ function getDataForTeaching(id_cds, tab_position, dynamicSelect){
             anni_accademici[i].v1 = 0;
             anni_accademici[i].v2 = 0;
             anni_accademici[i].v3 = 0;
-            anni_accademici[i].anno = data[i].anno_accademico;;
+            anni_accademici[i].anno = data[i].anno_accademico;
 
             let valori = [];
             valori.tot_schedeF   = data[i].totale_schede;

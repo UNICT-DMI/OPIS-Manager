@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { InfoComponent } from './info/info.component';
+import { HomeComponent } from './home/home.component';
 import { FormulaComponent } from './formula/formula.component';
+import { InfoComponent } from './info/info.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent
+  },
   {
     path: 'formula',
     component: FormulaComponent
