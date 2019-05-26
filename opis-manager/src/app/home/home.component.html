@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
 
 
   <div class="row">
@@ -8,8 +8,9 @@
       <br>
       <p>Scegli un dipartimento:</p>
 
-      <select id="dipartimenti" class="btn btn-success" OnChange="showCds(this.value)">
+      <select class="btn btn-success" (change)="showCds($event.target.value)">
         <option>--</option>
+        <option *ngFor="let department of departments" [value]="department.id"> {{ department.nome }} </option>
       </select>
 
     </div>
@@ -23,23 +24,46 @@
 
       <br><br>
 
-      <ul class="nav nav-tabs" id="tabs"></ul>
+      <ul class="nav nav-tabs" id="tabs">
+        <li class="nav-item tabs_button" *ngFor="let c of cds">
+          <button class="btn btn-success" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-cds' : ''">{{ c.nome + " " + c.classe }}</button>
+        </li>
+      </ul>
 
       <br>
-      <div class="container-switcher"> </div>
-      <div id="dynamicSelectContainer"> </div>
-      <br>
 
-      <label class="container-checkbox normalize" id="normcheckbox" style="display: none">Normalizza dati
-        <input type="checkbox" OnChange="normalizing()">
-        <span class="checkmark"></span>
-      </label>
+      <div [hidden]="!selectedCds">
+        <div class="container-switcher">
+          <div class="segmented">
+            <label (click)="enableOption(1)" [ngClass]="currentOption == 1 ? 'checked' : ''"><span>Anno accademico</span></label>
+            <label (click)="enableOption(2)" [ngClass]="currentOption == 2 ? 'checked' : ''"><span>Insegnamento   </span></label>
+          </div>
+        </div>
 
-      <div class="tab-content" id="tabs_content"></div>
+        <br>
+        <div [hidden]="currentOption != 1" class="text-center">
+          <div class="list-option-container">
+            Seleziona anno:
+            <br>
+            <select class="btn btn-success text-center switch-years">
+              <option class="text-center">--</option>
+              <option class="text-center" *ngFor="let year of config.years" [value]="year"> {{ year }} </option>
+            </select>
+          </div>
+        </div>
 
+        <div [hidden]="currentOption != 2" class="text-center">
+          <div class="list-option-container">
+            Seleziona insegnamento:
+            <br>
+            <select class="btn btn-success text-center">
+              <option class="text-center">--</option>
+              <option class="text-center" *ngFor="let teaching of teachings" [value]="teaching.id"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
+            </select>
+          </div>
+        </div>
 
-      <br>
-      <br>
+      </div>
 
     </div>
   </div>

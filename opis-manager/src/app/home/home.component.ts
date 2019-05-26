@@ -1,6 +1,7 @@
 import { Component, OnInit, getDebugNode } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
+import { Identifiers } from '@angular/compiler';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,18 @@ export class HomeComponent implements OnInit {
 
   config: {
     apiUrl: string;
-    years: string;
+    years: any;
+  } = {
+    apiUrl: '',
+    years: []
   };
+
+  departments: any = [];
+  cds: any = [];
+  teachings: any = [];
+
+  selectedCds: number;
+  currentOption: number;
 
   constructor(
     public configService: ConfigService,
@@ -30,29 +41,31 @@ export class HomeComponent implements OnInit {
 
       this.getDepartmnets();
     });
-
-    // this.getDepartmnets();
-    // $(document).ready(function() {
-    //   $.getJSON(apiUrl + "dipartimento", function(data) {
-    //     let dip = $("#dipartimenti");
-    //     for (let i in data) {
-    //       dip.append(new Option(data[i].nome, data[i].id));
-    //     }
-    //   });
-    // });
   }
 
   getDepartmnets() {
     this.http.get(this.config.apiUrl + 'dipartimento').subscribe((data) => {
-      console.log(data);
+      this.departments = data;
     });
-
-    // let dip = $("#dipartimenti");
-    // for (let i in data) {
-    //   dip.append(new Option(data[i].nome, data[i].id));
-    // }
   }
 
+  showCds(department: number) {
+    this.http.get(this.config.apiUrl + 'cds/' + department).subscribe((data) => {
+      this.cds = data;
+    });
+  }
+
+  selectCds(cds: number) {
+    this.selectedCds = cds;
+
+    this.http.get(this.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
+      this.teachings = data;
+    });
+  }
+
+  enableOption(val) {
+    this.currentOption = val;
+  }
 
 
 }
