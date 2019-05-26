@@ -45,9 +45,9 @@
           <div class="list-option-container">
             Seleziona anno:
             <br>
-            <select class="btn btn-success text-center switch-years">
+            <select class="btn btn-success text-center switch-years" [(ngModel)]="selectedYear" (ngModelChange)="getDataForYear()">
               <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let year of config.years" [value]="year"> {{ year }} </option>
+              <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
             </select>
           </div>
         </div>
@@ -56,11 +56,25 @@
           <div class="list-option-container">
             Seleziona insegnamento:
             <br>
-            <select class="btn btn-success text-center">
+            <select class="btn btn-success text-center" [(ngModel)]="selectedTeaching">
               <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let teaching of teachings" [value]="teaching.id"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
+              <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
             </select>
           </div>
+        </div>
+
+        <div [hidden]="(currentOption == 1 && !selectedYear) || (currentOption == 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
+          <ul class="nav nav-tabs" id="tabs">
+            <li class="nav-item tabs_button">
+              <button class="btn btn-success">V1</button>
+            </li>
+            <li class="nav-item tabs_button">
+              <button class="btn btn-success">V2</button>
+            </li>
+            <li class="nav-item tabs_button">
+              <button class="btn btn-success">V3</button>
+            </li>
+          </ul>
         </div>
 
       </div>
