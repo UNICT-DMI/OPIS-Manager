@@ -69,9 +69,26 @@
 
 .list-option-container {
     margin-left: 200px;
-    width: 800px;
+    width: 1200px;
 }
 
 .switch-years {
     width: 350px;
+}
+
+.collapse, .show {
+  display: block !important;
+  transition: all .25s ease-in-out;
+}
+.collapse {
+  opacity: 0;
+  height: 0;
+}
+.show {
+  opacity: 1;
+  height: 100%;
+}
+.v-info {
+  margin: 0 auto;
+  width: 900px;
 }

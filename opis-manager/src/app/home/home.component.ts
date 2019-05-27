@@ -1,7 +1,7 @@
 import { Component, OnInit, getDebugNode } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
-import { Identifiers } from '@angular/compiler';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit {
   selectedTeaching: number;
 
   currentOption: number;
+
+  switcherValues = 1;
 
   constructor(
     public configService: ConfigService,
@@ -132,6 +134,7 @@ export class HomeComponent implements OnInit {
   }
 
   calculateFormula(insegnamenti) {
+
     // pesi singole domande
     const pesi = [
       0.7,  // 1
@@ -147,6 +150,8 @@ export class HomeComponent implements OnInit {
       0.3,  // 11
       0.0   // 12  questa domanda non viene considerata
     ];
+
+    console.log(pesi);
 
     // pesi risposte
     const risposte = [
@@ -172,23 +177,29 @@ export class HomeComponent implements OnInit {
 
         if (N > 5) {
 
-          for (let j = 0; j < insegnamenti[i].domande.length; j++) {
+          for (let j = 1; j < insegnamenti[i].domande.length; j++) {
+            const h = j - 1;
 
-            d = 0;
+            d = 0.0;
             d += insegnamenti[i].domande[j][0] * risposte[0]; // Decisamente no
             d += insegnamenti[i].domande[j][1] * risposte[1]; // Più no che sì
             d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
             d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
 
-            if (j === 0 || j === 1) {                               // V1 domande: 1,2
-              _v1 += ((d / N) * pesi[j % 12]);
-            } else if (j === 3 || j === 4 || j === 8 || j === 9) {  // V2 domande: 4,5,9,10
-              _v2 += (d / N) * pesi[j % 12];
-            } else if (j === 2 || j === 5 || j === 6) {             // V3 domande: 3,6,7
-              _v3 += (d / N) * pesi[j % 12];
+            // console.log(d/N + ' * ' + pesi[h] + ' = ' + d/N * pesi[h]);
+
+            if (h === 0 || h === 1) {                               // V1 domande: 1,2
+              _v1 += ((d / N) * pesi[h]);
+            } else if (h === 3 || h === 4 || h === 8 || h === 9) {    // V2 domande: 4,5,9,10
+              _v2 += (d / N) * pesi[h];
+            } else if (h === 2 || h === 5 || h === 6) {              // V3 domande: 3,6,7
+              _v3 += (d / N) * pesi[h];
             }
           }
+
         }
+
+        // console.log(insegnamenti[i].nome + ' ' + _v1.toFixed(2));
 
         v1.push(_v1.toFixed(2));
         v2.push(_v2.toFixed(2));
@@ -196,7 +207,7 @@ export class HomeComponent implements OnInit {
       }
     }
 
-    const means = [0, 0, 0];
+    const means = [0.0, 0.0, 0.0];
 
     for (let x in v1) {
       if (v1.hasOwnProperty(x)) {
@@ -212,105 +223,114 @@ export class HomeComponent implements OnInit {
     return [means, [v1, v2, v3]];
   }
 
+  generateGraphs(means, values, insegnamenti) {
+    const labels: string[] = ['V1', 'V2', 'V3'];
+    const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
+
+    // chartjs stuff
+    const charts = [];
+    const ctx = [];
+
+    // Destroy and recreate canvas to clear
+    let canv = [];
+
+    canv.push(document.getElementById('v1'));
+    canv.push(document.getElementById('v2'));
+    canv.push(document.getElementById('v3'));
+
+    const parents = [];
+    parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
+
+    parents[0].removeChild(canv[0]);
+    parents[1].removeChild(canv[1]);
+    parents[2].removeChild(canv[2]);
+
+    const canvWidth = '90vw';
+    const canvHeight = (insegnamenti.length * 25) + 'px';
+
+    let canvs = document.createElement('canvas');
+    canvs.id = 'v1';
+    canvs.style.width = canvWidth;
+    canvs.style.height = canvHeight;
+    parents[0].appendChild(canvs);
+
+    canvs = document.createElement('canvas');
+    canvs.id = 'v2';
+    canvs.style.width = canvWidth;
+    canvs.style.height = canvHeight;
+    parents[1].appendChild(canvs);
+
+    canvs = document.createElement('canvas');
+    canvs.id = 'v3';
+    canvs.style.width = canvWidth;
+    canvs.style.height = canvHeight;
+    parents[2].appendChild(canvs);
+
+    canv = [];
+    canv.push(document.getElementById('v1'));
+    canv.push(document.getElementById('v2'));
+    canv.push(document.getElementById('v3'));
+
+    ctx.push(canv[0].getContext('2d'));
+    ctx.push(canv[1].getContext('2d'));
+    ctx.push(canv[2].getContext('2d'));
+
+    const _options = {
+      scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+          },
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      },
+      responsive: false,
+      legend: { display: false },
+      lineAtIndex: 0
+    };
+
+    for (let c in ctx) {
+      if (ctx.hasOwnProperty(c)) {
+        // chartjs data
+        const _data = {
+          labels: materie,
+          datasets: [{
+            label: labels[c],
+            data: values[c],
+            backgroundColor: '#28a745',
+            // borderColor: 'red',
+            borderWidth: 1
+          }]
+        };
+
+        const opt = Object.assign({}, _options);
+        opt.lineAtIndex = means[c];
+
+        charts.push(new Chart(ctx[c], {
+          type: 'horizontalBar',
+          data: _data,
+          options: opt
+        }));
+      }
+    }
+  }
+
   getDataForYear() {
 
     this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
-
       const insegnamenti: any = this.performTeachings(data);
 
-      const labels: string[] = ['V1', 'V2', 'V3'];
-      const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
-
       let means: any;
-      let values: any;  // data chartjs
+      let values: any;
       [means, values] = this.calculateFormula(insegnamenti);
 
-      // // chartjs stuff
-      // let charts = [];
-      // let ctx = [];
+      console.log(values);
 
-      // // Destroy and recreate canvas to clear (need refactoring)
-      // let canv = [];
-      // canv.push(document.getElementById(tabPosition + "v1"));
-      // canv.push(document.getElementById(tabPosition + 'v2'));
-      // canv.push(document.getElementById(tabPosition + 'v3'));
-
-      // const parents = [];
-      // parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
-
-      // parents[0].removeChild(canv[0]);
-      // parents[1].removeChild(canv[1]);
-      // parents[2].removeChild(canv[2]);
-
-      // const canvWidth = '90vw', canv_height = (insegnamenti.length*25) + 'px';
-
-      // let canvs = document.createElement('canvas');
-      // canvs.id = tabPosition + 'v1';
-      // canvs.style.width = canvWidth;
-      // canvs.style.height = canv_height;
-      // parents[0].appendChild(canvs);
-
-      // canvs = document.createElement('canvas');
-      // canvs.id = tabPosition + 'v2';
-      // canvs.style.width = canvWidth;
-      // canvs.style.height = canv_height;
-      // parents[1].appendChild(canvs);
-
-      // canvs = document.createElement('canvas');
-      // canvs.id = tabPosition + 'v3';
-      // canvs.style.width = canvWidth;
-      // canvs.style.height = canv_height;
-      // parents[2].appendChild(canvs);
-
-      // canv = [];
-      // canv.push(document.getElementById(tabPosition + 'v1'));
-      // canv.push(document.getElementById(tabPosition + 'v2'));
-      // canv.push(document.getElementById(tabPosition + 'v3'));
-
-      // ctx.push(canv[0].getContext('2d'));
-      // ctx.push(canv[1].getContext('2d'));
-      // ctx.push(canv[2].getContext('2d'));
-
-      // const _options = {
-      //   scales: {
-      //     xAxes: [{
-      //       ticks: {
-      //         beginAtZero: true,
-      //       },
-      //     }],
-      //     yAxes: [{
-      //       ticks: {
-      //         beginAtZero: true
-      //       }
-      //     }]
-      //   },
-      //   responsive: false,
-      //   legend: { display: false }
-      // };
-
-      // for (let c in ctx) {
-      //   // chartjs data
-      //   const _data = {
-      //     labels: materie,
-      //     datasets: [{
-      //       label: labels[c],
-      //       data: values[c],
-      //       backgroundColor: '#28a745',
-      //       // borderColor: 'red',
-      //       borderWidth: 1
-      //     }]
-      //   };
-
-      //   const opt = Object.assign({}, _options);
-      //   opt.lineAtIndex = means[c];
-
-      //   charts.push(new Chart(ctx[c], {
-      //       type: 'horizontalBar',
-      //       data: _data,
-      //       options: opt
-      //   }));
-      // }
-
+      this.generateGraphs(means, values, insegnamenti);
     });
 
   }

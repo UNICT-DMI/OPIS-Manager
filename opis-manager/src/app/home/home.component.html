@@ -1,6 +1,5 @@
 <div class="container-fluid">
 
-
   <div class="row">
 
     <div class="col-12 text-center">
@@ -66,16 +65,132 @@
         <div [hidden]="(currentOption == 1 && !selectedYear) || (currentOption == 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
           <ul class="nav nav-tabs" id="tabs">
             <li class="nav-item tabs_button">
-              <button class="btn btn-success">V1</button>
+              <button class="btn btn-success" (click)="switcherValues = 1">V1</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-success">V2</button>
+              <button class="btn btn-success" (click)="switcherValues = 2">V2</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-success">V3</button>
+              <button class="btn btn-success" (click)="switcherValues = 3">V3</button>
             </li>
           </ul>
+
+          <br>
+
+          <div id="v1-container" [hidden]="switcherValues != 1">
+            <h2 class="text-center">
+              V1 - Come lo studente vede il corso
+              <button type="button" class="btn btn-success" (click)="v1Info = !v1Info">
+                <fa name="info" size="lg"></fa>
+              </button>
+            </h2>
+
+            <div [ngbCollapse]="!v1Info" class="v-info">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Domande</th>
+                    <th>Pesi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti previsti nel programma d'esame?</td>
+                    <td>0.7</td>
+                  </tr>
+                  <tr>
+                    <td>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</td>
+                    <td>0.3</td>
+                  </tr>
+                  <tr>
+                    <td>11 - È interessato/a agli argomenti trattati nell'insegnamento?</td>
+                    <td>0.3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="v1"></div>
+          </div>
+          <div id="v2-container" [hidden]="switcherValues != 2">
+              <h2 class="text-center">
+                V2 - Come lo studente vede il docente
+                <button type="button" class="btn btn-success" (click)="v2Info = !v2Info">
+                  <fa name="info" size="lg"></fa>
+                </button>
+              </h2>
+  
+              <div [ngbCollapse]="!v2Info" class="v-info">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Domande</th>
+                      <th>Pesi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>4 - Le modalità di esame sono state definite in modo chiaro?</td>
+                      <td>0.1</td>
+                    </tr>
+                    <tr>
+                      <td>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche sono rispettati?</td>
+                      <td>0.3</td>
+                    </tr>
+                    <tr>
+                      <td>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del corso di studio?</td>
+                      <td>0.3</td>
+                    </tr>
+                    <tr>
+                      <td>10 - Il docente è reperibile per chiarimenti e spiegazioni?</td>
+                      <td>0.3</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="v2"></div>
+          </div>
+          <div id="v3-container" [hidden]="switcherValues != 3">
+              <h2 class="text-center">
+                V3 - Come il docente interagisce con lo studente
+                <button type="button" class="btn btn-success" (click)="v3Info = !v3Info">
+                  <fa name="info" size="lg"></fa>
+                </button>
+              </h2>
+  
+              <div [ngbCollapse]="!v3Info" class="v-info">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Domande</th>
+                      <th>Pesi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?</td>
+                      <td>0.1</td>
+                    </tr>
+                    <tr>
+                      <td>6 - Il docente stimola/motiva l'interesse verso la disciplina?</td>
+                      <td>0.5</td>
+                    </tr>
+                    <tr>
+                      <td>7 - Il docente espone gli argomenti in modo chiaro?</td>
+                      <td>0.4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="v3"></div>
+          </div>
         </div>
+
+        <br>
+        <br>
+        <br>
 
       </div>
 

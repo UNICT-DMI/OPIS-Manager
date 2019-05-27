@@ -5,6 +5,8 @@ import { KatexModule } from 'ng-katex';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ChartModule } from 'angular2-chartjs';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +28,9 @@ import { HomeComponent } from './home/home.component';
     KatexModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ChartModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
