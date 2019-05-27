@@ -55,9 +55,9 @@
           <div class="list-option-container">
             Seleziona insegnamento:
             <br>
-            <select class="btn btn-success text-center" [(ngModel)]="selectedTeaching">
+            <select class="btn btn-success text-center" [(ngModel)]="selectedTeaching" (ngModelChange)="getDataForTeaching()">
               <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
+              <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
             </select>
           </div>
         </div>

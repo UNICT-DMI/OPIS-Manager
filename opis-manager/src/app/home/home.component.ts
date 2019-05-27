@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
 
   selectedCds: number;
   selectedYear: string;
-  selectedTeaching: number;
+  selectedTeaching: string;
 
   currentOption: number;
 
@@ -133,8 +133,7 @@ export class HomeComponent implements OnInit {
     return insegnamenti;
   }
 
-  calculateFormula(insegnamenti) {
-
+  applyWeights(vals) {
     // pesi singole domande
     const pesi = [
       0.7,  // 1
@@ -151,8 +150,6 @@ export class HomeComponent implements OnInit {
       0.0   // 12  questa domanda non viene considerata
     ];
 
-    console.log(pesi);
-
     // pesi risposte
     const risposte = [
       1,    // Decisamente no
@@ -161,6 +158,38 @@ export class HomeComponent implements OnInit {
       10    // Decisamente sì
     ];
 
+    const N = vals.tot_schedeF;
+    let d = 0;
+    let V1 = 0;
+    let V2 = 0;
+    let V3 = 0;
+
+    if (N > 5) {
+
+      for (let j = 1; j < vals.domande.length; j++) {
+        const h = j - 1;
+
+        d = 0.0;
+        d += vals.domande[j][0] * risposte[0];   // Decisamente no
+        d += vals.domande[j][1] * risposte[1];   // Più no che sì
+        d += vals.domande[j][2] * risposte[2];   // Più sì che no
+        d += vals.domande[j][3] * risposte[3];   // Decisamente sì
+
+        if (h === 0 || h === 1) {                                 // V1 domande: 1,2
+          V1 += ((d / N) * pesi[h]);
+        } else if (h === 3 || h === 4 || h === 8 || h === 9) {    // V2 domande: 4,5,9,10
+          V2 += (d / N) * pesi[h];
+        } else if (h === 2 || h === 5 || h === 6) {               // V3 domande: 3,6,7
+          V3 += (d / N) * pesi[h];
+        }
+      }
+
+    }
+
+    return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
+  }
+
+  calculateFormula(insegnamenti) {
     const v1 = [];
     const v2 = [];
     const v3 = [];
@@ -169,41 +198,15 @@ export class HomeComponent implements OnInit {
 
       if (insegnamenti.hasOwnProperty(i)) {
 
-        const N = insegnamenti[i].tot_schedeF;
-        let d = 0;
-        let _v1 = 0;
-        let _v2 = 0;
-        let _v3 = 0;
+        let V1: any;
+        let V2: any;
+        let V3: any;
 
-        if (N > 5) {
+        [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
 
-          for (let j = 1; j < insegnamenti[i].domande.length; j++) {
-            const h = j - 1;
-
-            d = 0.0;
-            d += insegnamenti[i].domande[j][0] * risposte[0]; // Decisamente no
-            d += insegnamenti[i].domande[j][1] * risposte[1]; // Più no che sì
-            d += insegnamenti[i].domande[j][2] * risposte[2]; // Più sì che no
-            d += insegnamenti[i].domande[j][3] * risposte[3]; // Decisamente sì
-
-            // console.log(d/N + ' * ' + pesi[h] + ' = ' + d/N * pesi[h]);
-
-            if (h === 0 || h === 1) {                               // V1 domande: 1,2
-              _v1 += ((d / N) * pesi[h]);
-            } else if (h === 3 || h === 4 || h === 8 || h === 9) {    // V2 domande: 4,5,9,10
-              _v2 += (d / N) * pesi[h];
-            } else if (h === 2 || h === 5 || h === 6) {              // V3 domande: 3,6,7
-              _v3 += (d / N) * pesi[h];
-            }
-          }
-
-        }
-
-        // console.log(insegnamenti[i].nome + ' ' + _v1.toFixed(2));
-
-        v1.push(_v1.toFixed(2));
-        v2.push(_v2.toFixed(2));
-        v3.push(_v3.toFixed(2));
+        v1.push(V1);
+        v2.push(V2);
+        v3.push(V3);
       }
     }
 
@@ -328,9 +331,60 @@ export class HomeComponent implements OnInit {
       let values: any;
       [means, values] = this.calculateFormula(insegnamenti);
 
-      console.log(values);
-
       this.generateGraphs(means, values, insegnamenti);
+    });
+
+  }
+
+  getDataForTeaching() {
+
+    let id: string;
+    let channel: string;
+    [id, channel] = this.selectedTeaching.split(' ');
+
+    this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
+
+      const anniAccademici = [];
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
+
+          anniAccademici[i] = {};
+          anniAccademici[i].v1 = 0;
+          anniAccademici[i].v2 = 0;
+          anniAccademici[i].v3 = 0;
+          anniAccademici[i].anno = data[i].anno_accademico;
+
+          const valori: any = [];
+          valori.tot_schedeF   = data[i].totale_schede;
+          valori.domande = [];
+
+          valori.domande[i] = [];
+
+          let index = 0;
+          for (let j = 0; j < data[i].domande.length; j++) {
+            if (data[i].domande.hasOwnProperty(j)) {
+
+              if (j % 5 == 0 && j != 0) {
+                index++;
+                valori.domande[index] = [];
+              }
+
+              if (valori.domande[index] == undefined) {
+                valori.domande[index] = [];
+              }
+
+              valori.domande[index].push(data[i].domande[j]);
+            }
+          }
+
+          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
+        }
+      }
+
+      console.log(anniAccademici);
+      // lastTeachingResults = anniAccademici;
+      // showTeachingChart();
+
     });
 
   }
