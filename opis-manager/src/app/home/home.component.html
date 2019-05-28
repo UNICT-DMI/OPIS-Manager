@@ -7,7 +7,7 @@
       <br>
       <p>Scegli un dipartimento:</p>
 
-      <select class="btn btn-success" (change)="showCds($event.target.value)">
+      <select class="btn btn-opis" (change)="showCds($event.target.value)">
         <option>--</option>
         <option *ngFor="let department of departments" [value]="department.id"> {{ department.nome }} </option>
       </select>
@@ -25,7 +25,7 @@
 
       <ul class="nav nav-tabs" id="tabs">
         <li class="nav-item tabs_button" *ngFor="let c of cds">
-          <button class="btn btn-success" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-cds' : ''">{{ c.nome + " " + c.classe }}</button>
+          <button class="btn btn-opis" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-cds' : ''">{{ c.nome + " " + c.classe }}</button>
         </li>
       </ul>
 
@@ -44,7 +44,7 @@
           <div class="list-option-container">
             Seleziona anno:
             <br>
-            <select class="btn btn-success text-center switch-years" [(ngModel)]="selectedYear" (ngModelChange)="getDataForYear()">
+            <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear" (ngModelChange)="getDataForYear()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
             </select>
@@ -55,7 +55,7 @@
           <div class="list-option-container">
             Seleziona insegnamento:
             <br>
-            <select class="btn btn-success text-center" [(ngModel)]="selectedTeaching" (ngModelChange)="getDataForTeaching()">
+            <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching" (ngModelChange)="getDataForTeaching()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
             </select>
@@ -65,13 +65,13 @@
         <div [hidden]="(currentOption == 1 && !selectedYear) || (currentOption == 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
           <ul class="nav nav-tabs" id="tabs">
             <li class="nav-item tabs_button">
-              <button class="btn btn-success" (click)="switcherValues = 1">V1</button>
+              <button class="btn btn-opis" (click)="switchVal(1)">V1</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-success" (click)="switcherValues = 2">V2</button>
+              <button class="btn btn-opis" (click)="switchVal(2)">V2</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-success" (click)="switcherValues = 3">V3</button>
+              <button class="btn btn-opis" (click)="switchVal(3)">V3</button>
             </li>
           </ul>
 
@@ -80,7 +80,7 @@
           <div id="v1-container" [hidden]="switcherValues != 1">
             <h2 class="text-center">
               V1 - Come lo studente vede il corso
-              <button type="button" class="btn btn-success" (click)="v1Info = !v1Info">
+              <button type="button" class="btn btn-opis" (click)="v1Info = !v1Info">
                 <fa name="info" size="lg"></fa>
               </button>
             </h2>
@@ -110,12 +110,15 @@
               </table>
             </div>
 
-            <div id="v1"></div>
+            <div id="v1"  [hidden]="currentOption != 1">
+              <canvas id="v1-canvas"></canvas>
+            </div>
+            <div id="v1-teaching" [hidden]="currentOption != 2"></div>
           </div>
           <div id="v2-container" [hidden]="switcherValues != 2">
               <h2 class="text-center">
                 V2 - Come lo studente vede il docente
-                <button type="button" class="btn btn-success" (click)="v2Info = !v2Info">
+                <button type="button" class="btn btn-opis" (click)="v2Info = !v2Info">
                   <fa name="info" size="lg"></fa>
                 </button>
               </h2>
@@ -149,12 +152,15 @@
                 </table>
               </div>
 
-              <div id="v2"></div>
+              <div id="v2"  [hidden]="currentOption != 1">
+                <canvas id="v2-canvas"></canvas>
+              </div>
+              <div id="v2-teaching" [hidden]="currentOption != 2"></div>
           </div>
           <div id="v3-container" [hidden]="switcherValues != 3">
               <h2 class="text-center">
                 V3 - Come il docente interagisce con lo studente
-                <button type="button" class="btn btn-success" (click)="v3Info = !v3Info">
+                <button type="button" class="btn btn-opis" (click)="v3Info = !v3Info">
                   <fa name="info" size="lg"></fa>
                 </button>
               </h2>
@@ -184,7 +190,10 @@
                 </table>
               </div>
 
-              <div id="v3"></div>
+              <div id="v3"  [hidden]="currentOption != 1">
+                <canvas id="v3-canvas"></canvas>
+              </div>
+              <div id="v3-teaching" [hidden]="currentOption != 2"></div>
           </div>
         </div>
 

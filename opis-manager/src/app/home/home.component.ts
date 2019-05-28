@@ -30,6 +30,9 @@ export class HomeComponent implements OnInit {
   currentOption: number;
 
   switcherValues = 1;
+  v1Info = false;
+  v2Info = false;
+  v3Info = false;
 
   constructor(
     public configService: ConfigService,
@@ -46,6 +49,17 @@ export class HomeComponent implements OnInit {
 
       this.getDepartmnets();
     });
+  }
+
+  resetInfo() {
+    this.v1Info = false;
+    this.v2Info = false;
+    this.v3Info = false;
+  }
+
+  switchVal(v) {
+    this.resetInfo();
+    this.switcherValues = v;
   }
 
   getDepartmnets() {
@@ -80,6 +94,7 @@ export class HomeComponent implements OnInit {
   }
 
   enableOption(val) {
+    this.resetInfo();
     this.currentOption = val;
   }
 
@@ -235,11 +250,11 @@ export class HomeComponent implements OnInit {
     const ctx = [];
 
     // Destroy and recreate canvas to clear
-    let canv = [];
+    let canv: any = [];
 
-    canv.push(document.getElementById('v1'));
-    canv.push(document.getElementById('v2'));
-    canv.push(document.getElementById('v3'));
+    canv.push(document.getElementById('v1-canvas'));
+    canv.push(document.getElementById('v2-canvas'));
+    canv.push(document.getElementById('v3-canvas'));
 
     const parents = [];
     parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
@@ -251,28 +266,28 @@ export class HomeComponent implements OnInit {
     const canvWidth = '90vw';
     const canvHeight = (insegnamenti.length * 25) + 'px';
 
-    let canvs = document.createElement('canvas');
-    canvs.id = 'v1';
+    let canvs: any = document.createElement('canvas');
+    canvs.id = 'v1-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
     parents[0].appendChild(canvs);
 
     canvs = document.createElement('canvas');
-    canvs.id = 'v2';
+    canvs.id = 'v2-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
     parents[1].appendChild(canvs);
 
     canvs = document.createElement('canvas');
-    canvs.id = 'v3';
+    canvs.id = 'v3-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
     parents[2].appendChild(canvs);
 
     canv = [];
-    canv.push(document.getElementById('v1'));
-    canv.push(document.getElementById('v2'));
-    canv.push(document.getElementById('v3'));
+    canv.push(document.getElementById('v1-canvas'));
+    canv.push(document.getElementById('v2-canvas'));
+    canv.push(document.getElementById('v3-canvas'));
 
     ctx.push(canv[0].getContext('2d'));
     ctx.push(canv[1].getContext('2d'));
@@ -304,8 +319,7 @@ export class HomeComponent implements OnInit {
           datasets: [{
             label: labels[c],
             data: values[c],
-            backgroundColor: '#28a745',
-            // borderColor: 'red',
+            backgroundColor: '#00897b',
             borderWidth: 1
           }]
         };
@@ -336,6 +350,102 @@ export class HomeComponent implements OnInit {
 
   }
 
+  showTeachingChart(teachingResults) {
+
+    let teachingName: any = document.getElementById('selTeaching');
+    teachingName = teachingName.options[teachingName.selectedIndex].text;
+
+    const charts = [];
+    const matr = [];
+    matr[0] = [];
+    matr[1] = [];
+    matr[2] = [];
+
+    const yearsArray = this.config.years;
+
+    let j = 0;
+    for (let i in yearsArray) {
+      if (yearsArray.hasOwnProperty(i)) {
+
+        let val1 = 0;
+        let val2 = 0;
+        let val3 = 0;
+
+        if (j < teachingResults.length && yearsArray[i] == teachingResults[j].anno) {
+            val1 = Math.round(teachingResults[j].v1 * 100) / 100;
+            val2 = Math.round(teachingResults[j].v2 * 100) / 100;
+            val3 = Math.round(teachingResults[j].v3 * 100) / 100;
+            j++;
+        }
+        matr[0].push(val1);
+        matr[1].push(val2);
+        matr[2].push(val3);
+      }
+    }
+
+    // line graphs config
+    for (let i = 1; i < 4; i++) {
+
+      const config = {
+        type: 'line',
+        data: {
+          labels: yearsArray,
+          datasets: [{
+            label: 'V' + i,
+            fill: false,
+            backgroundColor: '#00897b',
+            borderColor: '#00897b',
+            data: matr[i - 1],
+          }]
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text:  teachingName + ' V' + i
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+          scales: {
+            xAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Anno accademico'
+              }
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'V' + i
+              }
+            }]
+          }
+        }
+      };
+
+      const container: any = document.getElementById('v' + i + '-teaching');
+      container.innerHTML = '<div style="width: 70%; height: 70%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
+
+      let ctx: any = document.getElementById('V' + i);
+      ctx = ctx.getContext('2d');
+      charts.push(new Chart(ctx, config));
+    }
+  }
+
   getDataForTeaching() {
 
     let id: string;
@@ -360,7 +470,7 @@ export class HomeComponent implements OnInit {
 
           valori.domande[i] = [];
 
-          let index = 0;
+          let index = 1;
           for (let j = 0; j < data[i].domande.length; j++) {
             if (data[i].domande.hasOwnProperty(j)) {
 
@@ -381,9 +491,7 @@ export class HomeComponent implements OnInit {
         }
       }
 
-      console.log(anniAccademici);
-      // lastTeachingResults = anniAccademici;
-      // showTeachingChart();
+      this.showTeachingChart(anniAccademici);
 
     });
 

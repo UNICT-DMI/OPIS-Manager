@@ -1,35 +1,23 @@
 @import '~katex/dist/katex.css';
 
 $color_1: #167efb;
-$color_2: #1e7e34;
-$color_3: #fff;
-$color_4: #28a745;
+$color_dark: #80cbc4;
+$color_light: #fff;
+$color_main: #00897b;
 $font_family_1: "Helvetica Neue";
-$background_color_1: #28a745;
-$background_color_2: #1e7e34;
-$border_top_color_1: #1e7e34;
 
-#tvContent {
-	width: 100%;
-	height: 700px;
+/*
+
+#00897b  Main
+#80cbc4 Light
+#00695c Dark
+*/
+
+
+body {
+	background-color: #80cbc4;
 }
-#dynamicSelectContainer {
-	select {
-		width: 150px;
-	}
-	height: 70px;
-	width: 250px;
-	position: relative;
-	left: 430px;
-	top: -20px;
-}
-#dynamicSelect {
-	width: 250px;
-}
-.bg {
-	background: #167efb;
-	color: $color_1;
-}
+
 .container-fluid {
 	padding-right: 0;
 	padding-left: 0;
@@ -44,74 +32,12 @@ $border_top_color_1: #1e7e34;
 	margin-left: 5px;
 	padding: 5px 0px;
 }
-.container-checkbox {
-	display: block;
-	position: relative;
-	padding-left: 35px;
-	cursor: pointer;
-	font-size: 22px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	input {
-		position: absolute;
-		opacity: 0;
-		cursor: pointer;
-		&:checked {
-			&~.checkmark {
-				background-color: $background_color_1;
-				&:after {
-					display: block;
-				}
-			}
-		}
-	}
-	&:hover {
-		input {
-			&~.checkmark {
-				background-color: $background_color_2;
-			}
-		}
-	}
-	.checkmark {
-		&:after {
-			left: 9px;
-			top: 5px;
-			width: 5px;
-			height: 10px;
-			border: solid white;
-			border-width: 0 3px 3px 0;
-			-webkit-transform: rotate(45deg);
-			-ms-transform: rotate(45deg);
-			transform: rotate(45deg);
-		}
-	}
-}
-.checkmark {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin-top: 2px;
-	height: 22px;
-	width: 22px;
-	background-color: $background_color_1;
-	&:after {
-		content: "";
-		position: absolute;
-		display: none;
-	}
-}
-.normalize {
-	position: absolute;
-	margin: 25px 0px 0px 300px;
-}
 .tooltip-inner {
 	max-width: 200px;
 	padding: 3px 8px;
-	color: $color_3;
+	color: $color_light;
 	text-align: center;
-	background-color: $background_color_2;
+	background-color: $color_dark;
 	border-radius: .25rem;
 }
 .tooltip.bs-tooltip-auto[x-placement^=top] {
@@ -120,7 +46,7 @@ $border_top_color_1: #1e7e34;
 			margin-left: -3px;
 			content: "";
 			border-width: 5px 5px 0;
-			border-top-color: $border_top_color_1;
+			border-top-color: $color_dark;
 		}
 	}
 }
@@ -130,34 +56,29 @@ $border_top_color_1: #1e7e34;
 			margin-left: -3px;
 			content: "";
 			border-width: 5px 5px 0;
-			border-top-color: $border_top_color_1;
+			border-top-color: $color_dark;
 		}
 	}
 }
-.opis-contact {
-	border: 2px solid #28a745;
-	border-radius: 2em;
-	padding: 25px;
-}
 .opis-icon {
-	color: $color_4;
+	color: $color_main;
 }
 .opis-nav {
-	background-color: $background_color_1;
-	color: $color_3;
+	background-color: $color_main;
+	color: $color_light;
 	font-size: 1.25rem;
 	a {
-		background-color: $background_color_1;
-		color: $color_3;
+		background-color: $color_main;
+		color: $color_light;
         font-size: 1.25rem;
         &:hover {
-            color: $color_3;
+            color: $color_light;
         }
 	}
 }
 .nav-link.active {
-	color: $color_3 !important;
-	background-color: $background_color_2 !important;
+	color: $color_light !important;
+	background-color: $color_dark !important;
 	border: 0px solid !important;
 }
 

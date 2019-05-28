@@ -1,3 +1,8 @@
+$color_dark: #00695c;
+$color_light: #fff;
+$color_main: #00897b;
+$font_family_1: "Helvetica Neue";
+
 .container-switcher {
   float: left;
   position: relative;
@@ -19,7 +24,7 @@
     box-sizing: border-box;
     border: 1px solid darkgrey;
     border-right: none;
-    color: #1e7e34;
+    color: $color_dark;
     margin: 0;
     padding: 10px;
     height: 50px;
@@ -43,8 +48,8 @@
     }
 
     &:hover, &.checked {
-      background: #28a745;
-      color: #fff;
+      background: $color_main;
+      color: $color_light;
       transition: .5s all;
     }
     
@@ -63,8 +68,8 @@
 }
 
 .selected-cds {
-    background-color: #fff;
-    color: #1e7e34;
+    background-color: $color_light;
+    color: $color_dark;
 }
 
 .list-option-container {
@@ -76,19 +81,13 @@
     width: 350px;
 }
 
-.collapse, .show {
-  display: block !important;
-  transition: all .25s ease-in-out;
-}
-.collapse {
-  opacity: 0;
-  height: 0;
-}
-.show {
-  opacity: 1;
-  height: 100%;
-}
 .v-info {
   margin: 0 auto;
   width: 900px;
+}
+
+.btn-opis {
+  color: $color_light;
+  background-color: $color_main;
+  border-color: $color_dark;
 }
