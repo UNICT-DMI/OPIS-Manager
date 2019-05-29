@@ -67,9 +67,9 @@ $font_family_1: "Helvetica Neue";
   }
 }
 
-.selected-cds {
-    background-color: $color_light;
-    color: $color_dark;
+.selected-tab {
+    background-color: $color_light !important;
+    color: $color_dark !important;
 }
 
 .list-option-container {

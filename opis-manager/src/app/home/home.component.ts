@@ -99,14 +99,15 @@ export class HomeComponent implements OnInit {
   }
 
   performTeachings(data) {
-    const insegnamenti: any = [];
+    let insegnamenti: any = [];
 
-    for (let i in data) {
+    for (let i = 0; i < data.length; i++) {
 
       if (data[i].tot_schedeF < 6) { continue; }
 
       insegnamenti[i] = {};
       insegnamenti[i].nome = data[i].nome;
+      insegnamenti[i].anno = data[i].anno;
 
       if (insegnamenti[i].nome.length > 35) {
         insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 35) + '... ';
@@ -117,7 +118,7 @@ export class HomeComponent implements OnInit {
         insegnamenti[i].nome += ' (' + data[i].canale + ')';
       }
 
-      if (data[i].id_modulo.length > 2) {
+      if (data[i].id_modulo.length > 2 && data[i].id_modulo != '0') {
         insegnamenti[i].nome += ' (' + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf('-') - 1) + ')';
       }
 
@@ -129,21 +130,22 @@ export class HomeComponent implements OnInit {
 
       insegnamenti[i].domande = [];
       insegnamenti[i].domande[0] = [];
+
       let index = 0;
-
-      let j: any;
-
-      for (j in data[i].domande) {
-        if (data[i].domande.hasOwnProperty(j)) {
-          if (j % 5 === 0 && j !== 0) {
-            index++;
-            insegnamenti[i].domande[index] = [];
-          }
-
-          insegnamenti[i].domande[index].push(data[i].domande[j]);
+      for (let j = 0; j < data[i].domande.length; j++) {
+        if (j % 5 === 0 && j !== 0) {
+          index++;
+          insegnamenti[i].domande[index] = [];
         }
+
+        insegnamenti[i].domande[index].push(data[i].domande[j]);
       }
     }
+
+    // remove empty slot
+    insegnamenti = insegnamenti.filter((el) => {
+      return el != null;
+    });
 
     return insegnamenti;
   }
@@ -181,8 +183,7 @@ export class HomeComponent implements OnInit {
 
     if (N > 5) {
 
-      for (let j = 1; j < vals.domande.length; j++) {
-        const h = j - 1;
+      for (let j = 0; j < vals.domande.length; j++) {
 
         d = 0.0;
         d += vals.domande[j][0] * risposte[0];   // Decisamente no
@@ -190,12 +191,12 @@ export class HomeComponent implements OnInit {
         d += vals.domande[j][2] * risposte[2];   // Più sì che no
         d += vals.domande[j][3] * risposte[3];   // Decisamente sì
 
-        if (h === 0 || h === 1) {                                 // V1 domande: 1,2
-          V1 += ((d / N) * pesi[h]);
-        } else if (h === 3 || h === 4 || h === 8 || h === 9) {    // V2 domande: 4,5,9,10
-          V2 += (d / N) * pesi[h];
-        } else if (h === 2 || h === 5 || h === 6) {               // V3 domande: 3,6,7
-          V3 += (d / N) * pesi[h];
+        if (j === 0 || j === 1) {                                 // V1 domande: 1,2
+          V1 += ((d / N) * pesi[j]);
+        } else if (j === 3 || j === 4 || j === 8 || j === 9) {    // V2 domande: 4,5,9,10
+          V2 += (d / N) * pesi[j];
+        } else if (j === 2 || j === 5 || j === 6) {               // V3 domande: 3,6,7
+          V3 += (d / N) * pesi[j];
         }
       }
 
@@ -212,7 +213,6 @@ export class HomeComponent implements OnInit {
     for (let i in insegnamenti) {
 
       if (insegnamenti.hasOwnProperty(i)) {
-
         let V1: any;
         let V2: any;
         let V3: any;
@@ -243,6 +243,28 @@ export class HomeComponent implements OnInit {
 
   generateGraphs(means, values, insegnamenti) {
     const labels: string[] = ['V1', 'V2', 'V3'];
+
+    insegnamenti.splice(0, 0, {
+      nome: '1 anno',
+      anno: '1'
+    });
+    values[0].splice(0, 0, "0");
+    values[1].splice(0, 0, "0");
+    values[2].splice(0, 0, "0");
+
+    for (let i = 2; i < insegnamenti.length; i++) {
+      if (insegnamenti[i].anno != insegnamenti[i - 1].anno) {
+        let year = insegnamenti[i].anno;
+        insegnamenti.splice(i, 0, {
+          anno: year,
+          nome: year + ' anno'
+        });
+        values[0].splice(i, 0, "0");
+        values[1].splice(i, 0, "0");
+        values[2].splice(i, 0, "0");
+      }
+    }
+
     const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
 
     // chartjs stuff
@@ -263,7 +285,7 @@ export class HomeComponent implements OnInit {
     parents[1].removeChild(canv[1]);
     parents[2].removeChild(canv[2]);
 
-    const canvWidth = '90vw';
+    const canvWidth = '100%';
     const canvHeight = (insegnamenti.length * 25) + 'px';
 
     let canvs: any = document.createElement('canvas');
@@ -337,17 +359,17 @@ export class HomeComponent implements OnInit {
   }
 
   getDataForYear() {
+    if (this.selectedYear != '--') {
+      this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
+        const insegnamenti: any = this.performTeachings(data);
 
-    this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
-      const insegnamenti: any = this.performTeachings(data);
+        let means: any;
+        let values: any;
+        [means, values] = this.calculateFormula(insegnamenti);
 
-      let means: any;
-      let values: any;
-      [means, values] = this.calculateFormula(insegnamenti);
-
-      this.generateGraphs(means, values, insegnamenti);
-    });
-
+        this.generateGraphs(means, values, insegnamenti);
+      });
+    }
   }
 
   showTeachingChart(teachingResults) {
@@ -470,7 +492,7 @@ export class HomeComponent implements OnInit {
 
           valori.domande[i] = [];
 
-          let index = 1;
+          let index = 0;
           for (let j = 0; j < data[i].domande.length; j++) {
             if (data[i].domande.hasOwnProperty(j)) {
 

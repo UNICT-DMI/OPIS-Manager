@@ -123,18 +123,20 @@ class opisController extends Controller {
     $ins = DB::table("insegnamento")->select("id");
     $schede = DB::table("schede");
 
-    /*if ($request->has("dipartimento") && $request->input("dipartimento") != "") {
+    /*
+    if ($request->has("dipartimento") && $request->input("dipartimento") != "") {
       $dip = $request->input("dipartimento");
       $cds->where("id_dipartimento", $dip);
-    }*/
+    }
+    */
 
-    if ($request->has("cds") && $request->input("cds") != "")
+    if ($request->has("cds") && $request->input("cds") != "") {
       $cds->where("id", $request->input("cds"));
+    }
 
-    if ($request->has("insegnamento") && $request->input("insegnamento") != "")
+    if ($request->has("insegnamento") && $request->input("insegnamento") != "") {
       $ins->where("id", $request->input("insegnamento"));
-
-    //inserisco selezione anno 
+    }
       
     $anno_accademico = "";
     if ($request->has("anno_accademico") && $request->input("anno_accademico") != "")  {
@@ -169,7 +171,7 @@ class opisController extends Controller {
         ->on('schede.id_modulo',       '=', 'insegnamento.id_modulo')
         ->on('schede.anno_accademico', '=', 'insegnamento.anno_accademico')
         ->on('schede.id_cds',          '=', 'insegnamento.id_cds');
-    });
+    })->orderBy("anno", "ASC");
 
     // echo str_replace_array('?', $schede->getBindings(), $schede->toSql());
     $result = $schede->get();

@@ -25,7 +25,7 @@
 
       <ul class="nav nav-tabs" id="tabs">
         <li class="nav-item tabs_button" *ngFor="let c of cds">
-          <button class="btn btn-opis" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-cds' : ''">{{ c.nome + " " + c.classe }}</button>
+          <button class="btn btn-opis" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
         </li>
       </ul>
 
@@ -65,13 +65,13 @@
         <div [hidden]="(currentOption == 1 && !selectedYear) || (currentOption == 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
           <ul class="nav nav-tabs" id="tabs">
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(1)">V1</button>
+              <button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues == 1 ? 'selected-tab' : ''">V1</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(2)">V2</button>
+              <button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues == 2 ? 'selected-tab' : ''">V2</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(3)">V3</button>
+              <button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues == 3 ? 'selected-tab' : ''">V3</button>
             </li>
           </ul>
 
