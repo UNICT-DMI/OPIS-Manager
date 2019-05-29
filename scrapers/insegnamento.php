@@ -40,20 +40,24 @@ function insegnamento($id_cds) {
             $_assegn      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[12]')->item(0)->textContent;
             $_tot_schedeF = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[13]')->item(0)->textContent;
 
-            echo "\033[1m" . ($j) . "/" . $num . "\033[0m\t" .  $_nome . " \n";
-
-            if ($_tot_schedeF == '')
+            if ($_tot_schedeF == '') {
                 $_tot_schedeF = 0;
+            }
 
             // if ($_tot_schedeNF == '')
             $_tot_schedeNF = 0; // oldinsegnamento() non ha _tot_schedeNF
 
+            $canale_text = "";
             if ($_canale == ' ') {
                 $_canale = 'no';
             }
             else {
                 $_canale = str_replace(" ", "", $_canale);
+                $_canale = str_replace("Nuovocanale", "", $_canale);
+                $canale_text = "(".$_canale.")";
             }
+
+            echo "\033[1m" . ($j) . "/" . $num . "\033[0m\t" .  $_nome . " " . $canale_text . " \n";
 
             // extract link_opis
             $link_opis = "";
@@ -193,14 +197,16 @@ function oldinsegnamento($id_cds) {
                 $_tot_schedeNF = 0;
             }
 
-            echo "\033[1m" . ($j) . "\033[0m\t" .  $_nome . " \n";
-
+            $canale_text = "";
             if ($_canale == ' ') {
                 $_canale = 'no';
             }
             else {
                 $_canale = str_replace(" ", "", $_canale);
+                $canale_text = "(".$_canale.")";
             }
+
+            echo "\033[1m" . ($j) . "\033[0m\t" .  $_nome . " " . $canale_text . "\n";
 
             // extract link_opis
             $link_opis = "";

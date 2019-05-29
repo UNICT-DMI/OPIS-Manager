@@ -20,8 +20,11 @@ function oldcds($id_dip) // come cds() ma serve per gli anni accademici prima de
         $_classe          = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+2) . ']')->item(0)->textContent;
         $_tot_moduli      = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+3) . ']')->item(0)->textContent;
         $_tot_valutati    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+4) . ']')->item(0)->textContent;
-        if($year == "2015/2016")
-			$_tot_report = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+5) . ']')->item(0)->textContent;
+
+        if ($year == "2015/2016") {
+            $_tot_report = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+5) . ']')->item(0)->textContent;
+        }
+
         $_tot_schedeF     = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+5+($year=="2015/2016" ? 1 : 0)) . ']')->item(0)->textContent;
         $_tot_schedeNF    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[' . ($e+6+($year=="2015/2016" ? 1 : 0)) . ']')->item(0)->textContent;
 
@@ -70,6 +73,8 @@ function cds($id_dip)
         $_tot_schedeNF    = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[9]')->item(0)->textContent;
 
         $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[10]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
+
+        $_nome = html_entity_decode(utf8_decode($_nome)); // fix accents
 
         if (!$mysqli->query('SELECT id FROM cds WHERE id=' . $_cod_corso . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $id_dip . ';')->num_rows) {
             $query = "INSERT INTO cds (id, anno_accademico, nome, classe, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF, id_dipartimento) VALUES\n";

@@ -28,13 +28,6 @@ function fill_arr($arr, $elements) {
   return $arr;
 }
 
-//function check_special_chars(&$str){
-  //for($j=0; $j<strlen($str)-1; $j++)
-    //if(strlen(mb_substr($str, $j, 1, 'utf-8')) == 2) {             //se il carattere della stringa occupa 2 caratteri vuol dire che è un carattere "strano"
-      //$str = substr($str, 0, $j)."0".substr($str, $j+2);    //togliamo i primi 2 (che sarebbe il primo, ma quello strano) caratteri della stringa e concateniamo lo 0
-    //}
-//}
-
 function schede($id_cds, $id_gomp, $id_modulo, $canale) {
   global $link, $mysqli, $year;
 

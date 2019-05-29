@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `insegnamento` (
     `nome`              VARCHAR(255)    NOT NULL,
     `canale`            VARCHAR(10)     DEFAULT "no",
     `id_modulo`         VARCHAR(255)    DEFAULT "0",
-    `ssd`               VARCHAR(20),
+    `ssd`               VARCHAR(40),
     `tipo`              VARCHAR(10)     DEFAULT "",
     `anno`              VARCHAR(10),
     `semestre`          VARCHAR(255),
