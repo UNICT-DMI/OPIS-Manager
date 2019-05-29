@@ -71,8 +71,7 @@ export class HomeComponent implements OnInit {
   resetSettings() {
     this.selectedCds        = null;
     this.selectedTeaching   = null;
-    this.currentOption      = null;
-    this.selectedYear       = null;
+    // this.currentOption      = null;
   }
 
   showCds(department: number) {
@@ -91,6 +90,10 @@ export class HomeComponent implements OnInit {
     this.http.get(this.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
       this.teachings = data;
     });
+
+    if (this.selectedYear) {
+      this.getDataForYear();
+    }
   }
 
   enableOption(val) {
@@ -114,12 +117,12 @@ export class HomeComponent implements OnInit {
         insegnamenti[i].nome += insegnamenti[i].nome.substring(insegnamenti[i].nome.length - 5, insegnamenti[i].nome.length);
       }
 
-      if (data[i].canale !== 'no') {
+      if (data[i].canale.indexOf('no') == -1) {
         insegnamenti[i].nome += ' (' + data[i].canale + ')';
       }
 
-      if (data[i].id_modulo.length > 2 && data[i].id_modulo != '0') {
-        insegnamenti[i].nome += ' (' + data[i].id_modulo.substring(0, data[i].id_modulo.indexOf('-') - 1) + ')';
+      if (data[i].id_modulo.length > 3 && data[i].id_modulo != '0') {
+        insegnamenti[i].nome += ' (' + data[i].id_modulo + ')';
       }
 
       insegnamenti[i].nome += ' - ' + data[i].tot_schedeF;
@@ -248,9 +251,9 @@ export class HomeComponent implements OnInit {
       nome: '1 anno',
       anno: '1'
     });
-    values[0].splice(0, 0, "0");
-    values[1].splice(0, 0, "0");
-    values[2].splice(0, 0, "0");
+    values[0].splice(0, 0, '0');
+    values[1].splice(0, 0, '0');
+    values[2].splice(0, 0, '0');
 
     for (let i = 2; i < insegnamenti.length; i++) {
       if (insegnamenti[i].anno != insegnamenti[i - 1].anno) {
@@ -259,9 +262,9 @@ export class HomeComponent implements OnInit {
           anno: year,
           nome: year + ' anno'
         });
-        values[0].splice(i, 0, "0");
-        values[1].splice(i, 0, "0");
-        values[2].splice(i, 0, "0");
+        values[0].splice(i, 0, '0');
+        values[1].splice(i, 0, '0');
+        values[2].splice(i, 0, '0');
       }
     }
 
@@ -285,7 +288,7 @@ export class HomeComponent implements OnInit {
     parents[1].removeChild(canv[1]);
     parents[2].removeChild(canv[2]);
 
-    const canvWidth = '100%';
+    const canvWidth = '90vw';
     const canvHeight = (insegnamenti.length * 25) + 'px';
 
     let canvs: any = document.createElement('canvas');
@@ -460,7 +463,7 @@ export class HomeComponent implements OnInit {
       };
 
       const container: any = document.getElementById('v' + i + '-teaching');
-      container.innerHTML = '<div style="width: 70%; height: 70%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
+      container.innerHTML = '<div style="width: 100%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
 
       let ctx: any = document.getElementById('V' + i);
       ctx = ctx.getContext('2d');
