@@ -141,13 +141,13 @@ olddip();
 // $year = "2015/2016";
 // olddip();
 
-// $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
-// $year = "2016/2017";
-// dip();
+$link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
+$year = "2016/2017";
+dip();
 
-// $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
-// $year = "2017/2018";
-// dip();
+$link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
+$year = "2017/2018";
+dip();
 
 echo "\n";
 

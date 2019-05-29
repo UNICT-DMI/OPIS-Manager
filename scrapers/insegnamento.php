@@ -45,8 +45,8 @@ function insegnamento($id_cds) {
             if ($_tot_schedeF == '')
                 $_tot_schedeF = 0;
 
-            if ($_tot_schedeNF == '')
-                $_tot_schedeNF = 0;
+            // if ($_tot_schedeNF == '')
+            $_tot_schedeNF = 0; // oldinsegnamento() non ha _tot_schedeNF
 
             if ($_canale == ' ') {
                 $_canale = 'no';
@@ -61,7 +61,12 @@ function insegnamento($id_cds) {
 
             if ($_cod_modulo == "" || $_cod_modulo == " ") {
                 $_cod_modulo = "0";
+            } else {
+                $_cod_modulo = substr($_cod_modulo, 0, strpos($_cod_modulo, "-")-1);
             }
+
+            $_anno = str_replace("Â", "", $_anno);
+            $_anno = str_replace("°", "", $_anno);
 
             if (!$mysqli->query('SELECT id FROM insegnamento '.
                                 ' WHERE id=' . $_id .
@@ -211,6 +216,12 @@ function oldinsegnamento($id_cds) {
             check_special_chars($_id_modulo);
             if($_id_modulo == "" || $_id_modulo == " ")
                 $_id_modulo = "0";
+
+            $_anno = str_replace("°", "", $_anno);
+            $_anno = str_replace(" ", "", $_anno);
+            if (strlen($_anno) > 1) {
+                $_anno = substr($_anno, 1, 2);
+            }
 
             if (!$mysqli->query('SELECT id FROM insegnamento '.
                                 ' WHERE id=' . $_id .
