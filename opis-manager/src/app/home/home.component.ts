@@ -261,6 +261,7 @@ export class HomeComponent implements OnInit {
     insegnamenti.splice(0, 0, {
       nome: '1 anno',
       anno: '1',
+      docente: '',
       tot_schedeF: min
     });
 
@@ -274,6 +275,7 @@ export class HomeComponent implements OnInit {
         insegnamenti.splice(i, 0, {
           anno: year,
           nome: year + ' anno',
+          docente: '',
           tot_schedeF: min
         });
         values[0].splice(i, 0, '0');
@@ -296,6 +298,7 @@ export class HomeComponent implements OnInit {
     }
 
     const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
+    const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
 
     // chartjs stuff
     const charts = [];
@@ -358,9 +361,15 @@ export class HomeComponent implements OnInit {
           }
         }]
       },
+      tooltips: {
+        titleFontSize: 25,
+        bodyFontSize: 25,
+        callbacks: {
+          label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
+        }
+      },
       responsive: false,
       legend: { display: false },
-      lineAtIndex: 0
     };
 
     for (let c in ctx) {
@@ -370,7 +379,6 @@ export class HomeComponent implements OnInit {
         const _data = {
           labels: materie,
           datasets: [{
-            label: labels[c],
             data: values[c],
             backgroundColor: fitColor,
             hoverBackgroundColor: fitColor,
@@ -380,7 +388,6 @@ export class HomeComponent implements OnInit {
         };
 
         const opt = Object.assign({}, _options);
-        opt.lineAtIndex = means[c];
 
         charts.push(new Chart(ctx[c], {
           type: 'horizontalBar',
