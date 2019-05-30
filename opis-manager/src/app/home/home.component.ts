@@ -245,12 +245,25 @@ export class HomeComponent implements OnInit {
   }
 
   generateGraphs(means, values, insegnamenti) {
+
     const labels: string[] = ['V1', 'V2', 'V3'];
+
+    const fitColor = [];
+    let Rx: any;
+    let Gx: any;
+    let Bx: any;
+    let param: any;
+
+    const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+    const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+    const RGB = [100, 200, 200];
 
     insegnamenti.splice(0, 0, {
       nome: '1 anno',
-      anno: '1'
+      anno: '1',
+      tot_schedeF: min
     });
+
     values[0].splice(0, 0, '0');
     values[1].splice(0, 0, '0');
     values[2].splice(0, 0, '0');
@@ -260,11 +273,25 @@ export class HomeComponent implements OnInit {
         let year = insegnamenti[i].anno;
         insegnamenti.splice(i, 0, {
           anno: year,
-          nome: year + ' anno'
+          nome: year + ' anno',
+          tot_schedeF: min
         });
         values[0].splice(i, 0, '0');
         values[1].splice(i, 0, '0');
         values[2].splice(i, 0, '0');
+      }
+    }
+
+
+    for (let i in insegnamenti) {
+      if (insegnamenti.hasOwnProperty(i)) {
+        param = (125 * (insegnamenti[i].tot_schedeF - min) / (max - min));
+
+        Rx = RGB[0] - param;
+        Gx = RGB[1] - param;
+        Bx = RGB[2] - param;
+
+        fitColor.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
       }
     }
 
@@ -338,13 +365,16 @@ export class HomeComponent implements OnInit {
 
     for (let c in ctx) {
       if (ctx.hasOwnProperty(c)) {
+
         // chartjs data
         const _data = {
           labels: materie,
           datasets: [{
             label: labels[c],
             data: values[c],
-            backgroundColor: '#00897b',
+            backgroundColor: fitColor,
+            hoverBackgroundColor: fitColor,
+            fill: true,
             borderWidth: 1
           }]
         };
