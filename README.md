@@ -1,7 +1,7 @@
 # OPIS-Manager
 This tool performs the data visualization of the OPIS results.
 
-[Live Demo](http://188.213.170.165/OPIS-Manager/)
+[Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
 
 # Requirements
 
