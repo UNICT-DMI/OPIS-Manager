@@ -5,8 +5,11 @@ $color_light: #fff;
 	background-color: $color_main;
 	color: $color_light;
 }
-
 .opis-contributors {
     max-width: 700px;
     margin: 0 auto;
+}
+.opis-logo {
+    width: 100%;
+    height: auto;
 }
