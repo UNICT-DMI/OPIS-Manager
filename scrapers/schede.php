@@ -28,25 +28,40 @@ function fill_arr($arr, $elements) {
   return $arr;
 }
 
+function adjust_tag($html){
+  $html = str_replace("<b>", "", $html);
+  $html = str_replace("</b>", "", $html);
+  return $html;
+}
+
 function schede($id_cds, $id_gomp, $id_modulo, $canale) {
   global $link, $mysqli, $year;
 
   $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $id_modulo . "&canale=" . $canale;
   $canale = str_replace("%20", "", $canale);
 
-  $xpath = new DOMXPath(getDOM($url));
+  $dom = getDOM($url);
+  $xpath = new DOMXPath($dom);
 
-  $totaleSchede     = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[2]/td[2]')->item(0)->textContent;
-  $femmine          = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[2]/td[3]')->item(0)->textContent;
-  $fuoriCorso       = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[2]/td[4]')->item(0)->textContent;
-  $inattivi         = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[2]/td[5]')->item(0)->textContent;
+  if($year == "2015/2016"){
+    $sem = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[1]')->item(0)->textContent;
+    $ssd = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[2]')->item(0)->textContent;
+    $tipo = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[3]')->item(0)->textContent;
+    $cfu = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[4]')->item(0)->textContent;
+    $docente = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[5]')->item(0)->textContent;
+    $assegn = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[6]')->item(0)->textContent;
+  }
+  $totaleSchede     = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  2 : 2) . ']/td[' . ($year=="2015/2016" ?  2 : 2) . ']')->item(0)->textContent;
+  $femmine          = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  3 : 2) . ']/td[' . ($year=="2015/2016" ?  2 : 3) . ']')->item(0)->textContent;
+  $fuoriCorso       = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  4 : 2) . ']/td[' . ($year=="2015/2016" ?  2 : 4) . ']')->item(0)->textContent;
+  $inattivi         = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  5 : 2) . ']/td[' . ($year=="2015/2016" ?  2 : 5) . ']')->item(0)->textContent;
 
-  $totaleSchede_nf  = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[2]')->item(0)->textContent;
-  // $femmine_nf       = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[3]')->item(0)->textContent; // "non prevista"
+  $totaleSchede_nf  = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  2 : 3) . ']/td[' . ($year=="2015/2016" ?  3 : 2) . ']')->item(0)->textContent;
+  // $femmine_nf       = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[' . ($year=="2015/2016" ?  3 : 3) . ']/td[' . ($year=="2015/2016" ?  3 : 3) . ']')->item(0)->textContent; // "non prevista"
   $femmine_nf       = 0; // "non prevista"
-  // $fuoriCorso_nf    = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[4]')->item(0)->textContent;
+  // $fuoriCorso_nf    = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[' . ($year=="2015/2016" ?  4 : 3) . ']/td[' . ($year=="2015/2016" ?  3 : 4) . ']')->item(0)->textContent;
   $fuoriCorso_nf    = 0;
-  $inattivi_nf      = $xpath->query('/html/body/table[1]/tr/td/table[4]/tr[3]/td[5]')->item(0)->textContent;
+  $inattivi_nf      = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  5 : 4) . ']/tr[' . ($year=="2015/2016" ?  5 : 3) . ']/td[' . ($year=="2015/2016" ?  3 : 5) . ']')->item(0)->textContent;
 
   if ($inattivi_nf == "") {
     $inattivi_nf = 0;
@@ -56,9 +71,9 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale) {
     $femmine = 0;
   }
 
-  /* data from graphs */
+  // data from graphs
   $eta = "";
-  $el = $xpath->query('/html/body/table[1]/tr/td/table[5]/tr/td//img')->item(0);
+  $el = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  6 : 5) . ']/tr/td//img')->item(0);
   if ($el) {
     $eta = $el->getAttribute("src");
     $eta = filter_graph($eta, "graph_eta", "eta");
@@ -66,12 +81,14 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale) {
   }
 
   $anno_iscr = "";
-  $el = $xpath->query('/html/body/table[1]/tr/td/table[5]/tr/td[2]//img')->item(0);
+  $el = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year=="2015/2016" ?  6 : 5) . ']/tr/td[2]//img')->item(0);
   if ($el) {
     $anno_iscr = $el->getAttribute("src");
     $anno_iscr = filter_graph($anno_iscr, "graph_annoiscr", "iscr");
     $anno_iscr = fill_arr($anno_iscr, array("1", "2", "3", "4", "5", "6", "FC"));
   }
+
+  //CONTINUARE DA QUA IN POI PER L'ANNO 15/16
 
   $n_studenti = "";
   $el = $xpath->query('/html/body/table[1]/tr/td/table[5]/tr[2]/td[1]//img')->item(0);
@@ -108,7 +125,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale) {
 
   // questions answers
   $domande = "";
-  $el = $xpath->query('/html/body/table[1]/tr/td/table[6]/tr/td[1]')->item(0);
+  $el = $xpath->query('/html/body/table[1]/tr/td/table[5]/tr/td[1]')->item(0);
   if ($el && !strpos($el->textContent, "schede insuff.")) {
     $domande = array();
     for ($i = 2; $i < 14; $i++)
@@ -170,7 +187,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale) {
     }
   }
 
-  /* Serializing data */
+  // Serializing data
 
   // graphs
   $eta        = json_encode($eta);
@@ -230,7 +247,6 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale) {
     // echo $query;
 
   }
-
 }
 
 function oldschede($id_cds, $id_gomp, $canale) {
@@ -433,7 +449,7 @@ function oldschede($id_cds, $id_gomp, $canale) {
     }
 
     // echo $query;
-
+    
   }
 
 }
