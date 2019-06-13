@@ -46,14 +46,15 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
 
   $xpath = new DOMXPath(getDOM($url));
 
-  if ($year == "2015/2016") {
+  /*if ($year == "2015/2016") {
     $sem = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[1]')->item(0)->textContent;
     $ssd = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[2]')->item(0)->textContent;
     $tipo = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[3]')->item(0)->textContent;
     $cfu = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[4]')->item(0)->textContent;
     $docente = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[5]')->item(0)->textContent;
     $assegn = $xpath->query('/html/body/table[1]/tr/td/table[3]/tr[2]/td[6]')->item(0)->textContent;
-  }
+  }*/
+  
   $totaleSchede     = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  5 : 4) . ']/tr[' . ($year == "2015/2016" ?  2 : 2) . ']/td[' . ($year == "2015/2016" ?  2 : 2) . ']')->item(0)->textContent;
   $femmine          = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  5 : 4) . ']/tr[' . ($year == "2015/2016" ?  3 : 2) . ']/td[' . ($year == "2015/2016" ?  2 : 3) . ']')->item(0)->textContent;
   $fuoriCorso       = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  5 : 4) . ']/tr[' . ($year == "2015/2016" ?  4 : 2) . ']/td[' . ($year == "2015/2016" ?  2 : 4) . ']')->item(0)->textContent;
@@ -185,7 +186,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
   $el = $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  9 : 6) . ']/tr[3]/td[1]/table[1]/tr[2]/td[1]')->item(0);
   if ($el && !strpos($el->textContent, "schede insuff.")) {
     $sugg = array();
-    for ($i = 2; $i < 12; $i++)
+    for ($i = 2; $i < ($year == "2015/2016" ? 11 : 12); $i++)
       $sugg[] = array(
         $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  9 : 6) . ']/tr[3]/td[1]/table[1]/tr[' . $i . ']/td[1]')->item(0)->textContent,
         $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  9 : 6) . ']/tr[3]/td[1]/table[1]/tr[' . $i . ']/td[2]')->item(0)->textContent
@@ -198,7 +199,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
   if ($el && !strpos($el->textContent, "schede insuff.")) {
     $sugg_nf = array();
 
-    for ($i = 2; $i < 12; $i++) {
+    for ($i = 2; $i < ($year == "2015/2016" ? 11 : 12); $i++) {
       $sugg_nf[] = array(
         $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  9 : 6) . ']/tr[3]/td[2]/table[1]/tr[' . $i . ']/td[1]')->item(0)->textContent,
         $xpath->query('/html/body/table[1]/tr/td/table[' . ($year == "2015/2016" ?  9 : 6) . ']/tr[3]/td[2]/table[1]/tr[' . $i . ']/td[2]')->item(0)->textContent
