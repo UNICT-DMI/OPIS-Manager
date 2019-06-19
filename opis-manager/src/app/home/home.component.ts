@@ -252,11 +252,11 @@ export class HomeComponent implements OnInit {
     let Rx: any;
     let Gx: any;
     let Bx: any;
-    let param: any;
 
     const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
     const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
-    const RGB = [100, 200, 200];
+    const RGB1 = [255, 200, 45];
+    const RGB2 = [0,   121, 107];
 
     insegnamenti.splice(0, 0, {
       nome: '1 anno',
@@ -287,11 +287,9 @@ export class HomeComponent implements OnInit {
 
     for (let i in insegnamenti) {
       if (insegnamenti.hasOwnProperty(i)) {
-        param = (125 * (insegnamenti[i].tot_schedeF - min) / (max - min));
-
-        Rx = RGB[0] - param;
-        Gx = RGB[1] - param;
-        Bx = RGB[2] - param;
+        Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
+        Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
+        Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
 
         fitColor.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
       }
