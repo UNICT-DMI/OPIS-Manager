@@ -111,5 +111,41 @@ Run this command to fill the APP_KEY parameter:
 php artisan key:generate
 ```
 
-Now your OPIS-Manager should be installed.
-You can run the browser and test it!
+Now your OPIS-Manager API is installed.
+
+
+## Angular application (front-end)
+
+To run the front-end application you just need to enter into *opis-manager/* directory and install the required packages with:
+```
+$ cd opis-manager
+$ npm install
+```
+
+Install the last version of angular-cli to run the app locally with:
+```
+$ npm install -g @angular/cli@latest
+```
+
+Configure the years and the API path, so copy src/assets/config.json.dist into src/assets/config.json and configure the related years and API url, like:
+
+```
+{
+  "apiUrl": "http://localhost/OPIS-Manager/API/public/index.php/api/",
+  "years": ["2013/2014", "2014/2015", "2016/2017", "2017/2018"]
+}
+```
+
+Finally can run the front-end application with the follow command while you are in opis-manager/:
+```
+$ ng serve -o
+```
+
+### Credits
+
+- Stefano Borzì (Helias)
+- Pierpaolo Pecoraio
+- Simone Scionti
+- Alessandro Catalano
+- Alessio Piazza
+- Diego Sinitò
