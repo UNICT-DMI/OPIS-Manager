@@ -73,6 +73,16 @@
             <li class="nav-item tabs_button">
               <button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues == 3 ? 'selected-tab' : ''">V3</button>
             </li>
+            <li [hidden]="currentOption == 2">
+              <div class="input-group addons-bar">
+                <div class="input-group-prepend">
+                  <span class="input-group-text selected-tab" id="basic-addon1">
+                    <fa name="search" size="lg" class="opis-icon"></fa>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" debounce [delay]="700" (func)="getDataForYear()">
+              </div>
+            </li>
           </ul>
 
           <br>
@@ -195,6 +205,13 @@
               </div>
               <div id="v3-teaching" [hidden]="currentOption != 2"></div>
           </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="custom-slider">
+          <ng5-slider class="addons-bar slider-years" [(value)]="minValue" [(highValue)]="maxValue" [options]="optionsSlider" [hidden]="currentOption != 2 || !selectedTeaching" [manualRefresh]="manualRefresh" (valueChange)="getDataForTeaching()"></ng5-slider>
         </div>
 
         <br>

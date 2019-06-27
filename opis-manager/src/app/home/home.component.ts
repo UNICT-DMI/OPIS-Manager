@@ -1,7 +1,8 @@
-import { Component, OnInit, getDebugNode } from '@angular/core';
+import { Component, OnInit, getDebugNode, EventEmitter } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,23 @@ export class HomeComponent implements OnInit {
   v2Info = false;
   v3Info = false;
 
+  subject: string;
+
+  stepsYears: { value: number, legend: string }[] = [];
+
+  /* years slider */
+  manualRefresh: EventEmitter<void> = new EventEmitter<void>();
+  minValue: number = 0;
+  maxValue: number = 1;
+  optionsSlider: Options = {
+    floor: 1,
+    ceil: 8,
+    showTicksValues: true,
+    getLegend: (value: number): string => {
+      return this.config.years[value - 1];
+    }
+  };
+
   constructor(
     public configService: ConfigService,
     private http: HttpClient
@@ -46,6 +64,17 @@ export class HomeComponent implements OnInit {
         apiUrl: data.apiUrl,
         years: data.years
       };
+
+      this.optionsSlider = {
+        floor: 1,
+        ceil: data.years.length,
+        showTicksValues: true,
+        getLegend: (value: number): string => {
+          return this.config.years[value - 1];
+        }
+      };
+
+      this.maxValue = this.config.years.length;
 
       this.getDepartmnets();
     });
@@ -99,6 +128,7 @@ export class HomeComponent implements OnInit {
   enableOption(val) {
     this.resetInfo();
     this.currentOption = val;
+    this.manualRefresh.emit();
   }
 
   performTeachings(data) {
@@ -107,6 +137,7 @@ export class HomeComponent implements OnInit {
     for (let i = 0; i < data.length; i++) {
 
       if (data[i].tot_schedeF < 6) { continue; }
+      if (this.subject != null && data[i].nome.toUpperCase().indexOf(this.subject.toUpperCase()) === -1) { continue; }
 
       insegnamenti[i] = {};
       insegnamenti[i].nome = data[i].nome;
@@ -319,22 +350,26 @@ export class HomeComponent implements OnInit {
     const canvWidth = '90vw';
     const canvHeight = (insegnamenti.length * 25) + 'px';
 
+    const minHeight = '150px';
     let canvs: any = document.createElement('canvas');
     canvs.id = 'v1-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
+    canvs.style['min-height'] = minHeight;
     parents[0].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = 'v2-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
+    canvs.style['min-height'] = minHeight;
     parents[1].appendChild(canvs);
 
     canvs = document.createElement('canvas');
     canvs.id = 'v3-canvas';
     canvs.style.width = canvWidth;
     canvs.style.height = canvHeight;
+    canvs.style['min-height'] = minHeight;
     parents[2].appendChild(canvs);
 
     canv = [];
@@ -421,7 +456,14 @@ export class HomeComponent implements OnInit {
     matr[1] = [];
     matr[2] = [];
 
-    const yearsArray = this.config.years;
+    const tmp = Array.from(this.config.years);
+    const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
+
+    for (let i = 0; i < teachingResults.length; i++) {
+      if (!yearsArray.includes(teachingResults[i].anno)) {
+        teachingResults.splice(i--, 1);
+      }
+    }
 
     let j = 0;
     for (let i in yearsArray) {
@@ -498,7 +540,7 @@ export class HomeComponent implements OnInit {
       };
 
       const container: any = document.getElementById('v' + i + '-teaching');
-      container.innerHTML = '<div style="width: 100%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
+      container.innerHTML = '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
 
       let ctx: any = document.getElementById('V' + i);
       ctx = ctx.getContext('2d');
@@ -507,6 +549,10 @@ export class HomeComponent implements OnInit {
   }
 
   getDataForTeaching() {
+
+    this.manualRefresh.emit(); // refresh years slider
+
+    if (this.selectedTeaching === undefined) { return; }
 
     let id: string;
     let channel: string;

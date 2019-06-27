@@ -73,8 +73,8 @@ $font_family_1: "Helvetica Neue";
 }
 
 .list-option-container {
-    margin-left: 200px;
-    width: 1200px;
+    margin-left: 325px;
+    width: 850px;
 }
 
 .switch-years {
@@ -91,3 +91,42 @@ $font_family_1: "Helvetica Neue";
   background-color: $color_main;
   border-color: $color_dark;
 }
+
+.addons-bar {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+.slider-years {
+  width: 500px;
+}
+
+#v1-container, #v2-container, #v3-container {
+  min-height: 800px;
+}
+
+/* Slider */
+.custom-slider {
+  margin: 0 auto;
+  display: table;
+}
+::ng-deep {
+  .custom-slider .ng5-slider .ng5-slider-bar {
+    background: #ffe4d1;
+    height: 2px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-pointer {
+    background-color: $color_main;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-bubble {
+    bottom: 14px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+    background: $color_main;
+  }
+}
+
+

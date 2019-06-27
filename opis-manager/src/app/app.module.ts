@@ -6,7 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'angular2-chartjs';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DebounceModule } from 'ngx-debounce';
+import { Ng5SliderModule } from 'ng5-slider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +32,9 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FormsModule,
     ChartModule,
-    NgbModule
+    NgbModule,
+    DebounceModule,
+    Ng5SliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
