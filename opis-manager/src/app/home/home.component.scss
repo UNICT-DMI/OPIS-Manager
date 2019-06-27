@@ -92,6 +92,14 @@ $font_family_1: "Helvetica Neue";
   border-color: $color_dark;
 }
 
+.color-bar {
+  display: inline-block;
+  height: 20px;
+  width: 200px;
+  background: rgba(0, 0, 0, 0) linear-gradient(to right, rgb(255, 200, 45), rgb(0, 121, 107)) repeat scroll 0% 0%;
+  vertical-align: middle;
+}
+
 .addons-bar {
   margin-top: 5px;
   margin-left: 20px;
