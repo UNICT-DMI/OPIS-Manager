@@ -149,6 +149,10 @@ $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
 $year = "2017/2018";
 dip();
 
+$link = "http://nucleo.unict.it/val_did/anno_1819/index.php";
+$year = "2018/2019";
+dip();
+
 echo "\n";
 
 mysqli_close($mysqli);

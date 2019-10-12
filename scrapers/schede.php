@@ -135,10 +135,10 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
     }
   }
   else{
-    $n_studenti = "";
-    $ragg_uni = "";
-    $studio_gg = "";
-    $studio_tot = "";
+    $n_studenti = "{}";
+    $ragg_uni = "{}";
+    $studio_gg = "{}";
+    $studio_tot = "{}";
     //if interested in values n_studenti, ragg_uni, studio_gg, studio_tot scrape from the table below
     //var_dump($xpath->query('/html/body/table[1]/tr/td/table[7]')->item(0));
   }
