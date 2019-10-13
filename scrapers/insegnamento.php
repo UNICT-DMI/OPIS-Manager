@@ -170,8 +170,6 @@ function oldinsegnamento($id_cds) {
                     $_cfu2 = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($i+1) . ']/td[5]')->item(0)->textContent;
                     $_docente2 = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($i+1) . ']/td[6]')->item(0)->textContent;
                     $_assegn2 = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . ($i+1) . ']/td[7]')->item(0)->textContent;
-                    echo $_docente . " ---- " . $_docente2 . "\n";
-                    //echo $_assegn . " ---- " . $_assegn2 . "\n";
                 }
 
             }
@@ -210,8 +208,9 @@ function oldinsegnamento($id_cds) {
 
             // extract link_opis
             $link_opis = "";
-            if($year == "2015/2016")
-                $emptyOPIS= $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[10]')->item(0)->firstChild->nodeName;
+            if($year == "2015/2016"){
+                $emptyOPIS = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[15]')->item(0)->firstChild->nodeName; // non frequentanti
+            }
             else {
                 $emptyOPIS= $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[10]')->item(0)->firstChild->nodeName;
                 if ($year == "2014/2015") {
@@ -222,9 +221,16 @@ function oldinsegnamento($id_cds) {
             check_special_chars($_id_modulo);
             if($_id_modulo == "" || $_id_modulo == " ")
                 $_id_modulo = "0";
-
+    
             $_anno = str_replace("°", "", $_anno);
             $_anno = str_replace(" ", "", $_anno);
+            $_anno = str_replace("Â", "", $_anno);
+
+            $_anno2 = str_replace("°", "", $_anno);
+            $_anno2 = str_replace(" ", "", $_anno);
+            $_anno2 = str_replace("Â", "", $_anno);
+
+
             if (strlen($_anno) > 1) {
                 $_anno = substr($_anno, 1, 2);
             }
@@ -305,7 +311,7 @@ function oldinsegnamento($id_cds) {
             }
 
 			$_docente2 = "";
-			
+
             if ($emptyOPIS == 'img') {
                 $link_opis="Scheda non autorizzata alla pubblicazione";
             }
@@ -313,18 +319,26 @@ function oldinsegnamento($id_cds) {
                 $link_opis="Nessun report perché numero di schede insuff.";
             }
             else if ($emptyOPIS == 'a') {
-                $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[10]/a')->item(0)->attributes->item(0)->textContent;
+                if($year != "2015/2016")
+                    $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[10]/a')->item(0)->attributes->item(0)->textContent;
+                else{
+                    $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[15]/a')->item(0)->attributes->getNamedItem("href")->textContent;
+                }                
+                
                 $params = $link_opis;
                 $params = str_replace("./val_insegn.php?", "", $params);
                 $params = str_replace("cod_corso=", "", $params);
                 $params = str_replace("cod_gomp=", "", $params);
+                $params = str_replace("cod_modulo=", "", $params);
                 $params = str_replace("canale=", "", $params);
                 $params = explode("&", $params);
 
                 $params[2] = str_replace(" ", "%20", $params[2]);
-
                 //oldschede(cod_corso, cod_gomp canale);
-                oldschede($params[0], $params[1], $params[2]);
+                if($year != "2015/2016")
+                    oldschede($params[0], $params[1], $params[2]);
+                else
+                    schede($params[0], $params[1], $params[2], $params[3]);
             }
 
         }

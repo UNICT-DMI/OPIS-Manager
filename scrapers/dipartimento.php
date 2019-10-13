@@ -70,7 +70,7 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
         }
 
         // debugging
-        if ($debug && $_id == 2) {
+        if ($debug && $_id == 1) {
             oldcds($_id);
         }
         else if (!$debug) {
@@ -117,7 +117,7 @@ function dip()
         }
 
         // debugging
-        if ($debug && $_id == 2) {
+        if ($debug && $_id == 1) {
             cds($_id);
         }
         else if(!$debug) {
@@ -137,9 +137,9 @@ $link = "http://nucleo.unict.it/val_did/anno_1415/index.php";
 $year = "2014/2015";
 olddip();
 
-// $link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
-// $year = "2015/2016";
-// olddip();
+$link = "http://nucleo.unict.it/val_did/anno_1516/index.php";
+$year = "2015/2016";
+olddip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1617/index.php";
 $year = "2016/2017";
@@ -147,6 +147,10 @@ dip();
 
 $link = "http://nucleo.unict.it/val_did/anno_1718/index.php";
 $year = "2017/2018";
+dip();
+
+$link = "http://nucleo.unict.it/val_did/anno_1819/index.php";
+$year = "2018/2019";
 dip();
 
 echo "\n";
