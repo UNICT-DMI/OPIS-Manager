@@ -221,9 +221,16 @@ function oldinsegnamento($id_cds) {
             check_special_chars($_id_modulo);
             if($_id_modulo == "" || $_id_modulo == " ")
                 $_id_modulo = "0";
-
+    
             $_anno = str_replace("°", "", $_anno);
             $_anno = str_replace(" ", "", $_anno);
+            $_anno = str_replace("Â", "", $_anno);
+
+            $_anno2 = str_replace("°", "", $_anno);
+            $_anno2 = str_replace(" ", "", $_anno);
+            $_anno2 = str_replace("Â", "", $_anno);
+
+
             if (strlen($_anno) > 1) {
                 $_anno = substr($_anno, 1, 2);
             }

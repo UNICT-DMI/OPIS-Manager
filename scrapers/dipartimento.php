@@ -70,7 +70,7 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
         }
 
         // debugging
-        if ($debug && $_id == 2) {
+        if ($debug && $_id == 1) {
             oldcds($_id);
         }
         else if (!$debug) {
@@ -117,7 +117,7 @@ function dip()
         }
 
         // debugging
-        if ($debug && $_id == 2) {
+        if ($debug && $_id == 1) {
             cds($_id);
         }
         else if(!$debug) {
