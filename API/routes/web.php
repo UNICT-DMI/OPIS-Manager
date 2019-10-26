@@ -23,5 +23,6 @@ Route::group(['prefix' => 'api'], function() {
   Route::get("insegnamento/{cds}",          "opisController@getTeachings");
   Route::get("schedeInsegnamento",          "opisController@getSchedeAboutTeaching");
   Route::get("schede",                      "opisController@getResults");
+  Route::get("materia/{id}",                "opisController@getSubject");
 
 });
