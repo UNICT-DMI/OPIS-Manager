@@ -3,6 +3,7 @@ import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { Options } from 'ng5-slider';
+import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,9 @@ import { Options } from 'ng5-slider';
 })
 
 export class HomeComponent implements OnInit {
+
+  readonly faInfo = faInfo;
+  readonly faSearch = faSearch;
 
   config: {
     apiUrl: string;

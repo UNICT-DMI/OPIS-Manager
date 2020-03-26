@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { fadeAnimation } from './animations';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,5 @@ import { fadeAnimation } from './animations';
   animations: [fadeAnimation]
 })
 export class AppComponent {
-  title = 'opis-manager';
+  public readonly faGithub = faGithub;
 }

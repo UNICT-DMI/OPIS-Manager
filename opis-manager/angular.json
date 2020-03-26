@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/opis-manager",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -56,6 +57,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -138,5 +143,8 @@
       }
     }
   },
-  "defaultProject": "opis-manager"
+  "defaultProject": "opis-manager",
+  "cli": {
+    "analytics": "36bd3292-2c2f-4260-b172-f797d026afe9"
+  }
 }

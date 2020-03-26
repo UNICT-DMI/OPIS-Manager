@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule, FaConfig } from '@fortawesome/angular-fontawesome';
 import { KatexModule } from 'ng-katex';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,7 +25,7 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFontAwesomeModule,
+    FontAwesomeModule,
     KatexModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -37,4 +37,4 @@ import { HomeComponent } from './home/home.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

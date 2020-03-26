@@ -77,7 +77,7 @@
               <div class="input-group addons-bar">
                 <div class="input-group-prepend">
                   <span class="input-group-text selected-tab" id="basic-addon1">
-                    <fa name="search" size="lg" class="opis-icon"></fa>
+                    <fa-icon [icon]="faSearch" size="lg" class="opis-icon"></fa-icon>
                   </span>
                 </div>
                 <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" (change)="getDataForYear()">
@@ -94,7 +94,7 @@
             <h2 class="text-center">
               V1 - Come lo studente vede il corso
               <button type="button" class="btn btn-opis" (click)="v1Info = !v1Info">
-                <fa name="info" size="lg"></fa>
+                <fa-icon [icon]="faInfo" size="lg"></fa-icon>
               </button>
             </h2>
 
@@ -132,7 +132,7 @@
               <h2 class="text-center">
                 V2 - Come lo studente vede il docente
                 <button type="button" class="btn btn-opis" (click)="v2Info = !v2Info">
-                  <fa name="info" size="lg"></fa>
+                  <fa-icon [icon]="faInfo" size="lg"></fa-icon>
                 </button>
               </h2>
 
@@ -174,7 +174,7 @@
               <h2 class="text-center">
                 V3 - Come il docente interagisce con lo studente
                 <button type="button" class="btn btn-opis" (click)="v3Info = !v3Info">
-                  <fa name="info" size="lg"></fa>
+                  <fa-icon [icon]="faInfo" size="lg"></fa-icon>
                 </button>
               </h2>
 
