@@ -80,7 +80,8 @@
                     <fa name="search" size="lg" class="opis-icon"></fa>
                   </span>
                 </div>
-                <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" debounce [delay]="700" (func)="getDataForYear()">
+                <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" (change)="getDataForYear()">
+                <!-- <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" debounce [delay]="700" (func)="getDataForYear()"> -->
               </div>
             </li>
           </ul>
@@ -134,7 +135,7 @@
                   <fa name="info" size="lg"></fa>
                 </button>
               </h2>
-  
+
               <div [ngbCollapse]="!v2Info" class="v-info">
                 <table class="table table-bordered">
                   <thead>
@@ -176,7 +177,7 @@
                   <fa name="info" size="lg"></fa>
                 </button>
               </h2>
-  
+
               <div [ngbCollapse]="!v3Info" class="v-info">
                 <table class="table table-bordered">
                   <thead>

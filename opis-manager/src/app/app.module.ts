@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'angular2-chartjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DebounceModule } from 'ngx-debounce';
 import { Ng5SliderModule } from 'ng5-slider';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -33,7 +32,6 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     ChartModule,
     NgbModule,
-    DebounceModule,
     Ng5SliderModule
   ],
   providers: [],
