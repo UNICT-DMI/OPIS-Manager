@@ -31,3 +31,6 @@ Route::get('dipartimento/{department}/cds', 'DepartmentController@getCds')
 
 Route::get('cds', 'CdsController@index')
     ->name('cds.index'); 
+
+Route::get('cds/{cds}/insegnamenti', 'CdsController@getTeachings')
+    ->name('cds.teachings'); 

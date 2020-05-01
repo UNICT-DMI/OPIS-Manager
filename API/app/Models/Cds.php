@@ -6,23 +6,29 @@ use App\Traits\OpisUtilities;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
-class Department extends Model
+/** Corso di Laurea (CDS) model */
+
+class Cds extends Model
 {
     use OpisUtilities; 
 
-    protected $table = 'dipartimento'; 
+    protected $table = 'cds'; 
 
     public $timestamps = false; 
 
     /**
      * @override of model find method 
      * 
-     * @return Department
+     * Il Cds è identificato da id, anno accademico e id del dipartimento. 
+     * Tuttavia, nella version precedente il dipartimento non è menzionato.
+     * Fino alla review, non includeremo il dipartimento tra le chiavi primarie.
+     * 
+     * @return Cds
     */
     public static function find(int $id, string $academicYear = null)
     {
         $academicYear = $academicYear == null
-            ? self::getLastAcademicYear('dipartimento')
+            ? self::getLastAcademicYear('cds')
             : $academicYear; 
 
         return self::where('id', $id)
@@ -32,7 +38,7 @@ class Department extends Model
 
 
     /**
-     * Reperisci la lista dei dipartimenti relativamente
+     * Reperisci la lista dei cds relativamente
      * all'anno più recente registrato. 
      * 
      * @return array 
@@ -42,38 +48,37 @@ class Department extends Model
         return DB::SELECT(
             <<<SQL
                 SELECT  * 
-                FROM    dipartimento 
+                FROM    cds 
                 WHERE   anno_accademico = (
                     SELECT MAX(anno_accademico) 
-                    FROM dipartimento
+                    FROM cds
                 )
             SQL
         ); 
     }
-
+    
 
     /**
-     * Reperisci la lista dei corsi di studio (cds) legati
-     * al dipartimento. 
-     * 
-     * @note:   ricordatevi di eseguire il binding dei parametri
-     *          passati alle query raw con il query builder
-     * 
+     * Reperisci la lista degli insegnamenti legati
+     * al corso di studi.
+     *  
      *  @return array
      */
-    public function getCds () : array 
+    public function getTeachings () : array 
     {
         return DB::SELECT(
             <<<SQL
                 SELECT  * 
-                FROM    cds 
-                WHERE   id_dipartimento = ? 
+                FROM    insegnamento 
+                WHERE   id_cds = ? 
                 AND     anno_accademico = (
                     SELECT  MAX(anno_accademico) 
-                    FROM    cds
+                    FROM    insegnamento
                 )
             SQL, 
             [$this->id] 
-        ); 
+        );
     }
+
+
 }
