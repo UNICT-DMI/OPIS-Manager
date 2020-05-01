@@ -43,3 +43,11 @@ Route::get('insegnamento/{teaching}', 'TeachingController@show')
 
 Route::get('insegnamento/{teaching}/schede', 'TeachingController@getForms')
     ->name('insegnamento.schede'); 
+
+/**
+ * Insieme di API per i risultati delle schede OPIS 
+ * 
+ */
+
+Route::get('schede', 'OpisController@getOpisResults')
+    ->name('opis.schede'); 
