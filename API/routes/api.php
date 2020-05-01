@@ -13,6 +13,21 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+/**
+ * Insieme di API per la risorsa Department
+ * 
+ */
+Route::get('dipartimento', 'DepartmentController@index')
+    ->name('dipartimento.index'); 
+
+Route::get('dipartimento/{department}/cds', 'DepartmentController@getCds')
+    ->name('dipartimento.cds'); 
+
+/**
+ * Insieme di API per la risorsa Cds (Corso di laurea)
+ * 
+ */
+
+Route::get('cds', 'CdsController@index')
+    ->name('cds.index'); 
