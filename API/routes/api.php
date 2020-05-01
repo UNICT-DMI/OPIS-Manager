@@ -28,9 +28,18 @@ Route::get('dipartimento/{department}/cds', 'DepartmentController@getCds')
  * Insieme di API per la risorsa Cds (Corso di laurea)
  * 
  */
-
 Route::get('cds', 'CdsController@index')
     ->name('cds.index'); 
 
 Route::get('cds/{cds}/insegnamenti', 'CdsController@getTeachings')
-    ->name('cds.teachings'); 
+    ->name('cds.insegnamenti'); 
+
+/**
+ * Insieme di API per la risorsa Teaching (insegnamento)
+ * 
+ */
+Route::get('insegnamento/{teaching}', 'TeachingController@show')
+    ->name('insegnamento.show'); 
+
+Route::get('insegnamento/{teaching}/schede', 'TeachingController@getForms')
+    ->name('insegnamento.schede'); 

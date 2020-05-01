@@ -21,7 +21,7 @@ Route::get('/', function () {
 //   Route::get("cds",                         "opisController@getCds"); [fatta]
 //   Route::get("cds/{department}",            "opisController@getCds"); [fatta]
 //   Route::get("insegnamento/{cds}",          "opisController@getTeachings"); [fatta]
-//   Route::get("schedeInsegnamento",          "opisController@getSchedeAboutTeaching");
+//   Route::get("schedeInsegnamento",          "opisController@getSchedeAboutTeaching"); [fatta]
 //   Route::get("schede",                      "opisController@getResults");
 //   Route::get("materia/{id}",                "opisController@getSubject");
 
