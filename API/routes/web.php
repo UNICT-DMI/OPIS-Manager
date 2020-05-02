@@ -17,11 +17,11 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'api'], function() {
 
-  Route::get("dipartimento",                "opisController@getDepartments");
-  Route::get("cds",                         "opisController@getCds");
-  Route::get("cds/{department}",            "opisController@getCds");
-  Route::get("insegnamento/{cds}",          "opisController@getTeachings");
-  Route::get("schedeInsegnamento",          "opisController@getSchedeAboutTeaching");
+  Route::get("dipartimento",                "opisController@getDepartments"); 
+  Route::get("cds",                         "opisController@getCds"); 
+  Route::get("cds/{department}",            "opisController@getCds"); 
+  Route::get("insegnamento/{cds}",          "opisController@getTeachings"); 
+  Route::get("schedeInsegnamento",          "opisController@getSchedeAboutTeaching"); 
   Route::get("schede",                      "opisController@getResults");
   Route::get("materia/{id}",                "opisController@getSubject");
 
