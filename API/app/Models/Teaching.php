@@ -21,7 +21,7 @@ class Teaching extends Model
      * 
      * @return Teaching
     */
-    public static function find(int $id, string $academicYear = null)
+    public static function find(int $id, string $academicYear = null) : Teaching
     {
         $academicYear = $academicYear == null
             ? self::getLastAcademicYear('insegnamento')
@@ -37,7 +37,7 @@ class Teaching extends Model
      * del modulo nella ricerca. 
      * 
      */
-    public static function findWithModule (int $id) 
+    public static function findWithModule (int $id) : Teaching
     {
         return self::where('id', $id)
                 ->orWhere('id_modulo', $id)

@@ -25,7 +25,7 @@ class Cds extends Model
      * 
      * @return Cds
     */
-    public static function find(int $id, string $academicYear = null)
+    public static function find(int $id, string $academicYear = null) : Cds
     {
         $academicYear = $academicYear == null
             ? self::getLastAcademicYear('cds')

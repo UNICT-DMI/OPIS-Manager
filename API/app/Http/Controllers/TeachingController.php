@@ -14,8 +14,10 @@ class TeachingController extends Controller
     {
         $teaching = Teaching::findWithModule($teaching); 
 
-        if (null === $teaching)
-            return response()->json([], Response::HTTP_NOT_FOUND); 
+        if (null === $teaching) {
+
+            return response()->json([], Response::HTTP_NOT_FOUND);
+        } 
 
         return response()->json($teaching, Response::HTTP_OK); 
     }
@@ -25,8 +27,10 @@ class TeachingController extends Controller
     {
         $teaching = Teaching::find($teaching); 
 
-        if (null === $teaching)
-            return response()->json([], Response::HTTP_NOT_FOUND); 
+        if (null === $teaching) {
+
+            return response()->json([], Response::HTTP_NOT_FOUND);
+        } 
         
         return response()->json(
             $teaching->getForms($request->canale), 

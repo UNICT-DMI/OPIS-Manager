@@ -19,8 +19,10 @@ class DepartmentController extends Controller
     {
         $department = Department::find($department); 
 
-        if (null === $department) 
+        if (null === $department) {
+
             return response()->json([], Response::HTTP_NOT_FOUND); 
+        }
 
         return response()->json($department->getCds(), Response::HTTP_OK); 
     } 

@@ -30,8 +30,10 @@ class CdsController extends Controller
     {
         $cds = Cds::find($cds); 
 
-        if (null === $cds) 
-            return response()->json([], Response::HTTP_NOT_FOUND); 
+        if (null === $cds) {
+
+            return response()->json([], Response::HTTP_NOT_FOUND);
+        } 
 
         return response()->json($cds->getTeachings(), Response::HTTP_OK); 
     }
@@ -44,8 +46,10 @@ class CdsController extends Controller
     {
         $cds = Cds::find($cds); 
 
-        if (null === $cds) 
-            return response()->json([], Response::HTTP_NOT_FOUND); 
+        if (null === $cds) {
+
+            return response()->json([], Response::HTTP_NOT_FOUND);
+        }
 
         return response()->json(
             $cds->getFormsByAcademicYear($request->anno_accademico), 

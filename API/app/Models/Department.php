@@ -19,11 +19,12 @@ class Department extends Model
      * 
      * @return Department
     */
-    public static function find(int $id, string $academicYear = null)
+    public static function find(int $id, string $academicYear = null) : Department
     {
-        $academicYear = $academicYear == null
-            ? self::getLastAcademicYear('dipartimento')
-            : $academicYear; 
+        if (null === $academicYear) {
+
+            $academicYear = self::getLastAcademicYear('dipartimento'); 
+        }
 
         return self::where('id', $id)
                 ->where('anno_accademico', $academicYear)
