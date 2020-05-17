@@ -47,8 +47,8 @@ export class HomeComponent implements OnInit {
 
   /* years slider */
   manualRefresh: EventEmitter<void> = new EventEmitter<void>();
-  minValue: number = 0;
-  maxValue: number = 1;
+  minValue = 0;
+  maxValue = 1;
   optionsSlider: Options = {
     floor: 1,
     ceil: 8,
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit {
   }
 
   public getSchedeForSelectedYearAndCds() {
-    if (this.selectedYear != '--') {
+    if (this.selectedYear !== '--') {
       this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
         const insegnamenti: any = this.parseSchede(data);
 
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private parseSchede(schede) {
+  private parseSchede(schede): [] {
     let insegnamenti: any = [];
 
     for (let i = 0; i < schede.length; i++) {
@@ -168,11 +168,11 @@ export class HomeComponent implements OnInit {
         insegnamenti[i].nome += insegnamenti[i].nome.substring(insegnamenti[i].nome.length - 5, insegnamenti[i].nome.length);
       }
 
-      if (schede[i].canale.indexOf('no') == -1) {
+      if (schede[i].canale.indexOf('no') === -1) {
         insegnamenti[i].nome += ' (' + schede[i].canale + ')';
       }
 
-      if (schede[i].id_modulo.length > 3 && schede[i].id_modulo != '0') {
+      if (schede[i].id_modulo.length > 3 && schede[i].id_modulo !== '0') {
         insegnamenti[i].nome += ' (' + schede[i].id_modulo + ')';
       }
 
@@ -230,8 +230,8 @@ export class HomeComponent implements OnInit {
     values[2].splice(0, 0, '0');
 
     for (let i = 2; i < insegnamenti.length; i++) {
-      if (insegnamenti[i].anno != insegnamenti[i - 1].anno) {
-        let year = insegnamenti[i].anno;
+      if (insegnamenti[i].anno !== insegnamenti[i - 1].anno) {
+        const year = insegnamenti[i].anno;
         insegnamenti.splice(i, 0, {
           anno: year,
           nome: year + ' anno',
@@ -245,7 +245,7 @@ export class HomeComponent implements OnInit {
     }
 
 
-    for (let i in insegnamenti) {
+    for (const i in insegnamenti) {
       if (insegnamenti.hasOwnProperty(i)) {
         Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
         Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
@@ -281,8 +281,8 @@ export class HomeComponent implements OnInit {
     const minHeight = '150px';
 
     for (let i = 0; i < 3; i++) {
-      let canvs: any = document.createElement('canvas');
-      canvs.id = 'v' + (i+1) + '-canvas';
+      const canvs: any = document.createElement('canvas');
+      canvs.id = 'v' + (i + 1) + '-canvas';
       canvs.style.width = canvWidth;
       canvs.style.height = canvHeight;
       canvs.style['min-height'] = minHeight;
@@ -298,6 +298,7 @@ export class HomeComponent implements OnInit {
     ctx.push(canv[1].getContext('2d'));
     ctx.push(canv[2].getContext('2d'));
 
+    // tslint:disable-next-line: variable-name
     const _options = {
       scales: {
         xAxes: [{
@@ -322,10 +323,11 @@ export class HomeComponent implements OnInit {
       legend: { display: false },
     };
 
-    for (let c in ctx) {
+    for (const c in ctx) {
       if (ctx.hasOwnProperty(c)) {
 
         // chartjs data
+        // tslint:disable-next-line: variable-name
         const _data = {
           labels: materie,
           datasets: [{
@@ -361,7 +363,7 @@ export class HomeComponent implements OnInit {
     this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
 
       const anniAccademici = [];
-      for (let i in data) {
+      for (const i in data) {
         if (data.hasOwnProperty(i)) {
 
           anniAccademici[i] = {};
@@ -380,12 +382,12 @@ export class HomeComponent implements OnInit {
           for (let j = 0; j < data[i].domande.length; j++) {
             if (data[i].domande.hasOwnProperty(j)) {
 
-              if (j % 5 == 0 && j != 0) {
+              if (j % 5 === 0 && j !== 0) {
                 index++;
                 valori.domande[index] = [];
               }
 
-              if (valori.domande[index] == undefined) {
+              if (valori.domande[index] === undefined) {
                 valori.domande[index] = [];
               }
 
@@ -425,14 +427,14 @@ export class HomeComponent implements OnInit {
     }
 
     let j = 0;
-    for (let i in yearsArray) {
+    for (const i in yearsArray) {
       if (yearsArray.hasOwnProperty(i)) {
 
         let val1 = 0;
         let val2 = 0;
         let val3 = 0;
 
-        if (j < teachingResults.length && yearsArray[i] == teachingResults[j].anno) {
+        if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
             val1 = Math.round(teachingResults[j].v1 * 100) / 100;
             val2 = Math.round(teachingResults[j].v2 * 100) / 100;
             val3 = Math.round(teachingResults[j].v3 * 100) / 100;
@@ -562,12 +564,12 @@ export class HomeComponent implements OnInit {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  private calculateFormula(insegnamenti) {
+  private calculateFormula(insegnamenti: []) {
     const v1 = [];
     const v2 = [];
     const v3 = [];
 
-    for (let i in insegnamenti) {
+    for (const i in insegnamenti) {
 
       if (insegnamenti.hasOwnProperty(i)) {
         let V1: any;
@@ -584,7 +586,7 @@ export class HomeComponent implements OnInit {
 
     const means = [0.0, 0.0, 0.0];
 
-    for (let x in v1) {
+    for (const x in v1) {
       if (v1.hasOwnProperty(x)) {
         means[0] += parseFloat(v1[x]);
         means[1] += parseFloat(v2[x]);
