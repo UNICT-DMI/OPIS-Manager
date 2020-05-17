@@ -7,7 +7,7 @@
       <br>
       <p>Scegli un dipartimento:</p>
 
-      <select class="btn btn-opis" (change)="showCds($event.target.value)">
+      <select class="btn btn-opis" (change)="getAllCdsOfSelectedDepartment($event.target.value)">
         <option>--</option>
         <option *ngFor="let department of departments" [value]="department.id"> {{ department.nome }} </option>
       </select>
@@ -25,13 +25,14 @@
 
       <ul class="nav nav-tabs" id="tabs">
         <li class="nav-item tabs_button" *ngFor="let c of cds">
-          <button class="btn btn-opis" (click)="selectCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
+          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
         </li>
       </ul>
 
       <br>
 
       <div [hidden]="!selectedCds">
+        <div id="cds-stats"></div>
         <div class="container-switcher">
           <div class="segmented">
             <label (click)="enableOption(1)" [ngClass]="currentOption == 1 ? 'checked' : ''"><span>Anno accademico</span></label>
@@ -44,7 +45,7 @@
           <div class="list-option-container">
             Seleziona anno:
             <br>
-            <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear" (ngModelChange)="getDataForYear()">
+            <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear" (ngModelChange)="getSchedeForSelectedYearAndCds()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
             </select>
@@ -55,7 +56,7 @@
           <div class="list-option-container">
             Seleziona insegnamento:
             <br>
-            <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching" (ngModelChange)="getDataForTeaching()">
+            <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching" (ngModelChange)="getSchedeOfSelectedTeaching()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale"> {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
             </select>
@@ -80,15 +81,14 @@
                     <fa-icon [icon]="faSearch" size="lg" class="opis-icon"></fa-icon>
                   </span>
                 </div>
-                <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" (change)="getDataForYear()">
-                <!-- <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" debounce [delay]="700" (func)="getDataForYear()"> -->
+                <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1" [(ngModel)]="subject" (change)="getSchedeForSelectedYearAndCds()">
               </div>
             </li>
           </ul>
 
           <br>
 
-          Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong>
+        <div style="display: flex;"><div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div> <div id="math-stats"></div></div>
 
           <div id="v1-container" [hidden]="switcherValues != 1">
             <h2 class="text-center">
@@ -214,7 +214,7 @@
         <br>
 
         <div class="custom-slider">
-          <ng5-slider class="addons-bar slider-years" [(value)]="minValue" [(highValue)]="maxValue" [options]="optionsSlider" [hidden]="currentOption != 2 || !selectedTeaching" [manualRefresh]="manualRefresh" (valueChange)="getDataForTeaching()"></ng5-slider>
+          <ng5-slider class="addons-bar slider-years" [(value)]="minValue" [(highValue)]="maxValue" [options]="optionsSlider" [hidden]="currentOption != 2 || !selectedTeaching" [manualRefresh]="manualRefresh" (valueChange)="getSchedeOfSelectedTeaching()"></ng5-slider>
         </div>
 
         <br>

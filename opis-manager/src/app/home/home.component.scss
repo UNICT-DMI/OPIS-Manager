@@ -52,7 +52,7 @@ $font_family_1: "Helvetica Neue";
       color: $color_light;
       transition: .5s all;
     }
-    
+
     span {
       display: table-cell;
       vertical-align: middle;
@@ -135,6 +135,11 @@ $font_family_1: "Helvetica Neue";
   .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
     background: $color_main;
   }
+}
+
+#math-stats {
+  margin-left:auto;
+  margin-right:0;
 }
 
 
