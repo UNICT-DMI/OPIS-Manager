@@ -1,4 +1,3 @@
-before_script: cd opis-manager
 language: node_js
 node_js:
   - '12'
@@ -10,6 +9,7 @@ addons:
     chrome: stable
 before_script:
   - export DISPLAY=:99.0
+  - cd opis-manager
 install:
   - npm set progress=false
   - npm install
