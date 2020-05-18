@@ -9,7 +9,6 @@ addons:
     chrome: stable
 before_script:
   - export DISPLAY=:99.0
-  - cd opis-manager
 install:
   - cd opis-manager
   - npm set progress=false
