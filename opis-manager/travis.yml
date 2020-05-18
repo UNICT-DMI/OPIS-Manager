@@ -1,4 +1,3 @@
-before_script: cd opis-manager
 language: node_js
 node_js:
   - '12'
