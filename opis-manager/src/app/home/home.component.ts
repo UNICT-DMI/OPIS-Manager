@@ -1,10 +1,11 @@
-import { Component, OnInit, getDebugNode, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import { map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -83,6 +84,8 @@ export class HomeComponent implements OnInit {
       this.maxValue = this.config.years.length;
 
       this.getAllDepartments();
+
+      this.prova();
     });
   }
 
@@ -149,6 +152,37 @@ export class HomeComponent implements OnInit {
         this.showAcademicYearChart(means, values, insegnamenti);
       });
     }
+  }
+
+  private getMeans(year): Observable<{}> {
+    return this.http.get(this.config.apiUrl + 'schede?cds=346&anno_accademico=' + year) // TODO: this.selectedCds
+    .pipe(map((data) => {
+      const insegnamento = this.parseSchede(data);
+      const [means, _] = this.calculateFormula(insegnamento);
+      return means;
+    }));
+  }
+
+  private prova() {
+    const vmeans = [0, 0, 0];
+    const means$ = [];
+    for (const year of this.config.years) {
+      means$.push(this.getMeans(year));
+    }
+
+    console.log('PROVA');
+    combineLatest(means$).subscribe((means) => { // TODO: takeUntil() for unsubscribe
+      for (const v of means) {
+        vmeans[0] += v[0];
+        vmeans[1] += v[1];
+        vmeans[2] += v[2];
+      }
+
+      vmeans[0] /= means.length;
+      vmeans[1] /= means.length;
+      vmeans[2] /= means.length;
+      console.log(vmeans);
+    });
   }
 
   private parseSchede(schede): [] {
