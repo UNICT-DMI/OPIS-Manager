@@ -531,7 +531,7 @@ export class HomeComponent implements OnInit {
       0.0,  // 8   questa domanda non viene considerata
       0.3,  // 9
       0.3,  // 10
-      0.3,  // 11  TODO: da eliminare
+      0.0,  // 11  questa domanda non viene considerata
       0.0   // 12  questa domanda non viene considerata
     ];
 
@@ -641,7 +641,7 @@ export class HomeComponent implements OnInit {
     console.log(this.vCds[0]);
     const boxplotData = {
       // define label tree
-      //labels: this.config.years,
+      labels: "",
       datasets: [{
         label: 'V1',
         backgroundColor: 'rgba(255,0,0,0.5)',
