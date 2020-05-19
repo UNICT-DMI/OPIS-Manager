@@ -32,7 +32,7 @@
       <br>
 
       <div [hidden]="!selectedCds">
-        <div id="cds-stats"></div>
+        <div id="cds-stats"><canvas id="cds-canvas"></canvas></div>
         <div class="container-switcher">
           <div class="segmented">
             <label (click)="enableOption(1)" [ngClass]="currentOption == 1 ? 'checked' : ''"><span>Anno accademico</span></label>

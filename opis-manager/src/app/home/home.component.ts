@@ -6,6 +6,9 @@ import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
+import { mean, variance, std, median, min, max } from 'mathjs';
+import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
+
 
 @Component({
   selector: 'app-home',
@@ -22,9 +25,9 @@ export class HomeComponent implements OnInit {
     apiUrl: string;
     years: any;
   } = {
-    apiUrl: '',
-    years: []
-  };
+      apiUrl: '',
+      years: []
+    };
 
 
   departments: any = [];
@@ -34,6 +37,9 @@ export class HomeComponent implements OnInit {
   selectedCds: number;
   selectedYear: string;
   selectedTeaching: string;
+
+
+  vCds: number[][] = [[], [], []];
 
   currentOption: number;
 
@@ -62,31 +68,29 @@ export class HomeComponent implements OnInit {
   constructor(
     public configService: ConfigService,
     private http: HttpClient
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.configService.getConfig()
-    .subscribe((data: Config) => {
-      this.config = {
-        apiUrl: data.apiUrl,
-        years: data.years
-      };
+      .subscribe((data: Config) => {
+        this.config = {
+          apiUrl: data.apiUrl,
+          years: data.years
+        };
 
-      this.optionsSlider = {
-        floor: 1,
-        ceil: data.years.length,
-        showTicksValues: true,
-        getLegend: (value: number): string => {
-          return this.config.years[value - 1];
-        }
-      };
+        this.optionsSlider = {
+          floor: 1,
+          ceil: data.years.length,
+          showTicksValues: true,
+          getLegend: (value: number): string => {
+            return this.config.years[value - 1];
+          }
+        };
 
-      this.maxValue = this.config.years.length;
+        this.maxValue = this.config.years.length;
 
-      this.getAllDepartments();
-
-      this.prova();
-    });
+        this.getAllDepartments();
+      });
   }
 
   private resetInfo() {
@@ -107,8 +111,8 @@ export class HomeComponent implements OnInit {
   }
 
   private resetSettings() {
-    this.selectedCds        = null;
-    this.selectedTeaching   = null;
+    this.selectedCds = null;
+    this.selectedTeaching = null;
     // this.currentOption      = null;
   }
 
@@ -138,6 +142,8 @@ export class HomeComponent implements OnInit {
     if (this.selectedYear) {
       this.getSchedeForSelectedYearAndCds();
     }
+
+    this.getCdsStats();
   }
 
   public getSchedeForSelectedYearAndCds() {
@@ -152,37 +158,6 @@ export class HomeComponent implements OnInit {
         this.showAcademicYearChart(means, values, insegnamenti);
       });
     }
-  }
-
-  private getMeans(year): Observable<{}> {
-    return this.http.get(this.config.apiUrl + 'schede?cds=346&anno_accademico=' + year) // TODO: this.selectedCds
-    .pipe(map((data) => {
-      const insegnamento = this.parseSchede(data);
-      const [means, _] = this.calculateFormula(insegnamento);
-      return means;
-    }));
-  }
-
-  private prova() {
-    const vmeans = [0, 0, 0];
-    const means$ = [];
-    for (const year of this.config.years) {
-      means$.push(this.getMeans(year));
-    }
-
-    console.log('PROVA');
-    combineLatest(means$).subscribe((means) => { // TODO: takeUntil() for unsubscribe
-      for (const v of means) {
-        vmeans[0] += v[0];
-        vmeans[1] += v[1];
-        vmeans[2] += v[2];
-      }
-
-      vmeans[0] /= means.length;
-      vmeans[1] /= means.length;
-      vmeans[2] /= means.length;
-      console.log(vmeans);
-    });
   }
 
   private parseSchede(schede): [] {
@@ -211,10 +186,10 @@ export class HomeComponent implements OnInit {
       }
 
       insegnamenti[i].nome += ' - ' + schede[i].tot_schedeF;
-      insegnamenti[i].canale        = schede[i].canale;
-      insegnamenti[i].id_modulo     = schede[i].id_modulo;
-      insegnamenti[i].docente       = schede[i].docente;
-      insegnamenti[i].tot_schedeF   = schede[i].tot_schedeF;
+      insegnamenti[i].canale = schede[i].canale;
+      insegnamenti[i].id_modulo = schede[i].id_modulo;
+      insegnamenti[i].docente = schede[i].docente;
+      insegnamenti[i].tot_schedeF = schede[i].tot_schedeF;
 
       insegnamenti[i].domande = [];
       insegnamenti[i].domande[0] = [];
@@ -250,7 +225,7 @@ export class HomeComponent implements OnInit {
     const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
     const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
     const RGB1 = [255, 200, 45];
-    const RGB2 = [0,   121, 107];
+    const RGB2 = [0, 121, 107];
 
     insegnamenti.splice(0, 0, {
       nome: '1 anno',
@@ -407,7 +382,7 @@ export class HomeComponent implements OnInit {
           anniAccademici[i].anno = data[i].anno_accademico;
 
           const valori: any = [];
-          valori.tot_schedeF   = data[i].totale_schede;
+          valori.tot_schedeF = data[i].totale_schede;
           valori.domande = [];
 
           valori.domande[i] = [];
@@ -469,10 +444,10 @@ export class HomeComponent implements OnInit {
         let val3 = 0;
 
         if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
-            val1 = Math.round(teachingResults[j].v1 * 100) / 100;
-            val2 = Math.round(teachingResults[j].v2 * 100) / 100;
-            val3 = Math.round(teachingResults[j].v3 * 100) / 100;
-            j++;
+          val1 = Math.round(teachingResults[j].v1 * 100) / 100;
+          val2 = Math.round(teachingResults[j].v2 * 100) / 100;
+          val3 = Math.round(teachingResults[j].v3 * 100) / 100;
+          j++;
         }
         matr[0].push(val1);
         matr[1].push(val2);
@@ -499,7 +474,7 @@ export class HomeComponent implements OnInit {
           responsive: true,
           title: {
             display: true,
-            text:  teachingName + ' V' + i
+            text: teachingName + ' V' + i
           },
           tooltips: {
             mode: 'index',
@@ -556,7 +531,7 @@ export class HomeComponent implements OnInit {
       0.0,  // 8   questa domanda non viene considerata
       0.3,  // 9
       0.3,  // 10
-      0.3,  // 11
+      0.3,  // 11  TODO: da eliminare
       0.0   // 12  questa domanda non viene considerata
     ];
 
@@ -632,5 +607,88 @@ export class HomeComponent implements OnInit {
     means[2] = means[2] / v3.length;
 
     return [means, [v1, v2, v3]];
+  }
+
+  private getCdsStats() {
+    const means$ = [];
+    for (const year of this.config.years) {
+      means$.push(this.getMeans(year));
+    }
+
+    this.vCds = [[], [], []];
+    combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
+      for (const v of means) {
+        for (let i = 0; i < 3; i++) {
+          this.vCds[i].push(v[i]);
+        }
+      }
+
+      this.showCdsBoxplot();
+    });
+
+  }
+
+  private getMeans(year): Observable<{}> {
+    return this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + year)
+      .pipe(map((data) => {
+        const insegnamenti = this.parseSchede(data);
+        const [means, _] = this.calculateFormula(insegnamenti);
+        return means;
+      }));
+  }
+
+  private showCdsBoxplot() {
+    console.log(this.vCds[0]);
+    const boxplotData = {
+      // define label tree
+      //labels: this.config.years,
+      datasets: [{
+        label: 'V1',
+        backgroundColor: 'rgba(255,0,0,0.5)',
+        borderColor: 'red',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [ this.vCds[0] ]
+      }, {
+        label: 'V2',
+        backgroundColor: 'rgba(0,255,0,0.5)',
+        borderColor: 'green',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [ this.vCds[1] ]
+      }, {
+        label: 'V3',
+        backgroundColor: 'rgba(0,0,255,0.5)',
+        borderColor: 'blue',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [ this.vCds[2] ]
+      }]
+    };
+
+    let cdsStatsDiv: HTMLElement = document.getElementById('cds-stats');
+    cdsStatsDiv.innerHTML = '<canvas id="cds-canvas"></canvas>';
+    let ctx: any = document.getElementById('cds-canvas');
+    ctx = ctx.getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'horizontalBoxplot',
+      data: boxplotData,
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'CDS Stats'
+        }
+      }
+    });
   }
 }

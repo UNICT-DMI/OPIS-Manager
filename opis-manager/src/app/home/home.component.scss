@@ -110,7 +110,7 @@ $font_family_1: "Helvetica Neue";
 }
 
 #v1-container, #v2-container, #v3-container {
-  min-height: 800px;
+  //min-height: 800px;
 }
 
 /* Slider */
@@ -140,6 +140,10 @@ $font_family_1: "Helvetica Neue";
 #math-stats {
   margin-left:auto;
   margin-right:0;
+}
+
+#cds-stats {
+  padding: 0;
 }
 
 
