@@ -25,7 +25,7 @@
 
       <ul class="nav nav-tabs" id="tabs">
         <li class="nav-item tabs_button" *ngFor="let c of cds">
-          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(c.id)" [ngClass]="selectedCds == c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
+          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(c.id)" [ngClass]="selectedCds === c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
         </li>
       </ul>
 
@@ -35,8 +35,8 @@
         <div id="cds-stats"><canvas id="cds-canvas"></canvas></div>
         <div class="container-switcher">
           <div class="segmented">
-            <label (click)="enableOption(1)" [ngClass]="currentOption == 1 ? 'checked' : ''"><span>Anno accademico</span></label>
-            <label (click)="enableOption(2)" [ngClass]="currentOption == 2 ? 'checked' : ''"><span>Insegnamento   </span></label>
+            <label (click)="enableOption(1)" [ngClass]="currentOption === 1 ? 'checked' : ''"><span>Anno accademico</span></label>
+            <label (click)="enableOption(2)" [ngClass]="currentOption === 2 ? 'checked' : ''"><span>Insegnamento   </span></label>
           </div>
         </div>
 
@@ -63,18 +63,18 @@
           </div>
         </div>
 
-        <div [hidden]="(currentOption == 1 && !selectedYear) || (currentOption == 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
+        <div [hidden]="(currentOption === 1 && !selectedYear) || (currentOption === 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
           <ul class="nav nav-tabs" id="tabs">
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues == 1 ? 'selected-tab' : ''">V1</button>
+              <button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues == 2 ? 'selected-tab' : ''">V2</button>
+              <button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button>
             </li>
             <li class="nav-item tabs_button">
-              <button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues == 3 ? 'selected-tab' : ''">V3</button>
+              <button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button>
             </li>
-            <li [hidden]="currentOption == 2">
+            <li [hidden]="currentOption === 2">
               <div class="input-group addons-bar">
                 <div class="input-group-prepend">
                   <span class="input-group-text selected-tab" id="basic-addon1">
@@ -88,7 +88,7 @@
 
           <br>
 
-        <div style="display: flex;"><div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div> <div id="math-stats"></div></div>
+        <div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
 
           <div id="v1-container" [hidden]="switcherValues != 1">
             <h2 class="text-center">

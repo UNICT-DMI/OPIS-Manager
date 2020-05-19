@@ -315,10 +315,8 @@ export class HomeComponent implements OnInit {
     ctx.push(canv[2].getContext('2d'));
 
 
-    console.log(this.selectedYear);
     for (const c in ctx) {
       if (ctx.hasOwnProperty(c)) {
-
         // tslint:disable-next-line: variable-name
         const _options = {
           scales: {
@@ -479,8 +477,16 @@ export class HomeComponent implements OnInit {
       }
     }
 
+    const teachingMean = [[], [], []];
+    // tslint:disable-next-line: forin
+    for (const i in this.config.years) {
+      teachingMean[0][i] = mean(matr[0]);
+      teachingMean[1][i] = mean(matr[1]);
+      teachingMean[2][i] = mean(matr[2]);
+    }
+
     // line graphs config
-    for (let i = 1; i < 4; i++) {
+    for (let i = 1; i <= 3; i++) {
 
       const config = {
         type: 'line',
@@ -492,7 +498,21 @@ export class HomeComponent implements OnInit {
             backgroundColor: '#00897b',
             borderColor: '#00897b',
             data: matr[i - 1],
-          }]
+          }, {
+            label: 'Media CDS',
+            fill: false,
+            backgroundColor: '#521a7d',
+            borderColor: '#521a7d',
+            data: this.vCds[i - 1],
+          }, {
+            label: 'Media Insegnamento',
+            fill: false,
+            backgroundColor: '#a69319',
+            borderColor: '#a69319',
+            data: teachingMean[i - 1],
+            pointRadius: 1,
+          }
+          ]
         },
         options: {
           responsive: true,
@@ -529,7 +549,7 @@ export class HomeComponent implements OnInit {
                 labelString: 'V' + i
               }
             }]
-          }
+          },
         }
       };
 
@@ -662,7 +682,6 @@ export class HomeComponent implements OnInit {
   }
 
   private showCdsBoxplot() {
-    console.log(this.vCds[0]);
     const boxplotData = {
       // define label tree
       labels: "",
