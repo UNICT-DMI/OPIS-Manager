@@ -141,6 +141,7 @@ export class HomeComponent implements OnInit {
     this.resetSettings();
 
     this.selectedCds = cds;
+    this.getCdsStats();
 
     this.http.get(this.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
       this.teachings = data;
@@ -149,8 +150,6 @@ export class HomeComponent implements OnInit {
     if (this.selectedYear) {
       this.getSchedeForSelectedYearAndCds();
     }
-
-    this.getCdsStats();
   }
 
   public getSchedeForSelectedYearAndCds() {
@@ -666,8 +665,6 @@ export class HomeComponent implements OnInit {
           this.vCds[i].push(v[i]);
         }
       }
-
-      this.showCdsBoxplot();
     });
 
   }
@@ -681,10 +678,10 @@ export class HomeComponent implements OnInit {
       }));
   }
 
-  private showCdsBoxplot() {
+  public showCdsBoxplot() {
     const boxplotData = {
       // define label tree
-      labels: "",
+      labels: '',
       datasets: [{
         label: 'V1',
         backgroundColor: 'rgba(255,0,0,0.5)',
