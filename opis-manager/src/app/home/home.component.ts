@@ -8,6 +8,8 @@ import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { mean, variance, std, median, min, max } from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
+
 
 
 @Component({
@@ -91,6 +93,11 @@ export class HomeComponent implements OnInit {
 
         this.getAllDepartments();
       });
+
+    //ChartJS Annotation plugin stuff
+    let namedChartAnnotation = ChartAnnotation;
+    namedChartAnnotation['id'] = 'annotation';
+    Chart.pluginService.register(namedChartAnnotation);
   }
 
   private resetInfo() {
@@ -307,34 +314,51 @@ export class HomeComponent implements OnInit {
     ctx.push(canv[1].getContext('2d'));
     ctx.push(canv[2].getContext('2d'));
 
-    // tslint:disable-next-line: variable-name
-    const _options = {
-      scales: {
-        xAxes: [{
-          ticks: {
-            beginAtZero: true,
-          },
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      },
-      tooltips: {
-        titleFontSize: 25,
-        bodyFontSize: 25,
-        callbacks: {
-          label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
-        }
-      },
-      responsive: false,
-      legend: { display: false },
-    };
 
+    console.log(this.selectedYear);
     for (const c in ctx) {
       if (ctx.hasOwnProperty(c)) {
 
+        // tslint:disable-next-line: variable-name
+        const _options = {
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+              },
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          tooltips: {
+            titleFontSize: 25,
+            bodyFontSize: 25,
+            callbacks: {
+              label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
+            }
+          },
+          responsive: false,
+          legend: { display: false },
+          annotation: {
+            annotations: [
+              {
+                type: 'line',
+                mode: 'vertical',
+                scaleID: 'x-axis-0',
+                value: this.vCds[c][this.getIndexFromSelectedYear()],
+                borderColor: 'red',
+                label: {
+                  content: 'Media CDS',
+                  enabled: true,
+                  position: 'top'
+                }
+              }
+            ]
+          },
+        };
         // chartjs data
         // tslint:disable-next-line: variable-name
         const _data = {
@@ -650,7 +674,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [ this.vCds[0] ]
+        data: [this.vCds[0]]
       }, {
         label: 'V2',
         backgroundColor: 'rgba(0,255,0,0.5)',
@@ -659,7 +683,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [ this.vCds[1] ]
+        data: [this.vCds[1]]
       }, {
         label: 'V3',
         backgroundColor: 'rgba(0,0,255,0.5)',
@@ -668,7 +692,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [ this.vCds[2] ]
+        data: [this.vCds[2]]
       }]
     };
 
@@ -690,5 +714,9 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+  }
+
+  private getIndexFromSelectedYear(): number {
+    return parseInt(this.selectedYear.charAt(3), 10) - 3;
   }
 }
