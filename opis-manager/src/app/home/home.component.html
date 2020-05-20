@@ -114,7 +114,9 @@
               <div [hidden]="!showTeachingStats" class="card" style="margin-bottom: 20px;">
                 <div class="card-body">
                   <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching.split(" ")[0] }}</b></h5>
-                  <p class="card-text" id="math-stats"></p>
+                  <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
+                  <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
+                  <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
                 </div>
               </div>
             </div>

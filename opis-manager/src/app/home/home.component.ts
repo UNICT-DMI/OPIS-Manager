@@ -480,7 +480,7 @@ export class HomeComponent implements OnInit {
     }
 
     const teachingMean = [[], [], []];
-    console.log(matr);
+
     // tslint:disable-next-line: forin
     for (const i in this.config.years) {
       teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
@@ -761,11 +761,13 @@ export class HomeComponent implements OnInit {
   }
 
   private calculateTeachingStats(matr: number[][]) {
-    const paragraph = document.getElementById('math-stats');
-    const teachingValues = this.removeZeroValuesToArray(matr[this.switcherValues - 1]);
-    paragraph.innerHTML = '';
-    paragraph.textContent += 'Media: ' + mean(teachingValues) + '\t';
-    paragraph.textContent += 'Varianza: ' + variance(teachingValues) + '\t';
-    paragraph.textContent += 'Dev. std.: ' + std(teachingValues) + '\t';
+    for (let i = 0; i < 3; i++) {
+      const paragraph = document.getElementById('v' + (i + 1) + '-stats');
+      const teachingValues = this.removeZeroValuesToArray(matr[i]);
+      paragraph.innerHTML = '';
+      paragraph.textContent += 'Media: ' + mean(teachingValues).toFixed(2) + '\t';
+      paragraph.textContent += 'Varianza: ' + variance(teachingValues).toFixed(3) + '\t';
+      paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
+    }
   }
 }
