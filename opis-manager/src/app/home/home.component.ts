@@ -480,6 +480,7 @@ export class HomeComponent implements OnInit {
     }
 
     const teachingMean = [[], [], []];
+    console.log(matr);
     // tslint:disable-next-line: forin
     for (const i in this.config.years) {
       teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
@@ -572,6 +573,9 @@ export class HomeComponent implements OnInit {
       if (v !== 0 && !isNaN(v)) {
         cleanedArray.push(v);
       }
+    }
+    if (cleanedArray.length === 0) {
+      cleanedArray.push(0);
     }
     return cleanedArray;
   }
