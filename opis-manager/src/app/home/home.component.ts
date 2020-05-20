@@ -149,10 +149,9 @@ export class HomeComponent implements OnInit {
       this.teachings = data;
     });
 
-    /*if (this.currentOption === 0) {
+    if (this.currentOption === 0) {
       this.showCdsBoxplot();
-    } else */
-    if (this.selectedYear) {
+    } else if (this.selectedYear) {
       this.getSchedeOfCdsForSelectedYear();
     }
   }
@@ -226,7 +225,6 @@ export class HomeComponent implements OnInit {
 
   private showAcademicYearChart(means, values, insegnamenti) {
 
-    console.log(this.vCds[this.selectedCds]);
     const labels: string[] = ['V1', 'V2', 'V3'];
 
     const fitColor = [];
@@ -484,7 +482,6 @@ export class HomeComponent implements OnInit {
     const teachingMean = [[], [], []];
     // tslint:disable-next-line: forin
     for (const i in this.config.years) {
-      // TODO: don't consider 0 values
       teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
       teachingMean[1][i] = mean(this.removeZeroValuesToArray(matr[1]));
       teachingMean[2][i] = mean(this.removeZeroValuesToArray(matr[2]));
@@ -572,7 +569,7 @@ export class HomeComponent implements OnInit {
   private removeZeroValuesToArray(array: Array<number>) {
     const cleanedArray: Array<number> = [];
     for (const v of array) {
-      if (v !== 0 || !isNaN(v)) {
+      if (v !== 0 && !isNaN(v)) {
         cleanedArray.push(v);
       }
     }
@@ -698,7 +695,6 @@ export class HomeComponent implements OnInit {
   }
 
   public showCdsBoxplot() {
-    console.log(this.vCds);
     const boxplotData = {
       // define label tree
       labels: '',
