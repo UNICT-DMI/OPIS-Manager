@@ -6,7 +6,7 @@ import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { mean, variance, std, median, min, max } from 'mathjs';
+import { mean, variance, std} from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 
@@ -52,6 +52,8 @@ export class HomeComponent implements OnInit {
 
   subject: string;
 
+  showTeachingStats = false;
+
   stepsYears: { value: number, legend: string }[] = [];
 
   /* years slider */
@@ -94,9 +96,9 @@ export class HomeComponent implements OnInit {
         this.getAllDepartments();
       });
 
-    //ChartJS Annotation plugin stuff
-    let namedChartAnnotation = ChartAnnotation;
-    namedChartAnnotation['id'] = 'annotation';
+    // ChartJS Annotation plugin stuff
+    const namedChartAnnotation = ChartAnnotation;
+    namedChartAnnotation.id = 'annotation';
     Chart.pluginService.register(namedChartAnnotation);
   }
 
@@ -147,12 +149,15 @@ export class HomeComponent implements OnInit {
       this.teachings = data;
     });
 
+    /*if (this.currentOption === 0) {
+      this.showCdsBoxplot();
+    } else */
     if (this.selectedYear) {
-      this.getSchedeForSelectedYearAndCds();
+      this.getSchedeOfCdsForSelectedYear();
     }
   }
 
-  public getSchedeForSelectedYearAndCds() {
+  public getSchedeOfCdsForSelectedYear() {
     if (this.selectedYear !== '--') {
       this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
         const insegnamenti: any = this.parseSchede(data);
@@ -430,7 +435,6 @@ export class HomeComponent implements OnInit {
       }
 
       this.showTeachingChart(anniAccademici);
-
     });
 
   }
@@ -479,10 +483,13 @@ export class HomeComponent implements OnInit {
     const teachingMean = [[], [], []];
     // tslint:disable-next-line: forin
     for (const i in this.config.years) {
-      teachingMean[0][i] = mean(matr[0]);
-      teachingMean[1][i] = mean(matr[1]);
-      teachingMean[2][i] = mean(matr[2]);
+      // TODO: don't consider 0 values
+      teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
+      teachingMean[1][i] = mean(this.removeZeroValuesToArray(matr[1]));
+      teachingMean[2][i] = mean(this.removeZeroValuesToArray(matr[2]));
     }
+
+    this.calculateTeachingStats(matr);
 
     // line graphs config
     for (let i = 1; i <= 3; i++) {
@@ -559,6 +566,16 @@ export class HomeComponent implements OnInit {
       ctx = ctx.getContext('2d');
       charts.push(new Chart(ctx, config));
     }
+  }
+
+  private removeZeroValuesToArray(array: Array<number>) {
+    const cleanedArray: Array<number> = [];
+    for (const v of array) {
+      if (v !== 0 || !isNaN(v)) {
+        cleanedArray.push(v);
+      }
+    }
+    return cleanedArray;
   }
 
   private applyWeights(vals) {
@@ -679,6 +696,7 @@ export class HomeComponent implements OnInit {
   }
 
   public showCdsBoxplot() {
+    console.log(this.vCds);
     const boxplotData = {
       // define label tree
       labels: '',
@@ -712,7 +730,7 @@ export class HomeComponent implements OnInit {
       }]
     };
 
-    let cdsStatsDiv: HTMLElement = document.getElementById('cds-stats');
+    const cdsStatsDiv: HTMLElement = document.getElementById('cds-stats');
     cdsStatsDiv.innerHTML = '<canvas id="cds-canvas"></canvas>';
     let ctx: any = document.getElementById('cds-canvas');
     ctx = ctx.getContext('2d');
@@ -734,5 +752,18 @@ export class HomeComponent implements OnInit {
 
   private getIndexFromSelectedYear(): number {
     return parseInt(this.selectedYear.charAt(3), 10) - 3;
+  }
+
+  public toggleStats() {
+    this.showTeachingStats = !this.showTeachingStats;
+  }
+
+  private calculateTeachingStats(matr: number[][]) {
+    const paragraph = document.getElementById('math-stats');
+    const teachingValues = this.removeZeroValuesToArray(matr[this.switcherValues - 1]);
+    paragraph.innerHTML = '';
+    paragraph.textContent += 'Media insegnamento: ' + mean(teachingValues) + '\n';
+    paragraph.textContent += 'Varianza insegnamento: ' + variance(teachingValues) + '\n';
+    paragraph.textContent += 'Dev. std. insegnamento: ' + std(teachingValues) + '\n';
   }
 }

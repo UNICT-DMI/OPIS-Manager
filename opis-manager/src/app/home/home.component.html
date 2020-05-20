@@ -46,7 +46,7 @@
 
         <br>
 
-        <div *ngIf="currentOption === 0" >
+        <div [hidden]="currentOption !== 0" >
           <div id="cds-stats"></div>
         </div>
 
@@ -55,7 +55,7 @@
             Seleziona anno:
             <br>
             <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear"
-              (ngModelChange)="getSchedeForSelectedYearAndCds()">
+              (ngModelChange)="getSchedeOfCdsForSelectedYear()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
             </select>
@@ -100,14 +100,14 @@
                     </span>
                   </div>
                   <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
-                    [(ngModel)]="subject" (change)="getSchedeForSelectedYearAndCds()">
+                    [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYear()">
                 </div>
               </li>
             </ul>
 
             <br>
 
-            <div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
+            <div *ngIf="currentOption === 1">Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
 
             <div id="v1-container" [hidden]="switcherValues != 1">
               <h2 class="text-center">
@@ -226,6 +226,16 @@
                 <canvas id="v3-canvas"></canvas>
               </div>
               <div id="v3-teaching" [hidden]="currentOption != 2"></div>
+            </div>
+
+            <div id="teaching-stats" *ngIf="currentOption === 2">
+              <button class="btn btn-opis" (click)="toggleStats()">Stats</button>
+              <div [hidden]="!showTeachingStats" class="card" style="width: 24rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Insegnamento</h5>
+                  <p class="card-text" id="math-stats"></p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
