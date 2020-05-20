@@ -6,7 +6,7 @@ import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { mean, variance, std} from 'mathjs';
+import { mean, variance, std } from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   selectedTeaching: string;
 
 
-  vCds: number[][] = [[], [], []];
+  vCds: number[][][] = [];
 
   currentOption: number;
 
@@ -134,6 +134,7 @@ export class HomeComponent implements OnInit {
   public getAllCdsOfSelectedDepartment(department: number) {
     this.http.get(this.config.apiUrl + 'cds/' + department).subscribe((data) => {
       this.cds = data;
+      this.getCdsStats();
     });
 
     this.resetSettings();
@@ -143,7 +144,6 @@ export class HomeComponent implements OnInit {
     this.resetSettings();
 
     this.selectedCds = cds;
-    this.getCdsStats();
 
     this.http.get(this.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
       this.teachings = data;
@@ -226,6 +226,7 @@ export class HomeComponent implements OnInit {
 
   private showAcademicYearChart(means, values, insegnamenti) {
 
+    console.log(this.vCds[this.selectedCds]);
     const labels: string[] = ['V1', 'V2', 'V3'];
 
     const fitColor = [];
@@ -350,7 +351,7 @@ export class HomeComponent implements OnInit {
                 type: 'line',
                 mode: 'vertical',
                 scaleID: 'x-axis-0',
-                value: this.vCds[c][this.getIndexFromSelectedYear()],
+                value: this.vCds[this.selectedCds][c][this.getIndexFromSelectedYear()],
                 borderColor: 'red',
                 label: {
                   content: 'Media CDS',
@@ -509,7 +510,7 @@ export class HomeComponent implements OnInit {
             fill: false,
             backgroundColor: '#521a7d',
             borderColor: '#521a7d',
-            data: this.vCds[i - 1],
+            data: this.vCds[this.selectedCds][i - 1],
           }, {
             label: 'Media Insegnamento',
             fill: false,
@@ -670,24 +671,25 @@ export class HomeComponent implements OnInit {
   }
 
   private getCdsStats() {
-    const means$ = [];
-    for (const year of this.config.years) {
-      means$.push(this.getMeans(year));
-    }
-
-    this.vCds = [[], [], []];
-    combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
-      for (const v of means) {
-        for (let i = 0; i < 3; i++) {
-          this.vCds[i].push(v[i]);
-        }
+    for (const cds of this.cds) {
+      const means$ = [];
+      for (const year of this.config.years) {
+        means$.push(this.getMeans(year, cds.id));
       }
-    });
 
+      this.vCds[cds.id] = [[], [], []];
+      combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
+        for (const v of means) {
+          for (let i = 0; i < 3; i++) {
+            this.vCds[cds.id][i].push(v[i]);
+          }
+        }
+      });
+    }
   }
 
-  private getMeans(year): Observable<{}> {
-    return this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + year)
+  private getMeans(year, cds): Observable<{}> {
+    return this.http.get(this.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.parseSchede(data);
         const [means, _] = this.calculateFormula(insegnamenti);
@@ -708,7 +710,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [this.vCds[0]]
+        data: [this.vCds[this.selectedCds][0]]
       }, {
         label: 'V2',
         backgroundColor: 'rgba(0,255,0,0.5)',
@@ -717,7 +719,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [this.vCds[1]]
+        data: [this.vCds[this.selectedCds][1]]
       }, {
         label: 'V3',
         backgroundColor: 'rgba(0,0,255,0.5)',
@@ -726,7 +728,7 @@ export class HomeComponent implements OnInit {
         outlierColor: '#999999',
         padding: 10,
         itemRadius: 0,
-        data: [this.vCds[2]]
+        data: [this.vCds[this.selectedCds][2]]
       }]
     };
 
