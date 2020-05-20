@@ -133,6 +133,11 @@ $font_family_1: "Helvetica Neue";
   }
 }
 
+.nav-item-right {
+  @extend .nav-item !optional;
+  margin-left: auto;
+}
+
 #math-stats {
   white-space: pre-wrap;
 }

@@ -760,8 +760,8 @@ export class HomeComponent implements OnInit {
     const paragraph = document.getElementById('math-stats');
     const teachingValues = this.removeZeroValuesToArray(matr[this.switcherValues - 1]);
     paragraph.innerHTML = '';
-    paragraph.textContent += 'Media insegnamento: ' + mean(teachingValues) + '\n';
-    paragraph.textContent += 'Varianza insegnamento: ' + variance(teachingValues) + '\n';
-    paragraph.textContent += 'Dev. std. insegnamento: ' + std(teachingValues) + '\n';
+    paragraph.textContent += 'Media: ' + mean(teachingValues) + '\t';
+    paragraph.textContent += 'Varianza: ' + variance(teachingValues) + '\t';
+    paragraph.textContent += 'Dev. std.: ' + std(teachingValues) + '\t';
   }
 }
