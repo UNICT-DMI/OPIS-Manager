@@ -52,7 +52,7 @@ $font_family_1: "Helvetica Neue";
       color: $color_light;
       transition: .5s all;
     }
-    
+
     span {
       display: table-cell;
       vertical-align: middle;
@@ -109,10 +109,6 @@ $font_family_1: "Helvetica Neue";
   width: 500px;
 }
 
-#v1-container, #v2-container, #v3-container {
-  min-height: 800px;
-}
-
 /* Slider */
 .custom-slider {
   margin: 0 auto;
@@ -135,6 +131,15 @@ $font_family_1: "Helvetica Neue";
   .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
     background: $color_main;
   }
+}
+
+.nav-item-right {
+  @extend .nav-item !optional;
+  margin-left: auto;
+}
+
+#math-stats {
+  white-space: pre-wrap;
 }
 
 

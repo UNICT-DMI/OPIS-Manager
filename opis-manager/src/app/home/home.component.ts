@@ -1,9 +1,16 @@
-import { Component, OnInit, getDebugNode, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { mean, variance, std } from 'mathjs';
+import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
+
+
 
 @Component({
   selector: 'app-home',
@@ -20,9 +27,10 @@ export class HomeComponent implements OnInit {
     apiUrl: string;
     years: any;
   } = {
-    apiUrl: '',
-    years: []
-  };
+      apiUrl: '',
+      years: []
+    };
+
 
   departments: any = [];
   cds: any = [];
@@ -31,6 +39,9 @@ export class HomeComponent implements OnInit {
   selectedCds: number;
   selectedYear: string;
   selectedTeaching: string;
+
+
+  vCds: number[][][] = [];
 
   currentOption: number;
 
@@ -41,12 +52,14 @@ export class HomeComponent implements OnInit {
 
   subject: string;
 
+  showTeachingStats = false;
+
   stepsYears: { value: number, legend: string }[] = [];
 
   /* years slider */
   manualRefresh: EventEmitter<void> = new EventEmitter<void>();
-  minValue: number = 0;
-  maxValue: number = 1;
+  minValue = 0;
+  maxValue = 1;
   optionsSlider: Options = {
     floor: 1,
     ceil: 8,
@@ -59,63 +72,75 @@ export class HomeComponent implements OnInit {
   constructor(
     public configService: ConfigService,
     private http: HttpClient
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.configService.getConfig()
-    .subscribe((data: Config) => {
-      this.config = {
-        apiUrl: data.apiUrl,
-        years: data.years
-      };
+      .subscribe((data: Config) => {
+        this.config = {
+          apiUrl: data.apiUrl,
+          years: data.years
+        };
 
-      this.optionsSlider = {
-        floor: 1,
-        ceil: data.years.length,
-        showTicksValues: true,
-        getLegend: (value: number): string => {
-          return this.config.years[value - 1];
-        }
-      };
+        this.optionsSlider = {
+          floor: 1,
+          ceil: data.years.length,
+          showTicksValues: true,
+          getLegend: (value: number): string => {
+            return this.config.years[value - 1];
+          }
+        };
 
-      this.maxValue = this.config.years.length;
+        this.maxValue = this.config.years.length;
 
-      this.getDepartmnets();
-    });
+        this.getAllDepartments();
+      });
+
+    // ChartJS Annotation plugin stuff
+    const namedChartAnnotation = ChartAnnotation;
+    namedChartAnnotation.id = 'annotation';
+    Chart.pluginService.register(namedChartAnnotation);
   }
 
-  resetInfo() {
+  private resetInfo(): void {
     this.v1Info = false;
     this.v2Info = false;
     this.v3Info = false;
   }
 
-  switchVal(v) {
+  public enableOption(val): void {
+    this.resetInfo();
+    this.currentOption = val;
+    this.manualRefresh.emit();
+  }
+
+  public switchVal(v): void {
     this.resetInfo();
     this.switcherValues = v;
   }
 
-  getDepartmnets() {
+  private resetSettings(): void {
+    this.selectedCds = null;
+    this.selectedTeaching = null;
+    // this.currentOption      = null;
+  }
+
+  private getAllDepartments(): void {
     this.http.get(this.config.apiUrl + 'dipartimento').subscribe((data) => {
       this.departments = data;
     });
   }
 
-  resetSettings() {
-    this.selectedCds        = null;
-    this.selectedTeaching   = null;
-    // this.currentOption      = null;
-  }
-
-  showCds(department: number) {
+  public getAllCdsOfSelectedDepartment(department: number): void {
     this.http.get(this.config.apiUrl + 'cds/' + department).subscribe((data) => {
       this.cds = data;
+      this.getCdsStats();
     });
 
     this.resetSettings();
   }
 
-  selectCds(cds: number) {
+  public getAllTeachingsOfSelectedCds(cds: number): void {
     this.resetSettings();
 
     this.selectedCds = cds;
@@ -124,59 +149,69 @@ export class HomeComponent implements OnInit {
       this.teachings = data;
     });
 
-    if (this.selectedYear) {
-      this.getDataForYear();
+    if (this.currentOption === 0) {
+      this.showCdsBoxplot();
+    } else if (this.selectedYear) {
+      this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
     }
   }
 
-  enableOption(val) {
-    this.resetInfo();
-    this.currentOption = val;
-    this.manualRefresh.emit();
+  public getSchedeOfCdsForSelectedYearAndShowAcademicYearChart(): void {
+    if (this.selectedYear !== '--') {
+      this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
+        const insegnamenti: any = this.parseSchede(data);
+
+        let means: any;
+        let values: any;
+        [means, values] = this.calculateFormula(insegnamenti);
+
+        this.showAcademicYearChart(means, values, insegnamenti);
+      });
+    }
   }
 
-  performTeachings(data) {
+  private parseSchede(schede): [] {
     let insegnamenti: any = [];
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < schede.length; i++) {
 
-      if (data[i].tot_schedeF < 6) { continue; }
-      if (this.subject != null && data[i].nome.toUpperCase().indexOf(this.subject.toUpperCase()) === -1) { continue; }
+      if (schede[i].tot_schedeF < 6) { continue; }
+      if (this.subject != null && schede[i].nome.toUpperCase().indexOf(this.subject.toUpperCase()) === -1) { continue; }
 
       insegnamenti[i] = {};
-      insegnamenti[i].nome = data[i].nome;
-      insegnamenti[i].anno = data[i].anno;
+      insegnamenti[i].nome = schede[i].nome;
+      insegnamenti[i].anno = schede[i].anno;
 
       if (insegnamenti[i].nome.length > 35) {
         insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 35) + '... ';
         insegnamenti[i].nome += insegnamenti[i].nome.substring(insegnamenti[i].nome.length - 5, insegnamenti[i].nome.length);
       }
 
-      if (data[i].canale.indexOf('no') == -1) {
-        insegnamenti[i].nome += ' (' + data[i].canale + ')';
+      if (schede[i].canale.indexOf('no') === -1) {
+        insegnamenti[i].nome += ' (' + schede[i].canale + ')';
       }
 
-      if (data[i].id_modulo.length > 3 && data[i].id_modulo != '0') {
-        insegnamenti[i].nome += ' (' + data[i].id_modulo + ')';
+      if (schede[i].id_modulo.length > 3 && schede[i].id_modulo !== '0') {
+        insegnamenti[i].nome += ' (' + schede[i].id_modulo + ')';
       }
 
-      insegnamenti[i].nome += ' - ' + data[i].tot_schedeF;
-      insegnamenti[i].canale        = data[i].canale;
-      insegnamenti[i].id_modulo     = data[i].id_modulo;
-      insegnamenti[i].docente       = data[i].docente;
-      insegnamenti[i].tot_schedeF   = data[i].tot_schedeF;
+      insegnamenti[i].nome += ' - ' + schede[i].tot_schedeF;
+      insegnamenti[i].canale = schede[i].canale;
+      insegnamenti[i].id_modulo = schede[i].id_modulo;
+      insegnamenti[i].docente = schede[i].docente;
+      insegnamenti[i].tot_schedeF = schede[i].tot_schedeF;
 
       insegnamenti[i].domande = [];
       insegnamenti[i].domande[0] = [];
 
       let index = 0;
-      for (let j = 0; j < data[i].domande.length; j++) {
+      for (let j = 0; j < schede[i].domande.length; j++) {
         if (j % 5 === 0 && j !== 0) {
           index++;
           insegnamenti[i].domande[index] = [];
         }
 
-        insegnamenti[i].domande[index].push(data[i].domande[j]);
+        insegnamenti[i].domande[index].push(schede[i].domande[j]);
       }
     }
 
@@ -188,7 +223,364 @@ export class HomeComponent implements OnInit {
     return insegnamenti;
   }
 
-  applyWeights(vals) {
+  private showAcademicYearChart(means, values, insegnamenti): void {
+
+    const labels: string[] = ['V1', 'V2', 'V3'];
+
+    const fitColor = [];
+    let Rx: any;
+    let Gx: any;
+    let Bx: any;
+
+    const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+    const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+    const RGB1 = [255, 200, 45];
+    const RGB2 = [0, 121, 107];
+
+    insegnamenti.splice(0, 0, {
+      nome: '1 anno',
+      anno: '1',
+      docente: '',
+      tot_schedeF: min
+    });
+
+    values[0].splice(0, 0, '0');
+    values[1].splice(0, 0, '0');
+    values[2].splice(0, 0, '0');
+
+    for (let i = 2; i < insegnamenti.length; i++) {
+      if (insegnamenti[i].anno !== insegnamenti[i - 1].anno) {
+        const year = insegnamenti[i].anno;
+        insegnamenti.splice(i, 0, {
+          anno: year,
+          nome: year + ' anno',
+          docente: '',
+          tot_schedeF: min
+        });
+        values[0].splice(i, 0, '0');
+        values[1].splice(i, 0, '0');
+        values[2].splice(i, 0, '0');
+      }
+    }
+
+
+    for (const i in insegnamenti) {
+      if (insegnamenti.hasOwnProperty(i)) {
+        Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
+        Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
+        Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
+
+        fitColor.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
+      }
+    }
+
+    const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
+    const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
+
+    // chartjs stuff
+    const charts = [];
+    const ctx = [];
+
+    // Destroy and recreate canvas to clear
+    let canv: any = [];
+
+    canv.push(document.getElementById('v1-canvas'));
+    canv.push(document.getElementById('v2-canvas'));
+    canv.push(document.getElementById('v3-canvas'));
+
+    const parents = [];
+    parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
+
+    parents[0].removeChild(canv[0]);
+    parents[1].removeChild(canv[1]);
+    parents[2].removeChild(canv[2]);
+
+    const canvWidth = '90vw';
+    const canvHeight = (insegnamenti.length * 25) + 'px';
+    const minHeight = '150px';
+
+    for (let i = 0; i < 3; i++) {
+      const canvs: any = document.createElement('canvas');
+      canvs.id = 'v' + (i + 1) + '-canvas';
+      canvs.style.width = canvWidth;
+      canvs.style.height = canvHeight;
+      canvs.style['min-height'] = minHeight;
+      parents[i].appendChild(canvs);
+    }
+
+    canv = [];
+    canv.push(document.getElementById('v1-canvas'));
+    canv.push(document.getElementById('v2-canvas'));
+    canv.push(document.getElementById('v3-canvas'));
+
+    ctx.push(canv[0].getContext('2d'));
+    ctx.push(canv[1].getContext('2d'));
+    ctx.push(canv[2].getContext('2d'));
+
+
+    for (const c in ctx) {
+      if (ctx.hasOwnProperty(c)) {
+        // tslint:disable-next-line: variable-name
+        const _options = {
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+              },
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          tooltips: {
+            titleFontSize: 25,
+            bodyFontSize: 25,
+            callbacks: {
+              label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
+            }
+          },
+          responsive: false,
+          legend: { display: false },
+          annotation: {
+            annotations: [
+              {
+                type: 'line',
+                mode: 'vertical',
+                scaleID: 'x-axis-0',
+                value: this.vCds[this.selectedCds][c][this.getIndexFromSelectedYear()],
+                borderColor: 'red',
+                label: {
+                  content: 'Media CDS',
+                  enabled: true,
+                  position: 'top'
+                }
+              }
+            ]
+          },
+        };
+        // chartjs data
+        // tslint:disable-next-line: variable-name
+        const _data = {
+          labels: materie,
+          datasets: [{
+            data: values[c],
+            backgroundColor: fitColor,
+            hoverBackgroundColor: fitColor,
+            fill: true,
+            borderWidth: 1
+          }]
+        };
+
+        const opt = Object.assign({}, _options);
+
+        charts.push(new Chart(ctx[c], {
+          type: 'horizontalBar',
+          data: _data,
+          options: opt
+        }));
+      }
+    }
+  }
+
+  public getSchedeOfSelectedTeachingAndShowTeachingChart(): void {
+
+    this.manualRefresh.emit(); // refresh years slider
+
+    if (this.selectedTeaching === undefined) { return; }
+
+    let id: string;
+    let channel: string;
+    [id, channel] = this.selectedTeaching.split(' ');
+
+    this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
+
+      const anniAccademici = [];
+      for (const i in data) {
+        if (data.hasOwnProperty(i)) {
+
+          anniAccademici[i] = {};
+          anniAccademici[i].v1 = 0;
+          anniAccademici[i].v2 = 0;
+          anniAccademici[i].v3 = 0;
+          anniAccademici[i].anno = data[i].anno_accademico;
+
+          const valori: any = [];
+          valori.tot_schedeF = data[i].totale_schede;
+          valori.domande = [];
+
+          valori.domande[i] = [];
+
+          let index = 0;
+          for (let j = 0; j < data[i].domande.length; j++) {
+            if (data[i].domande.hasOwnProperty(j)) {
+
+              if (j % 5 === 0 && j !== 0) {
+                index++;
+                valori.domande[index] = [];
+              }
+
+              if (valori.domande[index] === undefined) {
+                valori.domande[index] = [];
+              }
+
+              valori.domande[index].push(data[i].domande[j]);
+            }
+          }
+
+          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
+        }
+      }
+
+      this.showTeachingChart(anniAccademici);
+    });
+
+  }
+
+  private showTeachingChart(teachingResults): void {
+
+    let teachingName: any = document.getElementById('selTeaching');
+    teachingName = teachingName.options[teachingName.selectedIndex].text;
+
+    const charts = [];
+    const matr = [];
+    matr[0] = [];
+    matr[1] = [];
+    matr[2] = [];
+
+
+    const tmp = Array.from(this.config.years);
+    const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
+
+    for (let i = 0; i < teachingResults.length; i++) {
+      if (!yearsArray.includes(teachingResults[i].anno)) {
+        teachingResults.splice(i--, 1);
+      }
+    }
+
+    let j = 0;
+    for (const i in yearsArray) {
+      if (yearsArray.hasOwnProperty(i)) {
+
+        let val1 = 0;
+        let val2 = 0;
+        let val3 = 0;
+
+        if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
+          val1 = Math.round(teachingResults[j].v1 * 100) / 100;
+          val2 = Math.round(teachingResults[j].v2 * 100) / 100;
+          val3 = Math.round(teachingResults[j].v3 * 100) / 100;
+          j++;
+        }
+        matr[0].push(val1);
+        matr[1].push(val2);
+        matr[2].push(val3);
+      }
+    }
+
+    const teachingMean = [[], [], []];
+
+    // tslint:disable-next-line: forin
+    for (const i in this.config.years) {
+      teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
+      teachingMean[1][i] = mean(this.removeZeroValuesToArray(matr[1]));
+      teachingMean[2][i] = mean(this.removeZeroValuesToArray(matr[2]));
+    }
+
+    this.calculateTeachingStats(matr);
+
+    // line graphs config
+    for (let i = 1; i <= 3; i++) {
+
+      const config = {
+        type: 'line',
+        data: {
+          labels: yearsArray,
+          datasets: [{
+            label: 'V' + i,
+            fill: false,
+            backgroundColor: '#00897b',
+            borderColor: '#00897b',
+            data: matr[i - 1],
+          }, {
+            label: 'Media CDS',
+            fill: false,
+            backgroundColor: '#521a7d',
+            borderColor: '#521a7d',
+            data: this.vCds[this.selectedCds][i - 1],
+          }, {
+            label: 'Media Insegnamento',
+            fill: false,
+            backgroundColor: '#a69319',
+            borderColor: '#a69319',
+            data: teachingMean[i - 1],
+            pointRadius: 1,
+          }
+          ]
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: teachingName + ' V' + i
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+          scales: {
+            xAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Anno accademico'
+              }
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'V' + i
+              }
+            }]
+          },
+        }
+      };
+
+      const container: any = document.getElementById('v' + i + '-teaching');
+      container.innerHTML = '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
+
+      let ctx: any = document.getElementById('V' + i);
+      ctx = ctx.getContext('2d');
+      charts.push(new Chart(ctx, config));
+    }
+  }
+
+  private removeZeroValuesToArray(array: Array<number>): Array<number> {
+    const cleanedArray: Array<number> = [];
+    for (const v of array) {
+      if (v !== 0 && !isNaN(v)) {
+        cleanedArray.push(v);
+      }
+    }
+    if (cleanedArray.length === 0) {
+      cleanedArray.push(0);
+    }
+    return cleanedArray;
+  }
+
+  private applyWeights(vals) {
     // pesi singole domande
     const pesi = [
       0.7,  // 1
@@ -201,7 +593,7 @@ export class HomeComponent implements OnInit {
       0.0,  // 8   questa domanda non viene considerata
       0.3,  // 9
       0.3,  // 10
-      0.3,  // 11
+      0.0,  // 11  questa domanda non viene considerata
       0.0   // 12  questa domanda non viene considerata
     ];
 
@@ -243,12 +635,12 @@ export class HomeComponent implements OnInit {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  calculateFormula(insegnamenti) {
+  private calculateFormula(insegnamenti: []) {
     const v1 = [];
     const v2 = [];
     const v3 = [];
 
-    for (let i in insegnamenti) {
+    for (const i in insegnamenti) {
 
       if (insegnamenti.hasOwnProperty(i)) {
         let V1: any;
@@ -265,7 +657,7 @@ export class HomeComponent implements OnInit {
 
     const means = [0.0, 0.0, 0.0];
 
-    for (let x in v1) {
+    for (const x in v1) {
       if (v1.hasOwnProperty(x)) {
         means[0] += parseFloat(v1[x]);
         means[1] += parseFloat(v2[x]);
@@ -279,332 +671,103 @@ export class HomeComponent implements OnInit {
     return [means, [v1, v2, v3]];
   }
 
-  generateGraphs(means, values, insegnamenti) {
-
-    const labels: string[] = ['V1', 'V2', 'V3'];
-
-    const fitColor = [];
-    let Rx: any;
-    let Gx: any;
-    let Bx: any;
-
-    const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
-    const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
-    const RGB1 = [255, 200, 45];
-    const RGB2 = [0,   121, 107];
-
-    insegnamenti.splice(0, 0, {
-      nome: '1 anno',
-      anno: '1',
-      docente: '',
-      tot_schedeF: min
-    });
-
-    values[0].splice(0, 0, '0');
-    values[1].splice(0, 0, '0');
-    values[2].splice(0, 0, '0');
-
-    for (let i = 2; i < insegnamenti.length; i++) {
-      if (insegnamenti[i].anno != insegnamenti[i - 1].anno) {
-        let year = insegnamenti[i].anno;
-        insegnamenti.splice(i, 0, {
-          anno: year,
-          nome: year + ' anno',
-          docente: '',
-          tot_schedeF: min
-        });
-        values[0].splice(i, 0, '0');
-        values[1].splice(i, 0, '0');
-        values[2].splice(i, 0, '0');
+  private getCdsStats(): void {
+    for (const cds of this.cds) {
+      const means$ = [];
+      for (const year of this.config.years) {
+        means$.push(this.getMeans(year, cds.id));
       }
-    }
 
-
-    for (let i in insegnamenti) {
-      if (insegnamenti.hasOwnProperty(i)) {
-        Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-        Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-        Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-
-        fitColor.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
-      }
-    }
-
-    const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
-    const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
-
-    // chartjs stuff
-    const charts = [];
-    const ctx = [];
-
-    // Destroy and recreate canvas to clear
-    let canv: any = [];
-
-    canv.push(document.getElementById('v1-canvas'));
-    canv.push(document.getElementById('v2-canvas'));
-    canv.push(document.getElementById('v3-canvas'));
-
-    const parents = [];
-    parents.push(canv[0].parentElement, canv[1].parentElement, canv[2].parentElement);
-
-    parents[0].removeChild(canv[0]);
-    parents[1].removeChild(canv[1]);
-    parents[2].removeChild(canv[2]);
-
-    const canvWidth = '90vw';
-    const canvHeight = (insegnamenti.length * 25) + 'px';
-
-    const minHeight = '150px';
-    let canvs: any = document.createElement('canvas');
-    canvs.id = 'v1-canvas';
-    canvs.style.width = canvWidth;
-    canvs.style.height = canvHeight;
-    canvs.style['min-height'] = minHeight;
-    parents[0].appendChild(canvs);
-
-    canvs = document.createElement('canvas');
-    canvs.id = 'v2-canvas';
-    canvs.style.width = canvWidth;
-    canvs.style.height = canvHeight;
-    canvs.style['min-height'] = minHeight;
-    parents[1].appendChild(canvs);
-
-    canvs = document.createElement('canvas');
-    canvs.id = 'v3-canvas';
-    canvs.style.width = canvWidth;
-    canvs.style.height = canvHeight;
-    canvs.style['min-height'] = minHeight;
-    parents[2].appendChild(canvs);
-
-    canv = [];
-    canv.push(document.getElementById('v1-canvas'));
-    canv.push(document.getElementById('v2-canvas'));
-    canv.push(document.getElementById('v3-canvas'));
-
-    ctx.push(canv[0].getContext('2d'));
-    ctx.push(canv[1].getContext('2d'));
-    ctx.push(canv[2].getContext('2d'));
-
-    const _options = {
-      scales: {
-        xAxes: [{
-          ticks: {
-            beginAtZero: true,
-          },
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
+      this.vCds[cds.id] = [[], [], []];
+      combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
+        for (const v of means) {
+          for (let i = 0; i < 3; i++) {
+            this.vCds[cds.id][i].push(v[i]);
           }
-        }]
-      },
-      tooltips: {
-        titleFontSize: 25,
-        bodyFontSize: 25,
-        callbacks: {
-          label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
         }
-      },
-      responsive: false,
-      legend: { display: false },
-    };
-
-    for (let c in ctx) {
-      if (ctx.hasOwnProperty(c)) {
-
-        // chartjs data
-        const _data = {
-          labels: materie,
-          datasets: [{
-            data: values[c],
-            backgroundColor: fitColor,
-            hoverBackgroundColor: fitColor,
-            fill: true,
-            borderWidth: 1
-          }]
-        };
-
-        const opt = Object.assign({}, _options);
-
-        charts.push(new Chart(ctx[c], {
-          type: 'horizontalBar',
-          data: _data,
-          options: opt
-        }));
-      }
-    }
-  }
-
-  getDataForYear() {
-    if (this.selectedYear != '--') {
-      this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
-        const insegnamenti: any = this.performTeachings(data);
-
-        let means: any;
-        let values: any;
-        [means, values] = this.calculateFormula(insegnamenti);
-
-        this.generateGraphs(means, values, insegnamenti);
       });
     }
   }
 
-  showTeachingChart(teachingResults) {
+  private getMeans(year, cds): Observable<{}> {
+    return this.http.get(this.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
+      .pipe(map((data) => {
+        const insegnamenti = this.parseSchede(data);
+        const [means, _] = this.calculateFormula(insegnamenti);
+        return means;
+      }));
+  }
 
-    let teachingName: any = document.getElementById('selTeaching');
-    teachingName = teachingName.options[teachingName.selectedIndex].text;
+  public showCdsBoxplot(): void {
+    const boxplotData = {
+      // define label tree
+      labels: '',
+      datasets: [{
+        label: 'V1',
+        backgroundColor: 'rgba(255,0,0,0.5)',
+        borderColor: 'red',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [this.vCds[this.selectedCds][0]]
+      }, {
+        label: 'V2',
+        backgroundColor: 'rgba(0,255,0,0.5)',
+        borderColor: 'green',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [this.vCds[this.selectedCds][1]]
+      }, {
+        label: 'V3',
+        backgroundColor: 'rgba(0,0,255,0.5)',
+        borderColor: 'blue',
+        borderWidth: 1,
+        outlierColor: '#999999',
+        padding: 10,
+        itemRadius: 0,
+        data: [this.vCds[this.selectedCds][2]]
+      }]
+    };
 
-    const charts = [];
-    const matr = [];
-    matr[0] = [];
-    matr[1] = [];
-    matr[2] = [];
-
-    const tmp = Array.from(this.config.years);
-    const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
-
-    for (let i = 0; i < teachingResults.length; i++) {
-      if (!yearsArray.includes(teachingResults[i].anno)) {
-        teachingResults.splice(i--, 1);
-      }
-    }
-
-    let j = 0;
-    for (let i in yearsArray) {
-      if (yearsArray.hasOwnProperty(i)) {
-
-        let val1 = 0;
-        let val2 = 0;
-        let val3 = 0;
-
-        if (j < teachingResults.length && yearsArray[i] == teachingResults[j].anno) {
-            val1 = Math.round(teachingResults[j].v1 * 100) / 100;
-            val2 = Math.round(teachingResults[j].v2 * 100) / 100;
-            val3 = Math.round(teachingResults[j].v3 * 100) / 100;
-            j++;
-        }
-        matr[0].push(val1);
-        matr[1].push(val2);
-        matr[2].push(val3);
-      }
-    }
-
-    // line graphs config
-    for (let i = 1; i < 4; i++) {
-
-      const config = {
-        type: 'line',
-        data: {
-          labels: yearsArray,
-          datasets: [{
-            label: 'V' + i,
-            fill: false,
-            backgroundColor: '#00897b',
-            borderColor: '#00897b',
-            data: matr[i - 1],
-          }]
+    const cdsStatsDiv: HTMLElement = document.getElementById('cds-stats');
+    cdsStatsDiv.innerHTML = '<canvas id="cds-canvas"></canvas>';
+    let ctx: any = document.getElementById('cds-canvas');
+    ctx = ctx.getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'horizontalBoxplot',
+      data: boxplotData,
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
         },
-        options: {
-          responsive: true,
-          title: {
-            display: true,
-            text:  teachingName + ' V' + i
-          },
-          tooltips: {
-            mode: 'index',
-            intersect: false,
-          },
-          hover: {
-            mode: 'nearest',
-            intersect: true
-          },
-          scales: {
-            xAxes: [{
-              display: true,
-              ticks: {
-                beginAtZero: true,
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Anno accademico'
-              }
-            }],
-            yAxes: [{
-              display: true,
-              ticks: {
-                beginAtZero: true,
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'V' + i
-              }
-            }]
-          }
-        }
-      };
-
-      const container: any = document.getElementById('v' + i + '-teaching');
-      container.innerHTML = '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
-
-      let ctx: any = document.getElementById('V' + i);
-      ctx = ctx.getContext('2d');
-      charts.push(new Chart(ctx, config));
-    }
-  }
-
-  getDataForTeaching() {
-
-    this.manualRefresh.emit(); // refresh years slider
-
-    if (this.selectedTeaching === undefined) { return; }
-
-    let id: string;
-    let channel: string;
-    [id, channel] = this.selectedTeaching.split(' ');
-
-    this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
-
-      const anniAccademici = [];
-      for (let i in data) {
-        if (data.hasOwnProperty(i)) {
-
-          anniAccademici[i] = {};
-          anniAccademici[i].v1 = 0;
-          anniAccademici[i].v2 = 0;
-          anniAccademici[i].v3 = 0;
-          anniAccademici[i].anno = data[i].anno_accademico;
-
-          const valori: any = [];
-          valori.tot_schedeF   = data[i].totale_schede;
-          valori.domande = [];
-
-          valori.domande[i] = [];
-
-          let index = 0;
-          for (let j = 0; j < data[i].domande.length; j++) {
-            if (data[i].domande.hasOwnProperty(j)) {
-
-              if (j % 5 == 0 && j != 0) {
-                index++;
-                valori.domande[index] = [];
-              }
-
-              if (valori.domande[index] == undefined) {
-                valori.domande[index] = [];
-              }
-
-              valori.domande[index].push(data[i].domande[j]);
-            }
-          }
-
-          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
+        title: {
+          display: true,
+          text: 'CDS Stats'
         }
       }
-
-      this.showTeachingChart(anniAccademici);
-
     });
-
   }
 
+  private getIndexFromSelectedYear(): number {
+    return parseInt(this.selectedYear.charAt(3), 10) - 3;
+  }
+
+  public toggleStats(): void {
+    this.showTeachingStats = !this.showTeachingStats;
+  }
+
+  private calculateTeachingStats(matr: number[][]): void {
+    for (let i = 0; i < 3; i++) {
+      const paragraph = document.getElementById('v' + (i + 1) + '-stats');
+      const teachingValues = this.removeZeroValuesToArray(matr[i]);
+      paragraph.innerHTML = '';
+      paragraph.textContent += 'Media: ' + mean(teachingValues).toFixed(2) + '\t';
+      paragraph.textContent += 'Varianza: ' + variance(teachingValues).toFixed(3) + '\t';
+      paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
+    }
+  }
 }
