@@ -55,7 +55,7 @@
             Seleziona anno:
             <br>
             <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear"
-              (ngModelChange)="getSchedeOfCdsForSelectedYear()">
+              (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
             </select>
@@ -67,7 +67,7 @@
             Seleziona insegnamento:
             <br>
             <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching"
-              (ngModelChange)="getSchedeOfSelectedTeaching()">
+              (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()">
               <option class="text-center">--</option>
               <option class="text-center" *ngFor="let teaching of teachings"
                 [ngValue]="teaching.id+' '+teaching.canale"> {{ teaching.nome }}
@@ -100,7 +100,7 @@
                     </span>
                   </div>
                   <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
-                    [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYear()">
+                    [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
                 </div>
               </li>
               <li class="nav-item-right tabs_button" (click)="toggleStats()" *ngIf="currentOption === 2">
@@ -250,7 +250,7 @@
         <div class="custom-slider">
           <ng5-slider class="addons-bar slider-years" [(value)]="minValue" [(highValue)]="maxValue"
             [options]="optionsSlider" [hidden]="currentOption != 2 || !selectedTeaching" [manualRefresh]="manualRefresh"
-            (valueChange)="getSchedeOfSelectedTeaching()"></ng5-slider>
+            (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"></ng5-slider>
         </div>
 
         <br>

@@ -102,36 +102,36 @@ export class HomeComponent implements OnInit {
     Chart.pluginService.register(namedChartAnnotation);
   }
 
-  private resetInfo() {
+  private resetInfo(): void {
     this.v1Info = false;
     this.v2Info = false;
     this.v3Info = false;
   }
 
-  public enableOption(val) {
+  public enableOption(val): void {
     this.resetInfo();
     this.currentOption = val;
     this.manualRefresh.emit();
   }
 
-  public switchVal(v) {
+  public switchVal(v): void {
     this.resetInfo();
     this.switcherValues = v;
   }
 
-  private resetSettings() {
+  private resetSettings(): void {
     this.selectedCds = null;
     this.selectedTeaching = null;
     // this.currentOption      = null;
   }
 
-  private getAllDepartments() {
+  private getAllDepartments(): void {
     this.http.get(this.config.apiUrl + 'dipartimento').subscribe((data) => {
       this.departments = data;
     });
   }
 
-  public getAllCdsOfSelectedDepartment(department: number) {
+  public getAllCdsOfSelectedDepartment(department: number): void {
     this.http.get(this.config.apiUrl + 'cds/' + department).subscribe((data) => {
       this.cds = data;
       this.getCdsStats();
@@ -140,7 +140,7 @@ export class HomeComponent implements OnInit {
     this.resetSettings();
   }
 
-  public getAllTeachingsOfSelectedCds(cds: number) {
+  public getAllTeachingsOfSelectedCds(cds: number): void {
     this.resetSettings();
 
     this.selectedCds = cds;
@@ -152,11 +152,11 @@ export class HomeComponent implements OnInit {
     if (this.currentOption === 0) {
       this.showCdsBoxplot();
     } else if (this.selectedYear) {
-      this.getSchedeOfCdsForSelectedYear();
+      this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
     }
   }
 
-  public getSchedeOfCdsForSelectedYear() {
+  public getSchedeOfCdsForSelectedYearAndShowAcademicYearChart(): void {
     if (this.selectedYear !== '--') {
       this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
         const insegnamenti: any = this.parseSchede(data);
@@ -223,7 +223,7 @@ export class HomeComponent implements OnInit {
     return insegnamenti;
   }
 
-  private showAcademicYearChart(means, values, insegnamenti) {
+  private showAcademicYearChart(means, values, insegnamenti): void {
 
     const labels: string[] = ['V1', 'V2', 'V3'];
 
@@ -384,7 +384,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public getSchedeOfSelectedTeaching() {
+  public getSchedeOfSelectedTeachingAndShowTeachingChart(): void {
 
     this.manualRefresh.emit(); // refresh years slider
 
@@ -438,7 +438,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  private showTeachingChart(teachingResults) {
+  private showTeachingChart(teachingResults): void {
 
     let teachingName: any = document.getElementById('selTeaching');
     teachingName = teachingName.options[teachingName.selectedIndex].text;
@@ -567,7 +567,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private removeZeroValuesToArray(array: Array<number>) {
+  private removeZeroValuesToArray(array: Array<number>): Array<number> {
     const cleanedArray: Array<number> = [];
     for (const v of array) {
       if (v !== 0 && !isNaN(v)) {
@@ -671,7 +671,7 @@ export class HomeComponent implements OnInit {
     return [means, [v1, v2, v3]];
   }
 
-  private getCdsStats() {
+  private getCdsStats(): void {
     for (const cds of this.cds) {
       const means$ = [];
       for (const year of this.config.years) {
@@ -698,7 +698,7 @@ export class HomeComponent implements OnInit {
       }));
   }
 
-  public showCdsBoxplot() {
+  public showCdsBoxplot(): void {
     const boxplotData = {
       // define label tree
       labels: '',
@@ -756,11 +756,11 @@ export class HomeComponent implements OnInit {
     return parseInt(this.selectedYear.charAt(3), 10) - 3;
   }
 
-  public toggleStats() {
+  public toggleStats(): void {
     this.showTeachingStats = !this.showTeachingStats;
   }
 
-  private calculateTeachingStats(matr: number[][]) {
+  private calculateTeachingStats(matr: number[][]): void {
     for (let i = 0; i < 3; i++) {
       const paragraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.removeZeroValuesToArray(matr[i]);
