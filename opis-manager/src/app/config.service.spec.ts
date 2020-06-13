@@ -11,7 +11,7 @@ describe('ConfigService', () => {
     ]
   }));
 
-  it('getConfig should correctly work', async() => {
+  it('getConfig should correctly work', () => {
     const service: ConfigService = TestBed.inject(ConfigService);
     const httpTestingController = TestBed.inject(HttpTestingController);
     const urlConfig = 'assets/config.json';

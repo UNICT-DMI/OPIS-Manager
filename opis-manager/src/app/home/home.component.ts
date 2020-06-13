@@ -1,11 +1,11 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { map, take } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { Observable, combineLatest, Subject } from 'rxjs';
 import { mean, variance, std } from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
@@ -17,10 +17,12 @@ import { round } from '../utils/utils';
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   readonly faInfo = faInfo;
   readonly faSearch = faSearch;
+
+  private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
   config: Config = {
     apiUrl: '',
@@ -98,13 +100,13 @@ export class HomeComponent implements OnInit {
     this.v3Info = false;
   }
 
-  public enableOption(val): void {
+  public enableOption(val: number): void {
     this.resetInfo();
     this.currentOption = val;
     this.manualRefresh.emit();
   }
 
-  public switchVal(v): void {
+  public switchVal(v: number): void {
     this.resetInfo();
     this.switcherValues = v;
   }
@@ -116,13 +118,13 @@ export class HomeComponent implements OnInit {
   }
 
   private getAllDepartments(): void {
-    this.http.get(this.config.apiUrl + 'dipartimento').subscribe((data) => {
+    this.http.get(this.config.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
       this.departments = data;
     });
   }
 
   public getAllCdsOfSelectedDepartment(department: number): void {
-    this.http.get(this.config.apiUrl + 'cds/' + department).subscribe((data) => {
+    this.http.get(this.config.apiUrl + 'cds/' + department).pipe(take(1)).subscribe((data) => {
       this.cds = data;
       this.getCdsStats();
     });
@@ -153,9 +155,9 @@ export class HomeComponent implements OnInit {
 
         let means: any;
         let values: any;
-        [means, values] = this.calculateFormula(insegnamenti);
+        [means, values] = this.elaborateFormula(insegnamenti);
 
-        this.showAcademicYearChart(means, values, insegnamenti);
+        this.showAcademicYearChart(values, insegnamenti);
       });
     }
   }
@@ -213,25 +215,35 @@ export class HomeComponent implements OnInit {
     return insegnamenti;
   }
 
-  private showAcademicYearChart(means, values, insegnamenti): void {
-
-    const labels: string[] = ['V1', 'V2', 'V3'];
-
-    const fitColor = [];
-    let Rx: any;
-    let Gx: any;
-    let Bx: any;
-
-    const min = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
-    const max = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+  private getColorTeachings(insegnamenti: [], maxSchede: number, minSchede: number): string[] {
+    let Rx: number;
+    let Gx: number;
+    let Bx: number;
     const RGB1 = [255, 200, 45];
     const RGB2 = [0, 121, 107];
+
+    const colorInsegnamenti = [];
+
+    for (const i of Object.keys(insegnamenti)) {
+      Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+      Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+      Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+
+      colorInsegnamenti.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
+    }
+
+    return colorInsegnamenti;
+  }
+
+  private showAcademicYearChart(values, insegnamenti): void {
+    const minSchede = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+    const maxSchede = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
 
     insegnamenti.splice(0, 0, {
       nome: '1 anno',
       anno: '1',
       docente: '',
-      tot_schedeF: min
+      tot_schedeF: minSchede
     });
 
     values[0].splice(0, 0, '0');
@@ -245,7 +257,7 @@ export class HomeComponent implements OnInit {
           anno: year,
           nome: year + ' anno',
           docente: '',
-          tot_schedeF: min
+          tot_schedeF: minSchede
         });
         values[0].splice(i, 0, '0');
         values[1].splice(i, 0, '0');
@@ -253,16 +265,7 @@ export class HomeComponent implements OnInit {
       }
     }
 
-
-    for (const i in insegnamenti) {
-      if (insegnamenti.hasOwnProperty(i)) {
-        Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-        Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-        Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - min) / (max - min));
-
-        fitColor.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
-      }
-    }
+    const fitColorInsegnamenti = this.getColorTeachings(insegnamenti, maxSchede, minSchede);
 
     const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
     const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
@@ -308,69 +311,60 @@ export class HomeComponent implements OnInit {
     ctx.push(canv[2].getContext('2d'));
 
 
-    for (const c in ctx) {
-      if (ctx.hasOwnProperty(c)) {
-        // tslint:disable-next-line: variable-name
-        const _options = {
-          scales: {
-            xAxes: [{
-              ticks: {
-                beginAtZero: true,
-              },
-            }],
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
+    for (const c of Object.keys(ctx)) {
+      // tslint:disable-next-line: variable-name
+      const _options = {
+        scales: {
+          xAxes: [{ ticks: { beginAtZero: true } }],
+          yAxes: [{ ticks: { beginAtZero: true } }],
+        },
+        tooltips: {
+          titleFontSize: 25,
+          bodyFontSize: 25,
+          callbacks: {
+            label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
+          }
+        },
+        responsive: false,
+        legend: { display: false },
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              mode: 'vertical',
+              scaleID: 'x-axis-0',
+              value: this.vCds[this.selectedCds][c][this.getIndexFromSelectedYear()],
+              borderColor: 'red',
+              label: {
+                content: 'Media CDS',
+                enabled: true,
+                position: 'top'
               }
-            }]
-          },
-          tooltips: {
-            titleFontSize: 25,
-            bodyFontSize: 25,
-            callbacks: {
-              label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
             }
-          },
-          responsive: false,
-          legend: { display: false },
-          annotation: {
-            annotations: [
-              {
-                type: 'line',
-                mode: 'vertical',
-                scaleID: 'x-axis-0',
-                value: this.vCds[this.selectedCds][c][this.getIndexFromSelectedYear()],
-                borderColor: 'red',
-                label: {
-                  content: 'Media CDS',
-                  enabled: true,
-                  position: 'top'
-                }
-              }
-            ]
-          },
-        };
-        // chartjs data
-        // tslint:disable-next-line: variable-name
-        const _data = {
-          labels: materie,
-          datasets: [{
-            data: values[c],
-            backgroundColor: fitColor,
-            hoverBackgroundColor: fitColor,
-            fill: true,
-            borderWidth: 1
-          }]
-        };
+          ]
+        },
+      };
 
-        const opt = Object.assign({}, _options);
+      // chartjs data
+      // tslint:disable-next-line: variable-name
+      const _data = {
+        labels: materie,
+        datasets: [{
+          data: values[c],
+          backgroundColor: fitColorInsegnamenti,
+          hoverBackgroundColor: fitColorInsegnamenti,
+          fill: true,
+          borderWidth: 1
+        }]
+      };
 
-        charts.push(new Chart(ctx[c], {
-          type: 'horizontalBar',
-          data: _data,
-          options: opt
-        }));
-      }
+      const opt = Object.assign({}, _options);
+
+      charts.push(new Chart(ctx[c], {
+        type: 'horizontalBar',
+        data: _data,
+        options: opt
+      }));
     }
   }
 
@@ -387,40 +381,37 @@ export class HomeComponent implements OnInit {
     this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
 
       const anniAccademici = [];
-      for (const i in data) {
-        if (data.hasOwnProperty(i)) {
+      for (const i of Object.keys(data)) {
+        anniAccademici[i] = {};
+        anniAccademici[i].v1 = 0;
+        anniAccademici[i].v2 = 0;
+        anniAccademici[i].v3 = 0;
+        anniAccademici[i].anno = data[i].anno_accademico;
 
-          anniAccademici[i] = {};
-          anniAccademici[i].v1 = 0;
-          anniAccademici[i].v2 = 0;
-          anniAccademici[i].v3 = 0;
-          anniAccademici[i].anno = data[i].anno_accademico;
+        const valori: any = [];
+        valori.tot_schedeF = data[i].totale_schede;
+        valori.domande = [];
 
-          const valori: any = [];
-          valori.tot_schedeF = data[i].totale_schede;
-          valori.domande = [];
+        valori.domande[i] = [];
 
-          valori.domande[i] = [];
+        let index = 0;
+        for (let j = 0; j < data[i].domande.length; j++) {
+          if (data[i].domande.hasOwnProperty(j)) {
 
-          let index = 0;
-          for (let j = 0; j < data[i].domande.length; j++) {
-            if (data[i].domande.hasOwnProperty(j)) {
-
-              if (j % 5 === 0 && j !== 0) {
-                index++;
-                valori.domande[index] = [];
-              }
-
-              if (valori.domande[index] === undefined) {
-                valori.domande[index] = [];
-              }
-
-              valori.domande[index].push(data[i].domande[j]);
+            if (j % 5 === 0 && j !== 0) {
+              index++;
+              valori.domande[index] = [];
             }
-          }
 
-          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
+            if (valori.domande[index] === undefined) {
+              valori.domande[index] = [];
+            }
+
+            valori.domande[index].push(data[i].domande[j]);
+          }
         }
+
+        [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
       }
 
       this.showTeachingChart(anniAccademici);
@@ -450,23 +441,20 @@ export class HomeComponent implements OnInit {
     }
 
     let j = 0;
-    for (const i in yearsArray) {
-      if (yearsArray.hasOwnProperty(i)) {
+    for (const i of Object.keys(yearsArray)) {
+      let val1 = 0;
+      let val2 = 0;
+      let val3 = 0;
 
-        let val1 = 0;
-        let val2 = 0;
-        let val3 = 0;
-
-        if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
-          val1 = Math.round(teachingResults[j].v1 * 100) / 100;
-          val2 = Math.round(teachingResults[j].v2 * 100) / 100;
-          val3 = Math.round(teachingResults[j].v3 * 100) / 100;
-          j++;
-        }
-        matr[0].push(val1);
-        matr[1].push(val2);
-        matr[2].push(val3);
+      if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
+        val1 = Math.round(teachingResults[j].v1 * 100) / 100;
+        val2 = Math.round(teachingResults[j].v2 * 100) / 100;
+        val3 = Math.round(teachingResults[j].v3 * 100) / 100;
+        j++;
       }
+      matr[0].push(val1);
+      matr[1].push(val2);
+      matr[2].push(val3);
     }
 
     const teachingMean = [[], [], []];
@@ -492,7 +480,7 @@ export class HomeComponent implements OnInit {
       const config = {
         type: 'line',
         data: {
-          labels: yearsArray,
+          labels: yearsArray.toString(),
           datasets: [
             { label: 'V' + i,              ...colorV1, data: matr[i - 1]                         },
             { label: 'Media CDS',          ...colorV2, data: this.vCds[this.selectedCds][i - 1]  },
@@ -501,39 +489,12 @@ export class HomeComponent implements OnInit {
         },
         options: {
           responsive: true,
-          title: {
-            display: true,
-            text: teachingName + ' V' + i
-          },
-          tooltips: {
-            mode: 'index',
-            intersect: false,
-          },
-          hover: {
-            mode: 'nearest',
-            intersect: true
-          },
+          title: { display: true, text: `${teachingName} V` + i },
+          tooltips: { mode: 'index',    intersect: false },
+          hover:    { mode: 'nearest',  intersect: true  },
           scales: {
-            xAxes: [{
-              display: true,
-              ticks: {
-                beginAtZero: true,
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Anno accademico'
-              }
-            }],
-            yAxes: [{
-              display: true,
-              ticks: {
-                beginAtZero: true,
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'V' + i
-              }
-            }]
+            xAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'Anno accademico' } }],
+            yAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'V' + i           } }],
           },
         }
       };
@@ -614,31 +575,25 @@ export class HomeComponent implements OnInit {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  private calculateFormula(insegnamenti: []): [number[], string[][]] {
+  private elaborateFormula(insegnamenti: []): [number[], string[][]] {
     const v1 = [];
     const v2 = [];
     const v3 = [];
 
-    for (const i in insegnamenti) {
+    for (const i of Object.keys(insegnamenti)) {
+      const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
 
-      if (insegnamenti.hasOwnProperty(i)) {
-
-        const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
-
-        v1.push(V1);
-        v2.push(V2);
-        v3.push(V3);
-      }
+      v1.push(V1);
+      v2.push(V2);
+      v3.push(V3);
     }
 
     const means = [0.0, 0.0, 0.0];
 
-    for (const x in v1) {
-      if (v1.hasOwnProperty(x)) {
-        means[0] += parseFloat(v1[x]);
-        means[1] += parseFloat(v2[x]);
-        means[2] += parseFloat(v3[x]);
-      }
+    for (const x of Object.keys(v1)) {
+      means[0] += parseFloat(v1[x]);
+      means[1] += parseFloat(v2[x]);
+      means[2] += parseFloat(v3[x]);
     }
     means[0] = means[0] / v1.length;
     means[1] = means[1] / v2.length;
@@ -655,7 +610,7 @@ export class HomeComponent implements OnInit {
       }
 
       this.vCds[cds.id] = [[], [], []];
-      combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
+      combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: Array<Array<number>>) => {
         for (const v of means) {
           for (let i = 0; i < 3; i++) {
             this.vCds[cds.id][i].push(
@@ -671,7 +626,7 @@ export class HomeComponent implements OnInit {
     return this.http.get(this.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.parseSchede(data);
-        const [means, _] = this.calculateFormula(insegnamenti);
+        const [means, _] = this.elaborateFormula(insegnamenti);
         return means;
       }));
   }
@@ -680,7 +635,7 @@ export class HomeComponent implements OnInit {
     const sharedProps = { borderWidth: 1, outlierColor: '#999999', padding: 10, itemRadius: 0 };
     const boxplotData = {
       // define label tree
-      labels: '',
+      labels: [''],
       datasets: [
         { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps, data: [this.vCds[this.selectedCds][0]] },
         { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps, data: [this.vCds[this.selectedCds][1]] },
@@ -689,6 +644,7 @@ export class HomeComponent implements OnInit {
     };
 
     document.getElementById('cds-stats').innerHTML = '<canvas id="cds-canvas"></canvas>';
+
     const ctx = (document.getElementById('cds-canvas') as HTMLCanvasElement).getContext('2d');
     const chart = new Chart(ctx, {
       type: 'horizontalBoxplot',
@@ -725,5 +681,11 @@ export class HomeComponent implements OnInit {
         paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }
