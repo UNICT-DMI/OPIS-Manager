@@ -5,8 +5,6 @@ import { FormulaComponent } from './formula.component';
 import { KatexModule } from 'ng-katex';
 
 describe('FormulaComponent', () => {
-  let component: FormulaComponent;
-  let fixture: ComponentFixture<FormulaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,13 +18,9 @@ describe('FormulaComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FormulaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const fixture = TestBed.createComponent(FormulaComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
   });
 });

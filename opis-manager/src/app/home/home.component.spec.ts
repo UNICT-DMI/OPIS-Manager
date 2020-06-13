@@ -1,21 +1,35 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular2-chartjs';
-import { Ng5SliderModule } from 'ng5-slider';
+import { ConfigService } from '../config.service';
 import { HomeComponent } from './home.component';
 
+/* Mock NgSliderComponent */
+// tslint:disable-next-line: component-selector
+@Component({selector: 'ng5-slider', template: ''})
+class NgSliderStubComponent {
+    @Input() value;
+    @Input() highValue;
+    @Input() options;
+    // hidden
+    @Input() manualRefresh;
+    @Output() valueChange =  new EventEmitter<any>();
+}
+
 describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [
+        NgSliderStubComponent,
+        HomeComponent,
+      ],
       imports: [
         BrowserModule,
         FontAwesomeModule,
@@ -24,19 +38,17 @@ describe('HomeComponent', () => {
         FormsModule,
         ChartModule,
         NgbModule,
-        Ng5SliderModule
+      ],
+      providers: [
+        ConfigService,
       ]
     })
     .compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const fixture = TestBed.createComponent(HomeComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
   });
 });

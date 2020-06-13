@@ -4,9 +4,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { InfoComponent } from './info.component';
 
 describe('InfoComponent', () => {
-  let component: InfoComponent;
-  let fixture: ComponentFixture<InfoComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ InfoComponent ],
@@ -18,13 +15,9 @@ describe('InfoComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(InfoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const fixture = TestBed.createComponent(InfoComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
   });
 });
