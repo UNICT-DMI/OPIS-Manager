@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface Config {
   apiUrl: string;
-  years: string;
+  years: string[];
 }
 
 @Injectable({

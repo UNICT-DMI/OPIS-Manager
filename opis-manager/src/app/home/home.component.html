@@ -35,12 +35,15 @@
       <div [hidden]="!selectedCds">
         <div class="container-switcher">
           <div class="segmented">
-            <label (click)="enableOption(0); showCdsBoxplot();" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di
-                Studio</span></label>
-            <label (click)="enableOption(1)" [ngClass]="currentOption === 1 ? 'checked' : ''"><span>Anno
-                accademico</span></label>
-            <label (click)="enableOption(2)"
-              [ngClass]="currentOption === 2 ? 'checked' : ''"><span>Insegnamento</span></label>
+            <label (click)="enableOption(0);" [ngClass]="currentOption === 0 ? 'checked' : ''">
+              <span>Corso di Studio</span>
+            </label>
+            <label (click)="enableOption(1)" [ngClass]="currentOption === 1 ? 'checked' : ''">
+              <span>Anno accademico</span>
+            </label>
+            <label (click)="enableOption(2)" [ngClass]="currentOption === 2 ? 'checked' : ''">
+              <span>Insegnamento</span>
+            </label>
           </div>
         </div>
 
@@ -66,12 +69,16 @@
           <div class="list-option-container">
             Seleziona insegnamento:
             <br>
-            <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching"
-              (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()">
+            <select
+              class="btn btn-opis text-center"
+              id="selTeaching"
+              [(ngModel)]="selectedTeaching"
+              (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+            >
               <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let teaching of teachings"
-                [ngValue]="teaching.id+' '+teaching.canale"> {{ teaching.nome }}
-                {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}</option>
+              <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
+                {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}
+              </option>
             </select>
           </div>
         </div>
@@ -248,9 +255,14 @@
         <br>
 
         <div class="custom-slider">
-          <ng5-slider class="addons-bar slider-years" [(value)]="minValue" [(highValue)]="maxValue"
-            [options]="optionsSlider" [hidden]="currentOption != 2 || !selectedTeaching" [manualRefresh]="manualRefresh"
-            (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"></ng5-slider>
+          <ng5-slider class="addons-bar slider-years"
+            [(value)]="minValue"
+            [(highValue)]="maxValue"
+            [options]="optionsSlider"
+            [hidden]="currentOption != 2 || !selectedTeaching"
+            [manualRefresh]="manualRefresh"
+            (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+          ></ng5-slider>
         </div>
 
         <br>
