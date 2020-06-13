@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './formula.component.html',
   styleUrls: ['./formula.component.scss']
 })
-export class FormulaComponent implements OnInit {
+export class FormulaComponent {
 
   constructor() { }
 
@@ -21,8 +21,4 @@ export class FormulaComponent implements OnInit {
    – si ottiene sommando le valutazioni ottenute secondo la formula
   $$ V = \\frac{1}{N} \\sum_{j=1}^{n} \\sum_{i=1}^{4} X_{ij} E_i p_j $$
   `;
-
-  ngOnInit() {
-  }
-
 }

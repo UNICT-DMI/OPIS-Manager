@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormulaComponent } from './formula.component';
+import { KatexModule } from 'ng-katex';
 
 describe('FormulaComponent', () => {
   let component: FormulaComponent;
@@ -8,7 +10,12 @@ describe('FormulaComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormulaComponent ]
+      declarations: [ FormulaComponent ],
+      imports: [
+        BrowserModule,
+        FontAwesomeModule,
+        KatexModule,
+      ]
     })
     .compileComponents();
   }));

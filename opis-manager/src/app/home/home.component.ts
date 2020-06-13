@@ -764,10 +764,12 @@ export class HomeComponent implements OnInit {
     for (let i = 0; i < 3; i++) {
       const paragraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.removeZeroValuesToArray(matr[i]);
-      paragraph.innerHTML = '';
-      paragraph.textContent += 'Media: ' + mean(teachingValues).toFixed(2) + '\t';
-      paragraph.textContent += 'Varianza: ' + variance(teachingValues).toFixed(3) + '\t';
-      paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
+      if (paragraph) {
+        paragraph.innerHTML = '';
+        paragraph.textContent += 'Media: ' + mean(teachingValues).toFixed(2) + '\t';
+        paragraph.textContent += 'Varianza: ' + variance(teachingValues).toFixed(3) + '\t';
+        paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
+      }
     }
   }
 }

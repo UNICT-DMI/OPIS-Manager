@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { InfoComponent } from './info.component';
 
 describe('InfoComponent', () => {
@@ -8,7 +9,11 @@ describe('InfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfoComponent ]
+      declarations: [ InfoComponent ],
+      imports: [
+        BrowserModule,
+        FontAwesomeModule,
+      ]
     })
     .compileComponents();
   }));
