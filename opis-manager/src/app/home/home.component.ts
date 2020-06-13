@@ -104,6 +104,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.resetInfo();
     this.currentOption = val;
     this.manualRefresh.emit();
+
+    if (this.currentOption === 0) {
+      this.showCdsBoxplot();
+    }
   }
 
   public switchVal(v: number): void {
@@ -141,9 +145,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.teachings = data;
     });
 
-    if (this.currentOption === 0) {
-      this.showCdsBoxplot();
-    } else if (this.selectedYear) {
+    if (this.selectedYear && this.currentOption !== 0) {
       this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
     }
   }
@@ -430,7 +432,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     matr[1] = [];
     matr[2] = [];
 
-
     const tmp = Array.from(this.config.years);
     const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
 
@@ -480,7 +481,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const config = {
         type: 'line',
         data: {
-          labels: yearsArray.toString(),
+          labels: yearsArray,
           datasets: [
             { label: 'V' + i,              ...colorV1, data: matr[i - 1]                         },
             { label: 'Media CDS',          ...colorV2, data: this.vCds[this.selectedCds][i - 1]  },
