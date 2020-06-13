@@ -9,6 +9,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { mean, variance, std } from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
+import { round } from '../utils/utils';
 
 @Component({
   selector: 'app-home',
@@ -21,14 +22,10 @@ export class HomeComponent implements OnInit {
   readonly faInfo = faInfo;
   readonly faSearch = faSearch;
 
-  config: {
-    apiUrl: string;
-    years: any;
-  } = {
-      apiUrl: '',
-      years: []
-    };
-
+  config: Config = {
+    apiUrl: '',
+    years: [],
+  };
 
   departments: any = [];
   cds: any = [];
@@ -37,7 +34,6 @@ export class HomeComponent implements OnInit {
   selectedCds: number;
   selectedYear: string;
   selectedTeaching: string;
-
 
   vCds: number[][][] = [];
 
@@ -62,17 +58,15 @@ export class HomeComponent implements OnInit {
     floor: 1,
     ceil: 8,
     showTicksValues: true,
-    getLegend: (value: number): string => {
-      return this.config.years[value - 1];
-    }
+    getLegend: (value: number): string => this.config.years[value - 1],
   };
 
   constructor(
     public configService: ConfigService,
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.configService.getConfig().pipe(take(1))
       .subscribe((data: Config) => {
         this.config = {
@@ -84,9 +78,7 @@ export class HomeComponent implements OnInit {
           floor: 1,
           ceil: data.years.length,
           showTicksValues: true,
-          getLegend: (value: number): string => {
-            return this.config.years[value - 1];
-          }
+          getLegend: (value: number): string => this.config.years[value - 1],
         };
 
         this.maxValue = this.config.years.length;
@@ -481,12 +473,18 @@ export class HomeComponent implements OnInit {
 
     // tslint:disable-next-line: forin
     for (const i in this.config.years) {
-      teachingMean[0][i] = mean(this.removeZeroValuesToArray(matr[0]));
-      teachingMean[1][i] = mean(this.removeZeroValuesToArray(matr[1]));
-      teachingMean[2][i] = mean(this.removeZeroValuesToArray(matr[2]));
+      teachingMean[0][i] = round(mean(this.removeZeroValuesToArray(matr[0])));
+      teachingMean[1][i] = round(mean(this.removeZeroValuesToArray(matr[1])));
+      teachingMean[2][i] = round(mean(this.removeZeroValuesToArray(matr[2])));
     }
 
     this.calculateTeachingStats(matr);
+
+    const [colorV1, colorV2, colorV3] = [
+      { fill: false, backgroundColor: '#00897b', borderColor: '#00897b', },
+      { fill: false, backgroundColor: '#521a7d', borderColor: '#521a7d', },
+      { fill: false, backgroundColor: '#a69319', borderColor: '#a69319', },
+    ];
 
     // line graphs config
     for (let i = 1; i <= 3; i++) {
@@ -495,26 +493,10 @@ export class HomeComponent implements OnInit {
         type: 'line',
         data: {
           labels: yearsArray,
-          datasets: [{
-            label: 'V' + i,
-            fill: false,
-            backgroundColor: '#00897b',
-            borderColor: '#00897b',
-            data: matr[i - 1],
-          }, {
-            label: 'Media CDS',
-            fill: false,
-            backgroundColor: '#521a7d',
-            borderColor: '#521a7d',
-            data: this.vCds[this.selectedCds][i - 1],
-          }, {
-            label: 'Media Insegnamento',
-            fill: false,
-            backgroundColor: '#a69319',
-            borderColor: '#a69319',
-            data: teachingMean[i - 1],
-            pointRadius: 1,
-          }
+          datasets: [
+            { label: 'V' + i,              ...colorV1, data: matr[i - 1]                         },
+            { label: 'Media CDS',          ...colorV2, data: this.vCds[this.selectedCds][i - 1]  },
+            { label: 'Media Insegnamento', ...colorV3, data: teachingMean[i - 1], pointRadius: 1 },
           ]
         },
         options: {
@@ -556,11 +538,10 @@ export class HomeComponent implements OnInit {
         }
       };
 
-      const container: any = document.getElementById('v' + i + '-teaching');
-      container.innerHTML = '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
+      document.getElementById('v' + i + '-teaching').innerHTML =
+        '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
 
-      let ctx: any = document.getElementById('V' + i);
-      ctx = ctx.getContext('2d');
+      const ctx = (document.getElementById('V' + i) as HTMLCanvasElement).getContext('2d');
       charts.push(new Chart(ctx, config));
     }
   }
@@ -578,9 +559,9 @@ export class HomeComponent implements OnInit {
     return cleanedArray;
   }
 
-  private applyWeights(vals) {
+  private applyWeights(vals): string[] {
     // pesi singole domande
-    const pesi = [
+    const weights = [
       0.7,  // 1
       0.3,  // 2
       0.1,  // 3
@@ -597,10 +578,10 @@ export class HomeComponent implements OnInit {
 
     // pesi risposte
     const risposte = [
-      1,    // Decisamente no
-      4,    // Più no che sì
-      7,    // Più sì che no
-      10    // Decisamente sì
+      1,   // Decisamente no
+      4,   // Più no che sì
+      7,   // Più sì che no
+      10,  // Decisamente sì
     ];
 
     const N = vals.tot_schedeF;
@@ -620,11 +601,11 @@ export class HomeComponent implements OnInit {
         d += vals.domande[j][3] * risposte[3];   // Decisamente sì
 
         if (j === 0 || j === 1) {                                 // V1 domande: 1,2
-          V1 += ((d / N) * pesi[j]);
+          V1 += ((d / N) * weights[j]);
         } else if (j === 3 || j === 4 || j === 8 || j === 9) {    // V2 domande: 4,5,9,10
-          V2 += (d / N) * pesi[j];
+          V2 += (d / N) * weights[j];
         } else if (j === 2 || j === 5 || j === 6) {               // V3 domande: 3,6,7
-          V3 += (d / N) * pesi[j];
+          V3 += (d / N) * weights[j];
         }
       }
 
@@ -633,7 +614,7 @@ export class HomeComponent implements OnInit {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  private calculateFormula(insegnamenti: []) {
+  private calculateFormula(insegnamenti: []): [number[], string[][]] {
     const v1 = [];
     const v2 = [];
     const v3 = [];
@@ -641,11 +622,8 @@ export class HomeComponent implements OnInit {
     for (const i in insegnamenti) {
 
       if (insegnamenti.hasOwnProperty(i)) {
-        let V1: any;
-        let V2: any;
-        let V3: any;
 
-        [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
+        const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
 
         v1.push(V1);
         v2.push(V2);
@@ -680,14 +658,16 @@ export class HomeComponent implements OnInit {
       combineLatest(means$).subscribe((means: Array<Array<number>>) => { // TODO: takeUntil() for unsubscribe
         for (const v of means) {
           for (let i = 0; i < 3; i++) {
-            this.vCds[cds.id][i].push(v[i]);
+            this.vCds[cds.id][i].push(
+              round(v[i])
+            );
           }
         }
       });
     }
   }
 
-  private getMeans(year, cds): Observable<{}> {
+  private getMeans(year, cds): Observable<object> {
     return this.http.get(this.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.parseSchede(data);
@@ -697,43 +677,19 @@ export class HomeComponent implements OnInit {
   }
 
   public showCdsBoxplot(): void {
+    const sharedProps = { borderWidth: 1, outlierColor: '#999999', padding: 10, itemRadius: 0 };
     const boxplotData = {
       // define label tree
       labels: '',
-      datasets: [{
-        label: 'V1',
-        backgroundColor: 'rgba(255,0,0,0.5)',
-        borderColor: 'red',
-        borderWidth: 1,
-        outlierColor: '#999999',
-        padding: 10,
-        itemRadius: 0,
-        data: [this.vCds[this.selectedCds][0]]
-      }, {
-        label: 'V2',
-        backgroundColor: 'rgba(0,255,0,0.5)',
-        borderColor: 'green',
-        borderWidth: 1,
-        outlierColor: '#999999',
-        padding: 10,
-        itemRadius: 0,
-        data: [this.vCds[this.selectedCds][1]]
-      }, {
-        label: 'V3',
-        backgroundColor: 'rgba(0,0,255,0.5)',
-        borderColor: 'blue',
-        borderWidth: 1,
-        outlierColor: '#999999',
-        padding: 10,
-        itemRadius: 0,
-        data: [this.vCds[this.selectedCds][2]]
-      }]
+      datasets: [
+        { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps, data: [this.vCds[this.selectedCds][0]] },
+        { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps, data: [this.vCds[this.selectedCds][1]] },
+        { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps, data: [this.vCds[this.selectedCds][2]] },
+      ],
     };
 
-    const cdsStatsDiv: HTMLElement = document.getElementById('cds-stats');
-    cdsStatsDiv.innerHTML = '<canvas id="cds-canvas"></canvas>';
-    let ctx: any = document.getElementById('cds-canvas');
-    ctx = ctx.getContext('2d');
+    document.getElementById('cds-stats').innerHTML = '<canvas id="cds-canvas"></canvas>';
+    const ctx = (document.getElementById('cds-canvas') as HTMLCanvasElement).getContext('2d');
     const chart = new Chart(ctx, {
       type: 'horizontalBoxplot',
       data: boxplotData,
