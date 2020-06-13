@@ -4,13 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { Options } from 'ng5-slider';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { mean, variance, std } from 'mathjs';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
-
-
 
 @Component({
   selector: 'app-home',
@@ -75,7 +73,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.configService.getConfig()
+    this.configService.getConfig().pipe(take(1))
       .subscribe((data: Config) => {
         this.config = {
           apiUrl: data.apiUrl,

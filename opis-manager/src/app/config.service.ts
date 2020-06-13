@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Config {
   apiUrl: string;
@@ -13,9 +14,7 @@ export class ConfigService {
 
   constructor(private http: HttpClient) { }
 
-  configUrl = 'assets/config.json';
-
-  getConfig() {
-    return this.http.get(this.configUrl);
+  getConfig(): Observable<object> {
+    return this.http.get('assets/config.json');
   }
 }
