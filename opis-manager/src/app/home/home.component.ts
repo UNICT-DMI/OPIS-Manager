@@ -53,10 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public enableOption(val: number): void {
     this.currentOption = val;
-
-    if (this.currentOption === 0) {
-      this.showCdsBoxplot();
-    }
   }
 
   private resetSettings(): void {
@@ -115,37 +111,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         const [means, _] = this.graphService.elaborateFormula(insegnamenti);
         return means;
       }));
-  }
-
-  public showCdsBoxplot(): void {
-    const sharedProps = { borderWidth: 1, outlierColor: '#999999', padding: 10, itemRadius: 0 };
-    const boxplotData = {
-      // define label tree
-      labels: [''],
-      datasets: [
-        { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps, data: [this.vCds[this.selectedCds][0]] },
-        { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps, data: [this.vCds[this.selectedCds][1]] },
-        { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps, data: [this.vCds[this.selectedCds][2]] },
-      ],
-    };
-
-    document.getElementById('corso-studio').innerHTML = '<canvas id="cds-canvas"></canvas>';
-
-    const ctx = (document.getElementById('cds-canvas') as HTMLCanvasElement).getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'horizontalBoxplot',
-      data: boxplotData,
-      options: {
-        responsive: true,
-        legend: {
-          position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'CDS Stats'
-        }
-      }
-    });
   }
 
   ngOnDestroy(): void {

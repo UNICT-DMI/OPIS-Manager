@@ -32,14 +32,15 @@
         <br>
 
         <!-- Corso di Studio -->
-        <div [hidden]="currentOption !== 0">
-          <div id="corso-studio"></div>
-        </div>
+        <app-cds
+          *ngIf="currentOption === 0"
+          [vCds]="vCds"
+          [selectedCds]="selectedCds"
+        ></app-cds>
 
         <!-- Anno Accademico -->
         <app-academic-year
           [hidden]="currentOption !== 1"
-          [teachings]="teachings"
           [vCds]="vCds"
           [selectedCds]="selectedCds"
         ></app-academic-year>

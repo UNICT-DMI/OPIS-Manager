@@ -17,6 +17,7 @@ import { HomeComponent } from './home/home.component';
 import { ValueDetailsComponent } from './value-details/value-details.component';
 import { TeachingComponent } from './teaching/teaching.component';
 import { AcademicYearComponent } from './academic-year/academic-year.component';
+import { CdsComponent } from './cds/cds.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AcademicYearComponent } from './academic-year/academic-year.component';
     ValueDetailsComponent,
     TeachingComponent,
     AcademicYearComponent,
+    CdsComponent,
   ],
   imports: [
     BrowserModule,

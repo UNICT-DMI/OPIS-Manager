@@ -11,6 +11,7 @@ import { TeachingComponent } from '../teaching/teaching.component';
 import { NgSliderStubComponent } from '../teaching/teaching.component.spec';
 import { ValueDetailsComponent } from '../value-details/value-details.component';
 import { HomeComponent } from './home.component';
+import { CdsComponent } from '../cds/cds.component';
 
 describe('HomeComponent', () => {
 
@@ -23,6 +24,7 @@ describe('HomeComponent', () => {
         AcademicYearComponent,
         ValueDetailsComponent,
         NgSliderStubComponent, // TODO: move this mocked component in a "utils" file
+        CdsComponent,
       ],
       imports: [
         BrowserModule,

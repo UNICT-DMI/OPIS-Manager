@@ -10,9 +10,8 @@ import { Chart } from 'chart.js';
   templateUrl: './academic-year.component.html',
   styleUrls: ['./academic-year.component.scss']
 })
-export class AcademicYearComponent implements OnInit {
+export class AcademicYearComponent {
 
-  @Input() teachings;
   @Input() vCds;
   @Input() selectedCds;
 
@@ -26,9 +25,6 @@ export class AcademicYearComponent implements OnInit {
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
-
-  ngOnInit(): void {
-  }
 
   // TODO: refactor / remove or use Output()
   public switchVal(v: number): void {
