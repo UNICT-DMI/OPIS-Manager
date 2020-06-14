@@ -1,33 +1,28 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ChartModule } from 'angular2-chartjs';
+import { AcademicYearComponent } from '../academic-year/academic-year.component';
 import { ConfigService } from '../config.service';
+import { TeachingComponent } from '../teaching/teaching.component';
+import { NgSliderStubComponent } from '../teaching/teaching.component.spec';
+import { ValueDetailsComponent } from '../value-details/value-details.component';
 import { HomeComponent } from './home.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-/* Mock NgSliderComponent */
-// tslint:disable-next-line: component-selector
-@Component({selector: 'ng5-slider', template: ''})
-class NgSliderStubComponent {
-    @Input() value;
-    @Input() highValue;
-    @Input() options;
-    @Input() manualRefresh;
-    @Output() valueChange =  new EventEmitter<any>();
-}
 
 describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        NgSliderStubComponent,
         HomeComponent,
+        ValueDetailsComponent,
+        TeachingComponent,
+        AcademicYearComponent,
+        ValueDetailsComponent,
+        NgSliderStubComponent, // TODO: move this mocked component in a "utils" file
       ],
       imports: [
         BrowserModule,
@@ -35,7 +30,6 @@ describe('HomeComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         FormsModule,
-        ChartModule,
         NgbModule,
       ],
       providers: [

@@ -16,6 +16,7 @@ import { FormulaComponent } from './formula/formula.component';
 import { HomeComponent } from './home/home.component';
 import { ValueDetailsComponent } from './value-details/value-details.component';
 import { TeachingComponent } from './teaching/teaching.component';
+import { AcademicYearComponent } from './academic-year/academic-year.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { TeachingComponent } from './teaching/teaching.component';
     HomeComponent,
     ValueDetailsComponent,
     TeachingComponent,
+    AcademicYearComponent,
   ],
   imports: [
     BrowserModule,

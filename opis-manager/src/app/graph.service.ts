@@ -5,7 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class GraphService {
 
-  constructor() { }
+  public round(v: number, padding = 2): number {
+    const pad = parseInt(1 + '0'.repeat(padding), 2);
+    return Math.round(v * pad) / pad;
+  }
 
   public applyWeights(vals): string[] {
     // pesi singole domande
@@ -62,9 +65,84 @@ export class GraphService {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  public round(v: number, padding = 2): number {
-    const pad = parseInt(1 + '0'.repeat(padding), 2);
-    return Math.round(v * pad) / pad;
+  public elaborateFormula(insegnamenti: []): [number[], string[][]] {
+    const v1 = [];
+    const v2 = [];
+    const v3 = [];
+
+    for (const i of Object.keys(insegnamenti)) {
+      const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
+
+      v1.push(V1);
+      v2.push(V2);
+      v3.push(V3);
+    }
+
+    const means = [0.0, 0.0, 0.0];
+
+    for (const x of Object.keys(v1)) {
+      means[0] += parseFloat(v1[x]);
+      means[1] += parseFloat(v2[x]);
+      means[2] += parseFloat(v3[x]);
+    }
+    means[0] = means[0] / v1.length;
+    means[1] = means[1] / v2.length;
+    means[2] = means[2] / v3.length;
+
+    return [means, [v1, v2, v3]];
+  }
+
+  public parseSchede(schede, subject: string = null): [] {
+    let insegnamenti: any = [];
+
+    for (let i = 0; i < schede.length; i++) {
+
+      if (schede[i].tot_schedeF < 6) { continue; }
+      if (subject != null && schede[i].nome.toUpperCase().indexOf(subject.toUpperCase()) === -1) { continue; }
+
+      insegnamenti[i] = {};
+      insegnamenti[i].nome = schede[i].nome;
+      insegnamenti[i].anno = schede[i].anno;
+
+      if (insegnamenti[i].nome.length > 35) {
+        insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 35) + '... ';
+        insegnamenti[i].nome += insegnamenti[i].nome.substring(insegnamenti[i].nome.length - 5, insegnamenti[i].nome.length);
+      }
+
+      if (schede[i].canale.indexOf('no') === -1) {
+        insegnamenti[i].nome += ' (' + schede[i].canale + ')';
+      }
+
+      if (schede[i].id_modulo.length > 3 && schede[i].id_modulo !== '0') {
+        insegnamenti[i].nome += ' (' + schede[i].id_modulo + ')';
+      }
+
+      insegnamenti[i].nome += ' - ' + schede[i].tot_schedeF;
+      insegnamenti[i].canale = schede[i].canale;
+      insegnamenti[i].id_modulo = schede[i].id_modulo;
+      insegnamenti[i].docente = schede[i].docente;
+      insegnamenti[i].tot_schedeF = schede[i].tot_schedeF;
+
+      insegnamenti[i].domande = [];
+      insegnamenti[i].domande[0] = [];
+
+      let index = 0;
+      for (let j = 0; j < schede[i].domande.length; j++) {
+        if (j % 5 === 0 && j !== 0) {
+          index++;
+          insegnamenti[i].domande[index] = [];
+        }
+
+        insegnamenti[i].domande[index].push(schede[i].domande[j]);
+      }
+    }
+
+    // remove empty slot
+    insegnamenti = insegnamenti.filter((el) => {
+      return el != null;
+    });
+
+    return insegnamenti;
   }
 
 }
