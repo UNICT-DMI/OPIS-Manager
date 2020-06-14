@@ -67,29 +67,8 @@ $font_family_1: "Helvetica Neue";
   }
 }
 
-.selected-tab {
-    background-color: $color_light !important;
-    color: $color_dark !important;
-}
-
-.list-option-container {
-    margin-left: 325px;
-    width: 850px;
-}
-
 .switch-years {
     width: 350px;
-}
-
-.v-info {
-  margin: 0 auto;
-  width: 900px;
-}
-
-.btn-opis {
-  color: $color_light;
-  background-color: $color_main;
-  border-color: $color_dark;
 }
 
 .color-bar {
@@ -100,46 +79,6 @@ $font_family_1: "Helvetica Neue";
   vertical-align: middle;
 }
 
-.addons-bar {
-  margin-top: 5px;
-  margin-left: 20px;
-}
-
-.slider-years {
-  width: 500px;
-}
-
-/* Slider */
-.custom-slider {
-  margin: 0 auto;
-  display: table;
-}
-::ng-deep {
-  .custom-slider .ng5-slider .ng5-slider-bar {
-    background: #ffe4d1;
-    height: 2px;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-pointer {
-    background-color: $color_main;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-bubble {
-    bottom: 14px;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
-    background: $color_main;
-  }
-}
-
-.nav-item-right {
-  @extend .nav-item !optional;
-  margin-left: auto;
-}
-
 #math-stats {
   white-space: pre-wrap;
 }
-
-

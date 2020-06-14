@@ -1,15 +1,13 @@
-import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
-import { ConfigService, Config } from '../config.service';
 import { HttpClient } from '@angular/common/http';
-import { Chart } from 'chart.js';
-import { Options } from 'ng5-slider';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faInfo, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { map, take, takeUntil } from 'rxjs/operators';
-import { Observable, combineLatest, Subject } from 'rxjs';
-import { mean, variance, std } from 'mathjs';
+import { Chart } from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
-import { round } from '../utils/utils';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { ConfigService, Config } from '../config.service';
+import { GraphService } from '../graph.service';
 
 @Component({
   selector: 'app-home',
@@ -24,66 +22,37 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
-  config: Config = {
-    apiUrl: '',
-    years: [],
-  };
-
   departments: any = [];
   cds: any = [];
   teachings: any = [];
 
   selectedCds: number;
   selectedYear: string;
-  selectedTeaching: string = null;
 
   vCds: number[][][] = [];
 
   currentOption: number;
-
   switcherValues = 1;
-
   subject: string;
-
-  showTeachingStats = false;
 
   stepsYears: { value: number, legend: string }[] = [];
 
-  /* years slider */
-  manualRefresh: EventEmitter<void> = new EventEmitter<void>();
-  minValue = 0;
-  maxValue = 1;
-  optionsSlider: Options = {
-    floor: 1,
-    ceil: 8,
-    showTicksValues: true,
-    getLegend: (value: number): string => this.config.years[value - 1],
-  };
-
   constructor(
-    public configService: ConfigService,
-    private http: HttpClient,
+    public readonly configService: ConfigService,
+    private readonly http: HttpClient,
+    private readonly graphService: GraphService,
   ) { }
 
   ngOnInit(): void {
-    this.configService.getConfig().pipe(take(1))
-      .subscribe((data: Config) => {
-        this.config = {
-          apiUrl: data.apiUrl,
-          years: data.years
-        };
 
-        this.optionsSlider = {
-          floor: 1,
-          ceil: data.years.length,
-          showTicksValues: true,
-          getLegend: (value: number): string => this.config.years[value - 1],
-        };
-
-        this.maxValue = this.config.years.length;
-
+    if (!this.configService.config.apiUrl) {
+      // wait to get the config
+      this.configService.updateConfig().toPromise().then(() => {
         this.getAllDepartments();
       });
+    } else { // do not wait for the config
+      this.getAllDepartments();
+    }
 
     // ChartJS Annotation plugin stuff
     const namedChartAnnotation = ChartAnnotation;
@@ -93,7 +62,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public enableOption(val: number): void {
     this.currentOption = val;
-    this.manualRefresh.emit();
 
     if (this.currentOption === 0) {
       this.showCdsBoxplot();
@@ -106,18 +74,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private resetSettings(): void {
     this.selectedCds = null;
-    this.selectedTeaching = null;
-    // this.currentOption      = null;
   }
 
   private getAllDepartments(): void {
-    this.http.get(this.config.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
+    this.http.get(this.configService.config.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
       this.departments = data;
     });
   }
 
   public getAllCdsOfSelectedDepartment(department: number): void {
-    this.http.get(this.config.apiUrl + 'cds/' + department).pipe(take(1)).subscribe((data) => {
+    this.http.get(this.configService.config.apiUrl + 'cds/' + department).pipe(take(1)).subscribe((data) => {
       this.cds = data;
       this.getCdsStats();
     });
@@ -130,18 +96,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.selectedCds = cds;
 
-    this.http.get(this.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
+    this.http.get(this.configService.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
       this.teachings = data;
     });
-
-    if (this.selectedYear && this.currentOption !== 0) {
-      this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
-    }
   }
 
   public getSchedeOfCdsForSelectedYearAndShowAcademicYearChart(): void {
     if (this.selectedYear !== '--') {
-      this.http.get(this.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear).subscribe((data) => {
+      this.http.get(this.configService.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
+        .subscribe((data) => {
         const insegnamenti: any = this.parseSchede(data);
 
         let means: any;
@@ -359,219 +322,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getSchedeOfSelectedTeachingAndShowTeachingChart(): void {
-
-    this.manualRefresh.emit(); // refresh years slider
-
-    if (!this.selectedTeaching) { return; }
-
-    let id: string;
-    let channel: string;
-    [id, channel] = this.selectedTeaching && this.selectedTeaching.split(' ');
-
-    this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
-
-      const anniAccademici = [];
-      for (const i of Object.keys(data)) {
-        anniAccademici[i] = {};
-        anniAccademici[i].v1 = 0;
-        anniAccademici[i].v2 = 0;
-        anniAccademici[i].v3 = 0;
-        anniAccademici[i].anno = data[i].anno_accademico;
-
-        const valori: any = [];
-        valori.tot_schedeF = data[i].totale_schede;
-        valori.domande = [];
-
-        valori.domande[i] = [];
-
-        let index = 0;
-        for (let j = 0; j < data[i].domande.length; j++) {
-          if (data[i].domande.hasOwnProperty(j)) {
-
-            if (j % 5 === 0 && j !== 0) {
-              index++;
-              valori.domande[index] = [];
-            }
-
-            if (valori.domande[index] === undefined) {
-              valori.domande[index] = [];
-            }
-
-            valori.domande[index].push(data[i].domande[j]);
-          }
-        }
-
-        [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.applyWeights(valori);
-      }
-
-      this.showTeachingChart(anniAccademici);
-    });
-
-  }
-
-  private showTeachingChart(teachingResults): void {
-
-    let teachingName: any = document.getElementById('selTeaching');
-    teachingName = teachingName.options[teachingName.selectedIndex].text;
-
-    const charts = [];
-    const matr = [];
-    matr[0] = [];
-    matr[1] = [];
-    matr[2] = [];
-
-    const tmp = Array.from(this.config.years);
-    const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
-
-    for (let i = 0; i < teachingResults.length; i++) {
-      if (!yearsArray.includes(teachingResults[i].anno)) {
-        teachingResults.splice(i--, 1);
-      }
-    }
-
-    let j = 0;
-    for (const i of Object.keys(yearsArray)) {
-      let val1 = 0;
-      let val2 = 0;
-      let val3 = 0;
-
-      if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
-        val1 = Math.round(teachingResults[j].v1 * 100) / 100;
-        val2 = Math.round(teachingResults[j].v2 * 100) / 100;
-        val3 = Math.round(teachingResults[j].v3 * 100) / 100;
-        j++;
-      }
-      matr[0].push(val1);
-      matr[1].push(val2);
-      matr[2].push(val3);
-    }
-
-    const teachingMean = [[], [], []];
-
-    // tslint:disable-next-line: forin
-    for (const i in this.config.years) {
-      teachingMean[0][i] = round(mean(this.removeZeroValuesToArray(matr[0])));
-      teachingMean[1][i] = round(mean(this.removeZeroValuesToArray(matr[1])));
-      teachingMean[2][i] = round(mean(this.removeZeroValuesToArray(matr[2])));
-    }
-
-    this.calculateTeachingStats(matr);
-
-    const [colorV1, colorV2, colorV3] = [
-      { fill: false, backgroundColor: '#00897b', borderColor: '#00897b', },
-      { fill: false, backgroundColor: '#521a7d', borderColor: '#521a7d', },
-      { fill: false, backgroundColor: '#a69319', borderColor: '#a69319', },
-    ];
-
-    // line graphs config
-    for (let i = 1; i <= 3; i++) {
-
-      const config = {
-        type: 'line',
-        data: {
-          labels: yearsArray,
-          datasets: [
-            { label: 'V' + i,              ...colorV1, data: matr[i - 1]                         },
-            { label: 'Media CDS',          ...colorV2, data: this.vCds[this.selectedCds][i - 1]  },
-            { label: 'Media Insegnamento', ...colorV3, data: teachingMean[i - 1], pointRadius: 1 },
-          ]
-        },
-        options: {
-          responsive: true,
-          title: { display: true, text: `${teachingName} V` + i },
-          tooltips: { mode: 'index',    intersect: false },
-          hover:    { mode: 'nearest',  intersect: true  },
-          scales: {
-            xAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'Anno accademico' } }],
-            yAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'V' + i           } }],
-          },
-        }
-      };
-
-      document.getElementById('v' + i + '-teaching').innerHTML =
-        '<div style="width: 80%; margin: 0 auto;"><canvas id="V' + i + '"></canvas></div>';
-
-      const ctx = (document.getElementById('V' + i) as HTMLCanvasElement).getContext('2d');
-      charts.push(new Chart(ctx, config));
-    }
-  }
-
-  private removeZeroValuesToArray(array: Array<number>): Array<number> {
-    const cleanedArray: Array<number> = [];
-    for (const v of array) {
-      if (v !== 0 && !isNaN(v)) {
-        cleanedArray.push(v);
-      }
-    }
-    if (cleanedArray.length === 0) {
-      cleanedArray.push(0);
-    }
-    return cleanedArray;
-  }
-
-  private applyWeights(vals): string[] {
-    // pesi singole domande
-    const weights = [
-      0.7,  // 1
-      0.3,  // 2
-      0.1,  // 3
-      0.1,  // 4
-      0.3,  // 5
-      0.5,  // 6
-      0.4,  // 7
-      0.0,  // 8   questa domanda non viene considerata
-      0.3,  // 9
-      0.3,  // 10
-      0.0,  // 11  questa domanda non viene considerata
-      0.0   // 12  questa domanda non viene considerata
-    ];
-
-    // pesi risposte
-    const risposte = [
-      1,   // Decisamente no
-      4,   // Più no che sì
-      7,   // Più sì che no
-      10,  // Decisamente sì
-    ];
-
-    const N = vals.tot_schedeF;
-    let d = 0;
-    let V1 = 0;
-    let V2 = 0;
-    let V3 = 0;
-
-    if (N > 5) {
-
-      for (let j = 0; j < vals.domande.length; j++) {
-
-        d = 0.0;
-        d += vals.domande[j][0] * risposte[0];   // Decisamente no
-        d += vals.domande[j][1] * risposte[1];   // Più no che sì
-        d += vals.domande[j][2] * risposte[2];   // Più sì che no
-        d += vals.domande[j][3] * risposte[3];   // Decisamente sì
-
-        if (j === 0 || j === 1) {                                 // V1 domande: 1,2
-          V1 += ((d / N) * weights[j]);
-        } else if (j === 3 || j === 4 || j === 8 || j === 9) {    // V2 domande: 4,5,9,10
-          V2 += (d / N) * weights[j];
-        } else if (j === 2 || j === 5 || j === 6) {               // V3 domande: 3,6,7
-          V3 += (d / N) * weights[j];
-        }
-      }
-
-    }
-
-    return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
-  }
-
   private elaborateFormula(insegnamenti: []): [number[], string[][]] {
     const v1 = [];
     const v2 = [];
     const v3 = [];
 
     for (const i of Object.keys(insegnamenti)) {
-      const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
+      const [V1, V2, V3] = this.graphService.applyWeights(insegnamenti[i]);
 
       v1.push(V1);
       v2.push(V2);
@@ -595,7 +352,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private getCdsStats(): void {
     for (const cds of this.cds) {
       const means$ = [];
-      for (const year of this.config.years) {
+      for (const year of this.configService.config.years) {
         means$.push(this.getMeans(year, cds.id));
       }
 
@@ -604,7 +361,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         for (const v of means) {
           for (let i = 0; i < 3; i++) {
             this.vCds[cds.id][i].push(
-              round(v[i])
+              this.graphService.round(v[i], 4)
             );
           }
         }
@@ -613,7 +370,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private getMeans(year, cds): Observable<object> {
-    return this.http.get(this.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
+    return this.http.get(this.configService.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.parseSchede(data);
         const [means, _] = this.elaborateFormula(insegnamenti);
@@ -654,23 +411,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private getIndexFromSelectedYear(): number {
     return parseInt(this.selectedYear.charAt(3), 10) - 3;
-  }
-
-  public toggleStats(): void {
-    this.showTeachingStats = !this.showTeachingStats;
-  }
-
-  private calculateTeachingStats(matr: number[][]): void {
-    for (let i = 0; i < 3; i++) {
-      const paragraph = document.getElementById('v' + (i + 1) + '-stats');
-      const teachingValues = this.removeZeroValuesToArray(matr[i]);
-      if (paragraph) {
-        paragraph.innerHTML = '';
-        paragraph.textContent += 'Media: ' + mean(teachingValues).toFixed(2) + '\t';
-        paragraph.textContent += 'Varianza: ' + variance(teachingValues).toFixed(3) + '\t';
-        paragraph.textContent += 'Dev. std.: ' + std(teachingValues).toFixed(3) + '\t';
-      }
-    }
   }
 
   ngOnDestroy(): void {

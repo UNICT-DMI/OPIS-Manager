@@ -1,27 +1,17 @@
 <div class="container-fluid">
 
   <div class="row">
-
-    <div class="col-12 text-center">
-
-      <br>
+    <div class="col-12 text-center mt-3">
       <p>Scegli un dipartimento:</p>
-
       <select class="btn btn-opis" (change)="getAllCdsOfSelectedDepartment($event.target.value)">
         <option>--</option>
         <option *ngFor="let department of departments" [value]="department.id"> {{ department.nome }} </option>
       </select>
-
     </div>
-
   </div>
 
-  <br>
-
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-12">
-
-      <br><br>
 
       <ul class="nav nav-tabs" id="tabs">
         <li class="nav-item tabs_button" *ngFor="let c of cds">
@@ -29,8 +19,6 @@
             [ngClass]="selectedCds === c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
         </li>
       </ul>
-
-      <br>
 
       <div [hidden]="!selectedCds">
         <div class="container-switcher">
@@ -60,7 +48,7 @@
                 (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
               >
                 <option class="text-center">--</option>
-                <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
+                <option class="text-center" *ngFor="let year of configService.config.years" [ngValue]="year"> {{ year }} </option>
               </select>
             </div>
           </div>
@@ -109,70 +97,12 @@
 
 
         <!-- Insegnamento -->
-        <div [hidden]="currentOption !== 2">
-          <div class="text-center">
-            <div class="list-option-container">
-              Seleziona insegnamento:
-              <br>
-              <select
-                class="btn btn-opis text-center"
-                id="selTeaching"
-                [(ngModel)]="selectedTeaching"
-                (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
-              >
-                <option class="text-center">--</option>
-                <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
-                  {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <div [hidden]="(currentOption === 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
-              <ul class="nav nav-tabs" id="tabs">
-                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
-                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
-                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
-                <li class="nav-item-right tabs_button" (click)="toggleStats()"><button class="btn btn-opis">Stats</button></li>
-              </ul>
-
-              <br>
-
-              <div id="teaching-stats" *ngIf="selectedTeaching !== null">
-                <div [hidden]="!showTeachingStats" class="card" style="margin-bottom: 20px;">
-                  <div class="card-body">
-                    <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching && selectedTeaching.split(" ")[0] }}</b></h5>
-                    <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
-                    <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
-                    <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
-                  </div>
-                </div>
-              </div>
-
-              <app-value-details [switcher]="switcherValues"></app-value-details>
-
-              <div id="v1-teaching" [hidden]="switcherValues != 1"></div>
-              <div id="v2-teaching" [hidden]="switcherValues != 2"></div>
-              <div id="v3-teaching" [hidden]="switcherValues != 3"></div>
-            </div>
-          </div>
-
-          <br>
-          <br>
-
-          <div class="custom-slider">
-            <ng5-slider class="addons-bar slider-years"
-              [(value)]="minValue"
-              [(highValue)]="maxValue"
-              [options]="optionsSlider"
-              [hidden]="currentOption != 2 || !selectedTeaching"
-              [manualRefresh]="manualRefresh"
-              (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
-            ></ng5-slider>
-          </div>
-
-        </div>
+        <app-teaching
+          [hidden]="currentOption !== 2"
+          [teachings]="teachings"
+          [vCds]="vCds"
+          [selectedCds]="selectedCds"
+        ></app-teaching>
         <!-- end Insegnamento -->
 
         <br>
