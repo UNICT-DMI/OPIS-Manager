@@ -14,13 +14,15 @@ import { AppComponent } from './app.component';
 import { InfoComponent } from './info/info.component';
 import { FormulaComponent } from './formula/formula.component';
 import { HomeComponent } from './home/home.component';
+import { ValueDetailsComponent } from './value-details/value-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InfoComponent,
     FormulaComponent,
-    HomeComponent
+    HomeComponent,
+    ValueDetailsComponent,
   ],
   imports: [
     BrowserModule,

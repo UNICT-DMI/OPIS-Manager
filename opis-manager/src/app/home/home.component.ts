@@ -35,16 +35,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   selectedCds: number;
   selectedYear: string;
-  selectedTeaching: string;
+  selectedTeaching: string = null;
 
   vCds: number[][][] = [];
 
   currentOption: number;
 
   switcherValues = 1;
-  v1Info = false;
-  v2Info = false;
-  v3Info = false;
 
   subject: string;
 
@@ -94,14 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     Chart.pluginService.register(namedChartAnnotation);
   }
 
-  private resetInfo(): void {
-    this.v1Info = false;
-    this.v2Info = false;
-    this.v3Info = false;
-  }
-
   public enableOption(val: number): void {
-    this.resetInfo();
     this.currentOption = val;
     this.manualRefresh.emit();
 
@@ -111,7 +101,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public switchVal(v: number): void {
-    this.resetInfo();
     this.switcherValues = v;
   }
 
@@ -374,11 +363,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.manualRefresh.emit(); // refresh years slider
 
-    if (this.selectedTeaching === undefined) { return; }
+    if (!this.selectedTeaching) { return; }
 
     let id: string;
     let channel: string;
-    [id, channel] = this.selectedTeaching.split(' ');
+    [id, channel] = this.selectedTeaching && this.selectedTeaching.split(' ');
 
     this.http.get(this.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
 
@@ -644,7 +633,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       ],
     };
 
-    document.getElementById('cds-stats').innerHTML = '<canvas id="cds-canvas"></canvas>';
+    document.getElementById('corso-studio').innerHTML = '<canvas id="cds-canvas"></canvas>';
 
     const ctx = (document.getElementById('cds-canvas') as HTMLCanvasElement).getContext('2d');
     const chart = new Chart(ctx, {

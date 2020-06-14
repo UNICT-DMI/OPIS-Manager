@@ -35,235 +35,145 @@
       <div [hidden]="!selectedCds">
         <div class="container-switcher">
           <div class="segmented">
-            <label (click)="enableOption(0);" [ngClass]="currentOption === 0 ? 'checked' : ''">
-              <span>Corso di Studio</span>
-            </label>
-            <label (click)="enableOption(1)" [ngClass]="currentOption === 1 ? 'checked' : ''">
-              <span>Anno accademico</span>
-            </label>
-            <label (click)="enableOption(2)" [ngClass]="currentOption === 2 ? 'checked' : ''">
-              <span>Insegnamento</span>
-            </label>
+            <label (click)="enableOption(0);" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
+            <label (click)="enableOption(1)" [ngClass]="currentOption === 1  ? 'checked' : ''"><span>Anno accademico</span></label>
+            <label (click)="enableOption(2)" [ngClass]="currentOption === 2  ? 'checked' : ''"><span>Insegnamento</span></label>
           </div>
         </div>
 
         <br>
 
-        <div [hidden]="currentOption !== 0" >
-          <div id="cds-stats"></div>
+        <!-- Corso di Studio -->
+        <div [hidden]="currentOption !== 0">
+          <div id="corso-studio"></div>
         </div>
 
-        <div *ngIf="currentOption === 1" class="text-center">
-          <div class="list-option-container">
-            Seleziona anno:
-            <br>
-            <select class="btn btn-opis text-center switch-years" [(ngModel)]="selectedYear"
-              (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
-              <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
-            </select>
+        <!-- Anno Accademico -->
+        <div [hidden]="currentOption !== 1">
+          <div class="text-center">
+            <div class="list-option-container">
+              Seleziona anno:
+              <br>
+              <select
+                class="btn btn-opis text-center switch-years"
+                [(ngModel)]="selectedYear"
+                (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
+              >
+                <option class="text-center">--</option>
+                <option class="text-center" *ngFor="let year of config.years" [ngValue]="year"> {{ year }} </option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div *ngIf="currentOption === 2" class="text-center">
-          <div class="list-option-container">
-            Seleziona insegnamento:
-            <br>
-            <select
-              class="btn btn-opis text-center"
-              id="selTeaching"
-              [(ngModel)]="selectedTeaching"
-              (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
-            >
-              <option class="text-center">--</option>
-              <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
-                {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}
-              </option>
-            </select>
-          </div>
-        </div>
+          <div [hidden]="!selectedYear">
+            <div>
+              <ul class="nav nav-tabs" id="tabs">
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+                <li>
+                  <div class="input-group addons-bar">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text selected-tab" id="basic-addon1">
+                        <fa-icon [icon]="faSearch" size="lg" class="opis-icon"></fa-icon>
+                      </span>
+                    </div>
 
-        <div [hidden]="currentOption === 0">
-          <div
-            [hidden]="(currentOption === 1 && !selectedYear) || (currentOption === 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
-            <ul class="nav nav-tabs" id="tabs">
-              <li class="nav-item tabs_button">
-                <button class="btn btn-opis" (click)="switchVal(1)"
-                  [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button>
-              </li>
-              <li class="nav-item tabs_button">
-                <button class="btn btn-opis" (click)="switchVal(2)"
-                  [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button>
-              </li>
-              <li class="nav-item tabs_button">
-                <button class="btn btn-opis" (click)="switchVal(3)"
-                  [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button>
-              </li>
-              <li *ngIf="currentOption === 1">
-                <div class="input-group addons-bar">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text selected-tab" id="basic-addon1">
-                      <fa-icon [icon]="faSearch" size="lg" class="opis-icon"></fa-icon>
-                    </span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Fondamenti..."
+                      aria-describedby="basic-addon1"
+                      [(ngModel)]="subject"
+                      (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
+                    >
                   </div>
-                  <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
-                    [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
-                </div>
-              </li>
-              <li class="nav-item-right tabs_button" (click)="toggleStats()" *ngIf="currentOption === 2">
-                <button class="btn btn-opis">Stats</button>
-              </li>
-            </ul>
+                </li>
+              </ul>
 
-            <br>
+              <br>
+              <div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
 
-            <div id="teaching-stats" *ngIf="currentOption === 2 && selectedTeaching !== null">
-              <div [hidden]="!showTeachingStats" class="card" style="margin-bottom: 20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching.split(" ")[0] }}</b></h5>
-                  <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
-                  <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
-                  <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
-                </div>
-              </div>
-            </div>
+              <br>
+              <app-value-details [switcher]="switcherValues"></app-value-details>
 
-            <div *ngIf="currentOption === 1">Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
-
-            <div id="v1-container" [hidden]="switcherValues != 1">
-              <h2 class="text-center">
-                V1 - Come lo studente vede il corso
-                <button type="button" class="btn btn-opis" (click)="v1Info = !v1Info">
-                  <fa-icon [icon]="faInfo" size="lg"></fa-icon>
-                </button>
-              </h2>
-
-              <div [ngbCollapse]="!v1Info" class="v-info">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Domande</th>
-                      <th>Pesi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli
-                        argomenti previsti nel programma d'esame?</td>
-                      <td>0.7</td>
-                    </tr>
-                    <tr>
-                      <td>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</td>
-                      <td>0.3</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="v1" [hidden]="currentOption != 1">
-                <canvas id="v1-canvas"></canvas>
-              </div>
-              <div id="v1-teaching" [hidden]="currentOption != 2"></div>
-            </div>
-            <div id="v2-container" [hidden]="switcherValues != 2">
-              <h2 class="text-center">
-                V2 - Come lo studente vede il docente
-                <button type="button" class="btn btn-opis" (click)="v2Info = !v2Info">
-                  <fa-icon [icon]="faInfo" size="lg"></fa-icon>
-                </button>
-              </h2>
-
-              <div [ngbCollapse]="!v2Info" class="v-info">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Domande</th>
-                      <th>Pesi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>4 - Le modalità di esame sono state definite in modo chiaro?</td>
-                      <td>0.1</td>
-                    </tr>
-                    <tr>
-                      <td>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche
-                        sono rispettati?</td>
-                      <td>0.3</td>
-                    </tr>
-                    <tr>
-                      <td>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del
-                        corso di studio?</td>
-                      <td>0.3</td>
-                    </tr>
-                    <tr>
-                      <td>10 - Il docente è reperibile per chiarimenti e spiegazioni?</td>
-                      <td>0.3</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="v2" [hidden]="currentOption != 1">
-                <canvas id="v2-canvas"></canvas>
-              </div>
-              <div id="v2-teaching" [hidden]="currentOption != 2"></div>
-            </div>
-            <div id="v3-container" [hidden]="switcherValues != 3">
-              <h2 class="text-center">
-                V3 - Come il docente interagisce con lo studente
-                <button type="button" class="btn btn-opis" (click)="v3Info = !v3Info">
-                  <fa-icon [icon]="faInfo" size="lg"></fa-icon>
-                </button>
-              </h2>
-
-              <div [ngbCollapse]="!v3Info" class="v-info">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Domande</th>
-                      <th>Pesi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?
-                      </td>
-                      <td>0.1</td>
-                    </tr>
-                    <tr>
-                      <td>6 - Il docente stimola/motiva l'interesse verso la disciplina?</td>
-                      <td>0.5</td>
-                    </tr>
-                    <tr>
-                      <td>7 - Il docente espone gli argomenti in modo chiaro?</td>
-                      <td>0.4</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="v3" [hidden]="currentOption != 1">
-                <canvas id="v3-canvas"></canvas>
-              </div>
-              <div id="v3-teaching" [hidden]="currentOption != 2"></div>
+              <!-- Anno Accademico canvas -->
+              <div id="v1" [hidden]="switcherValues != 1"><canvas id="v1-canvas"></canvas></div>
+              <div id="v2" [hidden]="switcherValues != 2"><canvas id="v2-canvas"></canvas></div>
+              <div id="v3" [hidden]="switcherValues != 3"><canvas id="v3-canvas"></canvas></div>
             </div>
           </div>
-        </div>
 
-        <br>
-        <br>
-
-        <div class="custom-slider">
-          <ng5-slider class="addons-bar slider-years"
-            [(value)]="minValue"
-            [(highValue)]="maxValue"
-            [options]="optionsSlider"
-            [hidden]="currentOption != 2 || !selectedTeaching"
-            [manualRefresh]="manualRefresh"
-            (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
-          ></ng5-slider>
         </div>
+        <!-- end Anno Accademico -->
+
+
+        <!-- Insegnamento -->
+        <div [hidden]="currentOption !== 2">
+          <div class="text-center">
+            <div class="list-option-container">
+              Seleziona insegnamento:
+              <br>
+              <select
+                class="btn btn-opis text-center"
+                id="selTeaching"
+                [(ngModel)]="selectedTeaching"
+                (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+              >
+                <option class="text-center">--</option>
+                <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
+                  {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div [hidden]="(currentOption === 2 && !selectedTeaching) || (!selectedYear && !selectedTeaching)">
+              <ul class="nav nav-tabs" id="tabs">
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
+                <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+                <li class="nav-item-right tabs_button" (click)="toggleStats()"><button class="btn btn-opis">Stats</button></li>
+              </ul>
+
+              <br>
+
+              <div id="teaching-stats" *ngIf="selectedTeaching !== null">
+                <div [hidden]="!showTeachingStats" class="card" style="margin-bottom: 20px;">
+                  <div class="card-body">
+                    <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching && selectedTeaching.split(" ")[0] }}</b></h5>
+                    <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
+                    <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
+                    <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
+                  </div>
+                </div>
+              </div>
+
+              <app-value-details [switcher]="switcherValues"></app-value-details>
+
+              <div id="v1-teaching" [hidden]="switcherValues != 1"></div>
+              <div id="v2-teaching" [hidden]="switcherValues != 2"></div>
+              <div id="v3-teaching" [hidden]="switcherValues != 3"></div>
+            </div>
+          </div>
+
+          <br>
+          <br>
+
+          <div class="custom-slider">
+            <ng5-slider class="addons-bar slider-years"
+              [(value)]="minValue"
+              [(highValue)]="maxValue"
+              [options]="optionsSlider"
+              [hidden]="currentOption != 2 || !selectedTeaching"
+              [manualRefresh]="manualRefresh"
+              (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+            ></ng5-slider>
+          </div>
+
+        </div>
+        <!-- end Insegnamento -->
 
         <br>
         <br>
