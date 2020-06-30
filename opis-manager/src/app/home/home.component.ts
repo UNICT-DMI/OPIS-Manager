@@ -3,7 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
+<<<<<<< HEAD
 import { combineLatest, Observable, Subject, pipe } from 'rxjs';
+=======
+import { combineLatest, Observable, Subject } from 'rxjs';
+>>>>>>> origin/master
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 import { GraphService } from '../graph.service';
