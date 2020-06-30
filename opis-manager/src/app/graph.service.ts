@@ -102,6 +102,7 @@ export class GraphService {
 
       insegnamenti[i] = {};
       insegnamenti[i].nome = schede[i].nome;
+      insegnamenti[i].nome_completo = schede[i].nome;
       insegnamenti[i].anno = schede[i].anno;
 
       if (insegnamenti[i].nome.length > 35) {
@@ -111,13 +112,16 @@ export class GraphService {
 
       if (schede[i].canale.indexOf('no') === -1) {
         insegnamenti[i].nome += ' (' + schede[i].canale + ')';
+        insegnamenti[i].nome_completo += ' (' + schede[i].canale + ')';
       }
 
       if (schede[i].id_modulo.length > 3 && schede[i].id_modulo !== '0') {
         insegnamenti[i].nome += ' (' + schede[i].id_modulo + ')';
+        insegnamenti[i].nome_completo += ' (' + schede[i].id_modulo + ')';
       }
 
       insegnamenti[i].nome += ' - ' + schede[i].tot_schedeF;
+      insegnamenti[i].nome_completo += ' - ' + schede[i].tot_schedeF;
       insegnamenti[i].canale = schede[i].canale;
       insegnamenti[i].id_modulo = schede[i].id_modulo;
       insegnamenti[i].docente = schede[i].docente;

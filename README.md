@@ -154,7 +154,8 @@ $ ng serve -o
 
 - Stefano Borzì (Helias)
 - Pierpaolo Pecoraio
+- Lemuel Puglisi
+- Alessandro Catalano (Wornairz)
 - Simone Scionti
-- Alessandro Catalano
 - Alessio Piazza
 - Diego Sinitò
