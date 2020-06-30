@@ -1,7 +1,6 @@
 $color_dark: #00695c;
 $color_light: #fff;
 $color_main: #00897b;
-$font_family_1: "Helvetica Neue";
 
 .container-switcher {
   float: left;
@@ -66,80 +65,3 @@ $font_family_1: "Helvetica Neue";
     }
   }
 }
-
-.selected-tab {
-    background-color: $color_light !important;
-    color: $color_dark !important;
-}
-
-.list-option-container {
-    margin-left: 325px;
-    width: 850px;
-}
-
-.switch-years {
-    width: 350px;
-}
-
-.v-info {
-  margin: 0 auto;
-  width: 900px;
-}
-
-.btn-opis {
-  color: $color_light;
-  background-color: $color_main;
-  border-color: $color_dark;
-}
-
-.color-bar {
-  display: inline-block;
-  height: 20px;
-  width: 200px;
-  background: rgba(0, 0, 0, 0) linear-gradient(to right, rgb(255, 200, 45), rgb(0, 121, 107)) repeat scroll 0% 0%;
-  vertical-align: middle;
-}
-
-.addons-bar {
-  margin-top: 5px;
-  margin-left: 20px;
-}
-
-.slider-years {
-  width: 500px;
-}
-
-/* Slider */
-.custom-slider {
-  margin: 0 auto;
-  display: table;
-}
-::ng-deep {
-  .custom-slider .ng5-slider .ng5-slider-bar {
-    background: #ffe4d1;
-    height: 2px;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-pointer {
-    background-color: $color_main;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-bubble {
-    bottom: 14px;
-  }
-
-  .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
-    background: $color_main;
-  }
-}
-
-.nav-item-right {
-  @extend .nav-item !optional;
-  margin-left: auto;
-}
-
-#math-stats {
-  white-space: pre-wrap;
-}
-
-

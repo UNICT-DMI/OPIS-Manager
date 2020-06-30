@@ -1,0 +1,105 @@
+<div id="v1-container" [hidden]="switcher != 1">
+  <h2 class="text-center">
+    V1 - Come lo studente vede il corso
+    <button type="button" class="btn btn-opis" (click)="v1Info = !v1Info">
+      <fa-icon [icon]="faInfo" size="lg"></fa-icon>
+    </button>
+  </h2>
+
+  <div [ngbCollapse]="!v1Info" class="v-info">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Domande</th>
+          <th>Pesi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli
+            argomenti previsti nel programma d'esame?</td>
+          <td>0.7</td>
+        </tr>
+        <tr>
+          <td>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</td>
+          <td>0.3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="v2-container" [hidden]="switcher != 2">
+  <h2 class="text-center">
+    V2 - Come lo studente vede il docente
+    <button type="button" class="btn btn-opis" (click)="v2Info = !v2Info">
+      <fa-icon [icon]="faInfo" size="lg"></fa-icon>
+    </button>
+  </h2>
+
+  <div [ngbCollapse]="!v2Info" class="v-info">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Domande</th>
+          <th>Pesi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>4 - Le modalità di esame sono state definite in modo chiaro?</td>
+          <td>0.1</td>
+        </tr>
+        <tr>
+          <td>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche
+            sono rispettati?</td>
+          <td>0.3</td>
+        </tr>
+        <tr>
+          <td>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del
+            corso di studio?</td>
+          <td>0.3</td>
+        </tr>
+        <tr>
+          <td>10 - Il docente è reperibile per chiarimenti e spiegazioni?</td>
+          <td>0.3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="v3-container" [hidden]="switcher != 3">
+  <h2 class="text-center">
+    V3 - Come il docente interagisce con lo studente
+    <button type="button" class="btn btn-opis" (click)="v3Info = !v3Info">
+      <fa-icon [icon]="faInfo" size="lg"></fa-icon>
+    </button>
+  </h2>
+
+  <div [ngbCollapse]="!v3Info" class="v-info">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Domande</th>
+          <th>Pesi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?
+          </td>
+          <td>0.1</td>
+        </tr>
+        <tr>
+          <td>6 - Il docente stimola/motiva l'interesse verso la disciplina?</td>
+          <td>0.5</td>
+        </tr>
+        <tr>
+          <td>7 - Il docente espone gli argomenti in modo chiaro?</td>
+          <td>0.4</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
