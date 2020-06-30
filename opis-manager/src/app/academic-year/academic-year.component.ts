@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { Component, Input } from '@angular/core';
-=======
-import { Component, OnInit, Input } from '@angular/core';
->>>>>>> origin/master
 import { ConfigService } from '../config.service';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
