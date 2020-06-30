@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject, pipe } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { ConfigService } from '../config.service';
 import { GraphService } from '../graph.service';
@@ -55,10 +55,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.currentOption = val;
   }
 
-  private resetSettings(): void {
-    this.selectedCds = null;
-  }
-
   private getAllDepartments(): void {
     this.http.get(this.configService.config.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
       this.departments = data;
@@ -71,28 +67,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.getCdsStats();
     });
 
-    this.resetSettings();
+    this.selectedCds = null;
   }
 
   public getAllTeachingsOfSelectedCds(cds: number): void {
-    this.resetSettings();
+    this.selectedCds = null;
 
     this.selectedCds = cds;
 
-    this.http.get(this.configService.config.apiUrl + 'insegnamento/' + cds).subscribe((data) => {
+    this.http.get(this.configService.config.apiUrl + 'insegnamento/' + cds).pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.teachings = data;
     });
   }
 
   private getCdsStats(): void {
     for (const cds of this.cds) {
-      const means$ = [];
-      for (const year of this.configService.config.years) {
-        means$.push(this.getMeans(year, cds.id));
-      }
+      const means$ = this.configService.config.years.map(year => this.getMeans(year, cds.id));
 
       this.vCds[cds.id] = [[], [], []];
-      combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: Array<Array<number>>) => {
+      combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: number[][]) => {
         for (const v of means) {
           for (let i = 0; i < 3; i++) {
             this.vCds[cds.id][i].push(
@@ -114,8 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(true);
+    this.destroy$.next();
     this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 }

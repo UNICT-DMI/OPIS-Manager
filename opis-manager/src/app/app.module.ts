@@ -42,7 +42,6 @@ import { CdsComponent } from './cds/cds.component';
     NgbModule,
     Ng5SliderModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

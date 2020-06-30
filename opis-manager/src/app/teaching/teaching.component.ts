@@ -1,17 +1,21 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, OnDestroy } from '@angular/core';
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';
 import { Options } from 'ng5-slider';
 import { ConfigService } from '../config.service';
 import { GraphService } from '../graph.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-teaching',
   templateUrl: './teaching.component.html',
   styleUrls: ['./teaching.component.scss']
 })
-export class TeachingComponent implements OnInit {
+export class TeachingComponent implements OnInit, OnDestroy {
+
+  private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
   @Input() teachings;
   @Input() vCds;
@@ -51,7 +55,7 @@ export class TeachingComponent implements OnInit {
 
   }
 
-  private initOptions() {
+  private initOptions(): void {
     this.maxValue = this.configService.config.years.length;
 
     this.optionsSlider = {
@@ -79,14 +83,9 @@ export class TeachingComponent implements OnInit {
     teachingName = teachingName.options[teachingName.selectedIndex].text;
 
     const charts = [];
-    const matr = [];
-    matr[0] = [];
-    matr[1] = [];
-    matr[2] = [];
+    const matr = [[], [], []];
 
-    const tmp = Array.from(this.configService.config.years);
-    const yearsArray = tmp.splice(this.minValue - 1, this.maxValue - this.minValue + 1);
-
+    const yearsArray = [...this.configService.config.years].splice(this.minValue - 1, this.maxValue - this.minValue + 1);
     for (let i = 0; i < teachingResults.length; i++) {
       if (!yearsArray.includes(teachingResults[i].anno)) {
         teachingResults.splice(i--, 1);
@@ -95,34 +94,30 @@ export class TeachingComponent implements OnInit {
 
     let j = 0;
     for (const i of Object.keys(yearsArray)) {
-      let val1 = 0;
-      let val2 = 0;
-      let val3 = 0;
-
       if (j < teachingResults.length && yearsArray[i] === teachingResults[j].anno) {
-        val1 = this.graphService.round(teachingResults[j].v1);
-        val2 = this.graphService.round(teachingResults[j].v2);
-        val3 = this.graphService.round(teachingResults[j].v3);
+        matr[0].push(this.graphService.round(teachingResults[j].v1));
+        matr[1].push(this.graphService.round(teachingResults[j].v2));
+        matr[2].push(this.graphService.round(teachingResults[j].v3));
         j++;
+      } else {
+        matr[0].push(0);
+        matr[1].push(0);
+        matr[2].push(0);
       }
-      matr[0].push(val1);
-      matr[1].push(val2);
-      matr[2].push(val3);
     }
 
     const teachingMean = [[], [], []];
 
-    // tslint:disable-next-line: forin
-    for (const i in this.configService.config.years) {
-      teachingMean[0][i] = this.graphService.round(mean(this.removeZeroValuesToArray(matr[0])));
-      teachingMean[1][i] = this.graphService.round(mean(this.removeZeroValuesToArray(matr[1])));
-      teachingMean[2][i] = this.graphService.round(mean(this.removeZeroValuesToArray(matr[2])));
+    for (let i = 0; i < this.configService.config.years.length; i++) {
+      teachingMean[0][i] = this.graphService.round(mean(this.filterZero(matr[0])));
+      teachingMean[1][i] = this.graphService.round(mean(this.filterZero(matr[1])));
+      teachingMean[2][i] = this.graphService.round(mean(this.filterZero(matr[2])));
     }
 
     this.calculateTeachingStats(matr);
 
     const [colorV1, colorV2, colorV3] = [
-      { fill: false, backgroundColor: '#00897b', borderColor: '#00897b', },
+      { fill: false, backgroundColor: '', borderColor: '#00897b', },
       { fill: false, backgroundColor: '#521a7d', borderColor: '#521a7d', },
       { fill: false, backgroundColor: '#a69319', borderColor: '#a69319', },
     ];
@@ -160,15 +155,16 @@ export class TeachingComponent implements OnInit {
     }
   }
 
-  public getSchedeOfSelectedTeachingAndShowTeachingChart(): void {
+  public updateTeachingChart(): void {
 
     if (!this.selectedTeaching) { return; }
 
-    let id: string;
-    let channel: string;
-    [id, channel] = this.selectedTeaching && this.selectedTeaching.split(' ');
+    const [id, channel]: string[] = this.selectedTeaching && this.selectedTeaching.split(' ');
 
-    this.http.get(this.configService.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel).subscribe((data) => {
+    // get new data (schede) of the selected teaching
+    this.http.get(this.configService.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
 
       const anniAccademici = [];
       for (const i of Object.keys(data)) {
@@ -204,6 +200,7 @@ export class TeachingComponent implements OnInit {
         [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(valori);
       }
 
+      // refresh the chart
       this.showTeachingChart(anniAccademici);
     });
 
@@ -213,27 +210,23 @@ export class TeachingComponent implements OnInit {
   private calculateTeachingStats(matr: number[][]): void {
     for (let i = 0; i < 3; i++) {
       const paragraph = document.getElementById('v' + (i + 1) + '-stats');
-      const teachingValues = this.removeZeroValuesToArray(matr[i]);
+      const teachingValues = this.filterZero(matr[i]);
       if (paragraph) {
-        paragraph.innerHTML = '';
-        paragraph.innerHTML += 'Media: ' + mean(teachingValues).toFixed(2) + '<br>';
-        paragraph.innerHTML += 'Varianza: ' + variance(teachingValues).toFixed(3) + '<br>';
-        paragraph.innerHTML += 'Dev. std.: ' + std(teachingValues).toFixed(3);
+        paragraph.innerHTML =  `Media: ${mean(teachingValues).toFixed(2)}<br>`;
+        paragraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
+        paragraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
       }
     }
   }
 
-  private removeZeroValuesToArray(array: Array<number>): Array<number> {
-    const cleanedArray: Array<number> = [];
-    for (const v of array) {
-      if (v !== 0 && !isNaN(v)) {
-        cleanedArray.push(v);
-      }
-    }
-    if (cleanedArray.length === 0) {
-      cleanedArray.push(0);
-    }
-    return cleanedArray;
+  private filterZero(array: number[]): number[] {
+    const cleanedArray: number[] = array.filter(item => item !== 0 && !isNaN(item));
+    return cleanedArray.length > 0 ? cleanedArray : [0];
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

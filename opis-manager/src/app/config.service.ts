@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { take, map, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 
 export interface Config {
   apiUrl: string;

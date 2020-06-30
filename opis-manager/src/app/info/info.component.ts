@@ -8,8 +8,6 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./info.component.scss']
 })
 export class InfoComponent {
-  constructor() { }
-
   public readonly faGithub = faGithub;
   public readonly faTelegram = faTelegram;
   public readonly faEnvelope = faEnvelope;
