@@ -65,7 +65,7 @@ export class GraphService {
     return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
   }
 
-  public elaborateFormula(insegnamenti: []): [number[], string[][]] {
+  public elaborateFormula(insegnamenti: any[]): [number[], string[][]] {
     const v1 = [];
     const v2 = [];
     const v3 = [];

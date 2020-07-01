@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -6,11 +6,15 @@ import { Chart } from 'chart.js';
   templateUrl: './cds.component.html',
   styleUrls: ['./cds.component.scss']
 })
-export class CdsComponent implements OnInit {
+export class CdsComponent implements OnInit, OnChanges {
   @Input() vCds;
   @Input() selectedCds;
 
   ngOnInit(): void {
+    this.showCdsBoxplot();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     this.showCdsBoxplot();
   }
 
