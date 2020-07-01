@@ -17,7 +17,21 @@ export class TeachingComponent implements OnInit, OnDestroy {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
-  @Input() teachings;
+  public teachings: any[];
+  @Input('teachings')
+  public set inputTeachings(teachings: any[]) {
+    teachings.sort( (a, b) => {
+      if (a.nome < b.nome) {
+        return -1;
+      } else if (a.nome > b.nome) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    this.teachings = teachings;
+  }
+
   @Input() vCds;
   @Input() selectedCds;
 
