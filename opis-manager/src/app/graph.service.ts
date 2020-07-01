@@ -93,7 +93,7 @@ export class GraphService {
   }
 
   public parseSchede(schede, subject: string = null): [] {
-    let insegnamenti: any = [];
+    const insegnamenti: any = [];
 
     for (let i = 0; i < schede.length; i++) {
 
@@ -137,12 +137,7 @@ export class GraphService {
       }
     }
 
-    // remove empty slot
-    insegnamenti = insegnamenti.filter((el) => {
-      return el != null;
-    });
-
-    return insegnamenti;
+    return insegnamenti.filter((el) => el != null); // remove empty slot
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-formula',
@@ -6,9 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./formula.component.scss']
 })
 export class FormulaComponent {
-
-  constructor() { }
-
   paragraphContent = `
   Il numero $D_j = \\frac{1}{N} \\sum_{i=1}^{4} X_{ij}  E_i  p_j $ rappresenta\
   la valutazione pesata relativa alla domanda $ D_j $ secondo il peso $ p_j $.

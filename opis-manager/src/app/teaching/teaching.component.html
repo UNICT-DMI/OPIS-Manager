@@ -6,7 +6,7 @@
       class="btn btn-opis text-center"
       id="selTeaching"
       [(ngModel)]="selectedTeaching"
-      (ngModelChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+      (ngModelChange)="updateTeachingChart()"
     >
       <option class="text-center">--</option>
       <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
@@ -56,6 +56,6 @@
     [options]="optionsSlider"
     [hidden]="!selectedTeaching"
     [manualRefresh]="manualRefresh"
-    (valueChange)="getSchedeOfSelectedTeachingAndShowTeachingChart()"
+    (valueChange)="updateTeachingChart()"
   ></ng5-slider>
 </div>
