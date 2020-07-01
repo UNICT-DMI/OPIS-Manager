@@ -38,7 +38,21 @@ export class AcademicYearComponent {
     if (this.selectedYear !== '--') {
       this.http.get(CONF.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
         .subscribe((data) => {
-        const insegnamenti: any = this.graphService.parseSchede(data, this.subject);
+        const insegnamenti: any = this.graphService.parseSchede(data, this.subject).sort((a, b) => {
+          if (a.anno === b.anno) {
+            if (a.nome_completo < b.nome_completo) {
+              return -1;
+            } else if (a.nome_completo > b.nome_completo) {
+              return 1;
+            } else {
+              return 0;
+            }
+          } else if (a.anno < b.anno) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
 
         let means: any;
         let values: any;

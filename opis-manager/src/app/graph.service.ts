@@ -92,7 +92,7 @@ export class GraphService {
     return [means, [v1, v2, v3]];
   }
 
-  public parseSchede(schede, subject: string = null): [] {
+  public parseSchede(schede, subject: string = null): any[] {
     const insegnamenti: any = [];
 
     for (let i = 0; i < schede.length; i++) {
