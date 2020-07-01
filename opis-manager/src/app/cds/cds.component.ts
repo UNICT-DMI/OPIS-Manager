@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ConfigService } from '../config.service';
 
@@ -7,7 +7,7 @@ import { ConfigService } from '../config.service';
   templateUrl: './cds.component.html',
   styleUrls: ['./cds.component.scss']
 })
-export class CdsComponent implements OnInit {
+export class CdsComponent implements OnInit, OnChanges {
   @Input() vCds;
   @Input() selectedCds;
 
@@ -24,6 +24,10 @@ export class CdsComponent implements OnInit {
     } else { // do not wait for the config
       this.showCdsBoxplot();
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.showCdsBoxplot();
   }
 
   public showCdsBoxplot(): void {

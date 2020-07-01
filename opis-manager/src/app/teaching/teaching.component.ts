@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';
 import { Options } from 'ng5-slider';
@@ -13,27 +13,14 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './teaching.component.html',
   styleUrls: ['./teaching.component.scss']
 })
-export class TeachingComponent implements OnInit, OnDestroy {
+export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
-  public teachings: any[];
-  @Input('teachings')
-  public set inputTeachings(teachings: any[]) {
-    teachings.sort( (a, b) => {
-      if (a.nome < b.nome) {
-        return -1;
-      } else if (a.nome > b.nome) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-    this.teachings = teachings;
-  }
+  @Input() teachings: any[];
 
-  @Input() vCds;
-  @Input() selectedCds;
+  @Input() vCds: number[];
+  @Input() selectedCds: number;
 
   selectedTeaching: string = null;
   showTeachingStats = false;
@@ -55,6 +42,21 @@ export class TeachingComponent implements OnInit, OnDestroy {
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (changes.hasOwnProperty('teachings')) {
+      changes.teachings.currentValue.sort((a, b) => {
+        if (a.nome < b.nome) {
+          return -1;
+        } else if (a.nome > b.nome) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+  }
 
   ngOnInit(): void {
 
@@ -144,19 +146,19 @@ export class TeachingComponent implements OnInit, OnDestroy {
         data: {
           labels: yearsArray,
           datasets: [
-            { label: 'V' + i,              ...colorV1, data: matr[i - 1]                         },
-            { label: 'Media CDS',          ...colorV2, data: this.vCds[this.selectedCds][i - 1]  },
+            { label: 'V' + i, ...colorV1, data: matr[i - 1] },
+            { label: 'Media CDS', ...colorV2, data: this.vCds[this.selectedCds][i - 1] },
             { label: 'Media Insegnamento', ...colorV3, data: teachingMean[i - 1], pointRadius: 1 },
           ]
         },
         options: {
           responsive: true,
           title: { display: true, text: `${teachingName} V` + i },
-          tooltips: { mode: 'index',    intersect: false },
-          hover:    { mode: 'nearest',  intersect: true  },
+          tooltips: { mode: 'index', intersect: false },
+          hover: { mode: 'nearest', intersect: true },
           scales: {
             xAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'Anno accademico' } }],
-            yAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'V' + i           } }],
+            yAxes: [{ display: true, ticks: { beginAtZero: true }, scaleLabel: { display: true, labelString: 'V' + i } }],
           },
         }
       };
@@ -180,43 +182,43 @@ export class TeachingComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
 
-      const anniAccademici = [];
-      for (const i of Object.keys(data)) {
-        anniAccademici[i] = {};
-        anniAccademici[i].v1 = 0;
-        anniAccademici[i].v2 = 0;
-        anniAccademici[i].v3 = 0;
-        anniAccademici[i].anno = data[i].anno_accademico;
+        const anniAccademici = [];
+        for (const i of Object.keys(data)) {
+          anniAccademici[i] = {};
+          anniAccademici[i].v1 = 0;
+          anniAccademici[i].v2 = 0;
+          anniAccademici[i].v3 = 0;
+          anniAccademici[i].anno = data[i].anno_accademico;
 
-        const valori: any = [];
-        valori.tot_schedeF = data[i].totale_schede;
-        valori.domande = [];
+          const valori: any = [];
+          valori.tot_schedeF = data[i].totale_schede;
+          valori.domande = [];
 
-        valori.domande[i] = [];
+          valori.domande[i] = [];
 
-        let index = 0;
-        for (let j = 0; j < data[i].domande.length; j++) {
-          if (data[i].domande.hasOwnProperty(j)) {
+          let index = 0;
+          for (let j = 0; j < data[i].domande.length; j++) {
+            if (data[i].domande.hasOwnProperty(j)) {
 
-            if (j % 5 === 0 && j !== 0) {
-              index++;
-              valori.domande[index] = [];
+              if (j % 5 === 0 && j !== 0) {
+                index++;
+                valori.domande[index] = [];
+              }
+
+              if (valori.domande[index] === undefined) {
+                valori.domande[index] = [];
+              }
+
+              valori.domande[index].push(data[i].domande[j]);
             }
-
-            if (valori.domande[index] === undefined) {
-              valori.domande[index] = [];
-            }
-
-            valori.domande[index].push(data[i].domande[j]);
           }
+
+          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(valori);
         }
 
-        [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(valori);
-      }
-
-      // refresh the chart
-      this.showTeachingChart(anniAccademici);
-    });
+        // refresh the chart
+        this.showTeachingChart(anniAccademici);
+      });
 
     this.manualRefresh.emit(); // refresh years slider
   }
@@ -226,7 +228,7 @@ export class TeachingComponent implements OnInit, OnDestroy {
       const paragraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.filterZero(matr[i]);
       if (paragraph) {
-        paragraph.innerHTML =  `Media: ${mean(teachingValues).toFixed(2)}<br>`;
+        paragraph.innerHTML = `Media: ${mean(teachingValues).toFixed(2)}<br>`;
         paragraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
         paragraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
       }
