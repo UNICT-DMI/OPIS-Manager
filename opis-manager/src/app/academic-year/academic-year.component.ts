@@ -98,7 +98,6 @@ export class AcademicYearComponent {
     const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
     const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
     const materieComplete: string[] = insegnamenti.map(a => a.nome_completo); // labels chartjs
-    console.log(materieComplete);
 
     // chartjs stuff
     const charts = [];

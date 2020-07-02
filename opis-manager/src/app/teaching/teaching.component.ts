@@ -43,7 +43,6 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes.hasOwnProperty('teachings')) {
       changes.teachings.currentValue.sort((a, b) => {
         if (a.nome < b.nome) {
