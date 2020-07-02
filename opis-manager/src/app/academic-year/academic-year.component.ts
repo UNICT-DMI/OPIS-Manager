@@ -1,4 +1,9 @@
-import { Component, Input } from '@angular/core';
+<<<<<<< HEAD
+import { Component, Input, SimpleChanges } from '@angular/core';
+=======
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ConfigService } from '../config.service';
+>>>>>>> 7374441... Removed -- from academic-year select
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { GraphService } from '../graph.service';
@@ -11,7 +16,7 @@ import { Config } from '../utils.model';
   templateUrl: './academic-year.component.html',
   styleUrls: ['./academic-year.component.scss']
 })
-export class AcademicYearComponent {
+export class AcademicYearComponent implements OnChanges {
 
   @Input() vCds;
   @Input() selectedCds;
@@ -28,6 +33,12 @@ export class AcademicYearComponent {
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('selectedCds')) {
+      this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
+    }
+  }
 
   // TODO: refactor / remove or use Output()
   public switchVal(v: number): void {

@@ -40,14 +40,14 @@
 
         <!-- Anno Accademico -->
         <app-academic-year
-          [hidden]="currentOption !== 1"
+          *ngIf="currentOption === 1"
           [vCds]="vCds"
           [selectedCds]="selectedCds"
         ></app-academic-year>
 
         <!-- Insegnamento -->
         <app-teaching
-          [hidden]="currentOption !== 2"
+          *ngIf="currentOption === 2"
           [teachings]="teachings"
           [vCds]="vCds"
           [selectedCds]="selectedCds"
