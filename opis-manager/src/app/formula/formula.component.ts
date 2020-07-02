@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { WeightService } from '../weight.service';
 
 @Component({
   selector: 'app-formula',
@@ -6,6 +7,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./formula.component.scss']
 })
 export class FormulaComponent {
+
+  public questionsWeights: number[];
+  public answersWeights: number[];
+
+  constructor(
+    public readonly weightService: WeightService,
+  ) {
+    this.questionsWeights = weightService.getQuestionsWeights();
+    this.answersWeights = weightService.getAnswersWeights();
+  }
+
   paragraphContent = `
   Il numero $D_j = \\frac{1}{N} \\sum_{i=1}^{4} X_{ij}  E_i  p_j $ rappresenta\
   la valutazione pesata relativa alla domanda $ D_j $ secondo il peso $ p_j $.

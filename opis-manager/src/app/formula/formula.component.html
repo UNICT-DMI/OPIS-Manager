@@ -10,22 +10,22 @@
     <tr>
       <td>DECISAMENTE NO</td>
       <td>E<sub>1</sub></td>
-      <td>1</td>
+      <td>{{ answersWeights[0] }}</td>
     </tr>
     <tr>
       <td>PIÙ NO CHE SÌ</td>
       <td>E<sub>2</sub></td>
-      <td>4</td>
+      <td>{{ answersWeights[1] }}</td>
     </tr>
     <tr>
       <td>PIÙ SÌ CHE NO</td>
       <td>E<sub>3</sub></td>
-      <td>7</td>
+      <td>{{ answersWeights[2] }}</td>
     </tr>
     <tr>
       <td>DECISAMENTE SI</td>
       <td>E<sub>4</sub></td>
-      <td>10</td>
+      <td>{{ answersWeights[3] }}</td>
     </tr>
   </table>
 
@@ -52,12 +52,12 @@
       <tr>
         <td>V1</td>
         <td>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti previsti nel programma d'esame?</td>
-        <td>0.7</td>
+        <td>{{ questionsWeights[0] }}</td>
       </tr>
       <tr>
         <td>V1</td>
         <td>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</td>
-        <td>0.3</td>
+        <td>{{ questionsWeights[1] }}</td>
       </tr>
       <tr>
         <td colspan="3"></td>
@@ -65,22 +65,22 @@
       <tr>
         <td>V2</td>
         <td>4 - Le modalità di esame sono state definite in modo chiaro?</td>
-        <td>0.1</td>
+        <td>{{ questionsWeights[3] }}</td>
       </tr>
       <tr>
         <td>V2</td>
         <td>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche sono rispettati?</td>
-        <td>0.3</td>
+        <td>{{ questionsWeights[4] }}</td>
       </tr>
       <tr>
         <td>V2</td>
         <td>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del corso di studio?</td>
-        <td>0.3</td>
+        <td>{{ questionsWeights[8] }}</td>
       </tr>
       <tr>
         <td>V2</td>
         <td>10 - Il docente è reperibile per chiarimenti e spiegazioni?</td>
-        <td>0.3</td>
+        <td>{{ questionsWeights[9] }}</td>
       </tr>
       <tr>
         <td colspan="3"></td>
@@ -88,35 +88,35 @@
       <tr>
         <td>V3</td>
         <td>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?</td>
-        <td>0.1</td>
+        <td>{{ questionsWeights[2] }}</td>
       </tr>
       <tr>
         <td>V3</td>
         <td>6 - Il docente stimola/motiva l'interesse verso la disciplina?</td>
-        <td>0.5</td>
+        <td>{{ questionsWeights[5] }}</td>
       </tr>
       <tr>
         <td>V3</td>
         <td>7 - Il docente espone gli argomenti in modo chiaro?</td>
-        <td>0.4</td>
+        <td>{{ questionsWeights[6] }}</td>
       </tr>
       <tr>
         <td colspan="3"></td>
       </tr>
       <tr>
         <td></td>
-        <td>8 - Le attività didattiche integrative (esercitazioni, tutorati, laboratori, ... etc) sono utili all'apprendimento della materia?</td>
-        <td>0.0</td>
+        <td><s>8 - Le attività didattiche integrative (esercitazioni, tutorati, laboratori, ... etc) sono utili all'apprendimento della materia?</s></td>
+        <td>{{ questionsWeights[7] }}</td>
       </tr>
       <tr>
         <td></td>
-        <td>11 - È interessato/a agli argomenti trattati nell'insegnamento?</td>
-        <td>0.0</td>
+        <td><s>11 - È interessato/a agli argomenti trattati nell'insegnamento?</s></td>
+        <td>{{ questionsWeights[10] }}</td>
       </tr>
       <tr>
         <td></td>
-        <td>12 - È complessivamente soddisfatto/a dell'insegnamento?</td>
-        <td>0.0</td>
+        <td><s>12 - È complessivamente soddisfatto/a dell'insegnamento?</s></td>
+        <td>{{ questionsWeights[11] }}</td>
       </tr>
     </tbody>
   </table>
