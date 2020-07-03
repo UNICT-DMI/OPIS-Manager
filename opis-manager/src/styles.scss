@@ -104,3 +104,29 @@ router-outlet ~ * {
   margin-top: 5px;
   margin-left: 20px;
 }
+
+
+/* Slider */
+.custom-slider {
+  margin: 0 auto;
+  display: table;
+
+  ng5-slider  {
+    .ng5-slider-bar {
+      background: #ffe4d1;
+      height: 2px;
+    }
+
+    .ng5-slider-pointer {
+      background-color: $color_main;
+    }
+
+    .ng5-slider-bubble {
+      bottom: 14px;
+    }
+
+    .ng5-slider-tick.ng5-slider-selected {
+      background: $color_main;
+    }
+  }
+}

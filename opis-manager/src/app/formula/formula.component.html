@@ -135,12 +135,12 @@
 
   <ng-template #questionslider>
     <ul class="nav nav-tabs" id="tabs">
-      <li class="nav-item tabs_button"><button (click)="switchV(1)"
-          [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
-      <li class="nav-item tabs_button"><button (click)="switchV(2)"
-          [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
-      <li class="nav-item tabs_button"><button (click)="switchV(3)"
-          [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(1)"
+          [ngClass]="selectedV === 1 ? 'selected-tab' : ''">V1</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(2)"
+          [ngClass]="selectedV === 2 ? 'selected-tab' : ''">V2</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(3)"
+          [ngClass]="selectedV === 3 ? 'selected-tab' : ''">V3</button></li>
     </ul>
     <div class="container">
       <div id="v1-sliders" class="row vslider" *ngIf="selectedV === 1">
@@ -148,13 +148,13 @@
           <p>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti
             previsti nel programma d'esame?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[0]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[1]" [options]="questionSliderOptions"></ng5-slider>
         </div>
       </div>
@@ -162,27 +162,27 @@
         <div class="col-4">
           <p>4 - Le modalità di esame sono state definite in modo chiaro?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[3]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche sono
             rispettati?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[4]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del corso di
             studio?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[8]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>10 - Il docente è reperibile per chiarimenti e spiegazioni?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[9]" [options]="questionSliderOptions"></ng5-slider>
         </div>
       </div>
@@ -190,19 +190,19 @@
         <div class="col-4">
           <p>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[2]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>6 - Il docente stimola/motiva l'interesse verso la disciplina?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[5]" [options]="questionSliderOptions"></ng5-slider>
         </div>
         <div class="col-4">
           <p>7 - Il docente espone gli argomenti in modo chiaro?</p>
         </div>
-        <div class="col-8">
+        <div class="col-8 custom-slider">
           <ng5-slider [(value)]="questionsWeights[6]" [options]="questionSliderOptions"></ng5-slider>
         </div>
       </div>
@@ -214,25 +214,25 @@
     <div id="answer-sliders" class="answer-slider container">
       <div class="row">
         <div class="col-2"><p>DECISAMENTE NO</p></div>
-        <div class="col-10">
+        <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[0]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
       <div class="row">
         <div class="col-2"><p>PIÙ NO CHE SÌ</p></div>
-        <div class="col-10">
+        <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[1]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
       <div class="row">
         <div class="col-2"><p>PIÙ SÌ CHE NO</p></div>
-        <div class="col-10">
+        <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[2]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
       <div class="row">
         <div class="col-2"><p>DECISAMENTE SÌ</p></div>
-        <div class="col-10">
+        <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[3]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
