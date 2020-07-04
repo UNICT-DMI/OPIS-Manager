@@ -80,7 +80,6 @@ export class GraphService {
 
   public parseSchede(schede, subject: string = null): any[] {
     const insegnamenti: any = [];
-
     for (let i = 0; i < schede.length; i++) {
 
       if (schede[i].tot_schedeF < 6) { continue; }
@@ -112,6 +111,7 @@ export class GraphService {
       insegnamenti[i].id_modulo = schede[i].id_modulo;
       insegnamenti[i].docente = schede[i].docente;
       insegnamenti[i].tot_schedeF = schede[i].tot_schedeF;
+      insegnamenti[i].tot_schedeNF = schede[i].tot_schedeNF;
 
       insegnamenti[i].domande = [];
       insegnamenti[i].domande[0] = [];

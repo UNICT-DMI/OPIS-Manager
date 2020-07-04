@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   selectedCds: number;
   vCds: number[][][] = [];
+  nCds: number[][][] = [];
 
   currentOption: number;
 
@@ -77,8 +78,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       const means$ = CONF.years.map(year => this.getMeans(year, cds.id));
 
       this.vCds[cds.id] = [[], [], []];
-      combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: number[][]) => {
-        for (const v of means) {
+      this.nCds[cds.id] = [];
+      combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: any[][]) => {
+        this.nCds[cds.id].push(means.map(a => a[1]));
+        const meansV = means.map(a => a[0]);
+        for (const v of meansV) {
           for (let i = 0; i < 3; i++) {
             this.vCds[cds.id][i].push(
               this.graphService.round(v[i], 4)
@@ -93,9 +97,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.http.get(CONF.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.graphService.parseSchede(data);
-        const [means, _] = this.graphService.elaborateFormula(insegnamenti);
-        return means;
-      }));
+        const meanSchede = (insegnamenti.map(t => (t.tot_schedeF/*  + t.tot_schedeNF */))
+                            .reduce((acc, val) => acc + val)) / insegnamenti.length;
+        const [meansV, _] = this.graphService.elaborateFormula(insegnamenti);
+        return [meansV, meanSchede];
+      }), takeUntil(this.destroy$));
   }
 
   ngOnDestroy(): void {

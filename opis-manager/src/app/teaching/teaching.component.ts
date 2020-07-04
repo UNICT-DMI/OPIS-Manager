@@ -18,10 +18,11 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
   @Input() teachings: any[];
-
   @Input() vCds: number[];
+  @Input() nCds: number[];
   @Input() selectedCds: number;
 
+  selectedTeachingSchede: any[];
   selectedTeaching: string = null;
   showTeachingStats = false;
   switcherValues = 1;
@@ -83,7 +84,6 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private showTeachingChart(teachingResults): void {
-
     let teachingName: any = document.getElementById('selTeaching');
     teachingName = teachingName.options[teachingName.selectedIndex].text;
 
@@ -170,7 +170,6 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     this.http.get(CONF.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel)
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-
         const anniAccademici = [];
         for (const i of Object.keys(data)) {
           anniAccademici[i] = {};
@@ -203,8 +202,9 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
           }
 
           [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(valori);
+          anniAccademici[i].totale_schede = data[i].totale_schede + data[i].totale_schede_nf;
         }
-
+        this.selectedTeachingSchede = anniAccademici;
         // refresh the chart
         this.showTeachingChart(anniAccademici);
       });
@@ -214,14 +214,25 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private calculateTeachingStats(matr: number[][]): void {
     for (let i = 0; i < 3; i++) {
-      const paragraph = document.getElementById('v' + (i + 1) + '-stats');
+      const selectedVParagraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.filterZero(matr[i]);
-      if (paragraph) {
-        paragraph.innerHTML = `Media: ${mean(teachingValues).toFixed(2)}<br>`;
-        paragraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
-        paragraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
+      if (selectedVParagraph) {
+        selectedVParagraph.innerHTML = `Media CDS: ${mean(this.vCds[this.selectedCds][i]).toFixed(2)}<br>`;
+        selectedVParagraph.innerHTML += `Media Insegn.: ${mean(teachingValues).toFixed(2)}<br>`;
+        selectedVParagraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
+        selectedVParagraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
       }
     }
+
+    const schedeParagraph = document.getElementById('s-stats');
+    const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
+    if (schedeParagraph) {
+      schedeParagraph.innerHTML = `Media CDS: ${mean(this.nCds[this.selectedCds]).toFixed(2)}<br>`;
+      schedeParagraph.innerHTML += `Media Insegn: ${mean(teachingSchede).toFixed(2)} <br>`;
+      schedeParagraph.innerHTML += `Varianza: ${variance(teachingSchede).toFixed(3)}<br>`;
+      schedeParagraph.innerHTML += `Dev. std.: ${std(teachingSchede).toFixed(3)}`;
+    }
+
   }
 
   private filterZero(array: number[]): number[] {

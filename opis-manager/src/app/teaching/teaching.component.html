@@ -2,12 +2,8 @@
   <div class="list-option-container">
     Seleziona insegnamento:
     <br>
-    <select
-      class="btn btn-opis text-center"
-      id="selTeaching"
-      [(ngModel)]="selectedTeaching"
-      (ngModelChange)="updateTeachingChart()"
-    >
+    <select class="btn btn-opis text-center" id="selTeaching" [(ngModel)]="selectedTeaching"
+      (ngModelChange)="updateTeachingChart()">
       <option class="text-center">--</option>
       <option class="text-center" *ngFor="let teaching of teachings" [ngValue]="teaching.id+' '+teaching.canale">
         {{ teaching.nome }} {{ teaching.canale != 'no' && teaching.canale != '' ? '('+teaching.canale+')' : '' }}
@@ -19,9 +15,12 @@
 <div>
   <div [hidden]="!selectedTeaching">
     <ul class="nav nav-tabs" id="tabs">
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)"
+          [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)"
+          [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)"
+          [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
       <li class="nav-item-right tabs_button" (click)="toggleStats()"><button class="btn btn-opis">Stats</button></li>
     </ul>
 
@@ -30,10 +29,22 @@
     <div id="teaching-stats" *ngIf="selectedTeaching !== null">
       <div [hidden]="!showTeachingStats" class="card" style="margin-bottom: 20px;">
         <div class="card-body">
-          <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching && selectedTeaching.split(" ")[0] }}</b></h5>
-          <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
-          <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
-          <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
+          <h5 class="card-title">Codice Insegnamento: <b>{{ selectedTeaching && selectedTeaching.split(" ")[0] }}</b>
+          </h5>
+          <div class="container">
+            <div class="row">
+              <div class="col-3" id="v-stats">
+                <p> <b>Valutazione:</b> </p>
+                <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
+                <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
+                <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
+              </div>
+              <div class="col-3">
+                <p> <b>N. schede:</b> </p>
+                <p id="s-stats"> </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -49,13 +60,7 @@
 <br>
 <br>
 
-<div class="custom-slider">
-  <ng5-slider class="addons-bar slider-years"
-    [value]="minValue"
-    [highValue]="maxValue"
-    [options]="optionsSlider"
-    [hidden]="!selectedTeaching"
-    [manualRefresh]="manualRefresh"
-    (valueChange)="updateTeachingChart()"
-  ></ng5-slider>
+<div class="custom-slider slider-years" style="width: 500px;">
+  <ng5-slider class="addons-bar" [value]="minValue" [highValue]="maxValue" [options]="optionsSlider"
+    [hidden]="!selectedTeaching" [manualRefresh]="manualRefresh" (valueChange)="updateTeachingChart()"></ng5-slider>
 </div>
