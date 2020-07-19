@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { ConfigService } from '../config.service';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { GraphService } from '../graph.service';
 import { Chart } from 'chart.js';
+import CONF from '../../assets/config.json';
+import { Config } from '../utils.model';
 
 @Component({
   selector: 'app-academic-year',
@@ -16,12 +17,14 @@ export class AcademicYearComponent {
   @Input() selectedCds;
 
   readonly faSearch = faSearch;
+  readonly CONF: Config = CONF;
+
   switcherValues = 1;
   subject: string;
   selectedYear: string;
 
+
   constructor(
-    public readonly configService: ConfigService,
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
@@ -33,7 +36,7 @@ export class AcademicYearComponent {
 
   public getSchedeOfCdsForSelectedYearAndShowAcademicYearChart(): void {
     if (this.selectedYear !== '--') {
-      this.http.get(this.configService.config.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
+      this.http.get(CONF.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
         .subscribe((data) => {
         const insegnamenti: any = this.graphService.parseSchede(data, this.subject);
 

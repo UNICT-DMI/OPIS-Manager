@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AcademicYearComponent } from '../academic-year/academic-year.component';
-import { ConfigService } from '../config.service';
 import { TeachingComponent } from '../teaching/teaching.component';
 import { NgSliderStubComponent } from '../teaching/teaching.component.spec';
 import { ValueDetailsComponent } from '../value-details/value-details.component';
@@ -34,9 +33,6 @@ describe('HomeComponent', () => {
         FormsModule,
         NgbModule,
       ],
-      providers: [
-        ConfigService,
-      ]
     })
     .compileComponents();
   }));

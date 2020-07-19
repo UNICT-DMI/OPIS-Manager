@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
-import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'app-cds',
@@ -11,19 +10,8 @@ export class CdsComponent implements OnInit {
   @Input() vCds;
   @Input() selectedCds;
 
-  constructor(
-    public readonly configService: ConfigService,
-  ) { }
-
   ngOnInit(): void {
-    if (!this.configService.config.apiUrl) {
-      // wait to get the config
-      this.configService.updateConfig().toPromise().then(() => {
-        this.showCdsBoxplot();
-      });
-    } else { // do not wait for the config
-      this.showCdsBoxplot();
-    }
+    this.showCdsBoxplot();
   }
 
   public showCdsBoxplot(): void {
