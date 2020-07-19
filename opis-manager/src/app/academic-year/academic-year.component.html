@@ -16,9 +16,12 @@
 <div [hidden]="!selectedYear">
   <div>
     <ul class="nav nav-tabs" id="tabs">
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)" [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)" [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
-      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)" [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)"
+          [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)"
+          [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)"
+          [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
       <li>
         <div class="input-group addons-bar">
           <div class="input-group-prepend">
@@ -27,14 +30,8 @@
             </span>
           </div>
 
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Fondamenti..."
-            aria-describedby="basic-addon1"
-            [(ngModel)]="subject"
-            (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
-          >
+          <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
+            [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
         </div>
       </li>
     </ul>
@@ -49,5 +46,30 @@
     <div id="v1" [hidden]="switcherValues != 1"><canvas id="v1-canvas"></canvas></div>
     <div id="v2" [hidden]="switcherValues != 2"><canvas id="v2-canvas"></canvas></div>
     <div id="v3" [hidden]="switcherValues != 3"><canvas id="v3-canvas"></canvas></div>
+
+    <div class="container" *ngIf="isAdmin === true" id="deviation-sliders">
+      <div class="row">
+        <div class="col-2">
+          <p>Scostamento media <b>V{{ switcherValues }}</b></p>
+        </div>
+        <div class="col-10">
+          <ng5-slider [(value)]="v1meanDeviation" [options]="meanSliderOptions" (change)="updateMeanTeachings()"
+            *ngIf="switcherValues === 1"></ng5-slider>
+          <ng5-slider [(value)]="v2meanDeviation" [options]="meanSliderOptions" (change)="updateMeanTeachings()"
+            *ngIf="switcherValues === 2"></ng5-slider>
+          <ng5-slider [(value)]="v3meanDeviation" [options]="meanSliderOptions" (change)="updateMeanTeachings()"
+            *ngIf="switcherValues === 3"></ng5-slider>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <p>Scostamento numerosità</p>
+        </div>
+        <div class="col-10">
+          <ng5-slider [(value)]="numerosityDeviation" [options]="numerositySliderOptions"
+            (change)="updateNumerosityTeachings"></ng5-slider>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

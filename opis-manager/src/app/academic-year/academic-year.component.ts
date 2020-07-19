@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import { Component, Input, SimpleChanges } from '@angular/core';
-=======
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ConfigService } from '../config.service';
->>>>>>> 7374441... Removed -- from academic-year select
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { GraphService } from '../graph.service';
@@ -21,6 +16,32 @@ export class AcademicYearComponent implements OnChanges {
   @Input() vCds;
   @Input() selectedCds;
 
+  private teachings: any[];
+  public isAdmin = true;
+  private charts: Chart[] = [];
+
+  public v1meanDeviation: number;
+  public v2meanDeviation: number;
+  public v3meanDeviation: number;
+  public meanSliderOptions: Options = {
+    floor: 0,
+    ceil: 10,
+    step: 0.5,
+    minLimit: 0.5,
+    maxLimit: 10,
+    showTicks: true,
+  };
+
+  public numerosityDeviation: number;
+  public numerositySliderOptions: Options = {
+    floor: 5,
+    ceil: 100,
+    step: 5,
+    minLimit: 5,
+    maxLimit: 100,
+    showTicks: true,
+  };
+
   readonly faSearch = faSearch;
   readonly CONF: Config = CONF;
 
@@ -32,7 +53,10 @@ export class AcademicYearComponent implements OnChanges {
   constructor(
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
-  ) { }
+  ) {
+    this.v1meanDeviation = this.v2meanDeviation = this.v3meanDeviation = 1;
+    this.numerosityDeviation = 20;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('selectedCds')) {
@@ -49,7 +73,7 @@ export class AcademicYearComponent implements OnChanges {
     if (this.selectedYear !== '--') {
       this.http.get(CONF.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
         .subscribe((data) => {
-        const insegnamenti: any = this.graphService.parseSchede(data, this.subject).sort((a, b) => {
+        this.teachings = this.graphService.parseSchede(data, this.subject).sort((a, b) => {
           if (a.anno === b.anno) {
             if (a.nome_completo < b.nome_completo) {
               return -1;
@@ -67,18 +91,18 @@ export class AcademicYearComponent implements OnChanges {
 
         let means: any;
         let values: any;
-        [means, values] = this.graphService.elaborateFormula(insegnamenti);
+        [means, values] = this.graphService.elaborateFormula(this.teachings);
 
-        this.showAcademicYearChart(values, insegnamenti);
+        this.showAcademicYearChart(values);
       });
     }
   }
 
-  private showAcademicYearChart(values, insegnamenti): void {
-    const minSchede = Math.min.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
-    const maxSchede = Math.max.apply(Math, insegnamenti.map((o) => o.tot_schedeF));
+  private showAcademicYearChart(values): void {
+    const minSchede = Math.min.apply(Math, this.teachings.map((o) => o.tot_schedeF));
+    const maxSchede = Math.max.apply(Math, this.teachings.map((o) => o.tot_schedeF));
 
-    insegnamenti.splice(0, 0, {
+    this.teachings.splice(0, 0, {
       nome: '1 anno',
       anno: '1',
       docente: '',
@@ -89,10 +113,10 @@ export class AcademicYearComponent implements OnChanges {
     values[1].splice(0, 0, '0');
     values[2].splice(0, 0, '0');
 
-    for (let i = 2; i < insegnamenti.length; i++) {
-      if (insegnamenti[i].anno !== insegnamenti[i - 1].anno) {
-        const year = insegnamenti[i].anno;
-        insegnamenti.splice(i, 0, {
+    for (let i = 2; i < this.teachings.length; i++) {
+      if (this.teachings[i].anno !== this.teachings[i - 1].anno) {
+        const year = this.teachings[i].anno;
+        this.teachings.splice(i, 0, {
           anno: year,
           nome: year + ' anno',
           docente: '',
@@ -104,14 +128,13 @@ export class AcademicYearComponent implements OnChanges {
       }
     }
 
-    const fitColorInsegnamenti = this.getColorTeachings(insegnamenti, maxSchede, minSchede);
+    const fitColorInsegnamenti = this.getColorTeachings(maxSchede, minSchede);
 
-    const materie: string[] = insegnamenti.map(a => a.nome); // labels chartjs
-    const docenti: string[] = insegnamenti.map(a => a.docente); // tooltips/labels
-    const materieComplete: string[] = insegnamenti.map(a => a.nome_completo); // labels chartjs
+    const materie: string[] = this.teachings.map(a => a.nome); // labels chartjs
+    const docenti: string[] = this.teachings.map(a => a.docente); // tooltips/labels
+    const materieComplete: string[] = this.teachings.map(a => a.nome_completo); // labels chartjs
 
     // chartjs stuff
-    const charts = [];
     const ctx = [];
 
     // Destroy and recreate canvas to clear
@@ -129,7 +152,7 @@ export class AcademicYearComponent implements OnChanges {
     parents[2].removeChild(canv[2]);
 
     const canvWidth = '90vw';
-    const canvHeight = (insegnamenti.length * 25) + 'px';
+    const canvHeight = (this.teachings.length * 25) + 'px';
     const minHeight = '150px';
 
     for (let i = 0; i < 3; i++) {
@@ -156,7 +179,9 @@ export class AcademicYearComponent implements OnChanges {
       const _options = {
         scales: {
           xAxes: [{ ticks: { beginAtZero: true } }],
-          yAxes: [{ ticks: { beginAtZero: true } }],
+          yAxes: [
+            { ticks: { beginAtZero: true } }
+          ],
         },
         tooltips: {
           titleFontSize: 25,
@@ -201,7 +226,7 @@ export class AcademicYearComponent implements OnChanges {
 
       const opt = Object.assign({}, _options);
 
-      charts.push(new Chart(ctx[c], {
+      this.charts.push(new Chart(ctx[c], {
         type: 'horizontalBar',
         data: _data,
         options: opt
@@ -213,7 +238,7 @@ export class AcademicYearComponent implements OnChanges {
     return parseInt(this.selectedYear.charAt(3), 10) - 3;
   }
 
-  private getColorTeachings(insegnamenti: [], maxSchede: number, minSchede: number): string[] {
+  private getColorTeachings(maxSchede: number, minSchede: number): string[] {
     let Rx: number;
     let Gx: number;
     let Bx: number;
@@ -222,10 +247,10 @@ export class AcademicYearComponent implements OnChanges {
 
     const colorInsegnamenti = [];
 
-    for (const i of Object.keys(insegnamenti)) {
-      Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
-      Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
-      Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (insegnamenti[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+    for (const i of Object.keys(this.teachings)) {
+      Rx = RGB1[0] + ((RGB2[0] - RGB1[0]) * (this.teachings[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+      Gx = RGB1[1] + ((RGB2[1] - RGB1[1]) * (this.teachings[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
+      Bx = RGB1[2] + ((RGB2[2] - RGB1[2]) * (this.teachings[i].tot_schedeF - minSchede) / (maxSchede - minSchede));
 
       colorInsegnamenti.push(`rgba(${Rx.toFixed(2)}, ${Gx.toFixed(2)}, ${Bx.toFixed(2)}, 1)`);
     }
