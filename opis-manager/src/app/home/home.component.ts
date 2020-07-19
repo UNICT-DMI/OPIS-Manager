@@ -5,8 +5,8 @@ import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { ConfigService } from '../config.service';
 import { GraphService } from '../graph.service';
+import CONF from '../../assets/config.json';
 
 @Component({
   selector: 'app-home',
@@ -30,20 +30,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   stepsYears: { value: number, legend: string }[] = [];
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
 
   ngOnInit(): void {
-    if (!this.configService.config.apiUrl) {
-      // wait to get the config
-      this.configService.updateConfig().toPromise().then(() => {
-        this.getAllDepartments();
-      });
-    } else { // do not wait for the config
-      this.getAllDepartments();
-    }
+    this.getAllDepartments();
 
     // ChartJS Annotation plugin stuff
     const namedChartAnnotation = ChartAnnotation;
@@ -56,13 +48,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private getAllDepartments(): void {
-    this.http.get(this.configService.config.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
+    this.http.get(CONF.apiUrl + 'dipartimento').pipe(take(1)).subscribe((data) => {
       this.departments = data;
     });
   }
 
   public getAllCdsOfSelectedDepartment(department: number): void {
-    this.http.get(this.configService.config.apiUrl + 'cds/' + department).pipe(take(1)).subscribe((data) => {
+    this.http.get(CONF.apiUrl + 'cds/' + department).pipe(take(1)).subscribe((data) => {
       this.cds = data;
       this.getCdsStats();
     });
@@ -75,14 +67,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.selectedCds = cds;
 
-    this.http.get(this.configService.config.apiUrl + 'insegnamento/' + cds).pipe(takeUntil(this.destroy$)).subscribe((data) => {
+    this.http.get(CONF.apiUrl + 'insegnamento/' + cds).pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.teachings = data;
     });
   }
 
   private getCdsStats(): void {
     for (const cds of this.cds) {
-      const means$ = this.configService.config.years.map(year => this.getMeans(year, cds.id));
+      const means$ = CONF.years.map(year => this.getMeans(year, cds.id));
 
       this.vCds[cds.id] = [[], [], []];
       combineLatest(means$).pipe(takeUntil(this.destroy$)).subscribe((means: number[][]) => {
@@ -98,7 +90,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private getMeans(year, cds): Observable<object> {
-    return this.http.get(this.configService.config.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
+    return this.http.get(CONF.apiUrl + 'schede?cds=' + cds + '&anno_accademico=' + year)
       .pipe(map((data) => {
         const insegnamenti = this.graphService.parseSchede(data);
         const [means, _] = this.graphService.elaborateFormula(insegnamenti);

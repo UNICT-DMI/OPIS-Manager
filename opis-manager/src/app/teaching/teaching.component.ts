@@ -3,10 +3,10 @@ import { Component, EventEmitter, OnInit, Input, OnDestroy } from '@angular/core
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';
 import { Options } from 'ng5-slider';
-import { ConfigService } from '../config.service';
 import { GraphService } from '../graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import CONF from '../../assets/config.json';
 
 @Component({
   selector: 'app-teaching',
@@ -33,36 +33,26 @@ export class TeachingComponent implements OnInit, OnDestroy {
     floor: 1,
     ceil: 8,
     showTicksValues: true,
-    getLegend: (value: number): string => this.configService.config.years[value - 1],
+    getLegend: (value: number): string => CONF.years[value - 1],
   };
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) { }
 
   ngOnInit(): void {
-
-    if (!this.configService.config.apiUrl) {
-      // wait to get the config
-      this.configService.updateConfig().toPromise().then(() => {
-        this.initOptions();
-      });
-    } else { // do not wait for the config
-      this.initOptions();
-    }
-
+    this.initOptions();
   }
 
   private initOptions(): void {
-    this.maxValue = this.configService.config.years.length;
+    this.maxValue = CONF.years.length;
 
     this.optionsSlider = {
       floor: 1,
       ceil: this.maxValue,
       showTicksValues: true,
-      getLegend: (value: number): string => this.configService.config.years[value - 1],
+      getLegend: (value: number): string => CONF.years[value - 1],
     };
 
     this.manualRefresh.emit();
@@ -85,7 +75,7 @@ export class TeachingComponent implements OnInit, OnDestroy {
     const charts = [];
     const matr = [[], [], []];
 
-    const yearsArray = [...this.configService.config.years].splice(this.minValue - 1, this.maxValue - this.minValue + 1);
+    const yearsArray = [...CONF.years].splice(this.minValue - 1, this.maxValue - this.minValue + 1);
     for (let i = 0; i < teachingResults.length; i++) {
       if (!yearsArray.includes(teachingResults[i].anno)) {
         teachingResults.splice(i--, 1);
@@ -108,7 +98,7 @@ export class TeachingComponent implements OnInit, OnDestroy {
 
     const teachingMean = [[], [], []];
 
-    for (let i = 0; i < this.configService.config.years.length; i++) {
+    for (let i = 0; i < CONF.years.length; i++) {
       teachingMean[0][i] = this.graphService.round(mean(this.filterZero(matr[0])));
       teachingMean[1][i] = this.graphService.round(mean(this.filterZero(matr[1])));
       teachingMean[2][i] = this.graphService.round(mean(this.filterZero(matr[2])));
@@ -162,7 +152,7 @@ export class TeachingComponent implements OnInit, OnDestroy {
     const [id, channel]: string[] = this.selectedTeaching && this.selectedTeaching.split(' ');
 
     // get new data (schede) of the selected teaching
-    this.http.get(this.configService.config.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel)
+    this.http.get(CONF.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel)
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
 

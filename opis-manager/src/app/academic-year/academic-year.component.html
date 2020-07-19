@@ -8,7 +8,7 @@
       (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
     >
       <option class="text-center">--</option>
-      <option class="text-center" *ngFor="let year of configService.config.years" [ngValue]="year"> {{ year }} </option>
+      <option class="text-center" *ngFor="let year of CONF.years" [ngValue]="year"> {{ year }} </option>
     </select>
   </div>
 </div>
