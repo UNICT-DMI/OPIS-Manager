@@ -218,7 +218,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
   $sugg_nf    = json_encode($sugg_nf);
 
   $res = $mysqli->query('SELECT * ' .
-    ' FROM schede ' .
+    ' FROM schede_opis ' .
     ' WHERE id_insegnamento='  . $id_gomp     .
     ' AND id_modulo="'       . $id_modulo   . '"' .
     ' AND anno_accademico="' . $year        . '"' .
@@ -226,7 +226,7 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
     ' AND canale="'          . $canale      . '";');
 
   if ($res && $res->num_rows == 0) {
-    $query = "INSERT INTO `schede` (`id_cds`, `totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`, `anno_accademico`) VALUES";
+    $query = "INSERT INTO `schede_opis` (`id_cds`, `totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('(' .
       "'" . $id_cds                                 . "', " .
@@ -439,7 +439,7 @@ function oldschede($id_cds, $id_gomp, $canale)
   }
 
   $res = $mysqli->query('SELECT * ' .
-    ' FROM schede ' .
+    ' FROM schede_opis ' .
     ' WHERE id_insegnamento="' . $id_gomp .
     // '" AND  id_modulo="'       . explode('-', $cod_modulo)[0] .
     '" AND  anno_accademico="' . $year .
@@ -448,7 +448,7 @@ function oldschede($id_cds, $id_gomp, $canale)
 
   if ($res && $res->num_rows <= 0) {
 
-    $query = "INSERT INTO `schede` (`id_cds`, `totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
+    $query = "INSERT INTO `schede_opis` (`id_cds`, `totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('(' .
       $id_cds . ', ' .

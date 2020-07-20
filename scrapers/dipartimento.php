@@ -54,14 +54,14 @@ function olddip() // come dip() ma serve per gli anni accademici prima del 16/17
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
 
-        if (!$mysqli->query('SELECT id '.
+        if (!$mysqli->query('SELECT unict_id '.
                             'FROM dipartimento ' .
                             'WHERE ' .
-                            'id=' . $_id .
+                            'unict_id=' . $_id .
                             ' AND anno_accademico="' . $year .
                             '";')->num_rows) { // se il dipartimento NON ESISTE
 
-            $query  = "INSERT INTO dipartimento (id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
+            $query  = "INSERT INTO dipartimento (unict_id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
             $query .= '("' . addslashes($_id) . '","' . $year . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '");';
 
             if (!$mysqli->query($query)) {
@@ -107,8 +107,8 @@ function dip()
         echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
         echo "";
 
-        if (!$mysqli->query('SELECT id FROM dipartimento WHERE id=' . $_id . ' AND anno_accademico="' . $year . '";')->num_rows) { // se il dipartimento NON ESISTE
-            $query  = "INSERT INTO dipartimento (id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
+        if (!$mysqli->query('SELECT unict_id FROM dipartimento WHERE id=' . $_id . ' AND anno_accademico="' . $year . '";')->num_rows) { // se il dipartimento NON ESISTE
+            $query  = "INSERT INTO dipartimento (unict_id, anno_accademico, nome, tot_cds, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF) VALUES\n";
             $query .= '("' . addslashes($_id) . '","' . $year . '","' . addslashes($_nome) . '","' . addslashes($_tot_CdS) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '", "' . addslashes($_tot_schedeNF) . '");';
 
             if (!$mysqli->query($query)) {
