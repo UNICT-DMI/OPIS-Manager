@@ -72,14 +72,14 @@ function insegnamento($id_cds) {
             $_anno = str_replace("Â", "", $_anno);
             $_anno = str_replace("°", "", $_anno);
 
-            if (!$mysqli->query('SELECT id FROM insegnamento '.
-                                ' WHERE id=' . $_id .
+            if (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
+                                ' WHERE codice_gomp=' . $_id .
                                 ' AND anno_accademico="'. $year        . '"' .
                                 ' AND canale="'         . $_canale     . '"' .
                                 ' AND id_cds="'         . $id_cds      . '"' .
                                 ' AND id_modulo="'      . $_cod_modulo . '"')->num_rows) {
 
-                $query  = "INSERT INTO insegnamento (id, nome, canale, id_modulo, ssd, tipo, anno, semestre, cfu, docente, assegn, tot_schedeF, tot_schedeNF, id_cds, anno_accademico) VALUES\n";
+                $query  = "INSERT INTO insegnamento (codice_gomp, nome, canale, id_modulo, ssd, tipo, anno, semestre, cfu, docente, assegn, tot_schedeF, tot_schedeNF, id_cds, anno_accademico) VALUES\n";
                 $query .= utf8_decode('("' .
                                       addslashes($_id) . '","' .
                                       addslashes($_nome) . '","' .
@@ -235,15 +235,15 @@ function oldinsegnamento($id_cds) {
                 $_anno = substr($_anno, 1, 2);
             }
 
-            if (!$mysqli->query('SELECT id FROM insegnamento '.
-                                ' WHERE id=' . $_id .
+            if (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
+                                ' WHERE codice_gomp=' . $_id .
                                 '  AND anno_accademico="'.$year.
                                 '" AND canale="' . $_canale .
                                 '" AND id_cds="' . $id_cds .
                                 '" AND id_modulo="' . $_id_modulo .
                                 '" AND docente="' . $_docente .'"')->num_rows) {
                 if($year == "2015/2016") {
-                    $query  = "INSERT INTO insegnamento (id, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
+                    $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
                     $query .= utf8_decode('("' . addslashes($_id) . '","' .
                                           addslashes($_nome) . '","' .
                                           addslashes($_id_modulo) . '","' .
@@ -261,7 +261,7 @@ function oldinsegnamento($id_cds) {
                                           $year . '");' . "\n");
                 }
                 else {
-                    $query  = "INSERT INTO insegnamento (id, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, anno_accademico) VALUES\n";
+                    $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, anno_accademico) VALUES\n";
                     $query .= utf8_decode('("' . addslashes($_id) . '","' .
                                           addslashes($_nome) . '","' .
                                           '0","' .
@@ -281,14 +281,14 @@ function oldinsegnamento($id_cds) {
 
             }
 
-            if(!empty($_docente2) && (!$mysqli->query('SELECT id FROM insegnamento '.
-                                ' WHERE id=' . $_id .
+            if(!empty($_docente2) && (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
+                                ' WHERE codice_gomp=' . $_id .
                                 '  AND anno_accademico="'.$year.
                                 '" AND canale="' . $_canale .
                                 '" AND id_cds="' . $id_cds .
                                 '" AND id_modulo="' . $_id_modulo .
                                 '" AND docente="' . $_docente2 .'"')->num_rows) ) {
-                $query  = "INSERT INTO insegnamento (id, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
+                $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, tot_schedeF, tot_schedeNF, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
                 $query .= utf8_decode('("' . addslashes($_id) . '","' .
                                       addslashes($_nome) . '","' .
                                       addslashes($_id_modulo) . '","' .

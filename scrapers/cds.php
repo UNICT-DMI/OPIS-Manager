@@ -38,9 +38,10 @@ function oldcds($id_dip) // come cds() ma serve per gli anni accademici prima de
 
         $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[10]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
 
-        if (!$mysqli->query('SELECT id FROM cds WHERE id=' . $_cod_corso . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $id_dip . ';')->num_rows) {
-            $query  = "INSERT INTO cds (id, anno_accademico, nome, classe, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF, id_dipartimento) VALUES\n";
+        if (!$mysqli->query('SELECT unict_id FROM corso_di_studi WHERE id=' . $_cod_corso . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $id_dip . ';')->num_rows) {
+            $query  = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF, id_dipartimento) VALUES\n";
             $query .= utf8_decode('("' . addslashes($_cod_corso) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '","' . addslashes($_tot_schedeNF) . '","' . addslashes($id_dip) . '");');
+
             if (!$mysqli->query($query)) {
                 die($mysqli->error);
             }
@@ -76,8 +77,8 @@ function cds($id_dip)
 
         $_nome = html_entity_decode(utf8_decode($_nome)); // fix accents
 
-        if (!$mysqli->query('SELECT id FROM cds WHERE id=' . $_cod_corso . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $id_dip . ';')->num_rows) {
-            $query = "INSERT INTO cds (id, anno_accademico, nome, classe, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF, id_dipartimento) VALUES\n";
+        if (!$mysqli->query('SELECT unict_id FROM corso_di_studi WHERE id=' . $_cod_corso . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $id_dip . ';')->num_rows) {
+            $query = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, tot_moduli, tot_valutati, tot_schedeF, tot_schedeNF, id_dipartimento) VALUES\n";
             $query .= utf8_decode('("' . addslashes($_cod_corso) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($_tot_moduli) . '", "' . addslashes($_tot_valutati) . '", "' . addslashes($_tot_schedeF) . '","' . addslashes($_tot_schedeNF) . '","' . addslashes($id_dip) . '");');
             if (!$mysqli->query($query)) {
                 die($mysqli->error);
