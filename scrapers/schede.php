@@ -37,11 +37,11 @@ function adjust_tag($html)
   return $html;
 }
 
-function schede($id_cds, $id_gomp, $id_modulo, $canale)
+function schede($unict_id_cds, $id_gomp, $id_modulo, $canale)
 {
   global $link, $mysqli, $year;
 
-  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $id_modulo . "&canale=" . $canale;
+  $url = $link . "val_insegn.php?cod_corso=" . $unict_id_cds . "&cod_gomp=" . $id_gomp . "&cod_modulo=" . $id_modulo . "&canale=" . $canale;
   $canale = str_replace("%20", "", $canale);
 
   $xpath = new DOMXPath(getDOM($url));
@@ -222,14 +222,14 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
     ' WHERE id_insegnamento='  . $id_gomp     .
     ' AND id_modulo="'       . $id_modulo   . '"' .
     ' AND anno_accademico="' . $year        . '"' .
-    ' AND id_cds='           . $id_cds      .
+    ' AND id_cds='           . $unict_id_cds      .
     ' AND canale="'          . $canale      . '";');
 
   if ($res && $res->num_rows == 0) {
     $query = "INSERT INTO `schede_opis` (`id_cds`, `totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`,`id_modulo`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('(' .
-      "'" . $id_cds                                 . "', " .
+      "'" . $unict_id_cds                                 . "', " .
       '"' . str_replace('"', "'", $totaleSchede)    . '", ' .
       '"' . str_replace('"', "'", $totaleSchede_nf) . '", ' .
       '"' . str_replace('"', "'", $femmine)         . '", ' .
@@ -262,11 +262,11 @@ function schede($id_cds, $id_gomp, $id_modulo, $canale)
   }
 }
 
-function oldschede($id_cds, $id_gomp, $canale)
+function oldschede($unict_id_cds, $id_gomp, $canale)
 {
   global $link, $mysqli, $year;
 
-  $url = $link . "val_insegn.php?cod_corso=" . $id_cds . "&cod_gomp=" . $id_gomp . "&canale=" . $canale;
+  $url = $link . "val_insegn.php?cod_corso=" . $unict_id_cds . "&cod_gomp=" . $id_gomp . "&canale=" . $canale;
   $canale = str_replace("%20", "", $canale);
 
   $xpath = new DOMXPath(getDOM($url));
@@ -287,7 +287,7 @@ function oldschede($id_cds, $id_gomp, $canale)
   //     'docente   = "' . explode('-', $docente)[0]    . '", ' .
   //     'assegn    = "' . explode('-', $assegn)[0]     . '" '  .
   //     'WHERE '.
-  //       'id_cds          =  ' . $id_cds  . ' AND ' .
+  //       'id_cds          =  ' . $unict_id_cds  . ' AND ' .
   //       'id              =  ' . $id_gomp . ' AND ' .
   //       'anno_accademico = "' . $year    . '" AND ' .
   //       'canale          = "' . $canale . '";';
@@ -305,7 +305,7 @@ function oldschede($id_cds, $id_gomp, $canale)
     $assegn     .= '-' . $xpath->query('/html/body/table[1]/tr/td/table[' . $year_idx . ']/tr[3]/td[' . ($year == "2013/2014" ? 13 : 10) . ']')->item(0)->textContent;
 
     // $query = 'UPDATE insegnamento SET id_modulo = "' . explode('-', $cod_modulo)[1] . '", ssd = "' . explode('-', $ssd)[1] . '", tipo = "' . explode('-', $tipo)[1] . '", docente = "' . explode('-', $docente)[1] . '", assegn = "' . explode('-', $assegn)[1] . '" ' .
-    //           'WHERE id_cds = ' . $id_cds . ' AND id = ' . $id_gomp . ' AND anno_accademico = "' . $year . '";';
+    //           'WHERE id_cds = ' . $unict_id_cds . ' AND id = ' . $id_gomp . ' AND anno_accademico = "' . $year . '";';
 
     // if (!$mysqli->query($query))
     //   die($mysqli->error);
@@ -443,7 +443,7 @@ function oldschede($id_cds, $id_gomp, $canale)
     ' WHERE id_insegnamento="' . $id_gomp .
     // '" AND  id_modulo="'       . explode('-', $cod_modulo)[0] .
     '" AND  anno_accademico="' . $year .
-    '" AND  id_cds="'          . $id_cds .
+    '" AND  id_cds="'          . $unict_id_cds .
     '" AND  canale="'          . $canale . '";');
 
   if ($res && $res->num_rows <= 0) {
@@ -451,7 +451,7 @@ function oldschede($id_cds, $id_gomp, $canale)
     $query = "INSERT INTO `schede_opis` (`id_cds`, `totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `canale`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('(' .
-      $id_cds . ', ' .
+      $unict_id_cds . ', ' .
       '"' . str_replace('"', "'",  $totaleSchede_f)  . '", ' .
       '"' . str_replace('"', "'",  $totaleSchede_nf) . '", ' .
       '"' . str_replace('"', "'",  $fuoriCorso)      . '", ' .
