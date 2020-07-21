@@ -65,15 +65,15 @@ function insegnamento($unict_id_cds, $primary_id_cds) {
             $_anno = str_replace("°", "", $_anno);
 
             if (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
-                                ' WHERE codice_gomp=' . $_id .
-                                ' AND anno_accademico="'. $year        . '"' .
-                                ' AND canale="'         . $_canale     . '"' .
-                                ' AND id_cds="'         . $unict_id_cds      . '"' .
-                                ' AND id_modulo="'      . $_cod_modulo . '"')->num_rows) {
+                                ' WHERE codice_gomp='   . $_id          .
+                                ' AND anno_accademico="'. $year         . '"' .
+                                ' AND canale="'         . $_canale      . '"' .
+                                ' AND id_cds='          . $unict_id_cds .
+                                ' AND id_modulo="'      . $_cod_modulo  . '"')->num_rows) {
 
                 $query  = "INSERT INTO insegnamento (codice_gomp, nome, canale, id_modulo, ssd, tipo, anno, semestre, cfu, docente, assegn, id_cds, anno_accademico) VALUES\n";
-                $query .= utf8_decode('("' .
-                                      addslashes($_id) . '","' .
+                $query .= utf8_decode('(' .
+                                      $_id . ',"' .
                                       addslashes($_nome) . '","' .
                                       addslashes($_canale) . '","' .
                                       $_cod_modulo . '", "' .
@@ -83,8 +83,8 @@ function insegnamento($unict_id_cds, $primary_id_cds) {
                                       addslashes($_semestre) . '", "' .
                                       addslashes($_cfu) . '", "' .
                                       addslashes($_docente) . '", "' .
-                                      addslashes($_assegn) . '", "' .
-                                      addslashes($unict_id_cds) . '", "'.
+                                      addslashes($_assegn) . '", ' .
+                                      $primary_id_cds . ', "'.
                                       $year . '");');
 
                 if (!$mysqli->query($query)) {
@@ -214,19 +214,19 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                                 ' WHERE codice_gomp=' . $_id .
                                 '  AND anno_accademico="'.$year.
                                 '" AND canale="' . $_canale .
-                                '" AND id_cds="' . $unict_id_cds .
-                                '" AND id_modulo="' . $_id_modulo .
+                                '" AND id_cds=' . $unict_id_cds .
+                                '  AND id_modulo="' . $_id_modulo .
                                 '" AND docente="' . $_docente .'"')->num_rows) {
                 if($year == "2015/2016") {
                     $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
-                    $query .= utf8_decode('("' . addslashes($_id) . '","' .
+                    $query .= utf8_decode('(' . $_id . ',"' .
                                           addslashes($_nome) . '","' .
                                           addslashes($_id_modulo) . '","' .
                                           addslashes($_canale) . '","' .
                                           addslashes($_anno) . '","' .
                                           addslashes($_semestre) . '","' .
-                                          addslashes($_cfu) . '", "' .
-                                          addslashes($unict_id_cds) . '", "' .
+                                          addslashes($_cfu) . '", ' .
+                                          $primary_id_cds . ', "' .
                                           addslashes($_ssd) . '", "' .
                                           addslashes($_tipo) . '", "' .
                                           addslashes($_docente) . '", "' .
@@ -235,14 +235,14 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                 }
                 else {
                     $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, anno_accademico) VALUES\n";
-                    $query .= utf8_decode('("' . addslashes($_id) . '","' .
+                    $query .= utf8_decode('(' . $_id . ',"' .
                                           addslashes($_nome) . '","' .
                                           '0","' .
                                           addslashes($_canale) . '","' .
                                           addslashes($_anno) . '","' .
                                           addslashes($_semestre) . '","' .
-                                          addslashes($_cfu) . '", "' .
-                                          addslashes($unict_id_cds) . '", "' .
+                                          addslashes($_cfu) . '", ' .
+                                          $primary_id_cds . ', "' .
                                           $year . '");');
                 }
 
@@ -260,14 +260,14 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                                 '" AND id_modulo="' . $_id_modulo .
                                 '" AND docente="' . $_docente2 .'"')->num_rows) ) {
                 $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
-                $query .= utf8_decode('("' . addslashes($_id) . '","' .
+                $query .= utf8_decode('(' . $_id . ',"' .
                                       addslashes($_nome) . '","' .
                                       addslashes($_id_modulo) . '","' .
                                       addslashes($_canale) . '","' .
                                       addslashes($_anno2) . '","' .
                                       addslashes($_semestre2) . '","' .
-                                      addslashes($_cfu2) . '", "' .
-                                      addslashes($unict_id_cds) . '", "' .
+                                      addslashes($_cfu2) . '", ' .
+                                      $primary_id_cds . ', "' .
                                       addslashes($_ssd) . '", "' .
                                       addslashes($_tipo2) . '", "' .
                                       addslashes($_docente2) . '", "' .
