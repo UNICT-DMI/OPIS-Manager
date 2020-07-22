@@ -1,5 +1,16 @@
 <?php
 
+function get_primary_id_ins(int $codice_gomp, $canale): int {
+  global $mysqli, $year;
+  
+  $result = $mysqli->query("SELECT id FROM insegnamento WHERE codice_gomp = $codice_gomp AND anno_accademico = '$year' AND canale = '$canale'");
+  while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+    return $row["id"];
+  }
+
+  echo "\nSELECT id FROM insegnamento WHERE codice_gomp = $codice_gomp AND anno_accademico = '$year'";
+  die("\n\nError getting the primary id of insegnamento");
+}
 
 function check_special_chars(&$str) {
     for ($j=0; $j<strlen($str)-1; $j++)
@@ -109,8 +120,10 @@ function insegnamento($unict_id_cds, $primary_id_cds) {
 
                 $params[3] = str_replace(" ", "%20", $params[3]);
 
+                $primary_id = get_primary_id_ins($params[1], $_canale);
+
                 // schede(cod_corso, cod_gomp, id_modulo, canale);
-                schede($params[0], $params[1], $params[2], $params[3]);
+                schede($primary_id, $params[0], $params[1], $params[2], $params[3]);
             }
 
         }
@@ -303,11 +316,14 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                 $params = explode("&", $params);
 
                 $params[2] = str_replace(" ", "%20", $params[2]);
+
+                $primary_id = get_primary_id_ins($params[1], $_canale);
+
                 //oldschede(cod_corso, cod_gomp canale);
                 if($year != "2015/2016")
-                    oldschede($params[0], $params[1], $params[2]);
+                    oldschede($primary_id, $params[0], $params[1], $params[2]);
                 else
-                    schede($params[0], $params[1], $params[2], $params[3]);
+                    schede($primary_id, $params[0], $params[1], $params[2], $params[3]);
             }
 
         }
