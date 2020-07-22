@@ -219,10 +219,10 @@ function schede($primary_id, $unict_id_cds, $id_gomp, $id_modulo, $canale)
 
   $res = $mysqli->query('SELECT * ' .
     ' FROM schede_opis ' .
-    ' WHERE id_insegnamento='  . $primary_id     .
-    ' AND anno_accademico="' . $year        . '";');
+    ' WHERE id_insegnamento="' . $primary_id .
+    '" AND  anno_accademico="' . $year . '";');
 
-  if (!$res) {
+  if ($res && $res->num_rows == 0) {
     $query = "INSERT INTO `schede_opis` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `anno_accademico`) VALUES";
     $query .= "\n";
     $query .= utf8_decode('(' .
