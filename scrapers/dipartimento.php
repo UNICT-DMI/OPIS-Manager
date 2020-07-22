@@ -13,7 +13,7 @@ function parseID($str)
     return $x;
 }
 
-function dip(): void // come dip() ma serve per gli anni accademici prima del 16/17 che usano una struttura HTML diversa
+function dip(): void 
 {
     global $link, $mysqli, $year, $debug;
 
