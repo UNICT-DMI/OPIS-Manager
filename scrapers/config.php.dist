@@ -85,4 +85,16 @@ function getDOM($link)
     curl_close($ch);
     return $dom;
 }
+
+function get_primary_id(int $unict_id, string $table): int {
+  global $mysqli, $year;
+  
+  $result = $mysqli->query("SELECT id FROM $table WHERE unict_id = $unict_id AND anno_accademico = '$year'");
+  while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+    return $row["id"];
+  }
+
+  echo "\nSELECT id FROM $table WHERE unict_id = $unict_id AND anno_accademico = '$year'";
+  die("\n\nError getting the primary id of $table");
+}
 ?>
