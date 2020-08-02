@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WeightService } from './weight.service';
+import { Teaching, SchedaOpis } from './api.model';
+import { mean } from 'mathjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,27 +17,56 @@ export class GraphService {
     return Math.round(v * pad) / pad;
   }
 
-  public applyWeights(vals): string[] {
-    const questionsWeights = this.weightService.getQuestionsWeights();
+  public elaborateFormula(schedeOpis: SchedaOpis[]): [number[], number[][]] {
+    const v1: number[] = [];
+    const v2: number[] = [];
+    const v3: number[] = [];
 
-    // pesi risposte
+    for (const schedaOpis of schedeOpis) {
+      const [V1, V2, V3] = this.applyWeights(schedaOpis);
+      v1.push(V1);
+      v2.push(V2);
+      v3.push(V3);
+    }
+
+    const means = [mean(v1), mean(v2), mean(v3)];
+    return [means, [v1, v2, v3]];
+  }
+
+  public applyWeights(scheda: SchedaOpis): number[] {
+
+    const questionsWeights = this.weightService.getQuestionsWeights();
     const answersWeights = this.weightService.getAnswersWeights();
 
-    const N = vals.tot_schedeF;
+    const N = scheda.totale_schede;
     let d = 0;
     let V1 = 0;
     let V2 = 0;
     let V3 = 0;
 
+    scheda.domande = JSON.parse(scheda.domande);
+    const domandeConv: number[][] = [];
+    for (const i in scheda.domande) {
+      if (scheda.domande[i] === 'u00a0') {
+        continue;
+      }
+      const array: number[] = [];
+      for (let j = 0; j < 4; j++) {
+        array.push(parseInt(scheda.domande[i], 10));
+      }
+      domandeConv.push(array);
+    }
+    scheda.domande = domandeConv;
+
     if (N > 5) {
 
-      for (let j = 0; j < vals.domande.length; j++) {
+      for (let j = 0; j < scheda.domande.length; j++) {
 
         d = 0.0;
-        d += vals.domande[j][0] * answersWeights[0];   // Decisamente no
-        d += vals.domande[j][1] * answersWeights[1];   // Più no che sì
-        d += vals.domande[j][2] * answersWeights[2];   // Più sì che no
-        d += vals.domande[j][3] * answersWeights[3];   // Decisamente sì
+        d += scheda.domande[j][0] * answersWeights[0];   // Decisamente no
+        d += scheda.domande[j][1] * answersWeights[1];   // Più no che sì
+        d += scheda.domande[j][2] * answersWeights[2];   // Più sì che no
+        d += scheda.domande[j][3] * answersWeights[3];   // Decisamente sì
 
         if (j === 0 || j === 1) {                                 // V1 domande: 1,2
           V1 += ((d / N) * questionsWeights[j]);
@@ -48,37 +79,10 @@ export class GraphService {
 
     }
 
-    return [V1.toFixed(2), V2.toFixed(2), V3.toFixed(2)];
+    return [parseFloat(V1.toFixed(2)), parseFloat(V2.toFixed(2)), parseFloat(V3.toFixed(2))];
   }
 
-  public elaborateFormula(insegnamenti: any[]): [number[], string[][]] {
-    const v1 = [];
-    const v2 = [];
-    const v3 = [];
-
-    for (const i of Object.keys(insegnamenti)) {
-      const [V1, V2, V3] = this.applyWeights(insegnamenti[i]);
-
-      v1.push(V1);
-      v2.push(V2);
-      v3.push(V3);
-    }
-
-    const means = [0.0, 0.0, 0.0];
-
-    for (const x of Object.keys(v1)) {
-      means[0] += parseFloat(v1[x]);
-      means[1] += parseFloat(v2[x]);
-      means[2] += parseFloat(v3[x]);
-    }
-    means[0] = means[0] / v1.length;
-    means[1] = means[1] / v2.length;
-    means[2] = means[2] / v3.length;
-
-    return [means, [v1, v2, v3]];
-  }
-
-  public parseSchede(schede, subject: string = null): any[] {
+  public parseInsegnamentoSchede(schede, subject: string = null): any[] {
     const insegnamenti: any = [];
     for (let i = 0; i < schede.length; i++) {
 

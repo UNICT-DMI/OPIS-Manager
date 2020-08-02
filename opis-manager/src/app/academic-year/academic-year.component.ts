@@ -17,7 +17,7 @@ export class AcademicYearComponent implements OnChanges {
   @Input() selectedCds;
 
   private teachings: any[];
-  public isAdmin = true;
+  public isAdmin = false;
   private charts: Chart[] = [];
 
   public v1meanDeviation: number;
@@ -73,7 +73,7 @@ export class AcademicYearComponent implements OnChanges {
     if (this.selectedYear !== '--') {
       this.http.get(CONF.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
         .subscribe((data) => {
-        this.teachings = this.graphService.parseSchede(data, this.subject).sort((a, b) => {
+        this.teachings = this.graphService.parseInsegnamentoSchede(data, this.subject).sort((a, b) => {
           if (a.anno === b.anno) {
             if (a.nome_completo < b.nome_completo) {
               return -1;

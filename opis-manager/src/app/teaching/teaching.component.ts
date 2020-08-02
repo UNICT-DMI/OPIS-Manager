@@ -7,6 +7,9 @@ import { GraphService } from '../graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import CONF from '../../assets/config.json';
+import { Teaching, SchedaOpis } from '../api.model';
+import { ApiService } from '../api.service';
+import { TeachingSchede } from '../utils.model';
 
 @Component({
   selector: 'app-teaching',
@@ -17,13 +20,13 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
-  @Input() teachings: any[];
-  @Input() vCds: number[];
-  @Input() nCds: number[];
+  @Input() teachings: Teaching[];
+  @Input() vCds: { [year: string]: number[]};
+  @Input() nCds: { [year: string]: number};
   @Input() selectedCds: number;
 
-  selectedTeachingSchede: any[];
-  selectedTeaching: string = null;
+  selectedTeachingSchede: TeachingSchede[];
+  selectedTeaching: number = null;
   showTeachingStats = false;
   switcherValues = 1;
 
@@ -39,7 +42,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   };
 
   constructor(
-    private readonly http: HttpClient,
+    private readonly apiService: ApiService,
     private readonly graphService: GraphService,
   ) { }
 
@@ -85,7 +88,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private showTeachingChart(teachingResults): void {
     let teachingName: any = document.getElementById('selTeaching');
-    teachingName = teachingName.options[teachingName.selectedIndex].text;
+    teachingName = this.teachings[this.selectedTeaching].nome;
 
     const charts = [];
     const matr = [[], [], []];
@@ -111,20 +114,23 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
 
-    const teachingMean = [[], [], []];
+    const teachingMean: number[][] = [[], [], []];
+    const cdsMean: number[][] = [[], [], []];
 
     for (let i = 0; i < CONF.years.length; i++) {
-      teachingMean[0][i] = this.graphService.round(mean(this.filterZero(matr[0])));
-      teachingMean[1][i] = this.graphService.round(mean(this.filterZero(matr[1])));
-      teachingMean[2][i] = this.graphService.round(mean(this.filterZero(matr[2])));
+      for (let v = 0; v < 3; v++) {
+        teachingMean[v][i] = this.graphService.round(mean(this.filterZero(matr[v])));
+        cdsMean[v][i] = this.graphService.round(mean(Object.values(this.vCds).map(array => array[v])));
+      }
     }
 
     this.calculateTeachingStats(matr);
 
-    const [colorV1, colorV2, colorV3] = [
+    const [colorV1, colorV2, colorV3, colorV4] = [
       { fill: false, backgroundColor: '', borderColor: '#00897b', },
       { fill: false, backgroundColor: '#521a7d', borderColor: '#521a7d', },
       { fill: false, backgroundColor: '#a69319', borderColor: '#a69319', },
+      { fill: false, backgroundColor: '#ffa500', borderColor: '#ffa500', },
     ];
 
     // line graphs config
@@ -136,8 +142,9 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
           labels: yearsArray,
           datasets: [
             { label: 'V' + i, ...colorV1, data: matr[i - 1] },
-            { label: 'Media CDS', ...colorV2, data: this.vCds[this.selectedCds][i - 1] },
+            { label: 'V' + i + ' CDS', ...colorV2, data: Object.values(this.vCds).map(array => array[i - 1]) },
             { label: 'Media Insegnamento', ...colorV3, data: teachingMean[i - 1], pointRadius: 1 },
+            { label: 'Media CDS', ...colorV4, data: cdsMean[i - 1], pointRadius: 1 },
           ]
         },
         options: {
@@ -162,47 +169,19 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   public updateTeachingChart(): void {
 
-    if (!this.selectedTeaching) { return; }
+    if (this.selectedTeaching == null) { return; }
 
-    const [id, channel]: string[] = this.selectedTeaching && this.selectedTeaching.split(' ');
-
+    const teaching = this.teachings[this.selectedTeaching];
     // get new data (schede) of the selected teaching
-    this.http.get(CONF.apiUrl + 'schedeInsegnamento?id_ins=' + id + '&canale=' + channel)
+    this.apiService.getSchedeOfTeaching(teaching.codice_gomp, teaching.canale, teaching.id_modulo)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        const anniAccademici = [];
-        for (const i of Object.keys(data)) {
+      .subscribe((schede: SchedaOpis[]) => {
+        const anniAccademici: TeachingSchede[] = [];
+        for (const i of Object.keys(schede)) {
           anniAccademici[i] = {};
-          anniAccademici[i].v1 = 0;
-          anniAccademici[i].v2 = 0;
-          anniAccademici[i].v3 = 0;
-          anniAccademici[i].anno = data[i].anno_accademico;
-
-          const valori: any = [];
-          valori.tot_schedeF = data[i].totale_schede;
-          valori.domande = [];
-
-          valori.domande[i] = [];
-
-          let index = 0;
-          for (let j = 0; j < data[i].domande.length; j++) {
-            if (data[i].domande.hasOwnProperty(j)) {
-
-              if (j % 5 === 0 && j !== 0) {
-                index++;
-                valori.domande[index] = [];
-              }
-
-              if (valori.domande[index] === undefined) {
-                valori.domande[index] = [];
-              }
-
-              valori.domande[index].push(data[i].domande[j]);
-            }
-          }
-
-          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(valori);
-          anniAccademici[i].totale_schede = data[i].totale_schede + data[i].totale_schede_nf;
+          anniAccademici[i].anno = schede[i].anno_accademico;
+          [anniAccademici[i].v1, anniAccademici[i].v2, anniAccademici[i].v3] = this.graphService.applyWeights(schede[i]);
+          anniAccademici[i].totale_schede = schede[i].totale_schede + schede[i].totale_schede_nf;
         }
         this.selectedTeachingSchede = anniAccademici;
         // refresh the chart
@@ -213,11 +192,12 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private calculateTeachingStats(matr: number[][]): void {
+
     for (let i = 0; i < 3; i++) {
       const selectedVParagraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.filterZero(matr[i]);
       if (selectedVParagraph) {
-        selectedVParagraph.innerHTML = `Media CDS: ${mean(this.vCds[this.selectedCds][i]).toFixed(2)}<br>`;
+        selectedVParagraph.innerHTML =  `Media CDS: ${mean(Object.values(this.vCds).map(array => array[i])).toFixed(2)}<br>`;
         selectedVParagraph.innerHTML += `Media Insegn.: ${mean(teachingValues).toFixed(2)}<br>`;
         selectedVParagraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
         selectedVParagraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
@@ -227,8 +207,8 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     const schedeParagraph = document.getElementById('s-stats');
     const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
     if (schedeParagraph) {
-      schedeParagraph.innerHTML = `Media CDS: ${mean(this.nCds[this.selectedCds]).toFixed(2)}<br>`;
-      schedeParagraph.innerHTML += `Media Insegn: ${mean(teachingSchede).toFixed(2)} <br>`;
+      schedeParagraph.innerHTML =  `Media CDS: ${mean(Object.values(this.nCds)).toFixed(2)}<br>`;
+      schedeParagraph.innerHTML += `Media Insegn: ${mean(teachingSchede).toFixed(2)}<br>`;
       schedeParagraph.innerHTML += `Varianza: ${variance(teachingSchede).toFixed(3)}<br>`;
       schedeParagraph.innerHTML += `Dev. std.: ${std(teachingSchede).toFixed(3)}`;
     }

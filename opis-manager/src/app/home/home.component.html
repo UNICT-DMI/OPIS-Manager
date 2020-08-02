@@ -14,13 +14,13 @@
     <div class="col-12">
 
       <ul class="nav nav-tabs" id="tabs">
-        <li class="nav-item tabs_button" *ngFor="let c of cds">
-          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(c.id)"
-            [ngClass]="selectedCds === c.id ? 'selected-tab' : ''">{{ c.nome + " " + c.classe }}</button>
+        <li class="nav-item tabs_button" *ngFor="let c of cds; let i = index">
+          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(i)"
+            [ngClass]="selectedCds === i ? 'selected-tab' : ''">{{ cds[i].nome + " " + cds[i].classe }}</button>
         </li>
       </ul>
 
-      <div [hidden]="!selectedCds">
+      <div *ngIf="selectedCds != null">
         <div class="container-switcher">
           <div class="segmented">
             <label (click)="enableOption(0);" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
@@ -35,7 +35,7 @@
         <app-cds
           *ngIf="currentOption === 0"
           [vCds]="vCds"
-          [selectedCds]="selectedCds"
+          [selectedCds]="cds[selectedCds]"
         ></app-cds>
 
         <!-- Anno Accademico -->
