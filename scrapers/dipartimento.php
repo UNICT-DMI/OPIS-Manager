@@ -17,8 +17,6 @@ function dip(): void
 {
     global $link, $mysqli, $year, $debug;
 
-    $arr      = array();
-
     $xpath    = new DOMXPath(getDOM($link)); // permette di gestire il DOM come se fosse un percorso
     $lengthN  = $xpath->query('/html/body/table[2]/tr/td/table/tr')->length; // Lunghezza righe (numero di dipartimenti)
 
@@ -35,24 +33,14 @@ function dip(): void
           $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $i . ']/td[8]/a');
         }
 
-        echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m";
-        echo "";
+        echo "\n  ## \033[1m" . ($i-1) . "/" . ($lengthN-2) . "\033[33m\t " . $_nome . "\033[0m\n";
 
-        if (!$mysqli->query('SELECT id '.
-                            'FROM dipartimento ' .
-                            'WHERE ' .
-                            'unict_id=' . $unict_id . ' AND ' .
-                            'anno_accademico="' . $year .
-                            '";')->num_rows) { // se il dipartimento NON ESISTE
-
-            $query  = "INSERT INTO dipartimento (unict_id, anno_accademico, nome) VALUES\n";
-            $query .= '("' . $unict_id . '","' . $year . '","' . addslashes($_nome) . '");';
-
-            if (!$mysqli->query($query)) {
-                die($mysqli->error);
-            }
-        }
-
+        $query  = "INSERT INTO dipartimento (unict_id, anno_accademico, nome) VALUES\n";
+        $query .= '("' . $unict_id . '","' . $year . '","' . addslashes($_nome) . '");';
+        if (!$mysqli->query($query))
+          die($mysqli->error);
+        
+        
         $id = get_primary_id($unict_id, 'dipartimento');
 
         

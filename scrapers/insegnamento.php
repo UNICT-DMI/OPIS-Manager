@@ -14,8 +14,8 @@ function get_primary_id_ins(int $codice_gomp, $canale): int {
 
 function check_special_chars(&$str) {
     for ($j=0; $j<strlen($str)-1; $j++)
-        if (strlen(mb_substr($str, $j, 1, 'utf-8')) == 2) {             //se il carattere della stringa occupa 2 caratteri vuol dire che è un carattere "strano"
-            $str = substr($str, 0, $j)."0".substr($str, $j+2);    //togliamo i primi 2 (che sarebbe il primo, ma quello strano) caratteri della stringa e concateniamo lo 0
+        if (strlen(mb_substr($str, $j, 1, 'utf-8')) == 2) { //se il carattere della stringa occupa 2 caratteri vuol dire che è un carattere "strano"
+            $str = substr($str, 0, $j)."0".substr($str, $j+2); //togliamo i primi 2 (che sarebbe il primo, ma quello strano) caratteri della stringa e concateniamo lo 0
         }
 }
 
@@ -75,34 +75,25 @@ function insegnamento($unict_id_cds, $primary_id_cds) {
             $_anno = str_replace("Â", "", $_anno);
             $_anno = str_replace("°", "", $_anno);
 
-            if (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
-                                ' WHERE codice_gomp='   . $_id          .
-                                ' AND anno_accademico="'. $year         . '"' .
-                                ' AND canale="'         . $_canale      . '"' .
-                                ' AND id_cds='          . $unict_id_cds .
-                                ' AND id_modulo="'      . $_cod_modulo  . '"')->num_rows) {
+            $query  = "INSERT INTO insegnamento (codice_gomp, nome, canale, id_modulo, ssd, tipo, anno, semestre, cfu, docente, assegn, id_cds, anno_accademico) VALUES\n";
+            $query .= utf8_decode('(' .
+                                    $_id . ',"' .
+                                    addslashes($_nome) . '","' .
+                                    addslashes($_canale) . '","' .
+                                    $_cod_modulo . '", "' .
+                                    addslashes($_ssd) . '", "' .
+                                    addslashes($_tipo) . '", "' .
+                                    addslashes($_anno) . '","' .
+                                    addslashes($_semestre) . '", "' .
+                                    addslashes($_cfu) . '", "' .
+                                    addslashes($_docente) . '", "' .
+                                    addslashes($_assegn) . '", ' .
+                                    $primary_id_cds . ', "'.
+                                    $year . '");');
 
-                $query  = "INSERT INTO insegnamento (codice_gomp, nome, canale, id_modulo, ssd, tipo, anno, semestre, cfu, docente, assegn, id_cds, anno_accademico) VALUES\n";
-                $query .= utf8_decode('(' .
-                                      $_id . ',"' .
-                                      addslashes($_nome) . '","' .
-                                      addslashes($_canale) . '","' .
-                                      $_cod_modulo . '", "' .
-                                      addslashes($_ssd) . '", "' .
-                                      addslashes($_tipo) . '", "' .
-                                      addslashes($_anno) . '","' .
-                                      addslashes($_semestre) . '", "' .
-                                      addslashes($_cfu) . '", "' .
-                                      addslashes($_docente) . '", "' .
-                                      addslashes($_assegn) . '", ' .
-                                      $primary_id_cds . ', "'.
-                                      $year . '");');
+            if (!$mysqli->query($query)) 
+                die($mysqli->error);
 
-                if (!$mysqli->query($query)) {
-                    die($mysqli->error);
-                }
-
-            }
 
             if ($emptyOPIS == 'img') {
                 $link_opis = "Scheda non autorizzata alla pubblicazione";
@@ -223,55 +214,47 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                 $_anno = substr($_anno, 1, 2);
             }
 
-            if (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
-                                ' WHERE codice_gomp=' . $_id .
-                                '  AND anno_accademico="'.$year.
-                                '" AND canale="' . $_canale .
-                                '" AND id_cds=' . $unict_id_cds .
-                                '  AND id_modulo="' . $_id_modulo .
-                                '" AND docente="' . $_docente .'"')->num_rows) {
-                if($year == "2015/2016") {
-                    $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
-                    $query .= utf8_decode('(' . $_id . ',"' .
-                                          addslashes($_nome) . '","' .
-                                          addslashes($_id_modulo) . '","' .
-                                          addslashes($_canale) . '","' .
-                                          addslashes($_anno) . '","' .
-                                          addslashes($_semestre) . '","' .
-                                          addslashes($_cfu) . '", ' .
-                                          $primary_id_cds . ', "' .
-                                          addslashes($_ssd) . '", "' .
-                                          addslashes($_tipo) . '", "' .
-                                          addslashes($_docente) . '", "' .
-                                          addslashes($_assegn) . '", "' .
-                                          $year . '");' . "\n");
-                }
-                else {
-                    $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, anno_accademico) VALUES\n";
-                    $query .= utf8_decode('(' . $_id . ',"' .
-                                          addslashes($_nome) . '","' .
-                                          '0","' .
-                                          addslashes($_canale) . '","' .
-                                          addslashes($_anno) . '","' .
-                                          addslashes($_semestre) . '","' .
-                                          addslashes($_cfu) . '", ' .
-                                          $primary_id_cds . ', "' .
-                                          $year . '");');
-                }
-
-                if (!$mysqli->query($query)) {
-                    die($mysqli->error);
-                }
-
+            if($year == "2015/2016") {
+                $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
+                $query .= utf8_decode('(' . $_id . ',"' .
+                                        addslashes($_nome) . '","' .
+                                        addslashes($_id_modulo) . '","' .
+                                        addslashes($_canale) . '","' .
+                                        addslashes($_anno) . '","' .
+                                        addslashes($_semestre) . '","' .
+                                        addslashes($_cfu) . '", ' .
+                                        $primary_id_cds . ', "' .
+                                        addslashes($_ssd) . '", "' .
+                                        addslashes($_tipo) . '", "' .
+                                        addslashes($_docente) . '", "' .
+                                        addslashes($_assegn) . '", "' .
+                                        $year . '");' . "\n");
+            }
+            else {
+                $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, anno_accademico) VALUES\n";
+                $query .= utf8_decode('(' . $_id . ',"' .
+                                        addslashes($_nome) . '","' .
+                                        '0","' .
+                                        addslashes($_canale) . '","' .
+                                        addslashes($_anno) . '","' .
+                                        addslashes($_semestre) . '","' .
+                                        addslashes($_cfu) . '", ' .
+                                        $primary_id_cds . ', "' .
+                                        $year . '");');
             }
 
-            if(!empty($_docente2) && (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
+            if (!$mysqli->query($query)) 
+                die($mysqli->error);
+
+            // TODO: fix and use
+            /*if(!empty($_docente2) && (!$mysqli->query('SELECT codice_gomp FROM insegnamento '.
                                 ' WHERE codice_gomp=' . $_id .
                                 '  AND anno_accademico="'.$year.
                                 '" AND canale="' . $_canale .
-                                '" AND id_cds="' . $unict_id_cds .
+                                '" AND id_cds="' . $primary_id_cds .
                                 '" AND id_modulo="' . $_id_modulo .
                                 '" AND docente="' . $_docente2 .'"')->num_rows) ) {
+
                 $query  = "INSERT INTO insegnamento (codice_gomp, nome, id_modulo, canale, anno, semestre, cfu, id_cds, ssd, tipo, docente, assegn, anno_accademico) VALUES\n";
                 $query .= utf8_decode('(' . $_id . ',"' .
                                       addslashes($_nome) . '","' .
@@ -287,12 +270,9 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
                                       addslashes($_assegn2) . '", "' .
                                       $year . '");');
 
-                if (!$mysqli->query($query)) {
+                if (!$mysqli->query($query))
                     die($mysqli->error);
-                }
-            }
-
-            $_docente2 = "";
+            }*/
 
             if ($emptyOPIS == 'img') {
                 $link_opis="Scheda non autorizzata alla pubblicazione";
@@ -319,7 +299,6 @@ function oldinsegnamento($unict_id_cds, $primary_id_cds) {
 
                 $primary_id = get_primary_id_ins($params[1], $_canale);
 
-                //oldschede(cod_corso, cod_gomp canale);
                 if($year != "2015/2016")
                     oldschede($primary_id, $params[0], $params[1], $params[2]);
                 else

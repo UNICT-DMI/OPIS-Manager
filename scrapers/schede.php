@@ -217,43 +217,33 @@ function schede($primary_id, $unict_id_cds, $id_gomp, $id_modulo, $canale)
   $sugg       = json_encode($sugg);
   $sugg_nf    = json_encode($sugg_nf);
 
-  $res = $mysqli->query('SELECT * ' .
-    ' FROM schede_opis ' .
-    ' WHERE id_insegnamento="' . $primary_id .
-    '" AND  anno_accademico="' . $year . '";');
+  $query = "INSERT INTO `schede_opis` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `anno_accademico`) VALUES";
+  $query .= "\n";
+  $query .= utf8_decode('(' .
+    '"' . str_replace('"', "'", $totaleSchede)    . '", ' .
+    '"' . str_replace('"', "'", $totaleSchede_nf) . '", ' .
+    '"' . str_replace('"', "'", $femmine)         . '", ' .
+    '"' . str_replace('"', "'", $femmine_nf)      . '", ' .
+    '"' . str_replace('"', "'", $fuoriCorso)      . '", ' .
+    '"' . str_replace('"', "'", $inattivi)        . '", ' .
+    '"' . str_replace('"', "'", $inattivi_nf)     . '", ' .
+    "'" . $eta                                    . "', " .
+    "'" . $anno_iscr                              . "', " .
+    "'" . $n_studenti                             . "', " .
+    "'" . $ragg_uni                               . "', " .
+    "'" . $studio_gg                              . "', " .
+    "'" . $studio_tot                             . "', " .
+    "'" . $domande                                . "', " .
+    "'" . $domande_nf                             . "', " .
+    "'" . str_replace("'", "\'", $motivi_nf)      . "', " .
+    "'" . str_replace("'", "\'", $sugg)           . "', " .
+    "'" . str_replace("'", "\'", $sugg_nf)        . "', " .
+    '"' . $primary_id                                . '", ' .
+    '"' . $year                                   . '");');
 
-  if ($res && $res->num_rows == 0) {
-    $query = "INSERT INTO `schede_opis` (`totale_schede`, `totale_schede_nf`, `femmine`, `femmine_nf`, `fc`, `inatt`, `inatt_nf`, `eta`, `anno_iscr`, `num_studenti`, `ragg_uni`, `studio_gg`, `studio_tot`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `anno_accademico`) VALUES";
-    $query .= "\n";
-    $query .= utf8_decode('(' .
-      '"' . str_replace('"', "'", $totaleSchede)    . '", ' .
-      '"' . str_replace('"', "'", $totaleSchede_nf) . '", ' .
-      '"' . str_replace('"', "'", $femmine)         . '", ' .
-      '"' . str_replace('"', "'", $femmine_nf)      . '", ' .
-      '"' . str_replace('"', "'", $fuoriCorso)      . '", ' .
-      '"' . str_replace('"', "'", $inattivi)        . '", ' .
-      '"' . str_replace('"', "'", $inattivi_nf)     . '", ' .
-      "'" . $eta                                    . "', " .
-      "'" . $anno_iscr                              . "', " .
-      "'" . $n_studenti                             . "', " .
-      "'" . $ragg_uni                               . "', " .
-      "'" . $studio_gg                              . "', " .
-      "'" . $studio_tot                             . "', " .
-      "'" . $domande                                . "', " .
-      "'" . $domande_nf                             . "', " .
-      "'" . str_replace("'", "\'", $motivi_nf)      . "', " .
-      "'" . str_replace("'", "\'", $sugg)           . "', " .
-      "'" . str_replace("'", "\'", $sugg_nf)        . "', " .
-      '"' . $primary_id                                . '", ' .
-      '"' . $year                                   . '");');
-
-    if (!$mysqli->query($query)) {
+    if (!$mysqli->query($query))
       die($mysqli->error);
-    }
 
-    // echo $query;
-
-  }
 }
 
 function oldschede($primary_id, $unict_id_cds, $id_gomp, $canale)
@@ -411,34 +401,23 @@ function oldschede($primary_id, $unict_id_cds, $id_gomp, $canale)
     $inattivi_nf = 0;
   }
 
-  $res = $mysqli->query('SELECT * ' .
-    ' FROM schede_opis ' .
-    ' WHERE id_insegnamento="' . $primary_id .
-    '" AND  anno_accademico="' . $year . '";');
+  $query = "INSERT INTO `schede_opis` (`totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `anno_accademico`) VALUES";
+  $query .= "\n";
+  $query .= utf8_decode('(' .
+    '"' . str_replace('"', "'",  $totaleSchede_f)  . '", ' .
+    '"' . str_replace('"', "'",  $totaleSchede_nf) . '", ' .
+    '"' . str_replace('"', "'",  $fuoriCorso)      . '", ' .
+    '"' . str_replace('"', "'",  $inattivi)       . '", ' .
+    '"' . str_replace('"', "'",  $inattivi_nf)    . '", ' .
+    "'" .                        $valutazioni_f   . "', " .
+    "'" .                        $valutazioni_nf  . "', " .
+    "'" . str_replace("'", "\'", $motivi_nf)      . "', " .
+    "'" . str_replace("'", "\'", $sugg_f)         . "', " .
+    "'" . str_replace("'", "\'", $sugg_nf)        . "', " .
+    '"' .                        $primary_id      . '", ' .
+    '"' .                        $year            . '");');
 
-  if ($res && $res->num_rows == 0) {
-
-    $query = "INSERT INTO `schede_opis` (`totale_schede`, `totale_schede_nf`, `fc`, `inatt`, `inatt_nf`, `domande`, `domande_nf`, `motivo_nf`, `sugg`, `sugg_nf`, `id_insegnamento`, `anno_accademico`) VALUES";
-    $query .= "\n";
-    $query .= utf8_decode('(' .
-      '"' . str_replace('"', "'",  $totaleSchede_f)  . '", ' .
-      '"' . str_replace('"', "'",  $totaleSchede_nf) . '", ' .
-      '"' . str_replace('"', "'",  $fuoriCorso)      . '", ' .
-      '"' . str_replace('"', "'",  $inattivi)       . '", ' .
-      '"' . str_replace('"', "'",  $inattivi_nf)    . '", ' .
-      "'" .                        $valutazioni_f   . "', " .
-      "'" .                        $valutazioni_nf  . "', " .
-      "'" . str_replace("'", "\'", $motivi_nf)      . "', " .
-      "'" . str_replace("'", "\'", $sugg_f)         . "', " .
-      "'" . str_replace("'", "\'", $sugg_nf)        . "', " .
-      '"' .                        $primary_id      . '", ' .
-      '"' .                        $year            . '");');
-
-    if (!$mysqli->query($query)) {
+    if (!$mysqli->query($query)) 
       die($mysqli->error);
-    }
 
-    // echo $query;
-
-  }
 }

@@ -16,6 +16,11 @@ $mysqli = new mysqli($host, $username, $password, $db_name);
 if ($mysqli->connect_error)
     die('Errore di connessione');
 
+$mysqli->query("DELETE FROM schede_opis");
+$mysqli->query("DELETE FROM insegnamento");
+$mysqli->query("DELETE FROM corso_di_studi");
+$mysqli->query("DELETE FROM dipartimento");
+
 function curl_exec_utf8($ch) {
   $data = curl_exec($ch);
   if (!is_string($data)) return $data;

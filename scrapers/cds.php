@@ -24,14 +24,10 @@ function oldcds($unict_id_dip, $primary_id_dip) // come cds() ma serve per gli a
 
         $link_opis = $xpath->query('/html/body/table[2]/tr/td/table/tr[' . $j . ']/td[10]/a')->item(0)->attributes->item(0)->textContent; // Link OPIS
 
-        if (!$mysqli->query('SELECT id FROM corso_di_studi WHERE unict_id=' . $unict_id_cds . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $unict_id_dip . ';')->num_rows) {
-            $query  = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, id_dipartimento) VALUES\n";
-            $query .= utf8_decode('("' . addslashes($unict_id_cds) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '","' . addslashes($primary_id_dip) . '");');
-
-            if (!$mysqli->query($query)) {
-                die($mysqli->error);
-            }
-        }
+        $query  = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, id_dipartimento) VALUES\n";
+        $query .= utf8_decode('("' . addslashes($unict_id_cds) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '","' . addslashes($primary_id_dip) . '");');
+        if (!$mysqli->query($query)) 
+            die($mysqli->error);
 
         $id = get_primary_id($unict_id_cds, 'corso_di_studi');
 
@@ -60,14 +56,11 @@ function cds($unict_id_dip, $primary_id_dip)
 
         $_nome = html_entity_decode(utf8_decode($_nome)); // fix accents
 
-        if (!$mysqli->query('SELECT id FROM corso_di_studi WHERE unict_id=' . $unict_id_cds . ' AND anno_accademico="' . $year . '" AND id_dipartimento=' . $unict_id_dip . ';')->num_rows) {
-            $query = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, id_dipartimento) VALUES\n";
-            $query .= utf8_decode('("' . addslashes($unict_id_cds) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($primary_id_dip) . '");');
+        $query = "INSERT INTO corso_di_studi (unict_id, anno_accademico, nome, classe, id_dipartimento) VALUES\n";
+        $query .= utf8_decode('("' . addslashes($unict_id_cds) . '","' . $year . '", "' . addslashes($_nome) . '", "' . addslashes($_classe) . '", "' . addslashes($primary_id_dip) . '");');
 
-            if (!$mysqli->query($query)) {
-                die($mysqli->error);
-            }
-        }
+        if (!$mysqli->query($query)) 
+            die($mysqli->error);
 
         $id = get_primary_id($unict_id_cds, 'corso_di_studi');
 
