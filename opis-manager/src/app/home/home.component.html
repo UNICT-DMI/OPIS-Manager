@@ -42,7 +42,7 @@
         <app-academic-year
           *ngIf="currentOption === 1"
           [vCds]="vCds"
-          [selectedCds]="selectedCds"
+          [cdsSchede]="cdsWithSchede"
         ></app-academic-year>
 
         <!-- Insegnamento -->
@@ -51,7 +51,6 @@
           [teachings]="teachings"
           [vCds]="vCds"
           [nCds]="nCds"
-          [selectedCds]="selectedCds"
         ></app-teaching>
 
         <br>

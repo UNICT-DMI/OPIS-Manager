@@ -1,18 +1,16 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { Chart } from 'chart.js';
+import { CDS } from '../api.model';
 
 @Component({
   selector: 'app-cds',
   templateUrl: './cds.component.html',
   styleUrls: ['./cds.component.scss']
 })
-export class CdsComponent implements OnInit, OnChanges {
-  @Input() vCds;
-  @Input() selectedCds;
+export class CdsComponent implements OnChanges {
 
-  ngOnInit(): void {
-    this.showCdsBoxplot();
-  }
+  @Input() vCds: { [year: string]: number[]};
+  @Input() selectedCds: CDS;
 
   ngOnChanges(changes: SimpleChanges): void {
     this.showCdsBoxplot();
@@ -24,9 +22,12 @@ export class CdsComponent implements OnInit, OnChanges {
       // define label tree
       labels: [''],
       datasets: [
-        { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps, data: [this.vCds[this.selectedCds][0]] },
-        { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps, data: [this.vCds[this.selectedCds][1]] },
-        { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps, data: [this.vCds[this.selectedCds][2]] },
+        { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps,
+          data: [Object.values(this.vCds).map(array => array[0])] },
+        { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps,
+          data: [Object.values(this.vCds).map(array => array[1])] },
+        { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps,
+          data: [Object.values(this.vCds).map(array => array[2])] },
       ],
     };
 

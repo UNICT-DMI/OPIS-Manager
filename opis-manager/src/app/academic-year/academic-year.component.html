@@ -5,7 +5,7 @@
     <select
       class="btn btn-opis text-center switch-years"
       [(ngModel)]="selectedYear"
-      (ngModelChange)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()"
+      (ngModelChange)="showAcademicYearChartForSelectedYear()"
     >
       <option class="text-center">--</option>
       <option class="text-center" *ngFor="let year of CONF.years" [ngValue]="year"> {{ year }} </option>
@@ -31,7 +31,7 @@
           </div>
 
           <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
-            [(ngModel)]="subject" (change)="getSchedeOfCdsForSelectedYearAndShowAcademicYearChart()">
+            [(ngModel)]="subject" (change)="showAcademicYearChartForSelectedYear()">
         </div>
       </li>
     </ul>

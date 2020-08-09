@@ -40,7 +40,7 @@ export interface Teaching {
   ssd: string;
   assegn: string;
   id_cds: number;
-  schedeopis: SchedaOpis[];
+  schedeopis: SchedaOpis;
 }
 
 export interface SchedaOpis {
@@ -59,7 +59,7 @@ export interface SchedaOpis {
   ragg_uni: any;
   studio_gg: any;
   studio_tot: any;
-  domande: any;
+  domande: number[][];
   domande_nf: any;
   motivo_nf: any;
   sugg: any;

@@ -23,7 +23,6 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   @Input() teachings: Teaching[];
   @Input() vCds: { [year: string]: number[]};
   @Input() nCds: { [year: string]: number};
-  @Input() selectedCds: number;
 
   selectedTeachingSchede: TeachingSchede[];
   selectedTeaching: number = null;

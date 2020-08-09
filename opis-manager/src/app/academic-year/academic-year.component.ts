@@ -1,10 +1,12 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { HttpClient } from '@angular/common/http';
 import { GraphService } from '../graph.service';
 import { Chart } from 'chart.js';
 import CONF from '../../assets/config.json';
-import { Config } from '../utils.model';
+import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
+import { CDS } from '../api.model';
+import { mean } from 'mathjs';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-academic-year',
@@ -13,10 +15,10 @@ import { Config } from '../utils.model';
 })
 export class AcademicYearComponent implements OnChanges {
 
-  @Input() vCds;
-  @Input() selectedCds;
+  @Input() vCds: { [year: string]: number[]};
+  @Input() cdsSchede: CDS[];
 
-  private teachings: any[];
+  private teachings: TeachingSummary[];
   public isAdmin = false;
   private charts: Chart[] = [];
 
@@ -47,11 +49,10 @@ export class AcademicYearComponent implements OnChanges {
 
   switcherValues = 1;
   subject: string;
-  selectedYear: string;
+  selectedYear = '--';
 
 
   constructor(
-    private readonly http: HttpClient,
     private readonly graphService: GraphService,
   ) {
     this.v1meanDeviation = this.v2meanDeviation = this.v3meanDeviation = 1;
@@ -59,8 +60,8 @@ export class AcademicYearComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('selectedCds')) {
-      this.getSchedeOfCdsForSelectedYearAndShowAcademicYearChart();
+    if (changes.hasOwnProperty('cdsSchede')) {
+      this.showAcademicYearChartForSelectedYear();
     }
   }
 
@@ -69,62 +70,44 @@ export class AcademicYearComponent implements OnChanges {
     this.switcherValues = v;
   }
 
-  public getSchedeOfCdsForSelectedYearAndShowAcademicYearChart(): void {
+  public showAcademicYearChartForSelectedYear(): void {
     if (this.selectedYear !== '--') {
-      this.http.get(CONF.apiUrl + 'schede?cds=' + this.selectedCds + '&anno_accademico=' + this.selectedYear)
-        .subscribe((data) => {
-        this.teachings = this.graphService.parseInsegnamentoSchede(data, this.subject).sort((a, b) => {
-          if (a.anno === b.anno) {
-            if (a.nome_completo < b.nome_completo) {
-              return -1;
-            } else if (a.nome_completo > b.nome_completo) {
-              return 1;
-            } else {
-              return 0;
-            }
-          } else if (a.anno < b.anno) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
+        this.teachings = this.graphService.parseInsegnamentoSchede(
+          this.cdsSchede.filter(cds => cds.anno_accademico === this.selectedYear)
+            .flatMap(cds => cds.insegnamenti), this.subject)
+            .sort((t1, t2) => {
+              if (t1.anno === t2.anno) {
+                if (t1.nome_completo < t2.nome_completo) {
+                  return -1;
+                } else if (t1.nome_completo > t2.nome_completo) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              } else if (t1.anno < t2.anno) {
+                return -1;
+              } else {
+                return 1;
+              }
+          });
 
-        let means: any;
-        let values: any;
-        [means, values] = this.graphService.elaborateFormula(this.teachings);
+        let means: number[];
+        let values: number[][];
+        [means, values] = this.graphService.elaborateFormula(this.teachings
+          .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ));
 
         this.showAcademicYearChart(values);
-      });
     }
   }
 
-  private showAcademicYearChart(values): void {
+  private showAcademicYearChart(values: number[][]): void {
     const minSchede = Math.min.apply(Math, this.teachings.map((o) => o.tot_schedeF));
     const maxSchede = Math.max.apply(Math, this.teachings.map((o) => o.tot_schedeF));
 
-    this.teachings.splice(0, 0, {
-      nome: '1 anno',
-      anno: '1',
-      docente: '',
-      tot_schedeF: minSchede
-    });
-
-    values[0].splice(0, 0, '0');
-    values[1].splice(0, 0, '0');
-    values[2].splice(0, 0, '0');
-
+    this.insertYear(values, '1', 0);
     for (let i = 2; i < this.teachings.length; i++) {
       if (this.teachings[i].anno !== this.teachings[i - 1].anno) {
-        const year = this.teachings[i].anno;
-        this.teachings.splice(i, 0, {
-          anno: year,
-          nome: year + ' anno',
-          docente: '',
-          tot_schedeF: minSchede
-        });
-        values[0].splice(i, 0, '0');
-        values[1].splice(i, 0, '0');
-        values[2].splice(i, 0, '0');
+        this.insertYear(values, this.teachings[i].anno, i);
       }
     }
 
@@ -199,7 +182,7 @@ export class AcademicYearComponent implements OnChanges {
               type: 'line',
               mode: 'vertical',
               scaleID: 'x-axis-0',
-              value: this.vCds[this.selectedCds][c][this.getIndexFromSelectedYear()],
+              value: mean(Object.values(this.vCds).map(array => array[c])),
               borderColor: 'red',
               label: {
                 content: 'Media CDS',
@@ -234,8 +217,23 @@ export class AcademicYearComponent implements OnChanges {
     }
   }
 
-  private getIndexFromSelectedYear(): number {
-    return parseInt(this.selectedYear.charAt(3), 10) - 3;
+  private insertYear(values: number[][], year: string, position: number) {
+    this.teachings.splice(position, 0, {
+      nome: year + ' anno',
+      nome_completo: year + ' anno',
+      anno: year,
+      canale: '',
+      nome_modulo: '',
+      id_modulo: 0,
+      docente: '',
+      domande: null,
+      tot_schedeF: 0,
+      tot_schedeNF: 0
+    });
+
+    values[0].splice(position, 0, 0);
+    values[1].splice(position, 0, 0);
+    values[2].splice(position, 0, 0);
   }
 
   private getColorTeachings(maxSchede: number, minSchede: number): string[] {

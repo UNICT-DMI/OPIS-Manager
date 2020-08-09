@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { WeightService } from './weight.service';
-import { Teaching, SchedaOpis } from './api.model';
+import { Teaching } from './api.model';
 import { mean } from 'mathjs';
+import { TeachingSummary, SchedaOpis } from './utils.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,6 @@ export class GraphService {
   }
 
   public applyWeights(scheda: SchedaOpis): number[] {
-
     const questionsWeights = this.weightService.getQuestionsWeights();
     const answersWeights = this.weightService.getAnswersWeights();
 
@@ -43,20 +43,6 @@ export class GraphService {
     let V1 = 0;
     let V2 = 0;
     let V3 = 0;
-
-    scheda.domande = JSON.parse(scheda.domande);
-    const domandeConv: number[][] = [];
-    for (const i in scheda.domande) {
-      if (scheda.domande[i] === 'u00a0') {
-        continue;
-      }
-      const array: number[] = [];
-      for (let j = 0; j < 4; j++) {
-        array.push(parseInt(scheda.domande[i], 10));
-      }
-      domandeConv.push(array);
-    }
-    scheda.domande = domandeConv;
 
     if (N > 5) {
 
@@ -82,56 +68,58 @@ export class GraphService {
     return [parseFloat(V1.toFixed(2)), parseFloat(V2.toFixed(2)), parseFloat(V3.toFixed(2))];
   }
 
-  public parseInsegnamentoSchede(schede, subject: string = null): any[] {
-    const insegnamenti: any = [];
-    for (let i = 0; i < schede.length; i++) {
+  public parseInsegnamentoSchede(insegnamenti: Teaching[], subjectToSearch?: string): TeachingSummary[] {
+    const insegnamentiVal: TeachingSummary[] = [];
+    for (let i = 0; i < insegnamenti.length; i++) {
 
-      if (schede[i].tot_schedeF < 6) { continue; }
-      if (subject != null && schede[i].nome.toUpperCase().indexOf(subject.toUpperCase()) === -1) { continue; }
+      if (insegnamenti[i].schedeopis == null) { continue; }
+      if (subjectToSearch != null && insegnamenti[i].nome.toUpperCase().indexOf(subjectToSearch.toUpperCase()) === -1) { continue; }
 
-      insegnamenti[i] = {};
-      insegnamenti[i].nome = schede[i].nome;
-      insegnamenti[i].nome_completo = schede[i].nome;
-      insegnamenti[i].anno = schede[i].anno;
+      insegnamentiVal[i] = {} as TeachingSummary;
+      insegnamentiVal[i].nome = insegnamenti[i].nome;
+      insegnamentiVal[i].nome_completo = insegnamenti[i].nome;
 
-      if (insegnamenti[i].nome.length > 35) {
-        insegnamenti[i].nome = insegnamenti[i].nome.substring(0, 35) + '... ';
-        insegnamenti[i].nome += insegnamenti[i].nome.substring(insegnamenti[i].nome.length - 5, insegnamenti[i].nome.length);
+      if (insegnamentiVal[i].nome.length > 35) {
+        insegnamentiVal[i].nome = insegnamentiVal[i].nome.substring(0, 35) + '... ';
+        insegnamentiVal[i].nome += insegnamentiVal[i].nome.substring(insegnamentiVal[i].nome.length - 5, insegnamentiVal[i].nome.length);
       }
 
-      if (schede[i].canale.indexOf('no') === -1) {
-        insegnamenti[i].nome += ' (' + schede[i].canale + ')';
-        insegnamenti[i].nome_completo += ' (' + schede[i].canale + ')';
+
+      if (insegnamenti[i].id_modulo !== 0 && insegnamenti[i].nome_modulo != null) {
+        insegnamentiVal[i].nome += ' - ' + insegnamenti[i].nome_modulo;
+        insegnamentiVal[i].nome_completo += ' -' + insegnamenti[i].nome_modulo;
       }
 
-      if (schede[i].id_modulo.length > 3 && schede[i].id_modulo !== '0') {
-        insegnamenti[i].nome += ' (' + schede[i].id_modulo + ')';
-        insegnamenti[i].nome_completo += ' (' + schede[i].id_modulo + ')';
+      if (insegnamenti[i].canale !== 'no') {
+        insegnamentiVal[i].nome += ' (' + insegnamenti[i].canale + ')';
+        insegnamentiVal[i].nome_completo += ' (' + insegnamenti[i].canale + ')';
       }
+      insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
+      insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede_nf;
 
-      insegnamenti[i].nome += ' - ' + schede[i].tot_schedeF;
-      insegnamenti[i].nome_completo += ' - ' + schede[i].tot_schedeF;
-      insegnamenti[i].canale = schede[i].canale;
-      insegnamenti[i].id_modulo = schede[i].id_modulo;
-      insegnamenti[i].docente = schede[i].docente;
-      insegnamenti[i].tot_schedeF = schede[i].tot_schedeF;
-      insegnamenti[i].tot_schedeNF = schede[i].tot_schedeNF;
+      insegnamentiVal[i].anno = insegnamenti[i].anno;
+      insegnamentiVal[i].canale = insegnamenti[i].canale;
+      insegnamentiVal[i].id_modulo = insegnamenti[i].id_modulo;
+      insegnamentiVal[i].nome_modulo = insegnamenti[i].nome_modulo;
+      insegnamentiVal[i].docente = insegnamenti[i].docente;
+      insegnamentiVal[i].tot_schedeF = insegnamenti[i].schedeopis.totale_schede;
+      insegnamentiVal[i].tot_schedeNF = insegnamenti[i].schedeopis.totale_schede_nf;
 
-      insegnamenti[i].domande = [];
-      insegnamenti[i].domande[0] = [];
+      insegnamentiVal[i].domande = insegnamenti[i].schedeopis.domande;
+      /*insegnamentiVal[i].domande[0] = [];
 
       let index = 0;
-      for (let j = 0; j < schede[i].domande.length; j++) {
+      for (let j = 0; j < insegnamenti[i].domande.length; j++) {
         if (j % 5 === 0 && j !== 0) {
           index++;
-          insegnamenti[i].domande[index] = [];
+          insegnamentiVal[i].domande[index] = [];
         }
 
-        insegnamenti[i].domande[index].push(schede[i].domande[j]);
-      }
+        insegnamentiVal[i].domande[index].push(insegnamenti[i].domande[j]);
+      }*/
     }
 
-    return insegnamenti.filter((el) => el != null); // remove empty slot
+    return insegnamentiVal.filter((el) => el != null); // remove empty slot
   }
 
 }

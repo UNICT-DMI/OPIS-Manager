@@ -22,10 +22,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   departments: Department[];
   cds: CDS[];
   teachings: Teaching[];
-
   selectedCds: number;
+
   vCds: { [year: string]: number[]} = {};
   nCds: { [year: string]: number} = {};
+  cdsWithSchede: CDS[];
 
   currentOption: number;
 
@@ -74,8 +75,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private getSelectedCdsStats(cds: CDS): void {
     this.apiService.getCDSCoarse(cds.unict_id).subscribe(cdsArray => {
+      this.cdsWithSchede = cdsArray;
       const cdsSchede = cdsArray.flatMap(cdsCoarse => cdsCoarse.insegnamenti)
-      .filter(insegnamento => insegnamento.schedeopis.length > 0)
+      .filter(insegnamento => insegnamento.schedeopis != null)
       .flatMap(insegnamento => insegnamento.schedeopis);
       const annoSchede = from(cdsSchede).pipe(
         groupBy(scheda => scheda.anno_accademico),

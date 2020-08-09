@@ -50,8 +50,9 @@ export class ApiService implements OnInit {
     }
     return this.http.get<Teaching[]>(this.CONF.apiUrl + 'insegnamento/coarse/' + codiceGomp + '/schedeopis' + extra)
     .pipe(
-      map(insegnamenti => insegnamenti.flatMap(insegnamento => insegnamento.schedeopis)),
-      filter(schedeopis => schedeopis.length > 0)
+      map(insegnamenti =>
+        insegnamenti.map(insegnamento => insegnamento.schedeopis)
+          .filter(schedeopis => schedeopis != null))
     );
   }
 
