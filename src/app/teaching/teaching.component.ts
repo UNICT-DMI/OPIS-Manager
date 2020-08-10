@@ -141,7 +141,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
           labels: yearsArray,
           datasets: [
             { label: 'V' + i, ...colorV1, data: matr[i - 1] },
-            { label: 'V' + i + ' CDS', ...colorV2, data: Object.values(this.vCds).map(array => array[i - 1]) },
+            { label: 'V' + i + ' CDS', ...colorV2, data: Object.values(this.vCds).map(array => this.graphService.round(array[i - 1])) },
             { label: 'Media Insegnamento', ...colorV3, data: teachingMean[i - 1], pointRadius: 1 },
             { label: 'Media CDS', ...colorV4, data: cdsMean[i - 1], pointRadius: 1 },
           ]
