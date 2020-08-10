@@ -14,6 +14,7 @@ export class RegistrationComponent implements OnInit {
   public passwordConfirmation: string;
 
   private passwordRegex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
+  // tslint:disable-next-line: max-line-length
   private emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
   constructor() { }
@@ -50,7 +51,8 @@ export class RegistrationComponent implements OnInit {
       alert('La password è necessaria');
       errors = true;
     } else if (!this.passwordRegex.test(this.password)) {
-      alert('La password non è valida: la password deve essere almeno 8 caratteri e comprendere almeno un carattere minuscolo, uno maiuscolo ed un numero.')
+      alert('La password non è valida: la password deve essere almeno 8 caratteri ' +
+      + 'e comprendere almeno un carattere minuscolo, uno maiuscolo ed un numero.');
       errors = true;
     } else if (this.password !== this.passwordConfirmation) {
       alert('Le password non corrispondono');

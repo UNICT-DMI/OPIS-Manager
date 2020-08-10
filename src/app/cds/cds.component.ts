@@ -13,7 +13,9 @@ export class CdsComponent implements OnChanges {
   @Input() selectedCds: CDS;
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.showCdsBoxplot();
+    if (changes.hasOwnProperty('vCds')) {
+      this.showCdsBoxplot();
+    }
   }
 
   public showCdsBoxplot(): void {
