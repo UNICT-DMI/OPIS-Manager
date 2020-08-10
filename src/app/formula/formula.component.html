@@ -212,32 +212,32 @@
 
   <ng-template #answerslider>
     <div id="answer-sliders" class="answer-slider container">
-      <div class="row">
-        <div class="col-2"><p>DECISAMENTE NO</p></div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">DECISAMENTE NO</div>
         <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[0]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
-      <div class="row">
-        <div class="col-2"><p>PIÙ NO CHE SÌ</p></div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">PIÙ NO CHE SÌ</div>
         <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[1]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
-      <div class="row">
-        <div class="col-2"><p>PIÙ SÌ CHE NO</p></div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">PIÙ SÌ CHE NO</div>
         <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[2]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
-      <div class="row">
-        <div class="col-2"><p>DECISAMENTE SÌ</p></div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">DECISAMENTE SÌ</div>
         <div class="col-10 custom-slider">
           <ng5-slider [(value)]="answersWeights[3]" [options]="answerSliderOptions"></ng5-slider>
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-opis pull-right" (click)="changeAnswersWeights()">Salva modifiche</button>
+    <button type="button" class="btn btn-opis pull-right mt-3" (click)="changeAnswersWeights()">Salva modifiche</button>
   </ng-template>
 
   <br>

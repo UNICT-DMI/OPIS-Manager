@@ -174,7 +174,7 @@ export class AcademicYearComponent implements OnChanges {
             label: (data) => ' ' + docenti[data.index] + ' ' + data.value,
           }
         },
-        responsive: false,
+        responsive: true,
         legend: { display: false },
         annotation: {
           annotations: [

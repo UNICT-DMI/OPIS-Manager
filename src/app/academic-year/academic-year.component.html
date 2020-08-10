@@ -49,10 +49,10 @@
 
     <div class="container" *ngIf="isAdmin === true" id="deviation-sliders">
       <div class="row">
-        <div class="col-2">
-          <p>Scostamento media <b>V{{ switcherValues }}</b></p>
+        <div class="col-3 my-auto">
+          Scostamento media <b>V{{ switcherValues }}</b>
         </div>
-        <div class="col-10">
+        <div class="col-9">
           <ng5-slider [(value)]="v1meanDeviation" [options]="meanSliderOptions" (change)="updateMeanTeachings()"
             *ngIf="switcherValues === 1"></ng5-slider>
           <ng5-slider [(value)]="v2meanDeviation" [options]="meanSliderOptions" (change)="updateMeanTeachings()"
@@ -62,10 +62,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">
-          <p>Scostamento numerosità</p>
+        <div class="col-3 my-auto">
+          Scostamento numerosità
         </div>
-        <div class="col-10">
+        <div class="col-9">
           <ng5-slider [(value)]="numerosityDeviation" [options]="numerositySliderOptions"
             (change)="updateNumerosityTeachings"></ng5-slider>
         </div>

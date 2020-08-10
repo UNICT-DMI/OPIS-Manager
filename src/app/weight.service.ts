@@ -37,7 +37,7 @@ export class WeightService {
     return this.questionsWeights;
   }
 
-  public getQuestionWeight(index: number) {
+  public getQuestionWeight(index: number): number {
     return this.questionsWeights[index];
   }
 
@@ -53,7 +53,7 @@ export class WeightService {
     return this.answersWeights;
   }
 
-  public getAnswerWeight(index: number) {
+  public getAnswerWeight(index: number): number {
     return this.answersWeights[index];
   }
 

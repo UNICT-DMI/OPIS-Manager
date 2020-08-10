@@ -11,7 +11,7 @@ export class FormulaComponent {
 
   public questionsWeights: number[];
   public answersWeights: number[];
-  public isAdmin = true;
+  public isAdmin = false;
 
 
   constructor(
