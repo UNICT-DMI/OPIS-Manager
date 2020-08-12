@@ -11,17 +11,22 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" routerLink="/formula" role="tab" aria-controls="formula" aria-selected="false">Formula</a>
+          <a class="nav-link" id="formula-tab" data-toggle="tab" routerLink="/formula" role="tab" aria-controls="formula" aria-selected="false">Formula</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="contact-tab" data-toggle="tab" routerLink="/info" role="tab" aria-controls="info" aria-selected="false">Info</a>
+          <a class="nav-link" id="info-tab" data-toggle="tab" routerLink="/info" role="tab" aria-controls="info" aria-selected="false">Info</a>
         </li>
       </ul>
-    </div>
-    <div class="justify-content-end">
-      <a href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank">
-        GitHub <fa-icon [icon]="faGithub" size="lg"></fa-icon>
-      </a>
+      <ul class="navbar-nav nav nav-tabs ml-auto">
+        <li class="nav-item opis-logo-menu">
+          <a class="nav-link" href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank">
+            GitHub <fa-icon [icon]="faGithub" size="lg"></fa-icon>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="info-tab" data-toggle="tab" routerLink="/login" role="tab" aria-controls="info" aria-selected="false">Login</a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

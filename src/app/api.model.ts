@@ -66,3 +66,17 @@ export interface SchedaOpis {
   sugg_nf: any;
   id_insegnamento: number;
 }
+
+export interface Domanda {
+  id: number;
+  peso_standard: number;
+  gruppo: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+}
