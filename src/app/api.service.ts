@@ -64,4 +64,8 @@ export class ApiService implements OnInit {
     return this.http.post<LoginResponse>(this.CONF.apiUrl + 'auth/login', { email, password});
   }
 
+  public refreshToken(token: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.CONF.apiUrl + 'auth/refresh', { token });
+  }
+
 }
