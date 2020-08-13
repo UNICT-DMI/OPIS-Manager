@@ -23,8 +23,11 @@
             GitHub <fa-icon [icon]="faGithub" size="lg"></fa-icon>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="!isLogged">
           <a class="nav-link" id="info-tab" data-toggle="tab" routerLink="/login" role="tab" aria-controls="info" aria-selected="false">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="isLogged">
+          <a class="nav-link" id="info-tab" data-toggle="tab" (click)="logout()" role="tab" aria-controls="info" aria-selected="false">Logout</a>
         </li>
       </ul>
     </div>
