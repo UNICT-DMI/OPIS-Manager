@@ -6,7 +6,6 @@ import CONF from '../../assets/config.json';
 import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
 import { CDS } from '../api.model';
 import { mean } from 'mathjs';
-import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-academic-year',
@@ -19,30 +18,7 @@ export class AcademicYearComponent implements OnChanges {
   @Input() cdsSchede: CDS[];
 
   private teachings: TeachingSummary[];
-  public isAdmin = false;
   private charts: Chart[] = [];
-
-  public v1meanDeviation: number;
-  public v2meanDeviation: number;
-  public v3meanDeviation: number;
-  public meanSliderOptions: Options = {
-    floor: 0,
-    ceil: 10,
-    step: 0.5,
-    minLimit: 0.5,
-    maxLimit: 10,
-    showTicks: true,
-  };
-
-  public numerosityDeviation: number;
-  public numerositySliderOptions: Options = {
-    floor: 5,
-    ceil: 100,
-    step: 5,
-    minLimit: 5,
-    maxLimit: 100,
-    showTicks: true,
-  };
 
   readonly faSearch = faSearch;
   readonly CONF: Config = CONF;
@@ -51,13 +27,9 @@ export class AcademicYearComponent implements OnChanges {
   subject: string;
   selectedYear = '--';
 
-
   constructor(
     private readonly graphService: GraphService,
-  ) {
-    this.v1meanDeviation = this.v2meanDeviation = this.v3meanDeviation = 1;
-    this.numerosityDeviation = 20;
-  }
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('cdsSchede')) {

@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
-import { combineLatest, Observable, Subject, from } from 'rxjs';
-import { map, take, takeUntil, flatMap, groupBy, every, mergeMap, toArray, tap } from 'rxjs/operators';
+import { Subject, from } from 'rxjs';
+import { take, takeUntil, groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { GraphService } from '../graph.service';
 import { ApiService } from '../api.service';
 import { Department, CDS, Teaching } from '../api.model';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -32,10 +32,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   stepsYears: { value: number, legend: string }[] = [];
 
+  private isLogged = false;
+
   constructor(
     private readonly graphService: GraphService,
-    private readonly apiService: ApiService
-  ) { }
+    private readonly apiService: ApiService,
+    private readonly authService: AuthService,
+  ) {
+    this.isLogged = this.authService.authTokenIsPresent();
+  }
 
   ngOnInit(): void {
     this.getAllDepartments();

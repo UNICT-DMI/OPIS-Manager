@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.authTokenIsPresent()) {
-      console.log('prova');
       if (this.authService.authTokenHasExpired()) {
         this.authService.refreshToken();
       }

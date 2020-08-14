@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { WeightService } from './weight.service';
-import { Teaching } from './api.model';
+import { Teaching, Domanda } from './api.model';
 import { mean } from 'mathjs';
 import { TeachingSummary, SchedaOpis } from './utils.model';
 
@@ -8,6 +8,7 @@ import { TeachingSummary, SchedaOpis } from './utils.model';
   providedIn: 'root'
 })
 export class GraphService {
+
 
   constructor(
     private readonly weightService: WeightService,
@@ -35,6 +36,7 @@ export class GraphService {
   }
 
   public applyWeights(scheda: SchedaOpis): number[] {
+
     const questionsWeights = this.weightService.getQuestionsWeights();
     const answersWeights = this.weightService.getAnswersWeights();
 
@@ -54,12 +56,13 @@ export class GraphService {
         d += scheda.domande[j][2] * answersWeights[2];   // Più sì che no
         d += scheda.domande[j][3] * answersWeights[3];   // Decisamente sì
 
-        if (j === 0 || j === 1) {                                 // V1 domande: 1,2
-          V1 += ((d / N) * questionsWeights[j]);
-        } else if (j === 3 || j === 4 || j === 8 || j === 9) {    // V2 domande: 4,5,9,10
-          V2 += (d / N) * questionsWeights[j];
-        } else if (j === 2 || j === 5 || j === 6) {               // V3 domande: 3,6,7
-          V3 += (d / N) * questionsWeights[j];
+        const domanda = questionsWeights.filter(question => question.id === j + 1)[0];
+        if (domanda.gruppo === 'V1') {                                 // V1 domande: 1,2
+          V1 += (d / N) * domanda.peso_standard;
+        } else if (domanda.gruppo === 'V2') {    // V2 domande: 4,5,9,10
+          V2 += (d / N) * domanda.peso_standard;
+        } else if (domanda.gruppo === 'V3') {               // V3 domande: 3,6,7
+          V3 += (d / N) * domanda.peso_standard;
         }
       }
 

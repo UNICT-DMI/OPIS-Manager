@@ -23,13 +23,16 @@
       <div *ngIf="selectedCds != null">
         <div class="container-switcher">
           <div class="segmented">
-            <label (click)="enableOption(0);" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
+            <label (click)="enableOption(0)" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
             <label (click)="enableOption(1)" [ngClass]="currentOption === 1  ? 'checked' : ''"><span>Anno accademico</span></label>
             <label (click)="enableOption(2)" [ngClass]="currentOption === 2  ? 'checked' : ''"><span>Insegnamento</span></label>
           </div>
         </div>
 
-        <br>
+        <app-deviation-slider
+          *ngIf="isLogged"
+          [cds]="cds[selectedCds]"
+        ></app-deviation-slider>
 
         <!-- Corso di Studio -->
         <app-cds

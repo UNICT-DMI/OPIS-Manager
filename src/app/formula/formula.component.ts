@@ -1,25 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WeightService } from '../weight.service';
 import { Options } from 'ng5-slider';
+import { AuthService } from '../auth.service';
+import { Domanda } from '../api.model';
 
 @Component({
   selector: 'app-formula',
   templateUrl: './formula.component.html',
   styleUrls: ['./formula.component.scss']
 })
-export class FormulaComponent {
+export class FormulaComponent implements OnInit {
 
-  public questionsWeights: number[];
+  public questionsWeights: Domanda[];
   public answersWeights: number[];
-  public isAdmin = false;
-
+  public isLogged = false;
 
   constructor(
     public readonly weightService: WeightService,
-  ) {
-    this.questionsWeights = weightService.getQuestionsWeights();
-    this.answersWeights = weightService.getAnswersWeights();
-  }
+    public readonly authService: AuthService,
+  ) { }
+
 
   public answerSliderOptions: Options = {
     floor: 1,
@@ -54,13 +54,24 @@ export class FormulaComponent {
   $$ V = \\frac{1}{N} \\sum_{j=1}^{n} \\sum_{i=1}^{4} X_{ij} E_i p_j $$
   `;
 
+  ngOnInit(): void {
+    this.isLogged = this.authService.authTokenIsPresent();
+    this.answersWeights = this.weightService.getAnswersWeights();
+    const temp = setInterval(() => {
+      this.questionsWeights = this.weightService.getQuestionsWeights();
+      if (this.questionsWeights != null) {
+        clearInterval(temp);
+      }
+    }, 1000);
+  }
+
   // TODO: refactor / remove or use Output()
   public switchV(v: number): void {
     this.selectedV = v;
   }
 
   public changeVWeights(): void {
-    if (this.questionsWeights[0] + this.questionsWeights[1] !== 1) {
+    /*if (this.questionsWeights[0] + this.questionsWeights[1] !== 1) {
       alert('La somma di V1 è diversa da 1');
     } else if (this.questionsWeights[3] + this.questionsWeights[4] + this.questionsWeights[8] + this.questionsWeights[9] !== 1) {
       alert('La somma di V2 è diversa da 1');
@@ -68,7 +79,7 @@ export class FormulaComponent {
       alert('La somma di V3 è diversa da 1');
     } else {
       // save in DB
-    }
+    }*/
   }
 
   public changeAnswersWeights(): void {
