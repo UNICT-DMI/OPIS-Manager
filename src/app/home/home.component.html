@@ -21,44 +21,45 @@
       </ul>
 
       <div *ngIf="selectedCds != null">
-        <div class="container-switcher">
-          <div class="segmented">
-            <label (click)="enableOption(0)" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
-            <label (click)="enableOption(1)" [ngClass]="currentOption === 1  ? 'checked' : ''"><span>Anno accademico</span></label>
-            <label (click)="enableOption(2)" [ngClass]="currentOption === 2  ? 'checked' : ''"><span>Insegnamento</span></label>
+        <div class="row">
+          <div class="container-switcher">
+            <div class="segmented">
+              <label (click)="enableOption(0)" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
+              <label (click)="enableOption(1)" [ngClass]="currentOption === 1  ? 'checked' : ''"><span>Anno accademico</span></label>
+              <label (click)="enableOption(2)" [ngClass]="currentOption === 2  ? 'checked' : ''"><span>Insegnamento</span></label>
+            </div>
           </div>
         </div>
 
-        <app-deviation-slider
-          *ngIf="isLogged"
+        <div class="row" *ngIf="isLogged" style="display: contents">
+          <app-deviation-slider
           [cds]="cds[selectedCds]"
-        ></app-deviation-slider>
+          ></app-deviation-slider>
+        </div>
 
-        <!-- Corso di Studio -->
-        <app-cds
-          *ngIf="currentOption === 0"
-          [vCds]="vCds"
-          [selectedCds]="cds[selectedCds]"
-        ></app-cds>
+        <div class="row" *ngIf="currentOption != null">
+          <!-- Corso di Studio -->
+          <app-cds
+            *ngIf="currentOption === 0"
+            [vCds]="vCds"
+            [selectedCds]="cds[selectedCds]"
+          ></app-cds>
 
-        <!-- Anno Accademico -->
-        <app-academic-year
-          *ngIf="currentOption === 1"
-          [vCds]="vCds"
-          [cdsSchede]="cdsWithSchede"
-        ></app-academic-year>
+          <!-- Anno Accademico -->
+          <app-academic-year
+            *ngIf="currentOption === 1"
+            [vCds]="vCds"
+            [cdsSchede]="cdsWithSchede"
+          ></app-academic-year>
 
-        <!-- Insegnamento -->
-        <app-teaching
-          *ngIf="currentOption === 2"
-          [teachings]="teachings"
-          [vCds]="vCds"
-          [nCds]="nCds"
-        ></app-teaching>
-
-        <br>
-        <br>
-        <br>
+          <!-- Insegnamento -->
+          <app-teaching
+            *ngIf="currentOption === 2"
+            [teachings]="teachings"
+            [vCds]="vCds"
+            [nCds]="nCds"
+          ></app-teaching>
+        </div>
 
       </div>
 
