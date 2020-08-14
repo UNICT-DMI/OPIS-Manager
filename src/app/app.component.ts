@@ -21,17 +21,16 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.authService.authTokenIsPresent()) {
-      if (this.authService.authTokenHasExpired()) {
-        this.authService.refreshToken();
-      }
+    if (this.authService.authTokenIsPresent() && !this.authService.authTokenHasExpired()) {
       this.isLogged = true;
     }
+    this.authService.authStatus().subscribe(
+      status => this.isLogged = status
+    );
   }
 
   public logout(): void {
     this.authService.logout();
-    this.isLogged = false;
     this.router.navigate(['/login']);
   }
 

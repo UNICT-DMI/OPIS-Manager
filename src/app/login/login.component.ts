@@ -31,20 +31,17 @@ export class LoginComponent implements OnInit {
   }
 
   public login(): void {
-    this.authService.login(this.email, this.password)/*.subscribe(
-      data => this.saveTokenAndRedirectHome(data),
-      err => {
-        console.log(err);
-        this.error = true;
-      }
-    );*/
+    this.authService.login(this.email, this.password).subscribe(
+      data => this.redirectToHome(),
+      err => this.error = true
+    );
   }
 
   private refreshToken(): void {
-    this.authService.refreshToken()/*.subscribe(
-      data => this.saveTokenAndRedirectHome(data),
-      err => console.log(err)
-    );*/
+    this.authService.refreshToken().subscribe(
+      data => this.redirectToHome(),
+      err => this.error = true
+    );
   }
 
   private redirectToHome(): void {
