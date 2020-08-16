@@ -46,7 +46,7 @@ export class GraphService {
     let V2 = 0;
     let V3 = 0;
 
-    if (N > 5) {
+    if (N >= 5) {
 
       for (let j = 0; j < scheda.domande.length; j++) {
 
@@ -57,11 +57,11 @@ export class GraphService {
         d += scheda.domande[j][3] * answersWeights[3];   // Decisamente sì
 
         const domanda = questionsWeights.filter(question => question.id === j + 1)[0];
-        if (domanda.gruppo === 'V1') {                                 // V1 domande: 1,2
+        if (domanda.gruppo === 'V1') {
           V1 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V2') {    // V2 domande: 4,5,9,10
+        } else if (domanda.gruppo === 'V2') {
           V2 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V3') {               // V3 domande: 3,6,7
+        } else if (domanda.gruppo === 'V3') {
           V3 += (d / N) * domanda.peso_standard;
         }
       }
@@ -84,7 +84,6 @@ export class GraphService {
 
       if (insegnamentiVal[i].nome.length > 35) {
         insegnamentiVal[i].nome = insegnamentiVal[i].nome.substring(0, 35) + '... ';
-        insegnamentiVal[i].nome += insegnamentiVal[i].nome.substring(insegnamentiVal[i].nome.length - 5, insegnamentiVal[i].nome.length);
       }
 
 

@@ -5,7 +5,6 @@ import { Chart } from 'chart.js';
 import CONF from '../../assets/config.json';
 import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
 import { CDS } from '../api.model';
-import { mean } from 'mathjs';
 
 @Component({
   selector: 'app-academic-year',
@@ -130,6 +129,8 @@ export class AcademicYearComponent implements OnChanges {
 
 
     for (const c of Object.keys(ctx)) {
+      console.log(c);
+      console.log(this.vCds);
       // tslint:disable-next-line: variable-name
       const _options = {
         scales: {
@@ -154,7 +155,7 @@ export class AcademicYearComponent implements OnChanges {
               type: 'line',
               mode: 'vertical',
               scaleID: 'x-axis-0',
-              value: mean(Object.values(this.vCds).map(array => array[c])),
+              value: this.vCds[this.selectedYear][c],
               borderColor: 'red',
               label: {
                 content: 'Media CDS',
