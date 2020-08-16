@@ -36,16 +36,41 @@
           </h5>
           <div class="container">
             <div class="row">
-              <div class="col-3" id="v-stats">
-                <p> <b>Valutazione:</b> </p>
-                <p class="card-text" id="v1-stats" [hidden]="switcherValues !== 1"></p>
-                <p class="card-text" id="v2-stats" [hidden]="switcherValues !== 2"></p>
-                <p class="card-text" id="v3-stats" [hidden]="switcherValues !== 3"></p>
+              <div class="col-2"></div>
+              <div class="col-2">
+                <b>Valutazione</b> 
               </div>
-              <div class="col-3">
-                <p> <b>N. schede:</b> </p>
-                <p id="s-stats"> </p>
+              <div class="col-2">
+               <b>N. schede</b> 
               </div>
+            </div>
+            <div class="row">
+              <div class="col-2"><b>Media CDS</b></div>
+              <div class="col-2" id="v1-cds-mean" [hidden]="switcherValues != 1"></div>
+              <div class="col-2" id="v2-cds-mean" [hidden]="switcherValues != 2"></div>
+              <div class="col-2" id="v3-cds-mean" [hidden]="switcherValues != 3"></div>
+              <div class="col-2" id="n-cds-mean"></div>
+            </div>
+            <div class="row">
+              <div class="col-2"><b>Media Ins.</b></div>
+              <div class="col-2" id="v1-ins-mean" [hidden]="switcherValues != 1"></div>
+              <div class="col-2" id="v2-ins-mean" [hidden]="switcherValues != 2"></div>
+              <div class="col-2" id="v3-ins-mean" [hidden]="switcherValues != 3"></div>
+              <div class="col-2" id="n-ins-mean"></div>
+            </div>
+            <div class="row">
+              <div class="col-2"><b>Varianza</b></div>
+              <div class="col-2" id="v1-var" [hidden]="switcherValues != 1"></div>
+              <div class="col-2" id="v2-var" [hidden]="switcherValues != 2"></div>
+              <div class="col-2" id="v3-var" [hidden]="switcherValues != 3"></div>
+              <div class="col-2" id="n-var"></div>
+            </div>
+            <div class="row">
+              <div class="col-2"><b>Dev. std.</b></div>
+              <div class="col-2" id="v1-devstd" [hidden]="switcherValues != 1"></div>
+              <div class="col-2" id="v2-devstd" [hidden]="switcherValues != 2"></div>
+              <div class="col-2" id="v3-devstd" [hidden]="switcherValues != 3"></div>
+              <div class="col-2" id="n-devstd"></div>
             </div>
           </div>
         </div>

@@ -195,28 +195,24 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     console.log(this.cds.scostamento_media);
     console.log(this.cds.scostamento_numerosita);
     for (let i = 0; i < 3; i++) {
-      const selectedVParagraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.filterZero(matr[i]);
-      if (selectedVParagraph) {
-        const mediaCDS = mean(Object.values(this.vCds).map(array => array[i]));
-        const mediaInsegnamento = mean(teachingValues);
-        selectedVParagraph.innerHTML = `Media CDS: ${mediaCDS.toFixed(2)}<br>`;
-        selectedVParagraph.innerHTML += `Media Insegn.: <span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_media)};">${mediaInsegnamento.toFixed(2)}</span><br>`;
-        selectedVParagraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
-        selectedVParagraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
-      }
+      const mediaCDS = mean(Object.values(this.vCds).map(array => array[i]));
+      const mediaInsegnamento = mean(teachingValues);
+      document.getElementById('v' + (i + 1) + '-cds-mean').innerHTML = `${mediaCDS.toFixed(2)}`;
+      // tslint:disable-next-line: max-line-length
+      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_media)};">${mediaInsegnamento.toFixed(2)}</span>`;
+      document.getElementById('v' + (i + 1) + '-var').innerHTML = `${variance(teachingValues).toFixed(3)}`;
+      document.getElementById('v' + (i + 1) + '-devstd').innerHTML = `${std(teachingValues).toFixed(3)}`;
     }
 
-    const schedeParagraph = document.getElementById('s-stats');
-    if (schedeParagraph) {
-      const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
-      const mediaCDS = mean(Object.values(this.nCds));
-      const mediaInsegnamento = mean(teachingSchede);
-      schedeParagraph.innerHTML = `Media CDS: ${mediaCDS.toFixed(2)}<br>`;
-      schedeParagraph.innerHTML += `Media Insegn: <span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_numerosita)}">${mediaInsegnamento.toFixed(2)}</span><br>`;
-      schedeParagraph.innerHTML += `Varianza: ${variance(teachingSchede).toFixed(3)}<br>`;
-      schedeParagraph.innerHTML += `Dev. std.: ${std(teachingSchede).toFixed(3)}`;
-    }
+    const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
+    const nMediaCDS = mean(Object.values(this.nCds));
+    const nMediaInsegnamento = mean(teachingSchede);
+    document.getElementById('n-cds-mean').innerHTML = `${nMediaCDS.toFixed(2)}`;
+    // tslint:disable-next-line: max-line-length
+    document.getElementById('n-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(nMediaInsegnamento, nMediaCDS, this.cds.scostamento_numerosita)}">${nMediaInsegnamento.toFixed(2)}</span>`;
+    document.getElementById('n-var').innerHTML = `${variance(teachingSchede).toFixed(3)}`;
+    document.getElementById('n-devstd').innerHTML = `${std(teachingSchede).toFixed(3)}`;
 
   }
 
