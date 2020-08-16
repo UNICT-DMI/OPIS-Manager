@@ -7,7 +7,7 @@ import { GraphService } from '../graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import CONF from '../../assets/config.json';
-import { Teaching, SchedaOpis } from '../api.model';
+import { Teaching, SchedaOpis, CDS } from '../api.model';
 import { ApiService } from '../api.service';
 import { TeachingSchede } from '../utils.model';
 
@@ -20,9 +20,10 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
 
+  @Input() cds: CDS;
   @Input() teachings: Teaching[];
-  @Input() vCds: { [year: string]: number[]};
-  @Input() nCds: { [year: string]: number};
+  @Input() vCds: { [year: string]: number[] };
+  @Input() nCds: { [year: string]: number };
 
   selectedTeachingSchede: TeachingSchede[];
   selectedTeaching: number = null;
@@ -191,27 +192,42 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private calculateTeachingStats(matr: number[][]): void {
-
+    console.log(this.cds.scostamento_media);
+    console.log(this.cds.scostamento_numerosita);
     for (let i = 0; i < 3; i++) {
       const selectedVParagraph = document.getElementById('v' + (i + 1) + '-stats');
       const teachingValues = this.filterZero(matr[i]);
       if (selectedVParagraph) {
-        selectedVParagraph.innerHTML =  `Media CDS: ${mean(Object.values(this.vCds).map(array => array[i])).toFixed(2)}<br>`;
-        selectedVParagraph.innerHTML += `Media Insegn.: ${mean(teachingValues).toFixed(2)}<br>`;
+        const mediaCDS = mean(Object.values(this.vCds).map(array => array[i]));
+        const mediaInsegnamento = mean(teachingValues);
+        selectedVParagraph.innerHTML = `Media CDS: ${mediaCDS.toFixed(2)}<br>`;
+        selectedVParagraph.innerHTML += `Media Insegn.: <span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_media)};">${mediaInsegnamento.toFixed(2)}</span><br>`;
         selectedVParagraph.innerHTML += `Varianza: ${variance(teachingValues).toFixed(3)}<br>`;
         selectedVParagraph.innerHTML += `Dev. std.: ${std(teachingValues).toFixed(3)}`;
       }
     }
 
     const schedeParagraph = document.getElementById('s-stats');
-    const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
     if (schedeParagraph) {
-      schedeParagraph.innerHTML =  `Media CDS: ${mean(Object.values(this.nCds)).toFixed(2)}<br>`;
-      schedeParagraph.innerHTML += `Media Insegn: ${mean(teachingSchede).toFixed(2)}<br>`;
+      const teachingSchede = this.filterZero(this.selectedTeachingSchede.map(t => t.totale_schede));
+      const mediaCDS = mean(Object.values(this.nCds));
+      const mediaInsegnamento = mean(teachingSchede);
+      schedeParagraph.innerHTML = `Media CDS: ${mediaCDS.toFixed(2)}<br>`;
+      schedeParagraph.innerHTML += `Media Insegn: <span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_numerosita)}">${mediaInsegnamento.toFixed(2)}</span><br>`;
       schedeParagraph.innerHTML += `Varianza: ${variance(teachingSchede).toFixed(3)}<br>`;
       schedeParagraph.innerHTML += `Dev. std.: ${std(teachingSchede).toFixed(3)}`;
     }
 
+  }
+
+  private getLabelColor(mediaInsegnamento: number, mediaCDS: number, scostamento: number) {
+    let color = 'black';
+    if (mediaInsegnamento <= mediaCDS - scostamento) {
+      color = 'red';
+    } else if (mediaInsegnamento >= mediaCDS + scostamento) {
+      color = 'green';
+    }
+    return color;
   }
 
   private filterZero(array: number[]): number[] {

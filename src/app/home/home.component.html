@@ -55,6 +55,7 @@
           <!-- Insegnamento -->
           <app-teaching
             *ngIf="currentOption === 2"
+            [cds]="cds[selectedCds]"
             [teachings]="teachings"
             [vCds]="vCds"
             [nCds]="nCds"

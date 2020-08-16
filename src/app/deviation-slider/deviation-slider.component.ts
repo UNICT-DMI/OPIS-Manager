@@ -15,8 +15,8 @@ export class DeviationSliderComponent implements OnInit, OnChanges {
   public numerosityDeviation: number;
 
   public meanSliderOptions: Options = {
-    floor: 1,
-    ceil: 10,
+    floor: 0.5,
+    ceil: 5,
     step: 0.5,
     minLimit: 0.5,
     maxLimit: 10,
