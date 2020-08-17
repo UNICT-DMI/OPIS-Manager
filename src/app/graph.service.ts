@@ -15,7 +15,7 @@ export class GraphService {
   ) { }
 
   public round(v: number, padding = 2): number {
-    const pad = parseInt(1 + '0'.repeat(padding), 2);
+    const pad = parseInt(1 + '0'.repeat(padding), 10);
     return Math.round(v * pad) / pad;
   }
 

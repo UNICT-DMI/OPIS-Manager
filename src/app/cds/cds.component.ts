@@ -30,11 +30,11 @@ export class CdsComponent implements OnChanges {
       labels: [''],
       datasets: [
         { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps,
-          data: [Object.values(this.vCds).map(array => this.graphService.round(array[0])) ] },
+          data: [Object.values(this.vCds).map(array => array[0]).map(val => this.graphService.round(val)) ] },
         { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps,
-          data: [Object.values(this.vCds).map(array => this.graphService.round(array[1])) ] },
+          data: [Object.values(this.vCds).map(array => array[1]).map(val => this.graphService.round(val)) ] },
         { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps,
-          data: [Object.values(this.vCds).map(array => this.graphService.round(array[2])) ] },
+          data: [Object.values(this.vCds).map(array => array[2]).map(val => this.graphService.round(val)) ] },
       ],
     };
 

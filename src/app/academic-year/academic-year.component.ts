@@ -129,8 +129,6 @@ export class AcademicYearComponent implements OnChanges {
 
 
     for (const c of Object.keys(ctx)) {
-      console.log(c);
-      console.log(this.vCds);
       // tslint:disable-next-line: variable-name
       const _options = {
         scales: {
