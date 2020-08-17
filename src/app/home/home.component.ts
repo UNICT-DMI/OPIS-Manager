@@ -83,13 +83,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.cdsWithSchede = cdsArray;
       const cdsSchede = cdsArray.flatMap(cdsCoarse => cdsCoarse.insegnamenti)
       .filter(insegnamento => insegnamento.schedeopis != null)
-      .flatMap(insegnamento => insegnamento.schedeopis);
+      .flatMap(insegnamento => insegnamento.schedeopis)
+      .filter(schedaopis => schedaopis.domande != null);
       const annoSchede = from(cdsSchede).pipe(
         groupBy(scheda => scheda.anno_accademico),
         mergeMap(group => group.pipe(toArray())));
       annoSchede.subscribe(schede => {
         this.vCds[schede[0].anno_accademico] = this.graphService.elaborateFormula(schede)[0];
-        this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger changing in child components
+        this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger ngOnChange in child components
         this.nCds[schede[0].anno_accademico] = schede.map(scheda => scheda.totale_schede)
                                                   .reduce((acc, val) => acc + val) / schede.length;
       });
