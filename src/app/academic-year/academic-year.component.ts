@@ -48,6 +48,7 @@ export class AcademicYearComponent implements OnChanges {
   };
 
   switcherValues = 1;
+  public showStats = false;
   subject: string;
   selectedYear = '--';
 
@@ -58,6 +59,7 @@ export class AcademicYearComponent implements OnChanges {
     private readonly authService: AuthService,
   ) {
     this.isLogged = this.authService.authTokenIsPresent();
+    this.showStats = this.isLogged;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -74,6 +76,10 @@ export class AcademicYearComponent implements OnChanges {
 
   public sliderUpdate(value: number): void {
     this.findGoodAndBadTeachings();
+  }
+
+  public toggleStats() {
+    this.showStats = !this.showStats;
   }
 
   public getCdsOfSelectedYear(): CDS {

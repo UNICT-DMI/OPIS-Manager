@@ -63,11 +63,11 @@
         </div>
       </li>
       <li class="nav-item tabs_button ml-auto">
-        <button class="btn btn-opis">Stats</button>
+        <button class="btn btn-opis" (click)="toggleStats()">Stats</button>
       </li>
     </ul>
     <br>
-    <div class="card" id="cds-year-stats">
+    <div class="card" id="cds-year-stats" *ngIf="selectedYear != '--' && showStats === true">
       <div class="card-body">
         <h5 class="card-title">Statistiche sul Corso di Studio {{ cdsSchede[0].unict_id }} - anno accademico {{ selectedYear }}
         </h5>
@@ -76,25 +76,25 @@
             <div class="col-3">
               <p>Ins. con scarsa valutazione V{{ switcherValues }}</p>
               <ul>
-                <li *ngFor="let teaching of badValTeachings"> {{ teaching.nome_completo }} </li>
+                <li *ngFor="let teaching of badValTeachings"> <span style="color: red"> {{ teaching.nome_completo }} </span> </li>
               </ul>
             </div>
             <div class="col-3">
               <p>Ins. con buona valutazione V{{ switcherValues }}</p>
               <ul>
-                <li *ngFor="let teaching of goodValTeachings"> {{ teaching.nome_completo }} </li>
+                <li *ngFor="let teaching of goodValTeachings"> <span style="color: green"> {{ teaching.nome_completo }} </span> </li>
               </ul>
             </div>
             <div class="col-3">
               <p>Ins. con basso numero di schede</p>
               <ul>
-                <li *ngFor="let teaching of badNSchedeTeachings"> {{ teaching.nome_completo }} </li>
+                <li *ngFor="let teaching of badNSchedeTeachings"> <span style="color: red"> {{ teaching.nome_completo }} </span> </li>
               </ul>
             </div>
             <div class="col-3">
               <p>Ins. con elevato numero di schede</p>
               <ul>
-                <li *ngFor="let teaching of goodNSchedeTeachings"> {{ teaching.nome_completo }} </li>
+                <li *ngFor="let teaching of goodNSchedeTeachings"> <span style="color: green"> {{ teaching.nome_completo }} </span> </li>
               </ul>
             </div>
           </div>

@@ -199,7 +199,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
       const mediaInsegnamento = mean(teachingValues);
       document.getElementById('v' + (i + 1) + '-cds-mean').innerHTML = `${mediaCDS.toFixed(2)}`;
       // tslint:disable-next-line: max-line-length
-      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS, this.cds.scostamento_media)};">${mediaInsegnamento.toFixed(2)}</span>`;
+      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS)};">${mediaInsegnamento.toFixed(2)}</span>`;
       document.getElementById('v' + (i + 1) + '-var').innerHTML = `${variance(teachingValues).toFixed(3)}`;
       document.getElementById('v' + (i + 1) + '-devstd').innerHTML = `${std(teachingValues).toFixed(3)}`;
     }
@@ -209,17 +209,17 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     const nMediaInsegnamento = mean(teachingSchede);
     document.getElementById('n-cds-mean').innerHTML = `${nMediaCDS.toFixed(2)}`;
     // tslint:disable-next-line: max-line-length
-    document.getElementById('n-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(nMediaInsegnamento, nMediaCDS, this.cds.scostamento_numerosita)}">${nMediaInsegnamento.toFixed(2)}</span>`;
+    document.getElementById('n-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(nMediaInsegnamento, nMediaCDS, 10)}">${nMediaInsegnamento.toFixed(2)}</span>`;
     document.getElementById('n-var').innerHTML = `${variance(teachingSchede).toFixed(3)}`;
     document.getElementById('n-devstd').innerHTML = `${std(teachingSchede).toFixed(3)}`;
 
   }
 
-  private getLabelColor(mediaInsegnamento: number, mediaCDS: number, scostamento: number) {
+  private getLabelColor(mediaInsegnamento: number, mediaCDS: number, divider = 1) {
     let color = 'black';
-    if (mediaInsegnamento <= mediaCDS - scostamento) {
+    if (Math.round(mediaInsegnamento / divider) < Math.round(mediaCDS / divider)) {
       color = 'red';
-    } else if (mediaInsegnamento >= mediaCDS + scostamento) {
+    } else if (Math.round(mediaInsegnamento / divider) > Math.round(mediaCDS / divider)) {
       color = 'green';
     }
     return color;
