@@ -1,3 +1,31 @@
+<div *ngIf="isLogged && this.selectedYear != '--' && this.selectedYear != null" style="display: contents">
+  <div class="container mt-4 mb-4" id="deviation-sliders">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div class="col-3 my-auto">
+                    Scostamento media
+                </div>
+                <div class="col-9 custom-slider">
+                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_media" [options]="meanSliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-3 my-auto">
+                    Scostamento numerosità
+                </div>
+                <div class="col-9 custom-slider">
+                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_numerosita" [options]="numerositySliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 my-auto mx-auto">
+            <button class="btn btn-opis pull-right">Conferma</button>
+        </div>
+    </div>
+</div>
+</div>
+
 <div class="text-center">
   <div class="list-option-container">
     Seleziona anno:
@@ -34,7 +62,45 @@
             [(ngModel)]="subject" (change)="showAcademicYearChartForSelectedYear()">
         </div>
       </li>
+      <li class="nav-item tabs_button ml-auto">
+        <button class="btn btn-opis">Stats</button>
+      </li>
     </ul>
+    <br>
+    <div class="card" id="cds-year-stats">
+      <div class="card-body">
+        <h5 class="card-title">Statistiche sul Corso di Studio {{ cdsSchede[0].unict_id }} - anno accademico {{ selectedYear }}
+        </h5>
+        <div class="container">
+          <div class="row">
+            <div class="col-3">
+              <p>Ins. con scarsa valutazione V{{ switcherValues }}</p>
+              <ul>
+                <li *ngFor="let teaching of badValTeachings"> {{ teaching.nome_completo }} </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con buona valutazione V{{ switcherValues }}</p>
+              <ul>
+                <li *ngFor="let teaching of goodValTeachings"> {{ teaching.nome_completo }} </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con basso numero di schede</p>
+              <ul>
+                <li *ngFor="let teaching of badNSchedeTeachings"> {{ teaching.nome_completo }} </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con elevato numero di schede</p>
+              <ul>
+                <li *ngFor="let teaching of goodNSchedeTeachings"> {{ teaching.nome_completo }} </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <br>
     <div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>

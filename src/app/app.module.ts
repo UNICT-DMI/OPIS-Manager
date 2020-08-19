@@ -20,7 +20,6 @@ import { AcademicYearComponent } from './academic-year/academic-year.component';
 import { CdsComponent } from './cds/cds.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
-import { DeviationSliderComponent } from './deviation-slider/deviation-slider.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { DeviationSliderComponent } from './deviation-slider/deviation-slider.co
     CdsComponent,
     RegistrationComponent,
     LoginComponent,
-    DeviationSliderComponent,
   ],
   imports: [
     BrowserModule,

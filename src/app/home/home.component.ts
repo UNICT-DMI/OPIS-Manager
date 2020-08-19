@@ -7,7 +7,6 @@ import { take, takeUntil, groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { GraphService } from '../graph.service';
 import { ApiService } from '../api.service';
 import { Department, CDS, Teaching } from '../api.model';
-import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -32,15 +31,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   stepsYears: { value: number, legend: string }[] = [];
 
-  private isLogged = false;
-
   constructor(
     private readonly graphService: GraphService,
     private readonly apiService: ApiService,
-    private readonly authService: AuthService,
-  ) {
-    this.isLogged = this.authService.authTokenIsPresent();
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getAllDepartments();

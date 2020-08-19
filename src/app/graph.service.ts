@@ -97,7 +97,7 @@ export class GraphService {
         insegnamentiVal[i].nome_completo += ' (' + insegnamenti[i].canale + ')';
       }
       insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
-      insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede_nf;
+      insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede;
 
       insegnamentiVal[i].anno = insegnamenti[i].anno;
       insegnamentiVal[i].canale = insegnamenti[i].canale;

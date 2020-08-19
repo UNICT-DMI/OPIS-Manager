@@ -21,7 +21,7 @@ export interface TeachingSummary {
   docente: string;
   tot_schedeF: number;
   tot_schedeNF: number;
-  domande: any;
+  domande: number[][];
 }
 
 export interface SchedaOpis {

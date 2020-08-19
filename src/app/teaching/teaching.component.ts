@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';

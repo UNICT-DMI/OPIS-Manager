@@ -4,7 +4,9 @@ import { GraphService } from '../graph.service';
 import { Chart } from 'chart.js';
 import CONF from '../../assets/config.json';
 import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
-import { CDS } from '../api.model';
+import { CDS, Teaching } from '../api.model';
+import { AuthService } from '../auth.service';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-academic-year',
@@ -14,21 +16,49 @@ import { CDS } from '../api.model';
 export class AcademicYearComponent implements OnChanges {
 
   @Input() vCds: { [year: string]: number[]};
+  @Input() nCds: { [year: string]: number};
   @Input() cdsSchede: CDS[];
 
   private teachings: TeachingSummary[];
+  public badValTeachings: TeachingSummary[];
+  public badNSchedeTeachings: TeachingSummary[];
+  public goodValTeachings: TeachingSummary[];
+  public goodNSchedeTeachings: TeachingSummary[];
   private charts: Chart[] = [];
 
   readonly faSearch = faSearch;
   readonly CONF: Config = CONF;
 
+  public meanSliderOptions: Options = {
+    floor: 0,
+    ceil: 5,
+    step: 0.25,
+    minLimit: 0,
+    maxLimit: 5,
+    showTicks: true,
+  };
+
+  public numerositySliderOptions: Options = {
+    floor: 5,
+    ceil: 100,
+    step: 5,
+    minLimit: 5,
+    maxLimit: 100,
+    showTicks: true,
+  };
+
   switcherValues = 1;
   subject: string;
   selectedYear = '--';
 
+  public isLogged = false;
+
   constructor(
     private readonly graphService: GraphService,
-  ) { }
+    private readonly authService: AuthService,
+  ) {
+    this.isLogged = this.authService.authTokenIsPresent();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('cdsSchede')) {
@@ -39,35 +69,113 @@ export class AcademicYearComponent implements OnChanges {
   // TODO: refactor / remove or use Output()
   public switchVal(v: number): void {
     this.switcherValues = v;
+    this.findGoodAndBadTeachings();
+  }
+
+  public sliderUpdate(value: number): void {
+    this.findGoodAndBadTeachings();
+  }
+
+  public getCdsOfSelectedYear(): CDS {
+    return this.cdsSchede.find(cds => cds.anno_accademico === this.selectedYear);
   }
 
   public showAcademicYearChartForSelectedYear(): void {
     if (this.selectedYear !== '--') {
-        this.teachings = this.graphService.parseInsegnamentoSchede(
-          this.cdsSchede.filter(cds => cds.anno_accademico === this.selectedYear)
-            .flatMap(cds => cds.insegnamenti), this.subject)
-            .sort((t1, t2) => {
-              if (t1.anno === t2.anno) {
-                if (t1.nome_completo < t2.nome_completo) {
-                  return -1;
-                } else if (t1.nome_completo > t2.nome_completo) {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              } else if (t1.anno < t2.anno) {
-                return -1;
-              } else {
-                return 1;
-              }
-          });
+      const teachingOfSelectedYear =
+        this.cdsSchede.filter(cds => cds.anno_accademico === this.selectedYear)
+        .flatMap(cds => cds.insegnamenti);
+      this.teachings = this.graphService.parseInsegnamentoSchede(teachingOfSelectedYear, this.subject)
+        .sort((t1, t2) => {
+          if (t1.anno === t2.anno) {
+            if (t1.nome_completo < t2.nome_completo) {
+              return -1;
+            } else if (t1.nome_completo > t2.nome_completo) {
+              return 1;
+            } else {
+              return 0;
+            }
+          } else if (t1.anno < t2.anno) {
+            return -1;
+          } else {
+            return 1;
+          }
+      });
 
-        let means: number[];
-        let values: number[][];
-        [means, values] = this.graphService.elaborateFormula(this.teachings
-          .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ));
+      let means: number[];
+      let values: number[][];
+      [means, values] = this.graphService.elaborateFormula(this.teachings
+        .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ));
 
-        this.showAcademicYearChart(values);
+      this.findGoodAndBadTeachings();
+
+      this.showAcademicYearChart([...values]);
+    }
+  }
+
+  private findGoodAndBadTeachings(): void {
+    const values = this.graphService.elaborateFormula(this.teachings
+      .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ))[1];
+
+    this.badNSchedeTeachings = [];
+    this.badValTeachings = [];
+    this.goodNSchedeTeachings = [];
+    this.goodValTeachings = [];
+
+    for (const i in this.teachings) {
+      if (this.teachings[i].domande != null) {
+        if (this.isBadTeaching(
+          values[this.switcherValues - 1][i],
+          this.vCds[this.selectedYear][this.switcherValues - 1],
+          this.getCdsOfSelectedYear().scostamento_media)) {
+          this.badValTeachings.push(this.teachings[i]);
+        } else if (this.isGoodTeaching(
+          values[this.switcherValues - 1][i],
+          this.vCds[this.selectedYear][this.switcherValues - 1],
+          this.getCdsOfSelectedYear().scostamento_media)) {
+          this.goodValTeachings.push(this.teachings[i]);
+        }
+
+        if (this.isBadTeaching(
+          this.teachings[i].tot_schedeF,
+          this.nCds[this.selectedYear],
+          this.getCdsOfSelectedYear().scostamento_numerosita)) {
+          this.badNSchedeTeachings.push(this.teachings[i]);
+        } else if (this.isGoodTeaching(
+          this.teachings[i].tot_schedeF,
+          this.nCds[this.selectedYear],
+          this.getCdsOfSelectedYear().scostamento_numerosita)) {
+          this.goodNSchedeTeachings.push(this.teachings[i]);
+        }
+      }
+    }
+
+    console.log(this.getCdsOfSelectedYear().scostamento_media);
+    console.log(this.getCdsOfSelectedYear().scostamento_numerosita);
+    console.log(this.badValTeachings);
+    console.log(this.goodValTeachings);
+    console.log(this.badNSchedeTeachings);
+    console.log(this.goodNSchedeTeachings);
+  }
+
+  private isBadTeaching(teachingVal: number, cdsVal: number, cdsDeviation: number): boolean {
+    console.log('--------------');
+    console.log(teachingVal);
+    console.log(cdsVal);
+    console.log(cdsDeviation);
+    console.log('--------------');
+    if (teachingVal <= cdsVal - cdsDeviation) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private isGoodTeaching(teachingVal: number, cdsVal: number, cdsDeviation: number): boolean {
+    if (teachingVal >= cdsVal + cdsDeviation) {
+      return true;
+    } else {
+      return false;
     }
   }
 

@@ -31,12 +31,6 @@
           </div>
         </div>
 
-        <div class="row" *ngIf="isLogged" style="display: contents">
-          <app-deviation-slider
-          [cds]="cds[selectedCds]"
-          ></app-deviation-slider>
-        </div>
-
         <div class="row" *ngIf="currentOption != null">
           <!-- Corso di Studio -->
           <app-cds
@@ -48,6 +42,7 @@
           <!-- Anno Accademico -->
           <app-academic-year
             *ngIf="currentOption === 1"
+            [nCds]="nCds"
             [vCds]="vCds"
             [cdsSchede]="cdsWithSchede"
           ></app-academic-year>
