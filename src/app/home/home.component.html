@@ -35,8 +35,7 @@
           <!-- Corso di Studio -->
           <app-cds
             *ngIf="currentOption === 0"
-            [vCds]="vCds"
-            [selectedCds]="cds[selectedCds]"
+            [cdsSchede]="cdsWithSchede"
           ></app-cds>
 
           <!-- Anno Accademico -->

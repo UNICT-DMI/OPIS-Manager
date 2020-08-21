@@ -10,11 +10,10 @@ import { GraphService } from '../graph.service';
 })
 export class CdsComponent implements OnChanges {
 
-  @Input() vCds: { [year: string]: number[]};
-  @Input() selectedCds: CDS;
+  @Input() cdsSchede: CDS[];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('vCds')) {
+    if (changes.hasOwnProperty('cdsSchede')) {
       this.showCdsBoxplot();
     }
   }
@@ -24,17 +23,21 @@ export class CdsComponent implements OnChanges {
   ) { }
 
   public showCdsBoxplot(): void {
+    const vCds = this.graphService.elaborateFormula(this.cdsSchede.flatMap(cds => cds.insegnamenti)
+      .filter(insegnamento => insegnamento.schedeopis != null)
+      .map(insegnamento => insegnamento.schedeopis))[1];
+
     const sharedProps = { borderWidth: 1, outlierColor: '#999999', padding: 10, itemRadius: 0 };
     const boxplotData = {
       // define label tree
       labels: [''],
       datasets: [
         { label: 'V1', backgroundColor: 'rgba(255,0,0,0.5)', borderColor: 'red',   ...sharedProps,
-          data: [Object.values(this.vCds).map(array => array[0]).map(val => this.graphService.round(val)) ] },
+          data: [Object.values(vCds).map(array => array[0]).map(val => this.graphService.round(val)) ] },
         { label: 'V2', backgroundColor: 'rgba(0,255,0,0.5)', borderColor: 'green', ...sharedProps,
-          data: [Object.values(this.vCds).map(array => array[1]).map(val => this.graphService.round(val)) ] },
+          data: [Object.values(vCds).map(array => array[1]).map(val => this.graphService.round(val)) ] },
         { label: 'V3', backgroundColor: 'rgba(0,0,255,0.5)', borderColor: 'blue',  ...sharedProps,
-          data: [Object.values(this.vCds).map(array => array[2]).map(val => this.graphService.round(val)) ] },
+          data: [Object.values(vCds).map(array => array[2]).map(val => this.graphService.round(val)) ] },
       ],
     };
 
