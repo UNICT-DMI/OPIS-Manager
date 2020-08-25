@@ -27,7 +27,7 @@ export class AuthService {
         } else {
             this.isLogged.next(false);
         }
-     }
+    }
 
     public login(email: string, password: string): Observable<LoginResponse> {
         const response = this.apiService.login(email, password);
@@ -39,13 +39,16 @@ export class AuthService {
     }
 
     public refreshToken(): Observable<LoginResponse> {
-        console.log(this.isLogged);
         const response = this.apiService.refreshToken(localStorage.getItem(this.TOKEN_KEY).replace('bearer ', ''));
         response.subscribe(
             data => this.saveToken(data),
             err => console.log(err)
         );
         return response;
+    }
+
+    public getAuthToken(): string {
+        return localStorage.getItem(this.TOKEN_KEY);
     }
 
     public authStatus(): Observable<boolean> {

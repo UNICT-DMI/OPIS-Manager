@@ -71,15 +71,27 @@ export class FormulaComponent implements OnInit {
   }
 
   public changeVWeights(): void {
-    /*if (this.questionsWeights[0] + this.questionsWeights[1] !== 1) {
+    if (this.getGroupWeight('V1') !== 1) {
       alert('La somma di V1 è diversa da 1');
-    } else if (this.questionsWeights[3] + this.questionsWeights[4] + this.questionsWeights[8] + this.questionsWeights[9] !== 1) {
+    } else if (this.getGroupWeight('V2') !== 1) {
       alert('La somma di V2 è diversa da 1');
-    } else if (this.questionsWeights[2] + this.questionsWeights[5] + this.questionsWeights[6] !== 1) {
+    } else if (this.getGroupWeight('V3') !== 1) {
       alert('La somma di V3 è diversa da 1');
     } else {
-      // save in DB
-    }*/
+      this.weightService.updateQuestionsWeights().subscribe(
+        data => alert('Pesi aggiornati correttamente!'),
+        err => {
+          alert('Errore nell\'aggiornare i pesi');
+          console.log(err);
+        }
+      );
+    }
+  }
+
+  private getGroupWeight(group: string): number {
+    return this.questionsWeights.filter(domanda => domanda.gruppo === group)
+      .map(domanda => domanda.peso_standard)
+      .reduce((acc, val) => acc + val);
   }
 
   public changeAnswersWeights(): void {

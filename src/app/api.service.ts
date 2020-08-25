@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Department, CDS, Teaching, SchedaOpis, Domanda, LoginResponse } from './api.model';
 import { Observable } from 'rxjs';
 import CONF from '../assets/config.json';
@@ -58,6 +58,24 @@ export class ApiService implements OnInit {
 
   public getDomandePesi(): Observable<Domanda[]> {
     return this.http.get<Domanda[]>(this.CONF.apiUrl + 'v2/domande');
+  }
+
+  public updateDomandePesi(domande: Domanda[], token: string): Observable<object> {
+    const domandeJson = JSON.stringify(domande.map(domanda => {
+      return {
+        id: domanda.id,
+        peso: domanda.peso_standard,
+        gruppo: domanda.gruppo,
+      };
+    }));
+    const httpOptions = {
+      headers: new HttpHeaders(
+        {
+          Authorization: token,
+        }
+      )
+    };
+    return this.http.put(this.CONF.apiUrl + 'v2/domande?pesi_domande=' + domandeJson, {}, httpOptions);
   }
 
   public login(email: string, password: string): Observable<LoginResponse> {
