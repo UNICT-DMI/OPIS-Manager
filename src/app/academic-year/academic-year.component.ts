@@ -7,6 +7,7 @@ import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
 import { CDS, Teaching } from '../api.model';
 import { AuthService } from '../auth.service';
 import { Options } from 'ng5-slider';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-academic-year',
@@ -57,6 +58,7 @@ export class AcademicYearComponent implements OnChanges {
   constructor(
     private readonly graphService: GraphService,
     private readonly authService: AuthService,
+    private readonly apiService: ApiService,
   ) {
     this.isLogged = this.authService.authTokenIsPresent();
     this.showStats = this.isLogged;
@@ -78,12 +80,23 @@ export class AcademicYearComponent implements OnChanges {
     this.findGoodAndBadTeachings();
   }
 
-  public toggleStats() {
+  public toggleStats(): void {
     this.showStats = !this.showStats;
   }
 
   public getCdsOfSelectedYear(): CDS {
     return this.cdsSchede.find(cds => cds.anno_accademico === this.selectedYear);
+  }
+
+  public updateCds(): void {
+    const cds = this.getCdsOfSelectedYear();
+    this.apiService.updateCDS(cds, this.authService.getAuthToken()).subscribe(
+      data => alert('Valori aggiornati correttamente!'),
+      err => {
+        alert('Errore durante l\'aggiornamento dei valori');
+        console.log(err);
+      }
+    );
   }
 
   public showAcademicYearChartForSelectedYear(): void {
@@ -156,20 +169,9 @@ export class AcademicYearComponent implements OnChanges {
       }
     }
 
-    console.log(this.getCdsOfSelectedYear().scostamento_media);
-    console.log(this.getCdsOfSelectedYear().scostamento_numerosita);
-    console.log(this.badValTeachings);
-    console.log(this.goodValTeachings);
-    console.log(this.badNSchedeTeachings);
-    console.log(this.goodNSchedeTeachings);
   }
 
   private isBadTeaching(teachingVal: number, cdsVal: number, cdsDeviation: number): boolean {
-    console.log('--------------');
-    console.log(teachingVal);
-    console.log(cdsVal);
-    console.log(cdsDeviation);
-    console.log('--------------');
     if (teachingVal <= cdsVal - cdsDeviation) {
       return true;
     } else {

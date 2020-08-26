@@ -78,6 +78,19 @@ export class ApiService implements OnInit {
     return this.http.put(this.CONF.apiUrl + 'v2/domande?pesi_domande=' + domandeJson, {}, httpOptions);
   }
 
+  public updateCDS(cds: CDS, token: string): Observable<object> {
+    const httpOptions = {
+      headers: new HttpHeaders(
+        {
+          Authorization: token,
+        }
+      )
+    };
+
+    return this.http.put(this.CONF.apiUrl + 'v2/cds/with-id/' + cds.id
+    + '?scostamento_numerosita=' + cds.scostamento_numerosita + '&scostamento_media=' + cds.scostamento_media, {}, httpOptions);
+  }
+
   public login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.CONF.apiUrl + 'auth/login', { email, password});
   }
