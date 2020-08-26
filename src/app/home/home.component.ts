@@ -85,8 +85,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       annoSchede.subscribe(schede => {
         this.vCds[schede[0].anno_accademico] = this.graphService.elaborateFormula(schede)[0];
         this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger ngOnChange in child components
-        this.nCds[schede[0].anno_accademico] = schede.map(scheda => scheda.totale_schede)
-                                                  .reduce((acc, val) => acc + val) / schede.length;
+        this.nCds[schede[0].anno_accademico] = this.graphService.round(schede.map(scheda => scheda.totale_schede)
+                                                  .reduce((acc, val) => acc + val) / schede.length);
       });
     });
   }

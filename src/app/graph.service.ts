@@ -31,7 +31,7 @@ export class GraphService {
       v3.push(V3);
     }
 
-    const means = [mean(v1), mean(v2), mean(v3)];
+    const means = [this.round(mean(v1)), this.round(mean(v2)), this.round(mean(v3))];
     return [means, [v1, v2, v3]];
   }
 
@@ -68,7 +68,7 @@ export class GraphService {
 
     }
 
-    return [parseFloat(V1.toFixed(2)), parseFloat(V2.toFixed(2)), parseFloat(V3.toFixed(2))];
+    return [this.round(V1), this.round(V2), this.round(V3)];
   }
 
   public parseInsegnamentoSchede(insegnamenti: Teaching[], subjectToSearch?: string): TeachingSummary[] {
@@ -96,7 +96,8 @@ export class GraphService {
         insegnamentiVal[i].nome += ' (' + insegnamenti[i].canale + ')';
         insegnamentiVal[i].nome_completo += ' (' + insegnamenti[i].canale + ')';
       }
-      insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
+
+      // insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
       insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede;
 
       insegnamentiVal[i].anno = insegnamenti[i].anno;

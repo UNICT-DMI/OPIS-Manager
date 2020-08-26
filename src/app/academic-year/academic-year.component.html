@@ -69,9 +69,19 @@
     <br>
     <div class="card" id="cds-year-stats" *ngIf="selectedYear != '--' && showStats === true">
       <div class="card-body">
-        <h5 class="card-title">Statistiche sul Corso di Studio {{ cdsSchede[0].unict_id }} - anno accademico {{ selectedYear }}
-        </h5>
         <div class="container">
+          <div class="row mb-2">
+            <div class="col-8">
+              <h5 class="card-title">Statistiche sul Corso di Studio {{ cdsSchede[0].unict_id }} - anno accademico {{ selectedYear }}
+              </h5>
+            </div>
+            <div class="col-2">
+              <b>Media V{{switcherValues}}</b> {{ vCds[selectedYear][switcherValues - 1] }}
+            </div>
+            <div class="col-2">
+              <b>Media schede</b> {{ nCds[this.selectedYear] }}
+            </div>
+          </div>
           <div class="row">
             <div class="col-3">
               <p>Ins. con scarsa valutazione V{{ switcherValues }}</p>
