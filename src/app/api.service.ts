@@ -1,24 +1,25 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Department, CDS, Teaching, SchedaOpis, Domanda, LoginResponse } from './api.model';
 import { Observable } from 'rxjs';
-import CONF from '../assets/config.json';
 import { Config } from './utils.model';
 import { map } from 'rxjs/operators';
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService implements OnInit {
+export class ApiService {
 
-  readonly CONF: Config = CONF;
+  readonly CONF: Config;
 
   constructor(
     private readonly http: HttpClient,
-  ) { }
-
-  ngOnInit(): void {
+  ) {
+    try {
+      this.CONF = require('../assets/config.json');
+    } catch {
+      this.CONF = require('../assets/config.json.dist');
+    }
   }
 
   public getDepartments(): Observable<Department[]>;

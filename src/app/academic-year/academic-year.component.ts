@@ -2,9 +2,8 @@ import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { GraphService } from '../graph.service';
 import { Chart } from 'chart.js';
-import CONF from '../../assets/config.json';
 import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
-import { CDS, Teaching } from '../api.model';
+import { CDS } from '../api.model';
 import { AuthService } from '../auth.service';
 import { Options } from 'ng5-slider';
 import { ApiService } from '../api.service';
@@ -28,7 +27,7 @@ export class AcademicYearComponent implements OnChanges {
   private charts: Chart[] = [];
 
   readonly faSearch = faSearch;
-  readonly CONF: Config = CONF;
+  readonly CONF: Config;
 
   public meanSliderOptions: Options = {
     floor: 0,
@@ -62,6 +61,12 @@ export class AcademicYearComponent implements OnChanges {
   ) {
     this.isLogged = this.authService.authTokenIsPresent();
     this.showStats = this.isLogged;
+
+    try {
+      this.CONF = require('../../assets/config.json');
+    } catch {
+      this.CONF = require('../../assets/config.json.dist');
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
