@@ -5,10 +5,9 @@ import { Options } from 'ng5-slider';
 import { GraphService } from '../graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import CONF from '../../assets/config.json';
 import { Teaching, SchedaOpis, CDS } from '../api.model';
 import { ApiService } from '../api.service';
-import { TeachingSchede } from '../utils.model';
+import { TeachingSchede, Config } from '../utils.model';
 
 @Component({
   selector: 'app-teaching',
@@ -18,6 +17,7 @@ import { TeachingSchede } from '../utils.model';
 export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly destroy$: Subject<boolean> = new Subject<boolean>();
+  private readonly CONF: Config;
 
   @Input() cds: CDS;
   @Input() teachings: Teaching[];
@@ -33,17 +33,30 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   manualRefresh: EventEmitter<void> = new EventEmitter<void>();
   minValue = 1;
   maxValue = 1;
-  optionsSlider: Options = {
-    floor: 1,
-    ceil: 8,
-    showTicksValues: true,
-    getLegend: (value: number): string => CONF.years[value - 1],
-  };
+  optionsSlider: Options;
 
   constructor(
     private readonly apiService: ApiService,
     private readonly graphService: GraphService,
-  ) { }
+  ) {
+
+    try {
+      this.CONF = require('../../assets/config.json');
+    } catch {
+      this.CONF = require('../../assets/config.json.dist');
+    }
+
+    this.optionsSlider = {
+      floor: 1,
+      ceil: 8,
+      showTicksValues: true,
+      getLegend: (value: number): string => this.CONF.years[value - 1],
+    };
+  }
+
+  ngOnInit(): void {
+    this.initOptions();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('teachings')) {
@@ -59,18 +72,14 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  ngOnInit(): void {
-    this.initOptions();
-  }
-
   private initOptions(): void {
-    this.maxValue = CONF.years.length;
+    this.maxValue = this.CONF.years.length;
 
     this.optionsSlider = {
       floor: 1,
       ceil: this.maxValue,
       showTicksValues: true,
-      getLegend: (value: number): string => CONF.years[value - 1],
+      getLegend: (value: number): string => this.CONF.years[value - 1],
     };
 
     this.manualRefresh.emit();
@@ -92,7 +101,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     const charts = [];
     const matr = [[], [], []];
 
-    const yearsArray = [...CONF.years].splice(this.minValue - 1, this.maxValue - this.minValue + 1);
+    const yearsArray = [...this.CONF.years].splice(this.minValue - 1, this.maxValue - this.minValue + 1);
     for (let i = 0; i < teachingResults.length; i++) {
       if (!yearsArray.includes(teachingResults[i].anno)) {
         teachingResults.splice(i--, 1);
@@ -116,7 +125,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     const teachingMean: number[][] = [[], [], []];
     const cdsMean: number[][] = [[], [], []];
 
-    for (let i = 0; i < CONF.years.length; i++) {
+    for (let i = 0; i < this.CONF.years.length; i++) {
       for (let v = 0; v < 3; v++) {
         teachingMean[v][i] = this.graphService.round(mean(this.filterZero(matr[v])));
         cdsMean[v][i] = this.graphService.round(mean(Object.values(this.vCds).map(array => array[v])));

@@ -5,17 +5,20 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2015",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "typeRoots": [
-      "node_modules/@types"
+      "./node_modules/@types"
     ],
     "lib": [
       "es2019",
@@ -23,6 +26,7 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableIvy": false
+    "enableIvy": false,
+    "types" : ["node"]
   }
 }

@@ -15,7 +15,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "aot": true,
             "outputPath": "dist/opis-manager",
