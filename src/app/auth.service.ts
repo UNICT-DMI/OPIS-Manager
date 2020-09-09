@@ -82,11 +82,7 @@ export class AuthService {
         if (tokenExpiration == null) {
             return true;
         } else {
-            if (parseInt(tokenExpiration, 10) <= new Date().getTime()) {
-                return true;
-            } else {
-                return false;
-            }
+            return (parseInt(tokenExpiration, 10) <= new Date().getTime());
         }
     }
 
