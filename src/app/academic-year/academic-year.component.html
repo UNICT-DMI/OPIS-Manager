@@ -1,0 +1,126 @@
+<div *ngIf="isLogged && this.selectedYear != '--' && this.selectedYear != null" class="academic-year">
+  <div class="container mt-4 mb-4" id="deviation-sliders">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div class="col-3 my-auto">
+                    Scostamento media
+                </div>
+                <div class="col-9 custom-slider">
+                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_media" [options]="meanSliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-3 my-auto">
+                    Scostamento numerosità
+                </div>
+                <div class="col-9 custom-slider">
+                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_numerosita" [options]="numerositySliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 my-auto mx-auto">
+            <button class="btn btn-opis pull-right" (click)="updateCds()">Conferma</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="text-center">
+  <div class="list-option-container">
+    Seleziona anno:
+    <br>
+    <select
+      class="btn btn-opis text-center switch-years"
+      [(ngModel)]="selectedYear"
+      (ngModelChange)="showAcademicYearChartForSelectedYear()"
+    >
+      <option class="text-center">--</option>
+      <option class="text-center" *ngFor="let year of CONF.years" [ngValue]="year"> {{ year }} </option>
+    </select>
+  </div>
+</div>
+
+<div [hidden]="!selectedYear">
+  <div>
+    <ul class="nav nav-tabs" id="tabs">
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(1)"
+          [ngClass]="switcherValues === 1 ? 'selected-tab' : ''">V1</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(2)"
+          [ngClass]="switcherValues === 2 ? 'selected-tab' : ''">V2</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchVal(3)"
+          [ngClass]="switcherValues === 3 ? 'selected-tab' : ''">V3</button></li>
+      <li>
+        <div class="input-group addons-bar">
+          <div class="input-group-prepend">
+            <span class="input-group-text selected-tab" id="basic-addon1">
+              <fa-icon [icon]="faSearch" size="lg" class="opis-icon"></fa-icon>
+            </span>
+          </div>
+
+          <input type="text" class="form-control" placeholder="Fondamenti..." aria-describedby="basic-addon1"
+            [(ngModel)]="subject" (change)="showAcademicYearChartForSelectedYear()">
+        </div>
+      </li>
+      <li class="nav-item tabs_button ml-auto">
+        <button class="btn btn-opis" (click)="toggleStats()">Stats</button>
+      </li>
+    </ul>
+    <br>
+    <div class="card" id="cds-year-stats" *ngIf="selectedYear != '--' && showStats === true">
+      <div class="card-body">
+        <div class="container">
+          <div class="row mb-2">
+            <div class="col-8">
+              <h5 class="card-title">Statistiche sul Corso di Studio {{ cdsSchede[0].unict_id }} - anno accademico {{ selectedYear }}
+              </h5>
+            </div>
+            <div class="col-2">
+              <b>Media V{{switcherValues}}</b> {{ vCds[selectedYear][switcherValues - 1] }}
+            </div>
+            <div class="col-2">
+              <b>Media schede</b> {{ nCds[this.selectedYear] }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <p>Ins. con scarsa valutazione V{{ switcherValues }}</p>
+              <ul>
+                <li *ngFor="let teaching of badValTeachings"> <span style="color: red"> {{ teaching.nome_completo }} </span> </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con buona valutazione V{{ switcherValues }}</p>
+              <ul>
+                <li *ngFor="let teaching of goodValTeachings"> <span style="color: green"> {{ teaching.nome_completo }} </span> </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con basso numero di schede</p>
+              <ul>
+                <li *ngFor="let teaching of badNSchedeTeachings"> <span style="color: red"> {{ teaching.nome_completo }} </span> </li>
+              </ul>
+            </div>
+            <div class="col-3">
+              <p>Ins. con elevato numero di schede</p>
+              <ul>
+                <li *ngFor="let teaching of goodNSchedeTeachings"> <span style="color: green"> {{ teaching.nome_completo }} </span> </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div>Colore per numerosità di schede <strong>MIN - <div class="color-bar"></div> - MAX</strong></div>
+
+    <br>
+    <app-value-details [switcher]="switcherValues"></app-value-details>
+
+    <!-- Anno Accademico canvas -->
+    <div id="v1" [hidden]="switcherValues != 1"><canvas id="v1-canvas"></canvas></div>
+    <div id="v2" [hidden]="switcherValues != 2"><canvas id="v2-canvas"></canvas></div>
+    <div id="v3" [hidden]="switcherValues != 3"><canvas id="v3-canvas"></canvas></div>
+  </div>
+</div>

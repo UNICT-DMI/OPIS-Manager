@@ -10,7 +10,6 @@ addons:
 before_script:
   - export DISPLAY=:99.0
 install:
-  - cd opis-manager
   - npm set progress=false
   - npm install
 script:

@@ -1,0 +1,132 @@
+@import '~katex/dist/katex.css';
+
+$color_dark: #00695c;
+$color_light: #fff;
+$color_main: #00897b;
+$font_family_1: "Helvetica Neue";
+
+/*
+  #00897b  Main
+  #80cbc4 Light
+  #00695c Dark
+*/
+
+.container-fluid {
+	padding-right: 0;
+	padding-left: 0;
+	margin-right: auto;
+	margin-left: auto;
+}
+.row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.tabs_button {
+	margin-left: 5px;
+	padding: 5px 0px;
+}
+.tooltip-inner {
+	max-width: 200px;
+	padding: 3px 8px;
+	color: $color_light;
+	text-align: center;
+	background-color: $color_dark;
+	border-radius: .25rem;
+}
+.tooltip.bs-tooltip-auto[x-placement^=top] {
+	.arrow {
+		&::before {
+			margin-left: -3px;
+			content: "";
+			border-width: 5px 5px 0;
+			border-top-color: $color_dark;
+		}
+	}
+}
+.tooltip.bs-tooltip-top {
+	.arrow {
+		&::before {
+			margin-left: -3px;
+			content: "";
+			border-width: 5px 5px 0;
+			border-top-color: $color_dark;
+		}
+	}
+}
+.opis-icon {
+	color: $color_main;
+}
+.opis-nav {
+	background-color: $color_main;
+	color: $color_light;
+	font-size: 1.25rem;
+	a {
+		background-color: $color_main;
+		color: $color_light;
+        font-size: 1.25rem;
+        &:hover {
+            color: $color_light;
+        }
+	}
+}
+.nav-link.active {
+	color: $color_light !important;
+	background-color: $color_dark !important;
+	border: 0px solid !important;
+}
+
+router-outlet ~ * {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+.btn-opis {
+  color: $color_light;
+  background-color: $color_main;
+  border-color: $color_dark;
+}
+.btn-opis:hover, .btn-opis option {
+  color: $color_light;
+}
+
+.selected-tab {
+  background-color: $color_light !important;
+  color: $color_dark !important;
+}
+
+.list-option-container {
+  margin-left: 325px;
+  width: 850px;
+}
+
+.addons-bar {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+
+/* Slider */
+.custom-slider {
+  margin: 0 auto;
+  display: table;
+
+  ng5-slider  {
+    .ng5-slider-bar {
+      background: #ffe4d1;
+      height: 2px;
+    }
+
+    .ng5-slider-pointer {
+      background-color: $color_main;
+    }
+
+    .ng5-slider-bubble {
+      bottom: 14px;
+    }
+
+    .ng5-slider-tick.ng5-slider-selected {
+      background: $color_main;
+    }
+  }
+}
