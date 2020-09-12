@@ -1,0 +1,64 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-12 text-center mt-3">
+      <p>Scegli un dipartimento:</p>
+      <select class="btn btn-opis" (change)="getAllCdsOfSelectedDepartment($event.target.value)">
+        <option>--</option>
+        <option *ngFor="let department of departments" [value]="department.id"> {{ department.nome }} </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+
+      <ul class="nav nav-tabs" id="tabs">
+        <li class="nav-item tabs_button" *ngFor="let c of cds; let i = index">
+          <button class="btn btn-opis" (click)="getAllTeachingsOfSelectedCds(i)"
+            [ngClass]="selectedCds === i ? 'selected-tab' : ''">{{ cds[i].nome + " " + cds[i].classe }}</button>
+        </li>
+      </ul>
+
+      <div *ngIf="selectedCds != null">
+        <div class="row">
+          <div class="container-switcher">
+            <div class="segmented">
+              <label (click)="enableOption(0)" [ngClass]="currentOption === 0 ? 'checked' : ''"><span>Corso di Studio</span></label>
+              <label (click)="enableOption(1)" [ngClass]="currentOption === 1  ? 'checked' : ''"><span>Anno accademico</span></label>
+              <label (click)="enableOption(2)" [ngClass]="currentOption === 2  ? 'checked' : ''"><span>Insegnamento</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="currentOption != null">
+          <!-- Corso di Studio -->
+          <app-cds
+            *ngIf="currentOption === 0"
+            [cdsSchede]="cdsWithSchede"
+          ></app-cds>
+
+          <!-- Anno Accademico -->
+          <app-academic-year
+            *ngIf="currentOption === 1"
+            [nCds]="nCds"
+            [vCds]="vCds"
+            [cdsSchede]="cdsWithSchede"
+          ></app-academic-year>
+
+          <!-- Insegnamento -->
+          <app-teaching
+            *ngIf="currentOption === 2"
+            [cds]="cds[selectedCds]"
+            [teachings]="teachings"
+            [vCds]="vCds"
+            [nCds]="nCds"
+          ></app-teaching>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

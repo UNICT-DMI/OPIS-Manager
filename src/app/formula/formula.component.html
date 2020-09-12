@@ -1,0 +1,247 @@
+<div class="container">
+  <br>
+
+  <h2 class="text-danger">Modello per l'individuazione di indici atti a monitorare i servizi didattici</h2>
+  <p>La scheda OPIS viene suddivisa in tre parti, ciascuna contenente un gruppo di n domande e viene effettuata una
+    prima valutazione relativamente a ciascun gruppo. Consideriamo la generica domanda D<sub>j</sub> del gruppo e
+    assegniamo valori numerici agli esiti secondo la seguente</p>
+
+  <br>
+
+  <div *ngIf="!isLogged; else answerslider">
+    <table class="table table-bordered formula-table">
+      <tr>
+        <td>DECISAMENTE NO</td>
+        <td>E<sub>1</sub></td>
+        <td>{{ answersWeights[0] }}</td>
+      </tr>
+      <tr>
+        <td>PIÙ NO CHE SÌ</td>
+        <td>E<sub>2</sub></td>
+        <td>{{ answersWeights[1] }}</td>
+      </tr>
+      <tr>
+        <td>PIÙ SÌ CHE NO</td>
+        <td>E<sub>3</sub></td>
+        <td>{{ answersWeights[2] }}</td>
+      </tr>
+      <tr>
+        <td>DECISAMENTE SI</td>
+        <td>E<sub>4</sub></td>
+        <td>{{ answersWeights[3] }}</td>
+      </tr>
+    </table>
+  </div>
+
+
+  <br>
+  <p>Sia X<sub>ij</sub> il numero di studenti che hanno dato la risposta E<sub>i</sub> alla domanda D<sub>j</sub> e sia
+    N il numero complessivo di studenti.</p>
+
+  <ng-katex-paragraph [paragraph]="paragraphContent"></ng-katex-paragraph>
+
+  <p align="center">La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo -
+    (V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>).</p>
+
+  <br>
+
+  <div *ngIf="!isLogged; else questionslider">
+    <h2 class="text-center text-danger">Valutazioni, domande e relativi pesi</h2>
+    <table class="table table-bordered" *ngIf="!!questionsWeights">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Domande</th>
+          <th>Pesi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>V1</td>
+          <td>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti
+            previsti nel programma d'esame?</td>
+          <td>{{ questionsWeights[0].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V1</td>
+          <td>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</td>
+          <td>{{ questionsWeights[1].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td>V2</td>
+          <td>4 - Le modalità di esame sono state definite in modo chiaro?</td>
+          <td>{{ questionsWeights[3].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V2</td>
+          <td>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche sono
+            rispettati?</td>
+          <td>{{ questionsWeights[4].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V2</td>
+          <td>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del corso di
+            studio?</td>
+          <td>{{ questionsWeights[8].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V2</td>
+          <td>10 - Il docente è reperibile per chiarimenti e spiegazioni?</td>
+          <td>{{ questionsWeights[9].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td>V3</td>
+          <td>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?</td>
+          <td>{{ questionsWeights[2].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V3</td>
+          <td>6 - Il docente stimola/motiva l'interesse verso la disciplina?</td>
+          <td>{{ questionsWeights[5].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td>V3</td>
+          <td>7 - Il docente espone gli argomenti in modo chiaro?</td>
+          <td>{{ questionsWeights[6].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><s>8 - Le attività didattiche integrative (esercitazioni, tutorati, laboratori, ... etc) sono utili
+              all'apprendimento della materia?</s></td>
+          <td>{{ questionsWeights[7].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><s>11 - È interessato/a agli argomenti trattati nell'insegnamento?</s></td>
+          <td>{{ questionsWeights[10].peso_standard }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><s>12 - È complessivamente soddisfatto/a dell'insegnamento?</s></td>
+          <td>{{ questionsWeights[11].peso_standard }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #questionslider>
+    <ul class="nav nav-tabs" id="tabs">
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(1)"
+          [ngClass]="selectedV === 1 ? 'selected-tab' : ''">V1</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(2)"
+          [ngClass]="selectedV === 2 ? 'selected-tab' : ''">V2</button></li>
+      <li class="nav-item tabs_button"><button class="btn btn-opis" (click)="switchV(3)"
+          [ngClass]="selectedV === 3 ? 'selected-tab' : ''">V3</button></li>
+    </ul>
+    <div class="container">
+      <div id="v1-sliders" class="row vslider" *ngIf="selectedV === 1">
+        <div class="col-4">
+          <p>1 - Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti
+            previsti nel programma d'esame?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[0].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>2 - Il carico di studio dell'insegnamento è proporzionato ai crediti assegnati?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[1].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+      </div>
+      <div id="v2-sliders" class="row vslider" *ngIf="selectedV === 2">
+        <div class="col-4">
+          <p>4 - Le modalità di esame sono state definite in modo chiaro?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[3].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>5 - Gli orari di svolgimento di lezioni, esercitazioni e altre eventuali attività didattiche sono
+            rispettati?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[4].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>9 - L'insegnamento è stato svolto in maniera coerente con quanto dichiarato sul sito web del corso di
+            studio?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[8].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>10 - Il docente è reperibile per chiarimenti e spiegazioni?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[9].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+      </div>
+      <div id="v3-sliders" class="row vslider" *ngIf="selectedV === 3">
+        <div class="col-4">
+          <p>3 - Il materiale didattico (indicato e disponibile) è adeguato per lo studio della materia?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[2].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>6 - Il docente stimola/motiva l'interesse verso la disciplina?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[5].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+        <div class="col-4">
+          <p>7 - Il docente espone gli argomenti in modo chiaro?</p>
+        </div>
+        <div class="col-8 custom-slider">
+          <ng5-slider [(value)]="questionsWeights[6].peso_standard" [options]="questionSliderOptions"></ng5-slider>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-opis" (click)="changeVWeights()">Salva modifiche</button>
+  </ng-template>
+
+  <ng-template #answerslider>
+    <div id="answer-sliders" class="answer-slider container">
+      <div class="row mt-2">
+        <div class="col-2 my-auto">DECISAMENTE NO</div>
+        <div class="col-10 custom-slider">
+          <ng5-slider [(value)]="answersWeights[0]" [options]="answerSliderOptions"></ng5-slider>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">PIÙ NO CHE SÌ</div>
+        <div class="col-10 custom-slider">
+          <ng5-slider [(value)]="answersWeights[1]" [options]="answerSliderOptions"></ng5-slider>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">PIÙ SÌ CHE NO</div>
+        <div class="col-10 custom-slider">
+          <ng5-slider [(value)]="answersWeights[2]" [options]="answerSliderOptions"></ng5-slider>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2 my-auto">DECISAMENTE SÌ</div>
+        <div class="col-10 custom-slider">
+          <ng5-slider [(value)]="answersWeights[3]" [options]="answerSliderOptions"></ng5-slider>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-opis pull-right mt-3" (click)="changeAnswersWeights()">Salva modifiche</button>
+  </ng-template>
+
+  <br>
+  <br>
+  <br>
+
+</div>

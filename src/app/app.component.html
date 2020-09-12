@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg opis-nav">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav nav nav-tabs">
+        <li class="nav-item opis-logo-menu">
+          <a class="nav-link" id="home-tab" data-toggle="tab" routerLink="/" role="tab" aria-controls="home" aria-selected="true">
+            <img src="assets/logo.png">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="formula-tab" data-toggle="tab" routerLink="/formula" role="tab" aria-controls="formula" aria-selected="false">Formula</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="info-tab" data-toggle="tab" routerLink="/info" role="tab" aria-controls="info" aria-selected="false">Info</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav nav nav-tabs ml-auto">
+        <li class="nav-item opis-logo-menu">
+          <a class="nav-link" href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank">
+            GitHub <fa-icon [icon]="faGithub" size="lg"></fa-icon>
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="!isLogged">
+          <a class="nav-link" id="info-tab" data-toggle="tab" routerLink="/login" role="tab" aria-controls="info" aria-selected="false">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="isLogged">
+          <a class="nav-link" id="info-tab" data-toggle="tab" (click)="logout()" role="tab" aria-controls="info" aria-selected="false">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">
+  <router-outlet #o="outlet"></router-outlet>
+</main>
+
