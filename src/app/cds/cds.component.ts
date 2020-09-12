@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
-import { CDS } from '../api.model';
-import { GraphService } from '../graph.service';
+import { CDS } from '../services/api/api.model';
+import { GraphService } from '../services/graph/graph.service';
 
 @Component({
   selector: 'app-cds',
@@ -11,6 +11,8 @@ import { GraphService } from '../graph.service';
 export class CdsComponent implements OnChanges {
 
   @Input() cdsSchede: CDS[];
+
+  chart: Chart;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('cdsSchede')) {
@@ -44,7 +46,7 @@ export class CdsComponent implements OnChanges {
     document.getElementById('corso-studio').innerHTML = '<canvas id="cds-canvas"></canvas>';
 
     const ctx = (document.getElementById('cds-canvas') as HTMLCanvasElement).getContext('2d');
-    const chart = new Chart(ctx, {
+    this.chart = new Chart(ctx, {
       type: 'horizontalBoxplot',
       data: boxplotData,
       options: {

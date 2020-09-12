@@ -1,12 +1,13 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { GraphService } from '../graph.service';
+import { GraphService } from '../services/graph/graph.service';
 import { Chart } from 'chart.js';
-import { Config, TeachingSummary, SchedaOpis } from '../utils.model';
-import { CDS } from '../api.model';
-import { AuthService } from '../auth.service';
+import { Config, TeachingSummary, SchedaOpis } from '../utils/utils.model';
+import { CDS } from '../services/api/api.model';
+import { AuthService } from '../services/auth/auth.service';
 import { Options } from 'ng5-slider';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api/api.service';
+import { getConf } from '../utils/utils';
 
 @Component({
   selector: 'app-academic-year',
@@ -61,12 +62,7 @@ export class AcademicYearComponent implements OnChanges {
   ) {
     this.isLogged = this.authService.authTokenIsPresent();
     this.showStats = this.isLogged;
-
-    try {
-      this.CONF = require('../../assets/config.json');
-    } catch {
-      this.CONF = require('../../assets/config.json.dist');
-    }
+    this.CONF = getConf();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -126,9 +122,7 @@ export class AcademicYearComponent implements OnChanges {
           }
       });
 
-      let means: number[];
-      let values: number[][];
-      [means, values] = this.graphService.elaborateFormula(this.teachings
+      const [, values] = this.graphService.elaborateFormula(this.teachings
         .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ));
 
       this.findGoodAndBadTeachings();

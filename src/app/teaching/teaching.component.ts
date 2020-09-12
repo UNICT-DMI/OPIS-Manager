@@ -2,12 +2,13 @@ import { Component, EventEmitter, OnInit, Input, OnDestroy, OnChanges, SimpleCha
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';
 import { Options } from 'ng5-slider';
-import { GraphService } from '../graph.service';
+import { GraphService } from '../services/graph/graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Teaching, SchedaOpis, CDS } from '../api.model';
-import { ApiService } from '../api.service';
-import { TeachingSchede, Config } from '../utils.model';
+import { Teaching, SchedaOpis, CDS } from '../services/api/api.model';
+import { ApiService } from '../services/api/api.service';
+import { TeachingSchede, Config } from '../utils/utils.model';
+import { getConf } from '../utils/utils';
 
 @Component({
   selector: 'app-teaching',
@@ -39,12 +40,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     private readonly apiService: ApiService,
     private readonly graphService: GraphService,
   ) {
-
-    try {
-      this.CONF = require('../../assets/config.json');
-    } catch {
-      this.CONF = require('../../assets/config.json.dist');
-    }
+    this.CONF = getConf();
 
     this.optionsSlider = {
       floor: 1,

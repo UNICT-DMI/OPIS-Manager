@@ -4,9 +4,9 @@ import 'chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 import { Subject, from } from 'rxjs';
 import { take, takeUntil, groupBy, mergeMap, toArray } from 'rxjs/operators';
-import { GraphService } from '../graph.service';
-import { ApiService } from '../api.service';
-import { Department, CDS, Teaching } from '../api.model';
+import { GraphService } from '../services/graph/graph.service';
+import { ApiService } from '../services/api/api.service';
+import { Department, CDS, Teaching } from '../services/api/api.model';
 
 @Component({
   selector: 'app-home',

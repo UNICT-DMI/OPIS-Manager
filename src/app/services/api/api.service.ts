@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Department, CDS, Teaching, SchedaOpis, Domanda, LoginResponse } from './api.model';
 import { Observable } from 'rxjs';
-import { Config } from './utils.model';
+import { Config } from '../../utils/utils.model';
+import { getConf } from '../../utils/utils';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -15,11 +16,7 @@ export class ApiService {
   constructor(
     private readonly http: HttpClient,
   ) {
-    try {
-      this.CONF = require('../assets/config.json');
-    } catch {
-      this.CONF = require('../assets/config.json.dist');
-    }
+    this.CONF = getConf();
   }
 
   public getDepartments(): Observable<Department[]>;

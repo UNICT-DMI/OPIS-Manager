@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { fadeAnimation } from './animations';
+import { fadeAnimation } from './utils/animations';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({

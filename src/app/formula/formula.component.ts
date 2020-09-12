@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { WeightService } from '../weight.service';
+import { WeightService } from '../services/weight/weight.service';
 import { Options } from 'ng5-slider';
-import { AuthService } from '../auth.service';
-import { Domanda } from '../api.model';
+import { AuthService } from '../services/auth/auth.service';
+import { Domanda } from '../services/api/api.model';
 
 @Component({
   selector: 'app-formula',

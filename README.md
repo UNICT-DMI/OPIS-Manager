@@ -18,7 +18,7 @@ First of all, install the required dependencies with:
 Install the last version of angular-cli to run the app locally with:
 `$ npm install -g @angular/cli`
 
-Configure the years and the API path, so copy src/assets/config.json.dist into src/assets/config.json and configure the related years and API url, like:
+Configure the years and the API path, so copy src/assets/default.json into src/assets/config.json and configure the related years and API url, like:
 
 ```
 {

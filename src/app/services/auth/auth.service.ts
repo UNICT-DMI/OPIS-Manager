@@ -1,8 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
-import { ApiService } from './api.service';
-import { LoginResponse } from './api.model';
+import { Injectable } from '@angular/core';
+import { ApiService } from '../api/api.service';
+import { LoginResponse } from '../api/api.model';
 import { Observable, Subject } from 'rxjs';
-import 'rxjs/add/observable/of';
 
 
 @Injectable({

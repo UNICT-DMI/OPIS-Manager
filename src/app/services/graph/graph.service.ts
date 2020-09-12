@@ -1,8 +1,8 @@
-import { Injectable, OnInit } from '@angular/core';
-import { WeightService } from './weight.service';
-import { Teaching, Domanda } from './api.model';
+import { Injectable } from '@angular/core';
+import { WeightService } from '../weight/weight.service';
+import { Teaching } from '../api/api.model';
 import { mean } from 'mathjs';
-import { TeachingSummary, SchedaOpis } from './utils.model';
+import { TeachingSummary, SchedaOpis } from '../../utils/utils.model';
 
 @Injectable({
   providedIn: 'root'

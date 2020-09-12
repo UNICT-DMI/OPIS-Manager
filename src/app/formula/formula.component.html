@@ -47,7 +47,7 @@
 
   <div *ngIf="!isLogged; else questionslider">
     <h2 class="text-center text-danger">Valutazioni, domande e relativi pesi</h2>
-    <table class="table table-bordered">
+    <table class="table table-bordered" *ngIf="!!questionsWeights">
       <thead>
         <tr>
           <th></th>
