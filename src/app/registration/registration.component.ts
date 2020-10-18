@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
 
   public firstName: string;
   public lastName: string;
@@ -17,15 +17,10 @@ export class RegistrationComponent implements OnInit {
   // tslint:disable-next-line: max-line-length
   private emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
   public sendRegistrationRequest(): void {
-    if (!this.errorsInForm()) {
+    // if (!this.errorsInForm()) {
 
-    }
+    // }
   }
 
   private errorsInForm(): boolean {

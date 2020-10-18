@@ -196,15 +196,13 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private calculateTeachingStats(matr: number[][]): void {
-    console.log(this.cds.scostamento_media);
-    console.log(this.cds.scostamento_numerosita);
     for (let i = 0; i < 3; i++) {
       const teachingValues = this.filterZero(matr[i]);
       const mediaCDS = mean(Object.values(this.vCds).map(array => array[i]));
       const mediaInsegnamento = mean(teachingValues);
       document.getElementById('v' + (i + 1) + '-cds-mean').innerHTML = `${mediaCDS.toFixed(2)}`;
-      // tslint:disable-next-line: max-line-length
-      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS)};">${mediaInsegnamento.toFixed(2)}</span>`;
+      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = 
+        `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS)};">${mediaInsegnamento.toFixed(2)}</span>`;
       document.getElementById('v' + (i + 1) + '-var').innerHTML = `${variance(teachingValues).toFixed(3)}`;
       document.getElementById('v' + (i + 1) + '-devstd').innerHTML = `${std(teachingValues).toFixed(3)}`;
     }
@@ -213,8 +211,8 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
     const nMediaCDS = mean(Object.values(this.nCds));
     const nMediaInsegnamento = mean(teachingSchede);
     document.getElementById('n-cds-mean').innerHTML = `${nMediaCDS.toFixed(2)}`;
-    // tslint:disable-next-line: max-line-length
-    document.getElementById('n-ins-mean').innerHTML = `<span style="color:${this.getLabelColor(nMediaInsegnamento, nMediaCDS, 10)}">${nMediaInsegnamento.toFixed(2)}</span>`;
+    document.getElementById('n-ins-mean').innerHTML =
+      `<span style="color:${this.getLabelColor(nMediaInsegnamento, nMediaCDS, 10)}">${nMediaInsegnamento.toFixed(2)}</span>`;
     document.getElementById('n-var').innerHTML = `${variance(teachingSchede).toFixed(3)}`;
     document.getElementById('n-devstd').innerHTML = `${std(teachingSchede).toFixed(3)}`;
 
