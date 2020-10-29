@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart } from 'chart.js';
 import { mean, std, variance } from 'mathjs';
-import { Options } from 'ng5-slider';
+import { Options } from '@m0t0r/ngx-slider';
 import { GraphService } from '../services/graph/graph.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'angular2-chartjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Ng5SliderModule } from 'ng5-slider';
+import { NgxSliderModule } from '@m0t0r/ngx-slider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,7 +44,7 @@ import { LoginComponent } from './login/login.component';
     FormsModule,
     ChartModule,
     NgbModule,
-    Ng5SliderModule
+    NgxSliderModule,
   ],
   bootstrap: [AppComponent]
 })

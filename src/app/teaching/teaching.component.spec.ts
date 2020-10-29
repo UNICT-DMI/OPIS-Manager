@@ -10,7 +10,7 @@ import { TeachingComponent } from './teaching.component';
 
 /* Mock NgSliderComponent */
 // tslint:disable-next-line: component-selector
-@Component({selector: 'ng5-slider', template: ''})
+@Component({selector: 'ngx-slider', template: ''})
 export class NgSliderStubComponent {
     @Input() value;
     @Input() highValue;

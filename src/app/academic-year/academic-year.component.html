@@ -7,7 +7,7 @@
                     Scostamento media
                 </div>
                 <div class="col-9 custom-slider">
-                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_media" [options]="meanSliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                    <ngx-slider [(value)]="getCdsOfSelectedYear().scostamento_media" [options]="meanSliderOptions" (valueChange)="sliderUpdate($event)"></ngx-slider>
                 </div>
             </div>
             <div class="row mt-2">
@@ -15,7 +15,7 @@
                     Scostamento numerosità
                 </div>
                 <div class="col-9 custom-slider">
-                    <ng5-slider [(value)]="getCdsOfSelectedYear().scostamento_numerosita" [options]="numerositySliderOptions" (valueChange)="sliderUpdate($event)"></ng5-slider>
+                    <ngx-slider [(value)]="getCdsOfSelectedYear().scostamento_numerosita" [options]="numerositySliderOptions" (valueChange)="sliderUpdate($event)"></ngx-slider>
                 </div>
             </div>
         </div>
