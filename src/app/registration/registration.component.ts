@@ -23,6 +23,7 @@ export class RegistrationComponent {
     // }
   }
 
+  // tslint:disable-next-line
   private errorsInForm(): boolean {
     // TODO: visually show errors
     let errors = false;

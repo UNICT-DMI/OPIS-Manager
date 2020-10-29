@@ -201,7 +201,7 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
       const mediaCDS = mean(Object.values(this.vCds).map(array => array[i]));
       const mediaInsegnamento = mean(teachingValues);
       document.getElementById('v' + (i + 1) + '-cds-mean').innerHTML = `${mediaCDS.toFixed(2)}`;
-      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML = 
+      document.getElementById('v' + (i + 1) + '-ins-mean').innerHTML =
         `<span style="color:${this.getLabelColor(mediaInsegnamento, mediaCDS)};">${mediaInsegnamento.toFixed(2)}</span>`;
       document.getElementById('v' + (i + 1) + '-var').innerHTML = `${variance(teachingValues).toFixed(3)}`;
       document.getElementById('v' + (i + 1) + '-devstd').innerHTML = `${std(teachingValues).toFixed(3)}`;
