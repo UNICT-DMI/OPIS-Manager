@@ -172,7 +172,6 @@ export class TeachingComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public updateTeachingChart(): void {
-
     if (this.selectedTeaching == null) { return; }
 
     const teaching = this.teachings[this.selectedTeaching];
