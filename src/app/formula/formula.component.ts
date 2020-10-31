@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WeightService } from '../services/weight/weight.service';
-import { Options } from 'ng5-slider';
+import { Options } from '@m0t0r/ngx-slider';
 import { AuthService } from '../services/auth/auth.service';
 import { Domanda } from '../services/api/api.model';
 

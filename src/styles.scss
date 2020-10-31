@@ -111,21 +111,21 @@ router-outlet ~ * {
   margin: 0 auto;
   display: table;
 
-  ng5-slider  {
-    .ng5-slider-bar {
+  ngx-slider  {
+    .ngx-slider-bar {
       background: #ffe4d1;
       height: 2px;
     }
 
-    .ng5-slider-pointer {
+    .ngx-slider-pointer {
       background-color: $color_main;
     }
 
-    .ng5-slider-bubble {
+    .ngx-slider-bubble {
       bottom: 14px;
     }
 
-    .ng5-slider-tick.ng5-slider-selected {
+    .ngx-slider-tick.ngx-slider-selected {
       background: $color_main;
     }
   }

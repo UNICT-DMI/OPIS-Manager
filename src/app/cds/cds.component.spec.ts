@@ -1,9 +1,9 @@
-import { async, TestBed } from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { CdsComponent } from './cds.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CdsComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CdsComponent ],
       imports: [

@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { TeachingComponent } from './teaching.component';
 
 /* Mock NgSliderComponent */
 // tslint:disable-next-line: component-selector
-@Component({selector: 'ng5-slider', template: ''})
+@Component({selector: 'ngx-slider', template: ''})
 export class NgSliderStubComponent {
     @Input() value;
     @Input() highValue;
@@ -20,7 +20,7 @@ export class NgSliderStubComponent {
 }
 
 describe('TeachingComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         TeachingComponent,

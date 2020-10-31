@@ -17,6 +17,12 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "typed-function",
+              "decimal.js",
+              "fraction.js",
+              "complex.js"
+            ],
             "aot": true,
             "outputPath": "dist/opis-manager",
             "index": "src/index.html",
@@ -32,8 +38,7 @@
               "node_modules/font-awesome/css/font-awesome.css",
               "src/styles.scss"
             ],
-            "scripts": [],
-            "es5BrowserSupport": true
+            "scripts": []
           },
           "configurations": {
             "production": {

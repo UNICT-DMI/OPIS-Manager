@@ -5,7 +5,7 @@ import { Chart } from 'chart.js';
 import { Config, TeachingSummary, SchedaOpis } from '../utils/utils.model';
 import { CDS } from '../services/api/api.model';
 import { AuthService } from '../services/auth/auth.service';
-import { Options } from 'ng5-slider';
+import { Options } from '@m0t0r/ngx-slider';
 import { ApiService } from '../services/api/api.service';
 import { getConf } from '../utils/utils';
 
