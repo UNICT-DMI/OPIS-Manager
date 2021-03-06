@@ -1,5 +1,5 @@
 # OPIS-Manager
-This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/) 
+This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
 
 ## About this repo
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
@@ -22,7 +22,7 @@ Configure the years and the API path, so copy src/assets/default.json into src/a
 
 ```
 {
-  "apiUrl": "http://localhost:8000/api/v2/",
+  "apiUrl": "http://localhost:8000/api/",
   "years": ["2013/2014", "2014/2015", "2016/2017", "2017/2018", "2018/2019"]
 }
 ```
