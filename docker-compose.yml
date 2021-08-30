@@ -1,0 +1,16 @@
+version: "2"
+services:
+  node:
+    image: "node:14"
+    working_dir: /usr/opis-manager
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./:/usr/opis-manager
+    networks:
+      - opis
+    command: bash -c "npm run dev"
+
+networks:
+  opis:
+    external: true
