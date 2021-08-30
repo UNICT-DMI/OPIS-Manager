@@ -8,7 +8,8 @@
     "test": "ng test",
     "test-ci": "ng test --watch=false --code-coverage",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "dev" : "npm install && npm install -g @angular/cli && ng serve -o --host=0.0.0.0"
   },
   "private": true,
   "dependencies": {
