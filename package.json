@@ -46,7 +46,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "^6.5.4",
     "serialize-javascript": "^3.1.0",
-    "set-value": "^3.0.1",
+    "set-value": "^4.0.1",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
