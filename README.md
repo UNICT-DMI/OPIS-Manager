@@ -1,7 +1,9 @@
 # OPIS-Manager
+
 This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
 
 ## About this repo
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
 
 ## How to setup the project
@@ -27,7 +29,7 @@ Configure the years and the API path, so copy src/assets/default.json into src/a
 }
 ```
 
-Finally can run the front-end application with `$ ng serve -o`  then navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Finally can run the front-end application with `$ ng serve -o` then navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
@@ -49,7 +51,6 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-
 ### Credits
 
 - Stefano Borzì (Helias)
@@ -59,3 +60,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Simone Scionti
 - Alessio Piazza
 - Diego Sinitò
+- Salvo Asero
