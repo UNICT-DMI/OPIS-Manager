@@ -1,4 +1,5 @@
 # OPIS-Manager
+[![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
 This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
 
