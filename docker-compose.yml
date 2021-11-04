@@ -7,10 +7,4 @@ services:
       - "4200:4200"
     volumes:
       - ./:/usr/opis-manager
-    networks:
-      - opis
-    command: bash -c "npm run dev"
-
-networks:
-  opis:
-    external: true
+    command: bash -c "npm install && npm install -g @angular/cli && ng serve -o --host=0.0.0.0"
