@@ -1,0 +1,10 @@
+version: "2"
+services:
+  node:
+    image: "node:14"
+    working_dir: /usr/opis-manager
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./:/usr/opis-manager
+    command: bash -c "npm install && npm install -g @angular/cli && ng serve -o --host=0.0.0.0"
