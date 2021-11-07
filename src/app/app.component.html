@@ -1,9 +1,12 @@
 <nav class="navbar navbar-expand-lg opis-nav">
   <div class="container">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" (click)="navbarShow = !navbarShow">
+      <span class="navbar-toggler-icon">
+        <i class="fa fa-bars"></i>
+        Menù
+      </span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav" [ngClass]="{'show': navbarShow}">
       <ul class="navbar-nav nav nav-tabs">
         <li class="nav-item opis-logo-menu">
           <a class="nav-link" id="home-tab" data-toggle="tab" routerLink="/" role="tab" aria-controls="home" aria-selected="true">
