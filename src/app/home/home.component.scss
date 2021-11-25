@@ -12,6 +12,7 @@ $color_main: #00897b;
 }
 
 .segmented {
+  width: 500px;
   display: flex;
   flex-flow: row wrap;
   box-sizing: border-box;
@@ -31,25 +32,26 @@ $color_main: #00897b;
     display: table;
     flex: 1;
 
-    transition: .5s all;
+    transition: 0.5s all;
     user-select: none;
     -webkit-user-select: none;
     cursor: pointer;
 
     &:first-child {
-      border-radius: .4em 0 0 .4em;
+      border-radius: 0.4em 0 0 0.4em;
       border-right: 0;
     }
 
     &:last-child {
-      border-radius: 0 .4em .4em 0;
+      border-radius: 0 0.4em 0.4em 0;
       border-right: 1px solid;
     }
 
-    &:hover, &.checked {
+    &:hover,
+    &.checked {
       background: $color_main;
       color: $color_light;
-      transition: .5s all;
+      transition: 0.5s all;
     }
 
     span {
@@ -66,6 +68,7 @@ $color_main: #00897b;
   }
 }
 
-app-academic-year, app-teaching {
+app-academic-year,
+app-teaching {
   width: 100%;
 }
