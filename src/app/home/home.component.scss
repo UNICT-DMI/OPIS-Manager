@@ -1,3 +1,5 @@
+@import "../../styles";
+
 $color_dark: #00695c;
 $color_light: #fff;
 $color_main: #00897b;
@@ -20,6 +22,11 @@ $color_main: #00897b;
   font-size: 90%;
   text-align: center;
 
+  @include breakpoint(mobile) {
+    flex-direction: column;
+    width: 100%;
+  }
+
   label {
     box-sizing: border-box;
     border: 1px solid darkgrey;
@@ -27,7 +34,7 @@ $color_main: #00897b;
     color: $color_dark;
     margin: 0;
     padding: 10px;
-    height: 50px;
+    height: auto;
     text-align: center;
     display: table;
     flex: 1;
@@ -45,6 +52,24 @@ $color_main: #00897b;
     &:last-child {
       border-radius: 0 0.4em 0.4em 0;
       border-right: 1px solid;
+    }
+
+    @include breakpoint(mobile) {
+      border: 1px solid darkgrey !important;
+      border-bottom-width: 0 !important;
+
+      &:first-child {
+        border-radius: 0;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+
+      &:last-child {
+        border-radius: 0;
+        border-bottom-width: 1px !important;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
     }
 
     &:hover,

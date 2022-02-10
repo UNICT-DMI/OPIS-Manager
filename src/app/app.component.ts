@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   public readonly faGithub = faGithub;
 
   public isLogged = false;
+  public navbarShow = false;
 
   constructor(
     public readonly authService: AuthService,

@@ -5,6 +5,17 @@ $color_light: #fff;
 $color_main: #00897b;
 $font_family_1: "Helvetica Neue";
 
+@mixin breakpoint($point) {
+  @if $point == tablet {
+    @media (max-width: 1024px) {
+      @content;
+    }
+  } @else if $point == mobile {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 /*
   #00897b  Main
   #80cbc4 Light
@@ -85,6 +96,9 @@ router-outlet ~ * {
   color: $color_light;
   background-color: $color_main;
   border-color: $color_dark;
+  @include breakpoint(mobile)  {
+    width: 100%;
+  }
 }
 .btn-opis:hover, .btn-opis option {
   color: $color_light;
@@ -98,6 +112,10 @@ router-outlet ~ * {
 .list-option-container {
   margin-left: 325px;
   width: 850px;
+  @include breakpoint(mobile) {
+    width: 100%;
+    margin: 30px 0;
+  }
 }
 
 .addons-bar {

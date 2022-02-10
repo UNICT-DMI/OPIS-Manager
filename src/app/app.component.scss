@@ -10,3 +10,22 @@ $color_main: #00897b;
   width: 134px;
   height: 25px;
 }
+
+.navbar-toggler {
+  border: 0 !important;
+  padding: 0;
+  outline: none !important;
+  color: #fff;
+
+  .navbar-toggler-icon {
+    width: 90px;
+    text-align: start;
+    line-height: 30px;
+  }
+}
+
+.nav-link {
+  border: 0 !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
