@@ -1,5 +1,10 @@
 @import '~katex/dist/katex.css';
 
+/*Color palette*/
+$primary-grey: #a9a9a9;
+$light-grey: #f0f0f0;
+$primary-black: #1a1a1a;
+
 $color_dark: #00695c;
 $color_light: #fff;
 $color_main: #00897b;
@@ -93,15 +98,18 @@ router-outlet ~ * {
 }
 
 .btn-opis {
-  color: $color_light;
-  background-color: $color_main;
-  border-color: $color_dark;
+  color: $primary-black;
+  background-color: $light-grey;
+  border-color: $primary-grey;
+  box-shadow: none;
   @include breakpoint(mobile)  {
     width: 100%;
   }
 }
+
 .btn-opis:hover, .btn-opis option {
-  color: $color_light;
+  color: $primary-black;
+  background-color: $light-grey;
 }
 
 .selected-tab {
