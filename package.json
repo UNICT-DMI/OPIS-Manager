@@ -41,7 +41,7 @@
     "jquery": "^3.5.0",
     "lodash": "^4.17.20",
     "mathjs": "^7.0.0",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "ng-katex": "^2.0.3",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",
