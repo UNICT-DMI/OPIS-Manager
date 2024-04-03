@@ -19,11 +19,11 @@ jobs:
       - name: Use Node.js 16.15.1
         uses: actions/setup-node@v1
         with:
-          node-version: '16.15.1'
+          node-version: "16.15.1"
       - name: Build 🔨
         run: |
-          npm install -g @angular/cli@11
-          npm install
+          npm install -g @angular/cli@11 --legacy-peer-deps
+          npm install --legacy-peer-deps
           ng build --prod --base-href=""
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
