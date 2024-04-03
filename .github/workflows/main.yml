@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Use Node.js 18.16.1
+      - name: Use Node.js 16.15.1
         uses: actions/setup-node@v1
         with:
-          node-version: "18.16.1"
+          node-version: "16.15.1"
       - name: Build 🔨
         run: |
           npm install -g @angular/cli@10 --legacy-peer-deps
