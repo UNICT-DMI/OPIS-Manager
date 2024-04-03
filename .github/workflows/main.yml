@@ -22,7 +22,7 @@ jobs:
           node-version: "18.16.1"
       - name: Build 🔨
         run: |
-          npm install -g @angular/cli --legacy-peer-deps
+          npm install -g @angular/cli@10 --legacy-peer-deps
           npm install --legacy-peer-deps
           ng build --prod --base-href=""
       - name: Deploy 🚀

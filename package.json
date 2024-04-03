@@ -9,7 +9,8 @@
     "test-ci": "ng test --watch=false --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "ng serve -o --host=0.0.0.0"
+    "dev": "ng serve -o --host=0.0.0.0",
+    "build:prod": "ng build --prod --base-href=\"\""
   },
   "private": true,
   "dependencies": {
@@ -52,8 +53,8 @@
     "zone.js": "0.10.2"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "15.0.0",
-    "@angular-devkit/build-angular": "15.0.4",
+    "@angular-builders/custom-webpack": "10.0.1",
+    "@angular-devkit/build-angular": "0.1002.0",
     "@angular/cli": "10.2.0",
     "@angular/compiler-cli": "10.2.1",
     "@angular/language-service": "10.2.1",
