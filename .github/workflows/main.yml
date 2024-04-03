@@ -5,27 +5,28 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Use Node.js 16.x
+      - name: Use Node.js 16.15.1
         uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
-      - name: Build
+          node-version: '16.15.1'
+      - name: Build 🔨
         run: |
-          npm install -g @angular/cli
-          npm install
+          npm install -g @angular/cli@11 --legacy-peer-deps
+          npm install --legacy-peer-deps
           ng build --prod --base-href=""
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v2
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          FOLDER: dist/opis-manager
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/git-catalogue
