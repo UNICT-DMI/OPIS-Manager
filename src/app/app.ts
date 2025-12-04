@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
   template: '<router-outlet />',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
-  // protected readonly title = signal('opis-manager');
-}
+export class App {}

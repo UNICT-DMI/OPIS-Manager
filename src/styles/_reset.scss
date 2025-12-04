@@ -80,7 +80,7 @@ select {
 
 /* 8. Normalize button behavior and cursor */
 button,
-[role="button"] {
+[role='button'] {
   cursor: pointer;
   background: none;
   border: none;

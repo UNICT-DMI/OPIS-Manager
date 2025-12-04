@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './dipartimento.html',
   styleUrl: './dipartimento.scss',
 })
-export class Dipartimento {
-
-}
+export class Dipartimento {}

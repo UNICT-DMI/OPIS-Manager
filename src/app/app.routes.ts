@@ -7,7 +7,7 @@ export const routes: Routes = [
   { path: 'home', component: Home },
   { path: ':idDipartimento', component: Dipartimento },
   { path: 'info', component: Info },
-  { path: "**", redirectTo:'/home' }
+  { path: '**', redirectTo: '/home' },
   // { path: 'formula', },
   // { path: 'signup', },
   // { path: 'login', }
