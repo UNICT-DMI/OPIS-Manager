@@ -2,13 +2,12 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import gsap from 'gsap';
 
 @Component({
-  selector: 'logo-animated',
+  selector: 'opis-logo-animated',
   imports: [],
   templateUrl: './logo-animated.html',
   styleUrl: './logo-animated.scss',
 })
 export class LogoAnimated implements AfterViewInit {
-
   @ViewChild('logo') logo: ElementRef<SVGElement>;
 
   ngAfterViewInit(): void {
