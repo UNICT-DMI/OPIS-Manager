@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-info',
+  selector: 'opis-info',
   imports: [],
   templateUrl: './info.html',
   styleUrl: './info.scss',
