@@ -1,0 +1,105 @@
+/* 1. Apply border-box sizing to all elements */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin/padding and set consistent line-height */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+figure,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* 3. Set base font behavior and improve text rendering */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 4. Remove list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 5. Normalize link appearance */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 6. Make media elements responsive */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 7. Remove default styles from form elements */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* 8. Normalize button behavior and cursor */
+button,
+[role="button"] {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* 9. Normalize table layout */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 10. Restrict textarea resizing to vertical */
+textarea {
+  resize: vertical;
+}
+
+/* 11. Customize text selection color */
+::selection {
+  // TODO: substitute with palette colors
+  background: #c8d0da;
+  color: #9c5353;
+}
