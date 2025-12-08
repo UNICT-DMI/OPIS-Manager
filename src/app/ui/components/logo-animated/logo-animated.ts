@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import gsap from 'gsap';
 
 @Component({
@@ -8,10 +8,42 @@ import gsap from 'gsap';
   styleUrl: './logo-animated.scss',
 })
 export class LogoAnimated implements AfterViewInit {
-  @ViewChild('logo') logo: ElementRef<SVGElement>;
+  @ViewChildren('letter', { read: ElementRef })
+  private lettersRef: QueryList<ElementRef<SVGPathElement>>;
 
   ngAfterViewInit(): void {
-    // example
-    gsap.from(this.logo.nativeElement, { opacity: 0, scale: 0.5, duration: 1.5 });
+    this.animateLetters();
+  }
+
+  private convertElementRefToNativeElement() {
+    return this.lettersRef.toArray().reverse().map(
+      ref => ref.nativeElement as SVGPathElement
+    );
+  }
+
+  private prepareAllPaths(letters: SVGPathElement[]) {
+    letters.forEach(letterRef => {
+      const len = letterRef.getTotalLength();
+      gsap.set(letterRef, {
+        strokeDasharray: len,
+        strokeDashoffset: len
+      });
+    })
+  }
+
+  private setTimeline(nativeLetters: SVGPathElement[]) {
+    const timeline = gsap.timeline({ defaults: { ease: 'back.out'} });
+
+    nativeLetters.forEach((letter, i) => {
+      timeline.to(letter, { strokeDashoffset: 0, duration: 2 }, i * 0.12);
+    })
+  }
+
+  private animateLetters() {
+    if(!this.lettersRef) return;
+    const nativeLetters = this.convertElementRefToNativeElement();
+    
+    this.prepareAllPaths(nativeLetters);
+    this.setTimeline(nativeLetters);
   }
 }
