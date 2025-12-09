@@ -11,40 +11,60 @@ export class LogoAnimated implements AfterViewInit {
   @ViewChildren('letter', { read: ElementRef })
   private lettersRef: QueryList<ElementRef<SVGPathElement>>;
 
+  @ViewChildren('bar', { read: ElementRef })
+  private barsRef: QueryList<ElementRef<SVGPathElement>>;
+
+  private timeline = gsap.timeline({ defaults: { ease: 'back.out' } });
+
   ngAfterViewInit(): void {
-    this.animateLetters();
+    this.animateLogo();
   }
 
-  private convertElementRefToNativeElement() {
-    return this.lettersRef
+  private asNative(elements: QueryList<ElementRef<SVGPathElement>>) {
+    return elements
       .toArray()
       .reverse()
       .map((ref) => ref.nativeElement as SVGPathElement);
   }
 
-  private prepareAllPaths(letters: SVGPathElement[]) {
-    letters.forEach((letterRef) => {
-      const len = letterRef.getTotalLength();
-      gsap.set(letterRef, {
+  private prepareLetters(letters: SVGPathElement[]) {
+    letters.forEach((letter) => {
+      const len = letter.getTotalLength();
+      gsap.set(letter, {
         strokeDasharray: len,
         strokeDashoffset: len,
       });
     });
   }
 
-  private setTimeline(nativeLetters: SVGPathElement[]) {
-    const timeline = gsap.timeline({ defaults: { ease: 'back.out' } });
+  private animateLogo() {
+    const bars = this.asNative(this.barsRef);
+    const letters = this.asNative(this.lettersRef);
 
-    nativeLetters.forEach((letter, i) => {
-      timeline.to(letter, { strokeDashoffset: 0, duration: 2 }, i * 0.12);
+    if (!bars.length || !letters.length) return;
+
+    gsap.set(bars, {
+      scaleY: 0,
+      transformOrigin: 'bottom center',
     });
-  }
 
-  private animateLetters() {
-    if (!this.lettersRef) return;
-    const nativeLetters = this.convertElementRefToNativeElement();
+    this.prepareLetters(letters);
 
-    this.prepareAllPaths(nativeLetters);
-    this.setTimeline(nativeLetters);
+    this.timeline.to(bars, {
+      scaleY: 1,
+      duration: 1.2,
+      ease: 'power2.out',
+      stagger: 0.15,
+    });
+
+    this.timeline.to(
+      letters,
+      {
+        strokeDashoffset: 0,
+        duration: 1.8,
+        stagger: 0.12,
+      },
+      '>-0.5',
+    );
   }
 }
