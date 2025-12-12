@@ -5,7 +5,10 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/app/ui/components/*"]
+      "@components/*": ["src/app/ui/components/*"],
+      "@services/*": ["src/app/services/*"],
+      "@interfaces/*": ["src/app/interfaces/*"],
+      "@values/*": ["src/app/values/*"]
     },
     "strict": true,
     "noImplicitOverride": true,
