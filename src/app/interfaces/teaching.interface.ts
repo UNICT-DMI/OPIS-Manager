@@ -1,4 +1,4 @@
-import { SchedaOpis } from "./opis-record.interface";
+import { SchedaOpis } from './opis-record.interface';
 
 export interface Teaching {
   id: number;

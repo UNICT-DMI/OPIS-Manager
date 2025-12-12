@@ -1,0 +1,33 @@
+#homepage {
+  .animation-show {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
+  #years {
+    width: 70%;
+    margin: 2.5rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .btn-year {
+      border: 1px solid transparent;
+      background-color: rgb(29, 83, 104);
+      color: white;
+      border-radius: 0.6rem;
+      padding: 0.7rem 1rem;
+      &.selected {
+        border: 3px solid rgb(12, 34, 43);
+      }
+    }
+  }
+}

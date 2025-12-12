@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { DepartmentsService } from '@services/departments.service';
 import gsap from 'gsap';
 
 @Component({
@@ -15,6 +17,8 @@ import gsap from 'gsap';
   styleUrl: './logo-animated.scss',
 })
 export class LogoAnimated implements AfterViewInit {
+  private readonly _departmentService = inject(DepartmentsService);
+
   @ViewChildren('letter', { read: ElementRef })
   private lettersRef: QueryList<ElementRef<SVGPathElement>>;
 
@@ -86,39 +90,38 @@ export class LogoAnimated implements AfterViewInit {
     this.prepareLetters(letters);
     gsap.set(circle, { opacity: 0 });
 
-    this.timeline.to(arrows, {
-      scaleY: 1,
-      scaleX: 1,
-      duration: 0.9,
-      ease: 'power2.out',
-      stagger: 0.1,
-    });
-
-    this.timeline.to(bars, {
-      scaleY: 1,
-      duration: 1.2,
-      ease: 'power2.out',
-      stagger: 0.15,
-    });
-
-    this.timeline.to(
-      circle,
-      {
-        opacity: 1,
-        duration: 0.6,
-        ease: 'power1.out',
-      },
-      '>-0.5',
-    );
-
-    this.timeline.to(
-      letters,
-      {
-        strokeDashoffset: 0,
-        duration: 1.8,
-        stagger: 0.12,
-      },
-      '>-0.5',
-    );
+    this.timeline
+      .to(arrows, {
+        scaleY: 1,
+        scaleX: 1,
+        duration: 0.9,
+        ease: 'power2.out',
+        stagger: 0.1,
+      })
+      .to(bars, {
+        scaleY: 1,
+        duration: 1.2,
+        ease: 'power2.out',
+        stagger: 0.15,
+      })
+      .to(
+        circle,
+        {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power1.out',
+        },
+        '>-0.5',
+      )
+      .eventCallback('onComplete', () => this._departmentService.canStartUserFlow.set(true))
+      .to(
+        letters,
+        {
+          strokeDashoffset: 0,
+          duration: 1.8,
+          stagger: 0.12,
+        },
+        '>-0.5',
+      );
   }
 }

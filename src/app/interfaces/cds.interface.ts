@@ -1,4 +1,4 @@
-import { Teaching } from "./teaching.interface";
+import { Teaching } from './teaching.interface';
 
 export interface CDS {
   id: number;
