@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import gsap from 'gsap';
 
 @Component({
@@ -13,6 +20,12 @@ export class LogoAnimated implements AfterViewInit {
 
   @ViewChildren('bar', { read: ElementRef })
   private barsRef: QueryList<ElementRef<SVGPathElement>>;
+
+  @ViewChildren('arrow', { read: ElementRef })
+  private arrowsRef: QueryList<ElementRef<SVGPathElement>>;
+
+  @ViewChild('circle', { read: ElementRef })
+  private circleRef: ElementRef<SVGPathElement>;
 
   private timeline = gsap.timeline({ defaults: { ease: 'back.out' } });
 
@@ -37,18 +50,49 @@ export class LogoAnimated implements AfterViewInit {
     });
   }
 
-  private animateLogo() {
-    const bars = this.asNative(this.barsRef);
-    const letters = this.asNative(this.lettersRef);
+  private prepareArrows(arrows: SVGPathElement[]) {
+    const startEffectArrow = new Map([
+      ['arrow_top', { scaleY: 0, transformOrigin: 'bottom center' }],
+      ['arrow_bottom', { scaleX: 0, transformOrigin: 'left center' }],
+    ]);
 
-    if (!bars.length || !letters.length) return;
+    arrows.forEach((arrow) => {
+      const id = arrow.id;
+      if (id) {
+        const configGsap = startEffectArrow.get(id);
+        if (!configGsap) return;
+        gsap.set(arrow, configGsap);
+      }
+    });
+  }
 
+  private prepareBars(bars: SVGPathElement[]) {
     gsap.set(bars, {
       scaleY: 0,
       transformOrigin: 'bottom center',
     });
+  }
 
+  private animateLogo() {
+    const circle = this.circleRef.nativeElement;
+    const arrows = this.asNative(this.arrowsRef);
+    const bars = this.asNative(this.barsRef);
+    const letters = this.asNative(this.lettersRef);
+
+    if (!arrows.length && !bars.length && !letters.length) return;
+
+    this.prepareArrows(arrows);
+    this.prepareBars(bars);
     this.prepareLetters(letters);
+    gsap.set(circle, { opacity: 0 });
+
+    this.timeline.to(arrows, {
+      scaleY: 1,
+      scaleX: 1,
+      duration: 0.9,
+      ease: 'power2.out',
+      stagger: 0.1,
+    });
 
     this.timeline.to(bars, {
       scaleY: 1,
@@ -56,6 +100,16 @@ export class LogoAnimated implements AfterViewInit {
       ease: 'power2.out',
       stagger: 0.15,
     });
+
+    this.timeline.to(
+      circle,
+      {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power1.out',
+      },
+      '>-0.5',
+    );
 
     this.timeline.to(
       letters,
