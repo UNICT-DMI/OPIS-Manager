@@ -16,7 +16,7 @@ describe('Home', () => {
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('[HOME]: Created', () => expect(component).toBeTruthy());
+
+  
 });

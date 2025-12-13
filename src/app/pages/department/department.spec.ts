@@ -1,22 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Dipartimento } from './dipartimento';
+import { Department } from './department';
 
 describe('Dipartimento', () => {
-  let component: Dipartimento;
-  let fixture: ComponentFixture<Dipartimento>;
+  let component: Department;
+  let fixture: ComponentFixture<Department>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Dipartimento],
+      imports: [Department],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Dipartimento);
+    fixture = TestBed.createComponent(Department);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('[DEPARTMENT]: created', () => expect(component).toBeTruthy());
 });

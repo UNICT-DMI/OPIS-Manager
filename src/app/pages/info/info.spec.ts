@@ -16,7 +16,5 @@ describe('Info', () => {
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('[INFO]: created', () => expect(component).toBeTruthy());
 });

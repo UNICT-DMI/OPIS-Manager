@@ -9,4 +9,5 @@ export interface Department {
   report: any;
   tot_schedeF: number;
   tot_schedeNF: number;
+  icon?: string
 }
