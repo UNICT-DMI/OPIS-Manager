@@ -21,12 +21,19 @@
 
     .btn-year {
       border: 1px solid transparent;
-      background-color: rgb(29, 83, 104);
+      background-color: var(--color-primary);
       color: white;
       border-radius: 0.6rem;
       padding: 0.7rem 1rem;
+      transition: background-color 0.3s ease-in-out;
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+        transition: background-color 0.3s ease-in-out;
+      }
+
       &.selected {
-        border: 3px solid rgb(12, 34, 43);
+        border: 2px solid var(--color-primary-active);
       }
     }
   }
