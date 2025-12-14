@@ -20,4 +20,5 @@ export const DEPARTMENT_ICONS: Record<DepsName, string> = {
   LINGUE_RAGUSA: 'language',
   SCIENZE_BIOMEDICHE_BIOTEC: 'biotech',
   ARCHITETTURA_SIRACUSA: 'location_city',
+  DEFAULT: 'domain'
 };

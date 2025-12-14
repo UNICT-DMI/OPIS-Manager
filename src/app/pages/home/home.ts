@@ -28,7 +28,7 @@ export class Home {
         map(res => {
           return res.map(respDep => {
             const nameDep = OPIS_DEPARTMENT_MAP[respDep.unict_id];
-            const icon = DEPARTMENT_ICONS[nameDep];
+            const icon = DEPARTMENT_ICONS[nameDep] ?? DEPARTMENT_ICONS.DEFAULT;
 
             return {
               ...respDep,
