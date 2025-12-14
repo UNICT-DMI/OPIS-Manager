@@ -12,11 +12,12 @@
   }
 
   #years {
-    width: 70%;
-    margin: 2.5rem auto;
+    margin: 1.5rem;
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     justify-content: center;
+    border: 2px var(--color-primary) dashed;
+    padding: 1.5rem;
     gap: 1rem;
 
     .btn-year {
