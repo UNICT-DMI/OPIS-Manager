@@ -1,18 +1,6 @@
 <section id="homepage">
   <opis-logo-animated></opis-logo-animated>
-
-  <section id="years" class="animation-show" [class.show]="canShowDepartments()">
-    @for (year of allYears; track $index) {
-      <button
-        (click)="selectYear(year)"
-        role="button"
-        [class.selected]="selectedYear() === year"
-        class="btn-year"
-      >
-        <span>{{ year }}</span>
-      </button>
-    }
-  </section>
+  <opis-year-section></opis-year-section>
 
   <section id="departments" class="animation-show" [class.show]="canShowDepartments()">
     @if (respDepartments.isLoading()) {

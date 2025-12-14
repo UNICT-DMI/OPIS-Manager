@@ -15,6 +15,7 @@ export class DepartmentsService {
   private readonly _http = inject(HttpClient);
 
   public canStartUserFlow = signal(false);
+  public selectedYear = signal<AcademicYear>('2020/2021');
 
   private departmentsApi(year: AcademicYear) {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;
@@ -26,9 +27,9 @@ export class DepartmentsService {
     return this._http.get<CDS[]>(url);
   }
 
-  public getDepartmentByYear(year: Signal<AcademicYear>) {
+  public getDepartmentByYear() {
     return rxResource({
-      params: () => year(),
+      params: () => this.selectedYear(),
       stream: ({ params }) => {
         return this.departmentsApi(params).pipe(
           map(res => (res.map(respDep => {
