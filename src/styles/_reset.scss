@@ -99,7 +99,6 @@ textarea {
 
 /* 11. Customize text selection color */
 ::selection {
-  // TODO: substitute with palette colors
-  background: #c8d0da;
-  color: #9c5353;
+  background: var(--blue-100);
+  color: var(--green-500);
 }
