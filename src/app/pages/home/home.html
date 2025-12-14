@@ -23,7 +23,7 @@
       @let departments = respDepartments.value();
 
       @for (department of departments; track $index) {
-        <span class="material-symbols-outlined">{{ department.icon }}</span>
+        <opis-dep-card [department]="department"></opis-dep-card>
       }
     }
   </section>

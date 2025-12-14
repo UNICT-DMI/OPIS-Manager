@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { DepCard } from '@cards/dep-card/dep-card';
 import { LogoAnimated } from '@components/logo-animated/logo-animated';
 import { DepartmentsService } from '@services/departments.service';
 import { OPIS_DEPARTMENT_MAP } from '@values/deps-id';
@@ -9,7 +10,7 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'opis-home',
-  imports: [LogoAnimated],
+  imports: [ LogoAnimated, DepCard ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
