@@ -1,6 +1,13 @@
-{{ department() | json }}
-<!-- <span class="material-symbols-outlined">{{ department.icon }}</span> -->
-
-<article [id]="department().unict_id">
-  
+<article class="cards department" [id]="department().unict_id">
+  <a>
+    <div class="wrappers-icon">
+      <span class="material-symbols-outlined">{{ department().icon }}</span>
+    </div>
+    <div class="wrappers-text">
+      <h4>{{ department().nome }}</h4>
+      <span class="material-symbols-outlined icon-link">
+        open_in_new
+      </span>
+    </div>
+  </a>
 </article>

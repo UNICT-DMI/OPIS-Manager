@@ -38,4 +38,28 @@
       }
     }
   }
+
+  #departments {
+    padding-top: 2rem;
+    margin: 0 auto 1.5rem;
+    width: 90%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: start;
+    gap: 1.3rem;
+
+    opis-dep-card {
+      width: 100%;
+
+      @media (min-width: 700px) {
+        flex: 0 0 48%;
+        max-width: 48%;
+      }
+
+      @media (min-width: 1300px) {
+        flex: 0 0 32%;
+        max-width: 32%;
+      }
+    }
+  }
 }
