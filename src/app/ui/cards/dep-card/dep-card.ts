@@ -1,10 +1,10 @@
-import { JsonPipe } from '@angular/common';
 import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Department } from '@interfaces/department.interface';
 
 @Component({
   selector: 'opis-dep-card',
-  imports: [JsonPipe],
+  imports: [ RouterLink ],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
 })
