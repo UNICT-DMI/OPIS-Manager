@@ -10,7 +10,4 @@ import { Department } from '@interfaces/department.interface';
 })
 export class DepCard {
   public department = input.required<Department>();
-
-  
-
 }

@@ -3,11 +3,11 @@ export interface Department {
   unict_id: number;
   nome: string;
   anno_accademico: string;
-  tot_cds: number;
-  tot_moduli: number;
-  tot_valutati: number;
-  report: any;
-  tot_schedeF: number;
-  tot_schedeNF: number;
+  tot_cds?: number;
+  tot_moduli?: number;
+  tot_valutati?: number;
+  report?: any;
+  tot_schedeF?: number;
+  tot_schedeNF?: number;
   icon?: string
 }

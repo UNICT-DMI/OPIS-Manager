@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect } from 'vitest';
 import { YearSection } from './year-section';
 
 describe('YearSection', () => {
@@ -17,7 +17,5 @@ describe('YearSection', () => {
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('[YEAR_SECTION]: Created', () => expect(component).toBeTruthy());
 });

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect } from 'vitest';
 import { DepartmentPage } from './department';
 
 describe('Dipartimento', () => {

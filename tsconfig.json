@@ -10,7 +10,8 @@
       "@services/*": ["src/app/services/*"],
       "@interfaces/*": ["src/app/interfaces/*"],
       "@c_types/*": ["src/app/custom_types/*"],
-      "@values/*": ["src/app/values/*"]
+      "@values/*": ["src/app/values/*"],
+      "@mocks/*": ["src/app/mocks/*"]
     },
     "strict": true,
     "noImplicitOverride": true,
