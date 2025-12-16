@@ -3,10 +3,10 @@ import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Department } from '@interfaces/department.interface';
-import { OPIS_DEPARTMENT_MAP } from '@values/deps-id';
+import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
 import { AcademicYear } from '@values/years';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -17,9 +17,21 @@ export class DepartmentsService {
   public canStartUserFlow = signal(false);
   public selectedYear = signal<AcademicYear>('2020/2021');
 
-  private departmentsApi(year: AcademicYear) {
+  private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;
-    return this._http.get<Department[]>(url);
+    return this._http.get<Department[]>(url).pipe(
+      map((res) =>
+        res.map((respDep) => {
+          const nameDep = UNICT_ID_DEPARTMENT_MAP[respDep.unict_id];
+          const icon = DEPARTMENT_ICONS[nameDep] ?? DEPARTMENT_ICONS.DEFAULT;
+
+          return {
+            ...respDep,
+            icon,
+          };
+        }),
+      )
+    );
   }
 
   public getCDSOfDepartment(department: number) {
@@ -30,21 +42,7 @@ export class DepartmentsService {
   public getDepartmentByYear() {
     return rxResource({
       params: () => this.selectedYear(),
-      stream: ({ params }) => {
-        return this.departmentsApi(params).pipe(
-          map((res) =>
-            res.map((respDep) => {
-              const nameDep = OPIS_DEPARTMENT_MAP[respDep.unict_id];
-              const icon = DEPARTMENT_ICONS[nameDep] ?? DEPARTMENT_ICONS.DEFAULT;
-
-              return {
-                ...respDep,
-                icon,
-              };
-            }),
-          ),
-        );
-      },
+      stream: ({ params }) => this.departmentsApi(params)
     });
   }
 }

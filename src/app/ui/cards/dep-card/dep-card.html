@@ -1,5 +1,5 @@
 <article class="cards department" [id]="department().unict_id">
-  <a routerLink="/{{ department().id }}">
+  <a (click)="saveInfo()" [routerLink]="detailUrl">
     <div class="wrappers-icon">
       <span class="material-symbols-outlined">{{ department().icon }}</span>
     </div>

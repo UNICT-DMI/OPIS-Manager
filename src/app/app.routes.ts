@@ -5,7 +5,7 @@ import { Home } from './pages/home/home';
 
 export const routes: Routes = [
   { path: 'home', component: Home },
-  { path: ':idDipartimento', component: DepartmentPage },
+  { path: ':depsName', component: DepartmentPage },
   { path: 'info', component: Info },
   { path: '**', redirectTo: '/home' },
   // { path: 'formula', },
