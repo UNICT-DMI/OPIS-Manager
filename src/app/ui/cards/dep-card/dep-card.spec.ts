@@ -13,16 +13,14 @@ describe('DepCard', () => {
     queryParams: signal({}),
     snapshot: {
       params: {},
-      queryParams: {}
-    }
+      queryParams: {},
+    },
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DepCard],
-      providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
-      ]
+      providers: [{ provide: ActivatedRoute, useValue: mockActivatedRoute }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DepCard);

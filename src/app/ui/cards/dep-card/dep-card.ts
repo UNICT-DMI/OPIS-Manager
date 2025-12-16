@@ -4,7 +4,7 @@ import { Department } from '@interfaces/department.interface';
 
 @Component({
   selector: 'opis-dep-card',
-  imports: [ RouterLink ],
+  imports: [RouterLink],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
 })

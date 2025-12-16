@@ -32,17 +32,19 @@ export class DepartmentsService {
       params: () => this.selectedYear(),
       stream: ({ params }) => {
         return this.departmentsApi(params).pipe(
-          map(res => (res.map(respDep => {
-            const nameDep = OPIS_DEPARTMENT_MAP[respDep.unict_id];
-            const icon = DEPARTMENT_ICONS[nameDep] ?? DEPARTMENT_ICONS.DEFAULT;
+          map((res) =>
+            res.map((respDep) => {
+              const nameDep = OPIS_DEPARTMENT_MAP[respDep.unict_id];
+              const icon = DEPARTMENT_ICONS[nameDep] ?? DEPARTMENT_ICONS.DEFAULT;
 
-            return {
-              ...respDep,
-              icon
-            }
-          })))
-        )
+              return {
+                ...respDep,
+                icon,
+              };
+            }),
+          ),
+        );
       },
-    })
+    });
   }
 }

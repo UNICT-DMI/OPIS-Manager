@@ -1,4 +1,4 @@
-import { DepsName } from "@c_types/deps-name";
+import { DepsName } from '@c_types/deps-name';
 
 export const DEPARTMENT_ICONS: Record<DepsName, string> = {
   AGRICOLTURA: 'agriculture',
@@ -20,5 +20,5 @@ export const DEPARTMENT_ICONS: Record<DepsName, string> = {
   LINGUE_RAGUSA: 'language',
   SCIENZE_BIOMEDICHE_BIOTEC: 'biotech',
   ARCHITETTURA_SIRACUSA: 'location_city',
-  DEFAULT: 'domain'
+  DEFAULT: 'domain',
 };

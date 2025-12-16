@@ -1,29 +1,29 @@
 :root {
-  --blue-900: #01579B;
-  --blue-700: #0277BD;
-  --blue-500: #0288D1;
+  --blue-900: #01579b;
+  --blue-700: #0277bd;
+  --blue-500: #0288d1;
   /* brand primary */
-  --blue-300: #4FC3F7;
-  --blue-100: #E1F5FE;
+  --blue-300: #4fc3f7;
+  --blue-100: #e1f5fe;
 
-  --green-900: #00251A;
-  --green-700: #003D33;
-  --green-500: #004C40;
+  --green-900: #00251a;
+  --green-700: #003d33;
+  --green-500: #004c40;
   /* brand secondary */
-  --green-300: #26A69A;
+  --green-300: #26a69a;
   --green-200: #7dc5bf;
-  --green-100: #E0F2F1;
+  --green-100: #e0f2f1;
 
   /* NEUTRALS (servono, punto) */
   --gray-900: #121212;
-  --gray-700: #3A3A3A;
-  --gray-500: #6B6B6B;
-  --gray-300: #BDBDBD;
-  --gray-100: #F5F5F5;
+  --gray-700: #3a3a3a;
+  --gray-500: #6b6b6b;
+  --gray-300: #bdbdbd;
+  --gray-100: #f5f5f5;
 
   /* SEMANTIC TOKENS */
   --color-bg: var(--gray-100);
-  --color-surface: #FFFFFF;
+  --color-surface: #ffffff;
   --color-text: var(--gray-900);
   --color-text-muted: var(--gray-500);
 

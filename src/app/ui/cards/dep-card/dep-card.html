@@ -1,13 +1,11 @@
 <article class="cards department" [id]="department().unict_id">
-  <a routerLink="/{{department().id}}">
+  <a routerLink="/{{ department().id }}">
     <div class="wrappers-icon">
       <span class="material-symbols-outlined">{{ department().icon }}</span>
     </div>
     <div class="wrappers-text">
       <h4>{{ department().nome }}</h4>
-      <span class="material-symbols-outlined icon-link">
-        open_in_new
-      </span>
+      <span class="material-symbols-outlined icon-link"> open_in_new </span>
     </div>
   </a>
 </article>

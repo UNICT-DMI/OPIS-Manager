@@ -1,4 +1,4 @@
-export type DepsName = 
+export type DepsName =
   | 'AGRICOLTURA'
   | 'CHIRURGIA'
   | 'GIURISPRUDENZA'

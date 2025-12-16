@@ -8,9 +8,8 @@ describe('YearSection', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [YearSection]
-    })
-    .compileComponents();
+      imports: [YearSection],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(YearSection);
     component = fixture.componentInstance;

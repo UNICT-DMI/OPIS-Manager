@@ -13,19 +13,17 @@ describe('Home', () => {
     isLoading: () => false,
     hasValue: () => true,
     value: () => [],
-    error: () => null
+    error: () => null,
   };
   const mockDepartmentService = {
     canStartUserFlow,
-    getDepartmentByYear: () => mockResource
-  }
+    getDepartmentByYear: () => mockResource,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
-      providers: [
-        { provide: DepartmentsService, useValue: mockDepartmentService }
-      ]
+      providers: [{ provide: DepartmentsService, useValue: mockDepartmentService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Home);
@@ -46,5 +44,5 @@ describe('Home', () => {
     canStartUserFlow.set(true);
     component.ngOnDestroy();
     expect(canStartUserFlow()).toBe(false);
-  })
+  });
 });
