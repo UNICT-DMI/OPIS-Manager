@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, resource, Signal, signal, WritableSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Department } from '@interfaces/department.interface';
 import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
 import { AcademicYear } from '@values/years';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -34,8 +34,8 @@ export class DepartmentsService {
     );
   }
 
-  public getCDSOfDepartment(department: number) {
-    const url = `${this.BASE_URL}/width-id/` + department + '/cds';
+  private cdsOfDepartmentApi(department: number) {
+    const url = `${this.BASE_URL}/with-id/` + department + '/cds';
     return this._http.get<CDS[]>(url);
   }
 
@@ -44,5 +44,15 @@ export class DepartmentsService {
       params: () => this.selectedYear(),
       stream: ({ params }) => this.departmentsApi(params)
     });
+  }
+
+  public getCdsDepartment(department: WritableSignal<Department | null>) {
+    return rxResource({
+      params: () => department(),
+      stream: ({ params }) => {
+        if(!params) return of([]);
+        return this.cdsOfDepartmentApi(params.id)
+      }
+    })
   }
 }

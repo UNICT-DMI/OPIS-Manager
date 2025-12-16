@@ -1,1 +1,19 @@
-<p>dipartimento works!</p>
+<section id="department-page">
+  @if (department()) {
+    <span class="material-symbols-outlined">{{ department().icon }}</span>
+    <h1>{{ department().nome }}</h1>
+    <p>{{ department().anno_accademico }}</p>
+
+    <section id="cds">
+      @let allCds = cdsList.value();
+
+      @for(cds of allCds; track $index) {
+        <button>
+          <strong>({{ cds.classe }})</strong>
+          {{ cds.nome }}
+        </button>
+      }
+    </section>
+  }
+</section>
+
