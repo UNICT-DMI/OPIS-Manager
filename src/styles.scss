@@ -2,6 +2,12 @@
 @use 'reset';
 @use 'palette';
 
+body {
+  border-top: 1.2rem solid var(--gray-700);
+  border-bottom: 1.2rem solid var(--gray-700);
+  color: var(--gray-700);
+}
+
 .animation-show {
   opacity: 0;
   transform: translateY(20px);

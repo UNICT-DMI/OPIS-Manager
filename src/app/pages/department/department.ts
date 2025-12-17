@@ -1,10 +1,11 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Department } from '@interfaces/department.interface';
 import { DepartmentsService } from '@services/departments.service';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'opis-department',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './department.html',
   styleUrl: './department.scss',
 })
@@ -28,7 +29,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
     const rawDepartment = localStorage.getItem('department');
     if(!rawDepartment) throw new Error(
       'Impossibile recuperare le info del dipartimento selezionato'
-    ); // todo ritorno in home
+    ); // todo ritorno in home dopo tot secondi
 
     const correctDepFormat = JSON.parse(rawDepartment);
     this.departmentData.set(correctDepFormat);

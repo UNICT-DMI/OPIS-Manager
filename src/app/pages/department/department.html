@@ -1,8 +1,21 @@
 <section id="department-page">
   @if (department()) {
-    <span class="material-symbols-outlined">{{ department().icon }}</span>
-    <h1>{{ department().nome }}</h1>
-    <p>{{ department().anno_accademico }}</p>
+    <div class="department-title">
+      <div class="department-title-top">
+        <a routerLink="/home">
+          <span class="material-symbols-outlined">
+            arrow_circle_left
+          </span>
+          <span class="text">
+            Torna indietro
+          </span>
+        </a>
+        <h1>{{ department().anno_accademico }}</h1>
+      </div>
+      <div class="department-title-bottom" [attr.data-icon]="department().icon">
+        <h2>{{ department().nome }}</h2>
+      </div>
+    </div>
 
     <section id="cds">
       @let allCds = cdsList.value();
