@@ -3,6 +3,7 @@
 @use 'palette';
 
 body {
+  font-family: var(--font-sans);
   border-top: 2rem solid var(--dark-bg);
   border-bottom: 2rem solid var(--dark-bg);
   color: var(--color-text);
