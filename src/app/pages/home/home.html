@@ -2,12 +2,14 @@
   <opis-logo-animated></opis-logo-animated>
   <opis-year-section></opis-year-section>
 
-  <section id="departments" class="animation-show" [class.show]="canShowDepartments()">
+  <section id="departments" 
+    class="animation-show"
+    [class.show]="canShowDepartments()"
+    [class.loading]="respDepartments.isLoading()"
+    >
     @if (respDepartments.isLoading()) {
-      <small>In caricamento ...</small>
-    }
-
-    @if (respDepartments.hasValue()) {
+      <opis-loader></opis-loader>
+    } @else if (respDepartments.hasValue()) {
       @let departments = respDepartments.value();
 
       @for (department of departments; track $index) {

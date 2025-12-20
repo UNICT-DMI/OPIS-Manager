@@ -2,19 +2,26 @@ import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular
 import { Department } from '@interfaces/department.interface';
 import { DepartmentsService } from '@services/departments.service';
 import { RouterLink } from "@angular/router";
+import { CdsService } from '@services/cds.service';
+import { CDS } from '@interfaces/cds.interface';
+import { NO_CHOICE_CDS } from '@values/no-choice-cds';
+import { Loader } from '@components/loader/loader';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink],
+  imports: [RouterLink, Loader],
   templateUrl: './department.html',
   styleUrl: './department.scss',
 })
 export class DepartmentPage implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
+  private readonly _cdsService = inject(CdsService);
 
   private departmentData = signal<Department | null>(null);
 
+  public readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
   public department = computed(() => this.departmentData() ?? {} as Department);
+  public cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   public cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 
   ngOnInit(): void {
@@ -33,5 +40,9 @@ export class DepartmentPage implements OnInit, OnDestroy {
 
     const correctDepFormat = JSON.parse(rawDepartment);
     this.departmentData.set(correctDepFormat);
+  }
+
+  public selectCds(newCds: CDS) {
+    this._cdsService.cdsSelected.set(newCds);
   }
 }

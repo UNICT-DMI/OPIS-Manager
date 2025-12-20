@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, resource, Signal, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Department } from '@interfaces/department.interface';
+import { DELAY_API_MS } from '@values/delay-api';
 import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
 import { AcademicYear } from '@values/years';
-import { map, Observable, of } from 'rxjs';
+import { delay, map, Observable, of } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -19,6 +20,7 @@ export class DepartmentsService {
 
   private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;
+
     return this._http.get<Department[]>(url).pipe(
       map((res) =>
         res.map((respDep) => {
@@ -30,13 +32,17 @@ export class DepartmentsService {
             icon,
           };
         }),
-      )
+      ),
+      delay(DELAY_API_MS)
     );
   }
 
   private cdsOfDepartmentApi(department: number) {
     const url = `${this.BASE_URL}/with-id/` + department + '/cds';
-    return this._http.get<CDS[]>(url);
+
+    return this._http.get<CDS[]>(url).pipe(
+      delay(DELAY_API_MS)
+    );
   }
 
   public getDepartmentByYear() {

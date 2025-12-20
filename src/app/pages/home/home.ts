@@ -3,10 +3,14 @@ import { DepCard } from '@cards/dep-card/dep-card';
 import { LogoAnimated } from '@components/logo-animated/logo-animated';
 import { DepartmentsService } from '@services/departments.service';
 import { YearSection } from '@components/year-section/year-section';
+import { Loader } from '@components/loader/loader';
 
 @Component({
   selector: 'opis-home',
-  imports: [LogoAnimated, DepCard, YearSection],
+  imports: [
+    LogoAnimated, DepCard, YearSection,
+    Loader
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

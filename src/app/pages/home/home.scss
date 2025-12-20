@@ -8,6 +8,12 @@
     justify-content: start;
     gap: 1.3rem;
 
+    &.loading {
+      align-items: center;
+      justify-content: center;
+      height: 20rem;
+    }
+
     opis-dep-card {
       width: 100%;
 

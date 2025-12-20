@@ -17,15 +17,31 @@
       </div>
     </div>
 
-    <section id="cds">
-      @let allCds = cdsList.value();
-
-      @for(cds of allCds; track $index) {
-        <button>
-          <strong>({{ cds.classe }})</strong>
-          {{ cds.nome }}
-        </button>
+    <section id="cds" [class.loading]="cdsList.isLoading()">
+      @if(cdsList.isLoading()) {
+        <opis-loader></opis-loader>
+      } @else {
+        <div class="cds-title">
+  
+          @if(cds().id !== NO_CHOICE_VALUE.id) {
+            <button (click)="selectCds(NO_CHOICE_VALUE)">
+              <span class="material-symbols-outlined">
+                remove_selection
+              </span>
+            </button>
+          }
+          <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
+        </div>
+        @let allCds = cdsList.value();
+  
+        @for(cds of allCds; track $index) {
+          <button (click)="selectCds(cds)">
+            <strong>({{ cds.classe }})</strong>
+            {{ cds.nome }}
+          </button>
+        }
       }
+
     </section>
   }
 </section>
