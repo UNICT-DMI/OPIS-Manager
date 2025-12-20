@@ -6,7 +6,6 @@ article {
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: var(--green-500);
 
     .wrappers {
       &-icon {
@@ -29,7 +28,7 @@ article {
         padding: 0.8rem 1rem 0.8rem 0;
         width: 100%;
 
-        background-color: var(--green-100);
+        background-color: var(--sand-100);
         transition: all 0.3s ease-in-out;
 
         h4 {
@@ -47,8 +46,8 @@ article {
     &:hover {
       .wrappers {
         &-text {
-          background-color: var(--green-200);
-          color: var(--color-secondary);
+          background-color: var(--sand-300);
+          color: var(--gray-900);
           transition: all 0.3s ease-in-out;
 
           .icon-link {

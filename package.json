@@ -4,13 +4,14 @@
   "scripts": {
     "ng": "ng",
     "prestart": "node set-env.js",
-    "start": "ng serve --port 1000",
+    "start": "ng serve --port 1000 --host 0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
-    "test": "ng test"
+    "test": "ng test",
+    "test:coverage": "ng test --coverage"
   },
   "prettier": {
     "printWidth": 100,
@@ -49,6 +50,7 @@
     "@angular/compiler-cli": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
     "@typescript-eslint/parser": "^8.48.1",
+    "@vitest/coverage-v8": "^4.0.16",
     "angular-eslint": "^21.0.1",
     "eslint": "8.57.1",
     "eslint-config-prettier": "^10.1.8",

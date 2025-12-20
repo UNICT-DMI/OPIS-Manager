@@ -3,9 +3,9 @@
 @use 'palette';
 
 body {
-  border-top: 1.2rem solid var(--gray-700);
-  border-bottom: 1.2rem solid var(--gray-700);
-  color: var(--gray-700);
+  border-top: 2rem solid var(--dark-bg);
+  border-bottom: 2rem solid var(--dark-bg);
+  color: var(--color-text);
 }
 
 .animation-show {
