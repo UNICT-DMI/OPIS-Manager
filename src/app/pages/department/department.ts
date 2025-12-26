@@ -7,10 +7,14 @@ import { CDS } from '@interfaces/cds.interface';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { Loader } from '@components/loader/loader';
 import { Icon } from '@components/icon/icon';
+import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, Icon],
+  imports: [
+    RouterLink, Loader, Icon,
+    CdsSelectedSection
+  ],
   templateUrl: './department.html',
   styleUrl: './department.scss',
 })
@@ -37,6 +41,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     localStorage.removeItem('department');
+    this._cdsService.cdsSelected.set(this.NO_CHOICE_VALUE);
   }
 
   private retrieveDepartmentInfo() {

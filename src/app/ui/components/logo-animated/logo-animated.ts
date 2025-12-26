@@ -17,6 +17,8 @@ import gsap from 'gsap';
   styleUrl: './logo-animated.scss',
 })
 export class LogoAnimated implements AfterViewInit {
+  // TODO se possibile centralizzare la durata totale dell'animazione in un'unica variabile
+
   private readonly _departmentService = inject(DepartmentsService);
 
   @ViewChildren('letter', { read: ElementRef })

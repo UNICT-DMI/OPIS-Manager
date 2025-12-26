@@ -44,8 +44,11 @@
           </ul>
         }
       }
-
     </section>
+
+    @if(isCdsSelected) {
+      <opis-cds-selected-section [cds]="cds()"></opis-cds-selected-section>
+    }
   }
 </section>
 

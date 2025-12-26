@@ -2,8 +2,8 @@ import { Component, computed, inject, OnDestroy } from '@angular/core';
 import { DepCard } from '@cards/dep-card/dep-card';
 import { LogoAnimated } from '@components/logo-animated/logo-animated';
 import { DepartmentsService } from '@services/departments.service';
-import { YearSection } from '@components/year-section/year-section';
 import { Loader } from '@components/loader/loader';
+import { YearSection } from '@sections/year-section/year-section';
 
 @Component({
   selector: 'opis-home',
