@@ -6,10 +6,11 @@ import { CdsService } from '@services/cds.service';
 import { CDS } from '@interfaces/cds.interface';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { Loader } from '@components/loader/loader';
+import { Icon } from '@components/icon/icon';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader],
+  imports: [RouterLink, Loader, Icon],
   templateUrl: './department.html',
   styleUrl: './department.scss',
 })

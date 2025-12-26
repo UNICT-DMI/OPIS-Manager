@@ -1,10 +1,11 @@
 import { Component, input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Icon } from '@components/icon/icon';
 import { Department } from '@interfaces/department.interface';
 
 @Component({
   selector: 'opis-dep-card',
-  imports: [RouterLink],
+  imports: [RouterLink, Icon],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
 })

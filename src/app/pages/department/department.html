@@ -3,9 +3,7 @@
     <div class="department-title">
       <div class="department-title-top">
         <a routerLink="/home">
-          <span class="material-symbols-outlined">
-            arrow_circle_left
-          </span>
+          <opis-icon iconName="arrow_circle_left"></opis-icon>
           <span class="text">
             Torna indietro
           </span>
@@ -25,9 +23,7 @@
   
           @if(cds().id !== NO_CHOICE_VALUE.id) {
             <button (click)="selectCds(NO_CHOICE_VALUE)">
-              <span class="material-symbols-outlined">
-                remove_selection
-              </span>
+              <opis-icon iconName="backspace"></opis-icon>
             </button>
           }
           <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
