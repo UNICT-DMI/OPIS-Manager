@@ -21,20 +21,27 @@
       } @else {
         <div class="cds-title">
   
-          @if(cds().id !== NO_CHOICE_VALUE.id) {
+          @if(isCdsSelected) {
             <button (click)="selectCds(NO_CHOICE_VALUE)">
               <opis-icon iconName="backspace"></opis-icon>
             </button>
           }
           <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
         </div>
-        @let allCds = cdsList.value();
-  
-        @for(cds of allCds; track $index) {
-          <button (click)="selectCds(cds)">
-            <strong>({{ cds.classe }})</strong>
-            {{ cds.nome }}
-          </button>
+
+        @if (!isCdsSelected) {
+          <ul class="cds-list">
+            @let allCds = cdsList.value();
+      
+            @for(cds of allCds; track $index) {
+              <li>
+                <button (click)="selectCds(cds)">
+                  <strong>({{ cds.classe }})</strong>
+                  <span> {{ cds.nome }}</span>
+                </button>
+              </li>
+            }
+          </ul>
         }
       }
 

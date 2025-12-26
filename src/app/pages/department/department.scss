@@ -41,6 +41,7 @@
 
         @media(min-width: 1300px) {
           border-radius: .7rem;
+          padding-right: 1.5rem;
         }
       }
 
@@ -100,8 +101,6 @@
     margin: 0 auto;
 
     h3 {
-      margin-top: 1rem;
-      margin-bottom: 2rem;
       font-weight: 500;
     }
 
@@ -109,6 +108,50 @@
       align-items: center;
       justify-content: center;
       height: 20rem;
+    }
+
+    .cds {
+      &-title {
+        display: inline-flex;
+        align-items: start;
+        justify-content: start;
+        gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1.2rem;
+      }
+
+      &-list {
+        display: flex;
+        flex-direction: column;
+        gap: .7rem;
+        align-items: start;
+        justify-content: start;
+        padding-left: 0;
+
+
+        li {
+          width: 100%;
+
+          button {
+            width: 100%;
+            display: inline-flex;
+            text-align: start;
+            padding-bottom: .5rem;
+            border-bottom: 1px var(--gray-200) solid;
+
+            strong {
+              display: block;
+              flex: 0 0 25%
+            }
+
+            span {
+              display: block;
+              flex: 0 0 75%;
+            }
+          }
+
+        }
+      }
     }
 
     @media(min-width: 1300px) {
