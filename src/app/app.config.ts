@@ -7,6 +7,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideCharts(withDefaultRegisterables())
+    provideCharts(withDefaultRegisterables()),
   ],
 };

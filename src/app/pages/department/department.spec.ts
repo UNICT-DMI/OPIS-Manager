@@ -36,13 +36,13 @@ describe('Dipartimento', () => {
     // Mock localStorage
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockDepartment));
     vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(vi.fn());
-    
+
     await TestBed.configureTestingModule({
       imports: [DepartmentPage],
       providers: [
         { provide: DepartmentsService, useValue: mockDepartmentsService },
         { provide: CdsService, useValue: mockCdsService },
-        provideRouter([])
+        provideRouter([]),
       ],
     }).compileComponents();
 

@@ -1,11 +1,11 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable, signal } from "@angular/core";
-import { rxResource } from "@angular/core/rxjs-interop";
-import { CDS } from "@interfaces/cds.interface";
-import { Teaching } from "@interfaces/teaching.interface";
-import { DELAY_API_MS } from "@values/delay-api";
-import { delay, forkJoin, map } from "rxjs";
-import { env } from "src/enviroment";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { CDS } from '@interfaces/cds.interface';
+import { Teaching } from '@interfaces/teaching.interface';
+import { DELAY_API_MS } from '@values/delay-api';
+import { delay, forkJoin, map } from 'rxjs';
+import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
@@ -30,7 +30,6 @@ export class CdsService {
     return rxResource({
       params: () => this.cdsSelected(),
       stream: ({ params }) => {
-
         if (!params?.id || !params?.unict_id) throw new Error('Id or Unict_id missing!');
 
         const teachings$ = this.teachingCdsApi(params.id);
@@ -40,15 +39,12 @@ export class CdsService {
           delay(DELAY_API_MS),
           map(([teachingsRes, coarseRes]) => ({
             teaching: teachingsRes,
-            coarse: coarseRes
-          }))
+            coarse: coarseRes,
+          })),
         );
-      }
-    })
+      },
+    });
   }
-  
-
-
 
   // RIPORTO DA VECCHIO PROGETTO
   // public updateCDS(cds: CDS, token: string): Observable<object> {

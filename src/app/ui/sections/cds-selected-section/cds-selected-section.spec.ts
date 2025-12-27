@@ -9,9 +9,8 @@ describe('CdsSelectedSection', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CdsSelectedSection]
-    })
-    .compileComponents();
+      imports: [CdsSelectedSection],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CdsSelectedSection);
     fixture.componentRef.setInput('cds', exampleCDS);

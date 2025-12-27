@@ -1,4 +1,4 @@
-import { CDS } from "@interfaces/cds.interface";
+import { CDS } from '@interfaces/cds.interface';
 
 export const NO_CHOICE_CDS: CDS = {
   id: -1,
@@ -10,5 +10,5 @@ export const NO_CHOICE_CDS: CDS = {
   scostamento_numerosita: -1,
   scostamento_media: -1,
   pesi_domande: null,
-  insegnamenti: []
+  insegnamenti: [],
 };

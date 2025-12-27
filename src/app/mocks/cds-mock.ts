@@ -1,4 +1,4 @@
-import { CDS } from "@interfaces/cds.interface";
+import { CDS } from '@interfaces/cds.interface';
 
 export const exampleCDS: CDS = {
   id: 1,
@@ -43,12 +43,15 @@ export const exampleCDS: CDS = {
         ragg_uni: {},
         studio_gg: {},
         studio_tot: {},
-        domande: [[5, 4, 3], [4, 3, 5]],
+        domande: [
+          [5, 4, 3],
+          [4, 3, 5],
+        ],
         domande_nf: {},
         motivo_nf: {},
         sugg: {},
         sugg_nf: {},
-        id_insegnamento: 101, 
+        id_insegnamento: 101,
       },
     },
   ],

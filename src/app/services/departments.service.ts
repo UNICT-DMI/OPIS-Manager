@@ -33,22 +33,20 @@ export class DepartmentsService {
           };
         }),
       ),
-      delay(DELAY_API_MS)
+      delay(DELAY_API_MS),
     );
   }
 
   private cdsOfDepartmentApi(department: number) {
     const url = `${this.BASE_URL}/with-id/` + department + '/cds';
 
-    return this._http.get<CDS[]>(url).pipe(
-      delay(DELAY_API_MS)
-    );
+    return this._http.get<CDS[]>(url).pipe(delay(DELAY_API_MS));
   }
 
   public getDepartmentByYear() {
     return rxResource({
       params: () => this.selectedYear(),
-      stream: ({ params }) => this.departmentsApi(params)
+      stream: ({ params }) => this.departmentsApi(params),
     });
   }
 
@@ -56,9 +54,9 @@ export class DepartmentsService {
     return rxResource({
       params: () => department(),
       stream: ({ params }) => {
-        if(!params) return of([]);
-        return this.cdsOfDepartmentApi(params.id)
-      }
-    })
+        if (!params) return of([]);
+        return this.cdsOfDepartmentApi(params.id);
+      },
+    });
   }
 }

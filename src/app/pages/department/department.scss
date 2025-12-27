@@ -1,5 +1,4 @@
 #department-page {
-
   .department-title {
     position: relative;
     display: flex;
@@ -16,8 +15,8 @@
         margin-bottom: 1rem;
         display: inline-flex;
         align-items: center;
-        gap: .5rem;
-        padding-left: .7rem;
+        gap: 0.5rem;
+        padding-left: 0.7rem;
 
         .text {
           text-decoration: underline;
@@ -28,19 +27,19 @@
         background-color: var(--blue-500);
         color: white;
         margin: 1.2rem 0;
-        padding: .6rem .7rem .5rem 1.5rem;
-        border-top-left-radius: .7rem;
-        border-bottom-left-radius: .7rem;
+        padding: 0.6rem 0.7rem 0.5rem 1.5rem;
+        border-top-left-radius: 0.7rem;
+        border-bottom-left-radius: 0.7rem;
 
-        @media(min-width: 700px) {
+        @media (min-width: 700px) {
           margin: 1.5rem 0;
-          padding-top: .5rem;
+          padding-top: 0.5rem;
           padding-right: 2rem;
           font-size: 2.5rem;
         }
 
-        @media(min-width: 1300px) {
-          border-radius: .7rem;
+        @media (min-width: 1300px) {
+          border-radius: 0.7rem;
           padding-right: 1.5rem;
         }
       }
@@ -53,8 +52,8 @@
     &-bottom {
       border-left: 2px var(--blue-500) solid;
       border-right: 2px var(--blue-500) solid;
-      padding: 2rem .7rem;
-      margin-top: .5rem;
+      padding: 2rem 0.7rem;
+      margin-top: 0.5rem;
       margin-bottom: 1.5rem;
       width: 90%;
 
@@ -70,13 +69,13 @@
         pointer-events: none;
         white-space: nowrap;
 
-        @media(min-width: 1300px) {
+        @media (min-width: 1300px) {
           left: 25%;
           top: 20%;
         }
       }
 
-      >* {
+      > * {
         position: relative;
         z-index: 1;
       }
@@ -85,7 +84,7 @@
         text-align: center;
       }
 
-      @media(min-width: 1300px) {
+      @media (min-width: 1300px) {
         width: 70%;
         padding: 3rem 1rem;
       }
@@ -123,20 +122,19 @@
       &-list {
         display: flex;
         flex-direction: column;
-        gap: .7rem;
+        gap: 0.7rem;
         align-items: start;
         justify-content: start;
         padding-left: 0;
         width: 100%;
 
-        @media(min-width: 1200px) {
+        @media (min-width: 1200px) {
           width: 40%;
         }
 
-        @media(min-width: 1500px) {
+        @media (min-width: 1500px) {
           width: 38%;
         }
-
 
         li {
           width: 100%;
@@ -145,12 +143,12 @@
             width: 100%;
             display: inline-flex;
             text-align: start;
-            padding-bottom: .5rem;
+            padding-bottom: 0.5rem;
             border-bottom: 1px var(--gray-200) solid;
 
             strong {
               display: block;
-              flex: 0 0 25%
+              flex: 0 0 25%;
             }
 
             span {
@@ -158,12 +156,11 @@
               flex: 0 0 75%;
             }
           }
-
         }
       }
     }
 
-    @media(min-width: 1300px) {
+    @media (min-width: 1300px) {
       width: 70%;
     }
   }

@@ -16,7 +16,7 @@ export class DepCard implements OnInit {
   ngOnInit(): void {
     this.detailUrl = this.createDetailUrl();
   }
- 
+
   private createDetailUrl() {
     const regexRuleFormat = /[^a-zA-Z0-9]+/g;
     const formattedName = this.department().nome.toLowerCase().replace(regexRuleFormat, '_');

@@ -10,5 +10,4 @@ import { CDS } from '@interfaces/cds.interface';
 })
 export class CdsSelectedSection {
   public cds = input.required<CDS>();
-
 }

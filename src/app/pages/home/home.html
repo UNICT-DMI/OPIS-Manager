@@ -2,11 +2,12 @@
   <opis-logo-animated></opis-logo-animated>
   <opis-year-section></opis-year-section>
 
-  <section id="departments" 
+  <section
+    id="departments"
     class="animation-show"
     [class.show]="canShowDepartments()"
     [class.loading]="respDepartments.isLoading()"
-    >
+  >
     @if (respDepartments.isLoading()) {
       <opis-loader></opis-loader>
     } @else if (respDepartments.hasValue()) {

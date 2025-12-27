@@ -7,10 +7,7 @@ import { YearSection } from '@sections/year-section/year-section';
 
 @Component({
   selector: 'opis-home',
-  imports: [
-    LogoAnimated, DepCard, YearSection,
-    Loader
-  ],
+  imports: [LogoAnimated, DepCard, YearSection, Loader],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
