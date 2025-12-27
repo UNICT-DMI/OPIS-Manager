@@ -1,7 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
+import { rxResource } from "@angular/core/rxjs-interop";
 import { CDS } from "@interfaces/cds.interface";
 import { Teaching } from "@interfaces/teaching.interface";
+import { DELAY_API_MS } from "@values/delay-api";
+import { delay, forkJoin, map } from "rxjs";
 import { env } from "src/enviroment";
 
 @Injectable({ providedIn: 'root' })
@@ -23,6 +26,26 @@ export class CdsService {
     return this._http.get<CDS[]>(url);
   }
 
+  public getInfoCds() {
+    return rxResource({
+      params: () => this.cdsSelected(),
+      stream: ({ params }) => {
+
+        if (!params?.id || !params?.unict_id) throw new Error('Id or Unict_id missing!');
+
+        const teachings$ = this.teachingCdsApi(params.id);
+        const coarse$ = this.coarsePerCdsApi(params.unict_id);
+
+        return forkJoin([teachings$, coarse$]).pipe(
+          delay(DELAY_API_MS),
+          map(([teachingsRes, coarseRes]) => ({
+            teaching: teachingsRes,
+            coarse: coarseRes
+          }))
+        );
+      }
+    })
+  }
   
 
 
