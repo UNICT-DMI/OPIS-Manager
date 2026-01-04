@@ -1,8 +1,7 @@
 import { JsonPipe } from '@angular/common';
-import { Component, computed, inject, input, ResourceStatus } from '@angular/core';
+import { Component, computed, inject, ResourceStatus } from '@angular/core';
 import { Icon } from '@components/icon/icon';
 import { Loader } from '@components/loader/loader';
-import { CDS } from '@interfaces/cds.interface';
 import { CdsService } from '@services/cds/cds.service';
 
 @Component({

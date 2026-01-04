@@ -12,7 +12,7 @@ import { Component, input } from '@angular/core';
       display: block;
 
       &.bigger {
-        font-size: 2rem;
+        font-size: 5rem;
       }
     }
   `,

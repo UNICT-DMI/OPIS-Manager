@@ -1,3 +1,6 @@
+// TODO: dinamicizzare in base alla risposta delle api,
+// se il backend viene aggiornato con nuovi anni?
+
 export const ACADEMIC_YEARS = [
   '2013/2014',
   '2014/2015',

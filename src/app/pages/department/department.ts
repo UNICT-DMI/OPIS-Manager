@@ -49,7 +49,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
     this._questionService.loadQuestionsWeights().pipe(
       takeUntilDestroyed()
     ).subscribe({
-      next: () => console.log('Domande prese con successo!'),
+      next: () => console.log('[LOG RESP] ==> Domande salvate con successo!'),
       error: (error) => console.warn(error)
     });
   }

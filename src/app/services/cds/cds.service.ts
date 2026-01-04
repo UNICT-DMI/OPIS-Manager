@@ -3,27 +3,77 @@ import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Teaching } from '@interfaces/teaching.interface';
+import { GraphService } from '@services/graph/graph.service';
 import { DELAY_API_MS } from '@values/delay-api';
-import { catchError, delay, forkJoin, map, throwError } from 'rxjs';
+import { AcademicYear } from '@values/years';
+import { catchError, delay, forkJoin, from, groupBy, map, mergeMap, throwError, toArray } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
   private readonly BASE_URL = env.api_url + '/cds';
   private readonly _http = inject(HttpClient);
+  private readonly _graphService = inject(GraphService);
+
+  private vCds: Record<AcademicYear, any> = {
+    '2013/2014': null,
+    '2014/2015': null,
+    '2015/2016': null,
+    '2016/2017': null,
+    '2017/2018': null,
+    '2018/2019': null,
+    '2019/2020': null,
+    '2020/2021': null
+  };
 
   public cdsSelected = signal<CDS | null>(null);
+
+  private formatSchedaOpis(resp: CDS[]) {
+    const cdsSchede = resp.flatMap(cdsCoarse => cdsCoarse.insegnamenti)
+      .filter(insegnamento => insegnamento.schedeopis != null)
+      .flatMap(insegnamento => insegnamento.schedeopis)
+      .filter(schedaopis => schedaopis.domande != null);
+
+    from(cdsSchede).pipe(
+      groupBy(scheda => scheda.anno_accademico),
+      mergeMap(group => group.pipe(toArray()))
+    ).subscribe(schede => {
+      const academicYear = schede[0].anno_accademico as AcademicYear;
+
+      this.vCds[academicYear] = this._graphService.elaborateFormula(schede)[0];
+      // debugger
+      //   this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger ngOnChange in child components
+        // this.nCds[academicYear] = this.graphService.round(schede.map(scheda => scheda.totale_schede)
+      //     .reduce((acc, val) => acc + val) / schede.length);
+    });
+
+  }
+
 
   private teachingCdsApi(cds: number) {
     const url = `${this.BASE_URL}/with-id/${cds}/insegnamenti`;
 
-    return this._http.get<Teaching[]>(url);
+    return this._http.get<Teaching[]>(url).pipe(
+      map(teaching => {
+        if (!teaching?.length) {
+          throw new Error('Nessun insegnamento trovato');
+        }
+        return teaching;
+      })
+    );
   }
 
   private coarsePerCdsApi(unictCds: number) {
     const url = `${this.BASE_URL}/coarse/${unictCds}/schedeopis`;
 
-    return this._http.get<CDS[]>(url);
+    return this._http.get<CDS[]>(url).pipe(
+      map(coarse => {
+        if (!coarse) {
+          throw new Error('Schede OPIS non trovate');
+        }
+        return this.formatSchedaOpis(coarse);
+      })
+    );
   }
 
   public getInfoCds() {
@@ -40,19 +90,9 @@ export class CdsService {
         const coarse$ = this.coarsePerCdsApi(params.unict_id);
 
         return forkJoin({
-          teaching: teachings$,
-          coarse: coarse$,
+          teaching: teachings$, coarse: coarse$,
         }).pipe(
           delay(DELAY_API_MS),
-          map(res => {
-            if (!res.teaching?.length) {
-              throw new Error('Nessun insegnamento trovato');
-            }
-            if (!res.coarse) {
-              throw new Error('Schede OPIS non trovate');
-            }
-            return res;
-          }),
           catchError(err => throwError(() => err))
         );
       },
