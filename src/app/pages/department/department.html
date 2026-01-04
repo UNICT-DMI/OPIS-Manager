@@ -31,7 +31,7 @@
             @let allCds = cdsList.value();
 
             @for (cds of allCds; track $index) {
-              <li>
+              <li id="cds-list-{{cds.id}}">
                 <button (click)="selectCds(cds)">
                   <strong>({{ cds.classe }})</strong>
                   <span> {{ cds.nome }}</span>
@@ -44,7 +44,7 @@
     </section>
 
     @if (isCdsSelected) {
-      <opis-cds-selected-section [cds]="cds()"></opis-cds-selected-section>
+      <opis-cds-selected-section></opis-cds-selected-section>
     }
   }
 </section>
