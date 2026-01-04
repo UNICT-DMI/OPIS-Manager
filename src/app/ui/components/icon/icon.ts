@@ -3,13 +3,21 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'opis-icon',
   imports: [],
-  template: `<span class="material-symbols-outlined">{{ iconName() }}</span>`,
+  template: `<span
+    [class.bigger]="isBig()"
+    class="material-symbols-outlined"
+  >{{ iconName() }}</span>`,
   styles: `
     span {
       display: block;
+
+      &.bigger {
+        font-size: 2rem;
+      }
     }
   `,
 })
 export class Icon {
   public iconName = input.required<string>();
+  public isBig = input<boolean>(false);
 }

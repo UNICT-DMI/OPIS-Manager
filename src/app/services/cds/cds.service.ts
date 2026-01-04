@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Teaching } from '@interfaces/teaching.interface';
 import { DELAY_API_MS } from '@values/delay-api';
-import { delay, forkJoin, map } from 'rxjs';
+import { catchError, delay, forkJoin, map, throwError } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +15,7 @@ export class CdsService {
   public cdsSelected = signal<CDS | null>(null);
 
   private teachingCdsApi(cds: number) {
-    const url = `${this.BASE_URL}/width-id/${cds}/insegnamenti`;
+    const url = `${this.BASE_URL}/with-id/${cds}/insegnamenti`;
 
     return this._http.get<Teaching[]>(url);
   }
@@ -30,33 +30,42 @@ export class CdsService {
     return rxResource({
       params: () => this.cdsSelected(),
       stream: ({ params }) => {
-        if (!params?.id || !params?.unict_id) throw new Error('Id or Unict_id missing!');
+        if (!params?.id || !params?.unict_id) {
+          return throwError(() =>
+            new Error('Id or Unict_id missing!')
+          );
+        }
 
         const teachings$ = this.teachingCdsApi(params.id);
         const coarse$ = this.coarsePerCdsApi(params.unict_id);
 
-        return forkJoin([teachings$, coarse$]).pipe(
+        return forkJoin({
+          teaching: teachings$,
+          coarse: coarse$,
+        }).pipe(
           delay(DELAY_API_MS),
-          map(([teachingsRes, coarseRes]) => ({
-            teaching: teachingsRes,
-            coarse: coarseRes,
-          })),
+          map(res => {
+            if (!res.teaching?.length) {
+              throw new Error('Nessun insegnamento trovato');
+            }
+            if (!res.coarse) {
+              throw new Error('Schede OPIS non trovate');
+            }
+            return res;
+          }),
+          catchError(err => throwError(() => err))
         );
       },
     });
   }
 
-  // RIPORTO DA VECCHIO PROGETTO
-  // public updateCDS(cds: CDS, token: string): Observable<object> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders(
-  //       {
-  //         Authorization: token,
-  //       }
-  //     )
-  //   };
+  // TODO ???
+  public updateCDS(cds: CDS, token: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({ Authorization: token })
+    };
 
-  //   return this.http.put(this.CONF.apiUrl + 'v2/cds/with-id/' + cds.id
-  //     + '?scostamento_numerosita=' + cds.scostamento_numerosita + '&scostamento_media=' + cds.scostamento_media, {}, httpOptions);
-  // }
+    return this._http.put(this.BASE_URL + '/with-id/' + cds.id
+      + '?scostamento_numerosita=' + cds.scostamento_numerosita + '&scostamento_media=' + cds.scostamento_media, {}, httpOptions);
+  }
 }
