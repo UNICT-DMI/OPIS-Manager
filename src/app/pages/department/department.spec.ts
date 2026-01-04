@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect } from 'vitest';
 import { DepartmentPage } from './department';
-import { DepartmentsService } from '@services/departments.service';
-import { CdsService } from '@services/cds.service';
 import { signal } from '@angular/core';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { exampleCDS } from '@mocks/cds-mock';
 import { provideRouter } from '@angular/router';
 import { exampleDepartment } from '@mocks/department-mock';
+import { DepartmentsService } from '@services/departments/departments.service';
+import { CdsService } from '@services/cds/cds.service';
 
 describe('Dipartimento', () => {
   let component: DepartmentPage;

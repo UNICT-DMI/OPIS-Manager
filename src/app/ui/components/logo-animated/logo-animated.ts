@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { DepartmentsService } from '@services/departments.service';
+import { DepartmentsService } from '@services/departments/departments.service';
 import gsap from 'gsap';
 
 @Component({

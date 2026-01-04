@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect } from 'vitest';
 import { Home } from './home';
-import { DepartmentsService } from '@services/departments.service';
 import { signal } from '@angular/core';
+import { DepartmentsService } from '@services/departments/departments.service';
 
 describe('Home', () => {
   let component: Home;

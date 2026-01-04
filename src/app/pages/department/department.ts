@@ -1,8 +1,8 @@
 import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Department } from '@interfaces/department.interface';
-import { DepartmentsService } from '@services/departments.service';
+import { DepartmentsService } from '@services/departments/departments.service';
 import { RouterLink } from '@angular/router';
-import { CdsService } from '@services/cds.service';
+import { CdsService } from '@services/cds/cds.service';
 import { CDS } from '@interfaces/cds.interface';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { Loader } from '@components/loader/loader';

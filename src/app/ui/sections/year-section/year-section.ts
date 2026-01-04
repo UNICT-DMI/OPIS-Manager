@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { DepartmentsService } from '@services/departments.service';
+import { DepartmentsService } from '@services/departments/departments.service';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
 @Component({
