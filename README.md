@@ -9,6 +9,9 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## How to setup the project
 
+### Node
+For the development of this project in angular 21 was used Node v.24.11.1
+
 ### Backend setup
 
 Before starting the UI, you must have the backend fully working on your machine. Follow the instruction in the [OPIS Manager backend repo](https://github.com/UNICT-DMI/opis-manager-core).
