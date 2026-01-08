@@ -31,7 +31,7 @@
             @let allCds = cdsList.value();
 
             @for (cds of allCds; track $index) {
-              <li id="cds-list-{{cds.id}}">
+              <li id="cds-list-{{ cds.id }}">
                 <button (click)="selectCds(cds)">
                   <strong>({{ cds.classe }})</strong>
                   <span> {{ cds.nome }}</span>

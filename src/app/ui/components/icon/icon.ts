@@ -3,10 +3,9 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'opis-icon',
   imports: [],
-  template: `<span
-    [class.bigger]="isBig()"
-    class="material-symbols-outlined"
-  >{{ iconName() }}</span>`,
+  template: `<span [class.bigger]="isBig()" class="material-symbols-outlined">{{
+    iconName()
+  }}</span>`,
   styles: `
     span {
       display: block;

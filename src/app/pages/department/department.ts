@@ -46,12 +46,13 @@ export class DepartmentPage implements OnInit, OnDestroy {
   }
 
   private retrieveQuestions() {
-    this._questionService.loadQuestionsWeights().pipe(
-      takeUntilDestroyed()
-    ).subscribe({
-      next: () => console.log('[LOG RESP] ==> Domande salvate con successo!'),
-      error: (error) => console.warn(error)
-    });
+    this._questionService
+      .loadQuestionsWeights()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => console.log('[LOG RESP] ==> Domande salvate con successo!'),
+        error: (error) => console.warn(error),
+      });
   }
 
   private retrieveDepartmentInfo() {

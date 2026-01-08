@@ -61,7 +61,7 @@ describe('Dipartimento', () => {
   it('should throw if no department in localStorage', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValueOnce(null);
     expect(() => component.ngOnInit()).toThrow(
-      'Impossibile recuperare le info del dipartimento selezionato'
+      'Impossibile recuperare le info del dipartimento selezionato',
     );
   });
 

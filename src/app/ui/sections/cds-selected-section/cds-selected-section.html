@@ -1,18 +1,16 @@
-<section id="cds-{{cds()?.id}}" [class.loading]="infoCds.isLoading()" class="cds-selection_wrap">
+<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading()" class="cds-selection_wrap">
   @if (infoCds.isLoading()) {
     <opis-loader></opis-loader>
   } @else {
-
-    @if(infoCds.hasValue()) {
+    @if (infoCds.hasValue()) {
       {{ infoCds.value().coarse | json }}
     }
-    
-    @if(infoCds.status() === ERR_STATUS) {
+
+    @if (infoCds.status() === ERR_STATUS) {
       <div class="error">
         <opis-icon iconName="report_off" [isBig]="true"></opis-icon>
         <h2>Qualcosa è andato storto :/</h2>
       </div>
     }
   }
-
 </section>

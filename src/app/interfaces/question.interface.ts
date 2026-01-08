@@ -1,4 +1,4 @@
-import { OpisGroup } from "@enums/opis-group.enum";
+import { OpisGroup } from '@enums/opis-group.enum';
 
 export interface Question {
   id: number;

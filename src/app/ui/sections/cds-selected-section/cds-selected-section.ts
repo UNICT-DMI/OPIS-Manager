@@ -13,9 +13,9 @@ import { CdsService } from '@services/cds/cds.service';
 export class CdsSelectedSection {
   private readonly _cdsService = inject(CdsService);
 
-  public ERR_STATUS: ResourceStatus = "error";
+  public ERR_STATUS: ResourceStatus = 'error';
 
   public cds = computed(() => this._cdsService.cdsSelected());
-  
+
   public infoCds = this._cdsService.getInfoCds();
 }
