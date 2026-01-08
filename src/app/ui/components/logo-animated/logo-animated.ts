@@ -42,6 +42,12 @@ export class LogoAnimated implements AfterViewInit {
   private timeline = gsap.timeline({ defaults: { ease: 'back.out' } });
 
   ngAfterViewInit(): void {
+    if(this._departmentService.logoAlreadyAnimated()) {
+      this.showFinalState();
+      return;
+    }
+
+    this._departmentService.logoAlreadyAnimated.set(true);
     this.animateLogo();
   }
 
@@ -138,5 +144,19 @@ export class LogoAnimated implements AfterViewInit {
         this._departmentService.canStartUserFlow.set(true),
       );
 
+  }
+
+  private showFinalState() {
+    const circle = this.circleRef.nativeElement;
+    const arrows = this.asNative(this.arrowsRef);
+    const bars = this.asNative(this.barsRef);
+    const letters = this.asNative(this.lettersRef);
+
+    gsap.set(arrows, { scaleX: 1, scaleY: 1 });
+    gsap.set(bars, { scaleY: 1 });
+    gsap.set(circle, { opacity: 1 });
+    gsap.set(letters, { strokeDashoffset: 0 });
+
+    this._departmentService.canStartUserFlow.set(true);
   }
 }
