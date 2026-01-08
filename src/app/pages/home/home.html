@@ -6,9 +6,8 @@
     id="departments"
     class="animation-show"
     [class.show]="canShowDepartments()"
-    [class.loading]="respDepartments.isLoading()"
   >
-    @if (respDepartments.isLoading()) {
+    @if (respDepartments.isLoading() || !canShowDepartments()) {
       <opis-loader></opis-loader>
     } @else if (respDepartments.hasValue()) {
       @let departments = respDepartments.value();
