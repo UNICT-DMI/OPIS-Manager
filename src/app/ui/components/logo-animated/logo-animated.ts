@@ -17,9 +17,15 @@ import gsap from 'gsap';
   styleUrl: './logo-animated.scss',
 })
 export class LogoAnimated implements AfterViewInit {
-  // TODO se possibile centralizzare la durata totale dell'animazione in un'unica variabile
-
   private readonly _departmentService = inject(DepartmentsService);
+
+  private readonly TOTAL_DURATION = 3;
+  private readonly PHASES_PERCENTAGE = {
+    arrows: 0.2,
+    bars: 0.27,
+    circle: 0.13,
+    letters: 0.4,
+  } as const;
 
   @ViewChildren('letter', { read: ElementRef })
   private lettersRef: QueryList<ElementRef<SVGPathElement>>;
@@ -37,6 +43,10 @@ export class LogoAnimated implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.animateLogo();
+  }
+
+  private phaseDuration(phase: keyof typeof this.PHASES_PERCENTAGE): number {
+    return this.TOTAL_DURATION * this.PHASES_PERCENTAGE[phase];
   }
 
   private asNative(elements: QueryList<ElementRef<SVGPathElement>>) {
@@ -96,13 +106,13 @@ export class LogoAnimated implements AfterViewInit {
       .to(arrows, {
         scaleY: 1,
         scaleX: 1,
-        duration: 0.9,
+        duration: this.phaseDuration('arrows'),
         ease: 'power2.out',
         stagger: 0.1,
       })
       .to(bars, {
         scaleY: 1,
-        duration: 1.2,
+        duration: this.phaseDuration('bars'),
         ease: 'power2.out',
         stagger: 0.15,
       })
@@ -110,20 +120,23 @@ export class LogoAnimated implements AfterViewInit {
         circle,
         {
           opacity: 1,
-          duration: 0.6,
+          duration: this.phaseDuration('circle'),
           ease: 'power1.out',
         },
-        '>-0.5',
+        `>-${this.phaseDuration('circle') * 0.5}`,
       )
-      .eventCallback('onComplete', () => this._departmentService.canStartUserFlow.set(true))
       .to(
         letters,
         {
           strokeDashoffset: 0,
-          duration: 1.8,
+          duration: this.phaseDuration('letters'),
           stagger: 0.12,
         },
-        '>-0.5',
+        `>-${this.phaseDuration('letters') * 0.3}`,
+      )
+      .eventCallback('onComplete', () =>
+        this._departmentService.canStartUserFlow.set(true),
       );
+
   }
 }
