@@ -35,7 +35,7 @@ export class GraphService {
 
         const { gruppo, peso_standard } = domanda;
         if (V.hasOwnProperty(gruppo)) {
-          V[domanda.gruppo] += (d / totale_schede) * peso_standard;
+          V[gruppo] += (d / totale_schede) * peso_standard;
         }
       }
     }
