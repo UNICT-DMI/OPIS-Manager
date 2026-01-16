@@ -12,7 +12,6 @@ import gsap from 'gsap';
 
 @Component({
   selector: 'opis-logo-animated',
-  imports: [],
   templateUrl: './logo-animated.html',
   styleUrl: './logo-animated.scss',
 })
