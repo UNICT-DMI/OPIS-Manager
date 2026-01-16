@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { OpisGroup } from '@enums/opis-group.enum';
+import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
@@ -14,7 +14,7 @@ export class GraphService {
     const { totale_schede, domande: questions } = scheda;
 
     let d = 0;
-    const V: Record<OpisGroup, number> = {
+    const V: Record<OpisGroupType, number> = {
       [OpisGroup.Group1]: 0,
       [OpisGroup.Group2]: 0,
       [OpisGroup.Group3]: 0,
@@ -25,10 +25,10 @@ export class GraphService {
         const singleQuestion = questions[j];
 
         d = 0.0;
-        d += singleQuestion[0] * AnswerWeights.DecisamenteNo;
-        d += singleQuestion[1] * AnswerWeights.PiuNoCheSi;
-        d += singleQuestion[2] * AnswerWeights.PiuSiCheNo;
-        d += singleQuestion[3] * AnswerWeights.DecisamenteSi;
+        d += singleQuestion[0] * AnswerWeights.DefinitelyNo;
+        d += singleQuestion[1] * AnswerWeights.MoreNoThanYes;
+        d += singleQuestion[2] * AnswerWeights.MoreYesThanNo;
+        d += singleQuestion[3] * AnswerWeights.DefinitelyYes;
 
         const domanda = questionsWeights.find((question) => question.id === j + 1);
         if (!domanda) continue;
