@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, ResourceRef, signal, WritableSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CDS } from '@interfaces/cds.interface';
 import { Department } from '@interfaces/department.interface';
@@ -38,20 +38,20 @@ export class DepartmentsService {
     );
   }
 
-  private cdsOfDepartmentApi(department: number) {
+  private cdsOfDepartmentApi(department: number): Observable<CDS[]> {
     const url = `${this.BASE_URL}/with-id/` + department + '/cds';
 
     return this._http.get<CDS[]>(url).pipe(delay(DELAY_API_MS));
   }
 
-  public getDepartmentByYear() {
+  public getDepartmentByYear(): ResourceRef<Department[] | undefined> {
     return rxResource({
       params: () => this.selectedYear(),
       stream: ({ params }) => this.departmentsApi(params),
     });
   }
 
-  public getCdsDepartment(department: WritableSignal<Department | null>) {
+  public getCdsDepartment(department: WritableSignal<Department | null>): ResourceRef<CDS[] | undefined> {
     return rxResource({
       params: () => department(),
       stream: ({ params }) => {

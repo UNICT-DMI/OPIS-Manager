@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Question } from '@interfaces/question.interface';
-import { catchError, map, shareReplay, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, shareReplay, tap, throwError } from 'rxjs';
 import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -23,12 +23,12 @@ export class QuestionService {
 
   public questionWeights: Question[];
 
-  public loadQuestionsWeights() {
+  public loadQuestionsWeights(): Observable<Question[]> {
     return this._questionWeights$;
   }
 
   // TODO ???
-  public updateQuestionWeights(domande: Question[], token: string) {
+  public updateQuestionWeights(domande: Question[], token: string): Observable<Object> {
     const domandeJson = JSON.stringify(
       domande.map((domanda) => 
         ({

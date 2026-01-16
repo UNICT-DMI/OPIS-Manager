@@ -14,6 +14,7 @@ import {
   groupBy,
   map,
   mergeMap,
+  Observable,
   throwError,
   toArray,
 } from 'rxjs';
@@ -38,7 +39,7 @@ export class CdsService {
 
   public cdsSelected = signal<CDS | null>(null);
 
-  private formatSchedaOpis(resp: CDS[]) {
+  private formatSchedaOpis(resp: CDS[]): void {
     const cdsSchede = resp
       .flatMap((cdsCoarse) => cdsCoarse.insegnamenti)
       .filter((insegnamento) => insegnamento.schedeopis != null)
@@ -61,7 +62,7 @@ export class CdsService {
       });
   }
 
-  private teachingCdsApi(cds: number) {
+  private teachingCdsApi(cds: number): Observable<Teaching[]> {
     const url = `${this.BASE_URL}/with-id/${cds}/insegnamenti`;
 
     return this._http.get<Teaching[]>(url).pipe(
@@ -74,7 +75,7 @@ export class CdsService {
     );
   }
 
-  private coarsePerCdsApi(unictCds: number) {
+  private coarsePerCdsApi(unictCds: number): Observable<void> {
     const url = `${this.BASE_URL}/coarse/${unictCds}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
