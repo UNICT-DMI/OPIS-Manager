@@ -69,7 +69,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
     return effect(() => (this.isCdsSelected = this.cds().id !== this.NO_CHOICE_VALUE.id));
   }
 
-  public selectCds(newCds: CDS): void {
+  protected selectCds(newCds: CDS): void {
     this._cdsService.cdsSelected.set(newCds);
   }
 }
