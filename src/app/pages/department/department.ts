@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, EffectRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Department } from '@interfaces/department.interface';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { RouterLink } from '@angular/router';
@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [RouterLink, Loader, Icon, CdsSelectedSection],
   templateUrl: './department.html',
   styleUrl: './department.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartmentPage implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
@@ -24,12 +25,12 @@ export class DepartmentPage implements OnInit, OnDestroy {
 
   private departmentData = signal<Department | null>(null);
 
-  public isCdsSelected = false;
-
-  public readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
-  public department = computed(() => this.departmentData() ?? ({} as Department));
-  public cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
-  public cdsList = this._departmentService.getCdsDepartment(this.departmentData);
+  protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
+  
+  protected isCdsSelected = false;
+  protected department = computed(() => this.departmentData() ?? ({} as Department));
+  protected cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
+  protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 
   constructor() {
     this.manageListVisibility();
@@ -55,7 +56,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
       });
   }
 
-  private retrieveDepartmentInfo() {
+  private retrieveDepartmentInfo(): void {
     const rawDepartment = localStorage.getItem('department');
     if (!rawDepartment)
       throw new Error('Impossibile recuperare le info del dipartimento selezionato'); // todo ritorno in home dopo tot secondi
@@ -64,11 +65,11 @@ export class DepartmentPage implements OnInit, OnDestroy {
     this.departmentData.set(correctDepFormat);
   }
 
-  private manageListVisibility() {
+  private manageListVisibility(): EffectRef {
     return effect(() => (this.isCdsSelected = this.cds().id !== this.NO_CHOICE_VALUE.id));
   }
 
-  public selectCds(newCds: CDS) {
+  public selectCds(newCds: CDS): void {
     this._cdsService.cdsSelected.set(newCds);
   }
 }
