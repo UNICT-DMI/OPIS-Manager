@@ -23,8 +23,8 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _cdsService = inject(CdsService);
   private readonly _questionService = inject(QuestionService);
 
-  private departmentData = signal<Department | null>(null);
-
+  private readonly departmentData = signal<Department | null>(null);
+  
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
   
   protected isCdsSelected = false;
