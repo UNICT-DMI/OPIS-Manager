@@ -45,7 +45,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
     this._cdsService.cdsSelected.set(this.NO_CHOICE_VALUE);
   }
 
-  private retrieveQuestions() {
+  private retrieveQuestions(): void {
     this._questionService
       .loadQuestionsWeights()
       .pipe(takeUntilDestroyed())
