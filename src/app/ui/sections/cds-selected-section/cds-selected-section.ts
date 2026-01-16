@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, computed, inject, ResourceStatus } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ResourceStatus } from '@angular/core';
 import { Icon } from '@components/icon/icon';
 import { Loader } from '@components/loader/loader';
 import { CdsService } from '@services/cds/cds.service';
@@ -9,13 +9,12 @@ import { CdsService } from '@services/cds/cds.service';
   imports: [Icon, Loader, JsonPipe],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdsSelectedSection {
   private readonly _cdsService = inject(CdsService);
+  protected readonly ERR_STATUS: ResourceStatus = 'error';
 
-  public ERR_STATUS: ResourceStatus = 'error';
-
-  public cds = computed(() => this._cdsService.cdsSelected());
-
-  public infoCds = this._cdsService.getInfoCds();
+  protected cds = computed(() => this._cdsService.cdsSelected());
+  protected infoCds = this._cdsService.getInfoCds();
 }

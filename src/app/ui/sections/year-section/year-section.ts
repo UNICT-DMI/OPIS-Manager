@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
@@ -7,16 +7,17 @@ import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
   imports: [],
   templateUrl: './year-section.html',
   styleUrl: './year-section.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class YearSection {
   private readonly _departmentService = inject(DepartmentsService);
 
-  public readonly allYears = ACADEMIC_YEARS;
-  public selectedYear = computed(this._departmentService.selectedYear);
-  public canShowDepartments = computed(this._departmentService.canStartUserFlow);
+  protected readonly allYears = ACADEMIC_YEARS;
+  protected selectedYear = computed(this._departmentService.selectedYear);
+  protected canShowDepartments = computed(this._departmentService.canStartUserFlow);
 
-  public selectYear(year: AcademicYear) {
-    const isValidAcademicYear = ACADEMIC_YEARS.includes(year);
+  protected selectYear(year: AcademicYear): void {
+    const isValidAcademicYear = this.allYears.includes(year);
     if (!isValidAcademicYear) return;
     this._departmentService.selectedYear.set(year);
   }
