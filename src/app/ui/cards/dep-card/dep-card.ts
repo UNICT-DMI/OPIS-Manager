@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Icon } from '@components/icon/icon';
 import { Department } from '@interfaces/department.interface';
@@ -8,22 +8,23 @@ import { Department } from '@interfaces/department.interface';
   imports: [RouterLink, Icon],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepCard implements OnInit {
-  public department = input.required<Department>();
-  public detailUrl: string;
+  protected department = input.required<Department>();
+  protected detailUrl: string;
 
   ngOnInit(): void {
     this.detailUrl = this.createDetailUrl();
   }
 
-  private createDetailUrl() {
+  private createDetailUrl(): string {
     const regexRuleFormat = /[^a-zA-Z0-9]+/g;
     const formattedName = this.department().nome.toLowerCase().replace(regexRuleFormat, '_');
     return `/${formattedName}`;
   }
 
-  public saveInfo() {
+  protected saveInfo(): void {
     const formatToSave = JSON.stringify(this.department());
     localStorage.setItem('department', formatToSave);
   }

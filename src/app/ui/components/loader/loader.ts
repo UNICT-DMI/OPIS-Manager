@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'opis-loader',
-  imports: [],
   template: '<div class="loader"></div>',
   styles: `
     .loader {
