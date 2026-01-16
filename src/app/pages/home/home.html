@@ -13,7 +13,7 @@
       @let departments = respDepartments.value();
 
       @for (department of departments; track $index) {
-        <opis-dep-card [department]="department"></opis-dep-card>
+        <opis-dep-card [department]="department" />
       }
     }
   </section>
