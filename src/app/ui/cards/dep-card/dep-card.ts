@@ -11,7 +11,7 @@ import { Department } from '@interfaces/department.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepCard implements OnInit {
-  protected department = input.required<Department>();
+  readonly department = input.required<Department>();
   protected detailUrl: string;
 
   ngOnInit(): void {
