@@ -15,8 +15,8 @@ import { YearSection } from '@sections/year-section/year-section';
 export class HomePageComponent implements OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
 
-  protected canShowDepartments = computed(this._departmentService.canStartUserFlow);
-  protected respDepartments = this._departmentService.getDepartmentByYear();
+  protected readonly canShowDepartments = computed(this._departmentService.canStartUserFlow);
+  protected readonly respDepartments = this._departmentService.getDepartmentByYear();
 
   ngOnDestroy(): void {
     this._departmentService.canStartUserFlow.set(false);
