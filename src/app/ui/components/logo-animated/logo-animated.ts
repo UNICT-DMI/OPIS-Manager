@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   inject,
@@ -14,6 +15,7 @@ import gsap from 'gsap';
   selector: 'opis-logo-animated',
   templateUrl: './logo-animated.html',
   styleUrl: './logo-animated.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoAnimated implements AfterViewInit {
   private readonly _departmentService = inject(DepartmentsService);
@@ -54,47 +56,47 @@ export class LogoAnimated implements AfterViewInit {
     return this.TOTAL_DURATION * this.PHASES_PERCENTAGE[phase];
   }
 
-  private asNative(elements: QueryList<ElementRef<SVGPathElement>>) {
-    return elements
-      .toArray()
-      .reverse()
+  private asNative(elements: QueryList<ElementRef<SVGPathElement>>): SVGPathElement[] {
+    const arrayElements = elements.toArray().reverse();
+
+    return arrayElements
       .map((ref) => ref.nativeElement as SVGPathElement);
   }
 
-  private prepareLetters(letters: SVGPathElement[]) {
-    letters.forEach((letter) => {
+  private prepareLetters(letters: SVGPathElement[]): void {
+    for(const letter of letters) {
       const len = letter.getTotalLength();
       gsap.set(letter, {
         strokeDasharray: len,
         strokeDashoffset: len,
       });
-    });
+    }
   }
 
-  private prepareArrows(arrows: SVGPathElement[]) {
+  private prepareArrows(arrows: SVGPathElement[]): void {
     const startEffectArrow = new Map([
       ['arrow_top', { scaleY: 0, transformOrigin: 'bottom center' }],
       ['arrow_bottom', { scaleX: 0, transformOrigin: 'left center' }],
     ]);
 
-    arrows.forEach((arrow) => {
+    for(const arrow of arrows) {
       const id = arrow.id;
       if (id) {
         const configGsap = startEffectArrow.get(id);
         if (!configGsap) return;
         gsap.set(arrow, configGsap);
       }
-    });
+    }
   }
 
-  private prepareBars(bars: SVGPathElement[]) {
+  private prepareBars(bars: SVGPathElement[]): void {
     gsap.set(bars, {
       scaleY: 0,
       transformOrigin: 'bottom center',
     });
   }
 
-  private animateLogo() {
+  private animateLogo(): void {
     const circle = this.circleRef.nativeElement;
     const arrows = this.asNative(this.arrowsRef);
     const bars = this.asNative(this.barsRef);
@@ -145,7 +147,7 @@ export class LogoAnimated implements AfterViewInit {
 
   }
 
-  private showFinalState() {
+  private showFinalState(): void {
     const circle = this.circleRef.nativeElement;
     const arrows = this.asNative(this.arrowsRef);
     const bars = this.asNative(this.barsRef);
