@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
 import { DepCard } from '@cards/dep-card/dep-card';
 import { LogoAnimated } from '@components/logo-animated/logo-animated';
 import { DepartmentsService } from '@services/departments/departments.service';
@@ -10,12 +10,13 @@ import { YearSection } from '@sections/year-section/year-section';
   imports: [LogoAnimated, DepCard, YearSection, Loader],
   templateUrl: './home.html',
   styleUrl: './home.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Home implements OnDestroy {
+export class HomepageComponent implements OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
 
-  public canShowDepartments = computed(this._departmentService.canStartUserFlow);
-  public respDepartments = this._departmentService.getDepartmentByYear();
+  protected canShowDepartments = computed(this._departmentService.canStartUserFlow);
+  protected respDepartments = this._departmentService.getDepartmentByYear();
 
   ngOnDestroy(): void {
     this._departmentService.canStartUserFlow.set(false);
