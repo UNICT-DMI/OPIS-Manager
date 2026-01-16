@@ -1,8 +1,7 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'opis-icon',
-  imports: [],
   template: `<span [class.bigger]="isBig()" class="material-symbols-outlined">{{
     iconName()
   }}</span>`,
@@ -15,8 +14,9 @@ import { Component, input } from '@angular/core';
       }
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Icon {
-  public iconName = input.required<string>();
-  public isBig = input<boolean>(false);
+  readonly iconName = input.required<string>();
+  readonly isBig = input<boolean>(false);
 }
