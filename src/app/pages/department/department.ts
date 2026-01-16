@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DepartmentPage implements OnInit, OnDestroy {
+export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
   private readonly _cdsService = inject(CdsService);
   private readonly _questionService = inject(QuestionService);
@@ -28,7 +28,7 @@ export class DepartmentPage implements OnInit, OnDestroy {
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
   
   protected isCdsSelected = false;
-  protected department = computed(() => this.departmentData() ?? ({} as Department));
+  protected department = computed(() => this.departmentData() ?? null);
   protected cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 

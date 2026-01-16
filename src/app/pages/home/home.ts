@@ -12,7 +12,7 @@ import { YearSection } from '@sections/year-section/year-section';
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomepageComponent implements OnDestroy {
+export class HomePageComponent implements OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
 
   protected canShowDepartments = computed(this._departmentService.canStartUserFlow);

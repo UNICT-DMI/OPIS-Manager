@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { DepartmentPage } from './pages/department/department';
+import { DepartmentPageComponent } from './pages/department/department';
 import { Info } from './pages/info/info';
-import { HomepageComponent } from './pages/home/home';
+import { HomePageComponent } from './pages/home/home';
 
 export const routes: Routes = [
-  { path: 'home', component: HomepageComponent },
-  { path: ':depsName', component: DepartmentPage },
+  { path: 'home', component: HomePageComponent },
+  { path: ':depsName', component: DepartmentPageComponent },
   { path: 'info', component: Info },
   { path: '**', redirectTo: '/home' },
   // { path: 'formula', },

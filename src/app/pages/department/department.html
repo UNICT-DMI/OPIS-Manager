@@ -1,15 +1,15 @@
 <section id="department-page">
-  @if (department()) {
+  @if (department() !== null) {
     <div class="department-title">
       <div class="department-title-top">
         <a routerLink="/home">
           <opis-icon iconName="arrow_circle_left"></opis-icon>
           <span class="text"> Torna indietro </span>
         </a>
-        <h1>{{ department().anno_accademico }}</h1>
+        <h1>{{ department()?.anno_accademico }}</h1>
       </div>
-      <div class="department-title-bottom" [attr.data-icon]="department().icon">
-        <h2>{{ department().nome }}</h2>
+      <div class="department-title-bottom" [attr.data-icon]="department()?.icon">
+        <h2>{{ department()?.nome }}</h2>
       </div>
     </div>
 
