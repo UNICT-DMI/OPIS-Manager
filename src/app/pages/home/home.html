@@ -1,6 +1,6 @@
 <section id="homepage">
-  <opis-logo-animated></opis-logo-animated>
-  <opis-year-section></opis-year-section>
+  <opis-logo-animated/>
+  <opis-year-section/>
 
   <section
     id="departments"
@@ -8,12 +8,12 @@
     [class.show]="canShowDepartments()"
   >
     @if (respDepartments.isLoading() || !canShowDepartments()) {
-      <opis-loader></opis-loader>
+      <opis-loader/>
     } @else if (respDepartments.hasValue()) {
       @let departments = respDepartments.value();
 
       @for (department of departments; track $index) {
-        <opis-dep-card [department]="department" />
+        <opis-dep-card [department]="department"/>
       }
     }
   </section>

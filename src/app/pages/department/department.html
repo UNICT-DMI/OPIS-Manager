@@ -3,7 +3,7 @@
     <div class="department-title">
       <div class="department-title-top">
         <a routerLink="/home">
-          <opis-icon iconName="arrow_circle_left"></opis-icon>
+          <opis-icon iconName="arrow_circle_left"/>
           <span class="text"> Torna indietro </span>
         </a>
         <h1>{{ department()?.anno_accademico }}</h1>
@@ -15,12 +15,12 @@
 
     <section id="cds" [class.loading]="cdsList.isLoading()">
       @if (cdsList.isLoading()) {
-        <opis-loader></opis-loader>
+        <opis-loader/>
       } @else {
         <div class="cds-title">
           @if (isCdsSelected) {
             <button (click)="selectCds(NO_CHOICE_VALUE)">
-              <opis-icon iconName="backspace"></opis-icon>
+              <opis-icon iconName="backspace"/>
             </button>
           }
           <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
@@ -44,7 +44,7 @@
     </section>
 
     @if (isCdsSelected) {
-      <opis-cds-selected-section></opis-cds-selected-section>
+      <opis-cds-selected-section/>
     }
   }
 </section>
