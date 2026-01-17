@@ -1,3 +1,13 @@
+import { describe, expect, it } from 'vitest';
+import { DepartmentsService } from './departments.service';
+
+describe('DepartmentsService', () => {
+  it('should be defined', () => {
+    expect(DepartmentsService).toBeDefined();
+  });
+});
+
+// TODO: Implement comprehensive tests
 // import { TestBed } from '@angular/core/testing';
 // import { provideHttpClient, provideHttpClientTesting } from '@angular/common/http';
 // import { HttpTestingController } from '@angular/common/http/testing';

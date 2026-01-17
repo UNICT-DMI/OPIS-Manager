@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   template: `<span [class.bigger]="isBig()" class="material-symbols-outlined">{{
     iconName()
   }}</span>`,
+  // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
   styles: `
     span {
       display: block;
@@ -14,7 +15,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Icon {
   readonly iconName = input.required<string>();

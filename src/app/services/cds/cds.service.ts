@@ -26,7 +26,7 @@ export class CdsService {
   private readonly _http = inject(HttpClient);
   private readonly _graphService = inject(GraphService);
 
-  private vCds: Record<AcademicYear, any> = {
+  private vCds: Record<AcademicYear, number[] | null> = {
     '2013/2014': null,
     '2014/2015': null,
     '2015/2016': null,
@@ -37,7 +37,7 @@ export class CdsService {
     '2020/2021': null,
   };
 
-  public cdsSelected = signal<CDS | null>(null);
+  readonly cdsSelected = signal<CDS | null>(null);
 
   private formatSchedaOpis(resp: CDS[]): void {
     const cdsSchede = resp

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'opis-loader',
   template: '<div class="loader"></div>',
+  // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
   styles: `
     .loader {
       width: 45px;
@@ -53,6 +54,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Loader {}

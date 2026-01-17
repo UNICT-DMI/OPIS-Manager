@@ -9,6 +9,7 @@ export interface CDS {
   id_dipartimento: number;
   scostamento_numerosita: number;
   scostamento_media: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pesi_domande: any;
   insegnamenti: Teaching[];
 }

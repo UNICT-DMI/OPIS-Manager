@@ -15,7 +15,7 @@ import gsap from 'gsap';
   selector: 'opis-logo-animated',
   templateUrl: './logo-animated.html',
   styleUrl: './logo-animated.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoAnimated implements AfterViewInit {
   private readonly _departmentService = inject(DepartmentsService);
@@ -28,22 +28,26 @@ export class LogoAnimated implements AfterViewInit {
     letters: 0.4,
   } as const;
 
+  // eslint-disable-next-line @angular-eslint/prefer-signals
   @ViewChildren('letter', { read: ElementRef })
   private lettersRef: QueryList<ElementRef<SVGPathElement>>;
 
+  // eslint-disable-next-line @angular-eslint/prefer-signals
   @ViewChildren('bar', { read: ElementRef })
   private barsRef: QueryList<ElementRef<SVGPathElement>>;
 
+  // eslint-disable-next-line @angular-eslint/prefer-signals
   @ViewChildren('arrow', { read: ElementRef })
   private arrowsRef: QueryList<ElementRef<SVGPathElement>>;
 
+  // eslint-disable-next-line @angular-eslint/prefer-signals
   @ViewChild('circle', { read: ElementRef })
   private circleRef: ElementRef<SVGPathElement>;
 
   private timeline = gsap.timeline({ defaults: { ease: 'back.out' } });
 
   ngAfterViewInit(): void {
-    if(this._departmentService.logoAlreadyAnimated()) {
+    if (this._departmentService.logoAlreadyAnimated()) {
       this.showFinalState();
       return;
     }
@@ -59,12 +63,11 @@ export class LogoAnimated implements AfterViewInit {
   private asNative(elements: QueryList<ElementRef<SVGPathElement>>): SVGPathElement[] {
     const arrayElements = elements.toArray().reverse();
 
-    return arrayElements
-      .map((ref) => ref.nativeElement as SVGPathElement);
+    return arrayElements.map((ref) => ref.nativeElement as SVGPathElement);
   }
 
   private prepareLetters(letters: SVGPathElement[]): void {
-    for(const letter of letters) {
+    for (const letter of letters) {
       const len = letter.getTotalLength();
       gsap.set(letter, {
         strokeDasharray: len,
@@ -79,7 +82,7 @@ export class LogoAnimated implements AfterViewInit {
       ['arrow_bottom', { scaleX: 0, transformOrigin: 'left center' }],
     ]);
 
-    for(const arrow of arrows) {
+    for (const arrow of arrows) {
       const id = arrow.id;
       if (id) {
         const configGsap = startEffectArrow.get(id);
@@ -141,10 +144,7 @@ export class LogoAnimated implements AfterViewInit {
         },
         `>-${this.phaseDuration('letters') * 0.3}`,
       )
-      .eventCallback('onComplete', () =>
-        this._departmentService.canStartUserFlow.set(true),
-      );
-
+      .eventCallback('onComplete', () => this._departmentService.canStartUserFlow.set(true));
   }
 
   private showFinalState(): void {

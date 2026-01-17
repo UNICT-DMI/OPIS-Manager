@@ -6,6 +6,7 @@ export interface Department {
   tot_cds?: number;
   tot_moduli?: number;
   tot_valutati?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   report?: any;
   tot_schedeF?: number;
   tot_schedeNF?: number;

@@ -28,15 +28,13 @@ export class QuestionService {
   }
 
   // TODO ???
-  public updateQuestionWeights(domande: Question[], token: string): Observable<Object> {
+  updateQuestionWeights(domande: Question[], token: string): Observable<object> {
     const domandeJson = JSON.stringify(
-      domande.map((domanda) => 
-        ({
-          id: domanda.id,
-          peso: domanda.peso_standard,
-          gruppo: domanda.gruppo,
-        })
-      ),
+      domande.map((domanda) => ({
+        id: domanda.id,
+        peso: domanda.peso_standard,
+        gruppo: domanda.gruppo,
+      })),
     );
     const httpOptions = {
       headers: new HttpHeaders({

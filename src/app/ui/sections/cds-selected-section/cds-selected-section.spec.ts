@@ -1,19 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CdsSelectedSection } from './cds-selected-section';
 import { exampleCDS } from '@mocks/cds-mock';
+import { CdsService } from '@services/cds/cds.service';
+import { describe } from 'vitest';
+import { CdsSelectedSection } from './cds-selected-section';
 
 describe('CdsSelectedSection', () => {
   let component: CdsSelectedSection;
   let fixture: ComponentFixture<CdsSelectedSection>;
+  let cdsService: CdsService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CdsSelectedSection],
+      providers: [CdsService],
     }).compileComponents();
 
+    cdsService = TestBed.inject(CdsService);
+    cdsService.cdsSelected.set(exampleCDS);
     fixture = TestBed.createComponent(CdsSelectedSection);
-    fixture.componentRef.setInput('cds', exampleCDS);
+
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -23,6 +29,6 @@ describe('CdsSelectedSection', () => {
   });
 
   it('should read cds without throwing', () => {
-    expect(component.cds()).toEqual(exampleCDS);
+    expect(component['cds']()).toEqual(exampleCDS);
   });
 });

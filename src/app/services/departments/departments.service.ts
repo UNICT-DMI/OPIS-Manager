@@ -15,9 +15,9 @@ export class DepartmentsService {
   private readonly BASE_URL = env.api_url + '/dipartimento';
   private readonly _http = inject(HttpClient);
 
-  public logoAlreadyAnimated = signal(false);
-  public canStartUserFlow = signal(false);
-  public selectedYear = signal<AcademicYear>('2020/2021');
+  public readonly logoAlreadyAnimated = signal(false);
+  public readonly canStartUserFlow = signal(false);
+  public readonly selectedYear = signal<AcademicYear>('2020/2021');
 
   private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;

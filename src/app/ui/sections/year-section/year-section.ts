@@ -13,8 +13,8 @@ export class YearSection {
   private readonly _departmentService = inject(DepartmentsService);
 
   protected readonly allYears = ACADEMIC_YEARS;
-  protected selectedYear = computed(this._departmentService.selectedYear);
-  protected canShowDepartments = computed(this._departmentService.canStartUserFlow);
+  protected readonly selectedYear = computed(this._departmentService.selectedYear);
+  protected readonly canShowDepartments = computed(this._departmentService.canStartUserFlow);
 
   protected selectYear(year: AcademicYear): void {
     const isValidAcademicYear = this.allYears.includes(year);

@@ -28,8 +28,8 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
   
   protected isCdsSelected = false;
-  protected department = computed(() => this.departmentData() ?? null);
-  protected cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
+  protected readonly department = computed(() => this.departmentData() ?? null);
+  protected readonly cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 
   constructor() {

@@ -1,18 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect } from 'vitest';
-import { DepartmentPage } from './department';
 import { signal } from '@angular/core';
-import { NO_CHOICE_CDS } from '@values/no-choice-cds';
-import { exampleCDS } from '@mocks/cds-mock';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { exampleCDS } from '@mocks/cds-mock';
 import { exampleDepartment } from '@mocks/department-mock';
-import { DepartmentsService } from '@services/departments/departments.service';
 import { CdsService } from '@services/cds/cds.service';
+import { DepartmentsService } from '@services/departments/departments.service';
+import { NO_CHOICE_CDS } from '@values/no-choice-cds';
+import { describe, expect, it } from 'vitest';
+import { DepartmentPageComponent } from './department';
 
 describe('Dipartimento', () => {
-  let component: DepartmentPage;
-  let fixture: ComponentFixture<DepartmentPage>;
+  let component: DepartmentPageComponent;
+  let fixture: ComponentFixture<DepartmentPageComponent>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockDepartmentsService: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockCdsService: any;
 
   const mockDepartment = exampleDepartment;
@@ -24,6 +26,7 @@ describe('Dipartimento', () => {
       hasValue: () => true,
       value: () => [],
       error: () => null,
+      status: () => 'success',
     };
 
     mockDepartmentsService = {
@@ -31,6 +34,7 @@ describe('Dipartimento', () => {
     };
     mockCdsService = {
       cdsSelected: signal(NO_CHOICE_CDS),
+      getInfoCds: vi.fn(() => mockResource),
     };
 
     // Mock localStorage
@@ -38,7 +42,7 @@ describe('Dipartimento', () => {
     vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(vi.fn());
 
     await TestBed.configureTestingModule({
-      imports: [DepartmentPage],
+      imports: [DepartmentPageComponent],
       providers: [
         { provide: DepartmentsService, useValue: mockDepartmentsService },
         { provide: CdsService, useValue: mockCdsService },
@@ -46,7 +50,7 @@ describe('Dipartimento', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DepartmentPage);
+    fixture = TestBed.createComponent(DepartmentPageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -55,7 +59,7 @@ describe('Dipartimento', () => {
 
   it('should initialize departmentData from localStorage', () => {
     component.ngOnInit();
-    expect(component.department()).toEqual(mockDepartment);
+    expect(component['department']()).toEqual(mockDepartment);
   });
 
   it('should throw if no department in localStorage', () => {
@@ -66,10 +70,12 @@ describe('Dipartimento', () => {
   });
 
   it('should update isCdsSelected when cds changes', async () => {
-    component.selectCds(mockCDS);
+    component['selectCds'](mockCDS);
+
     fixture.detectChanges();
     await fixture.whenStable();
-    expect(component.isCdsSelected).toBe(true);
+
+    expect(component['isCdsSelected']).toBe(true);
     expect(mockCdsService.cdsSelected()).toEqual(mockCDS);
   });
 
