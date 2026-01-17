@@ -1,158 +1,22 @@
-@import '~katex/dist/katex.css';
+/* You can add global styles to this file, and also import other style files */
+@use 'reset';
+@use 'palette';
 
-/*Color palette*/
-$primary-grey: #a9a9a9;
-$light-grey: #f0f0f0;
-$primary-black: #1a1a1a;
-
-$color_dark: #00695c;
-$color_light: #fff;
-$color_main: #00897b;
-$font_family_1: "Helvetica Neue";
-
-@mixin breakpoint($point) {
-  @if $point == tablet {
-    @media (max-width: 1024px) {
-      @content;
-    }
-  } @else if $point == mobile {
-    @media (max-width: 768px) {
-      @content;
-    }
-  }
-}
-/*
-  #00897b  Main
-  #80cbc4 Light
-  #00695c Dark
-*/
-
-.container-fluid {
-	padding-right: 0;
-	padding-left: 0;
-	margin-right: auto;
-	margin-left: auto;
-}
-.row {
-	margin-left: 0px;
-	margin-right: 0px;
-}
-.tabs_button {
-	margin-left: 5px;
-	padding: 5px 0px;
-}
-.tooltip-inner {
-	max-width: 200px;
-	padding: 3px 8px;
-	color: $color_light;
-	text-align: center;
-	background-color: $color_dark;
-	border-radius: .25rem;
-}
-.tooltip.bs-tooltip-auto[x-placement^=top] {
-	.arrow {
-		&::before {
-			margin-left: -3px;
-			content: "";
-			border-width: 5px 5px 0;
-			border-top-color: $color_dark;
-		}
-	}
-}
-.tooltip.bs-tooltip-top {
-	.arrow {
-		&::before {
-			margin-left: -3px;
-			content: "";
-			border-width: 5px 5px 0;
-			border-top-color: $color_dark;
-		}
-	}
-}
-.opis-icon {
-	color: $color_main;
-}
-.opis-nav {
-	background-color: $color_main;
-	color: $color_light;
-	font-size: 1.25rem;
-	a {
-		background-color: $color_main;
-		color: $color_light;
-        font-size: 1.25rem;
-        &:hover {
-            color: $color_light;
-        }
-	}
-}
-.nav-link.active {
-	color: $color_light !important;
-	background-color: $color_dark !important;
-	border: 0px solid !important;
+body {
+  font-family: var(--font-sans);
+  border-top: 2rem solid var(--dark-bg);
+  border-bottom: 2rem solid var(--dark-bg);
+  color: var(--color-text);
 }
 
-router-outlet ~ * {
-	position: absolute;
-	height: 100%;
-	width: 100%;
-}
+.animation-show {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease-in-out;
 
-.btn-opis {
-  color: $primary-black;
-  background-color: $light-grey;
-  border-color: $primary-grey;
-  box-shadow: none;
-  @include breakpoint(mobile)  {
-    width: 100%;
-  }
-}
-
-.btn-opis:hover, .btn-opis option {
-  color: $primary-black;
-  background-color: $light-grey;
-}
-
-.selected-tab {
-  background-color: $color_light !important;
-  color: $color_dark !important;
-}
-
-.list-option-container {
-  margin-left: 325px;
-  width: 850px;
-  @include breakpoint(mobile) {
-    width: 100%;
-    margin: 30px 0;
-  }
-}
-
-.addons-bar {
-  margin-top: 5px;
-  margin-left: 20px;
-}
-
-
-/* Slider */
-.custom-slider {
-  margin: 0 auto;
-  display: table;
-
-  ngx-slider  {
-    .ngx-slider-bar {
-      background: #ffe4d1;
-      height: 2px;
-    }
-
-    .ngx-slider-pointer {
-      background-color: $color_main;
-    }
-
-    .ngx-slider-bubble {
-      bottom: 14px;
-    }
-
-    .ngx-slider-tick.ngx-slider-selected {
-      background: $color_main;
-    }
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease-in-out;
   }
 }

@@ -1,0 +1,22 @@
+.cds-selection {
+  &_wrap {
+    &.loading {
+      opis-loader {
+        margin: 10rem auto;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .error {
+      margin: 2rem auto;
+      width: 80%;
+      text-align: center;
+      color: var(--red-500);
+
+      h2 {
+        margin-top: 1rem;
+      }
+    }
+  }
+}

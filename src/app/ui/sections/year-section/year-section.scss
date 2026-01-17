@@ -1,0 +1,28 @@
+#years {
+  margin: 1.5rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  border: 2px var(--color-primary) dashed;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  gap: 1rem;
+
+  .btn-year {
+    border: 1px solid transparent;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 0.6rem;
+    padding: 0.7rem 1rem;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    &.selected {
+      border: 2px solid var(--color-primary-active);
+    }
+  }
+}

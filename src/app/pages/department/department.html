@@ -1,0 +1,50 @@
+<section id="department-page">
+  @if (department() !== null) {
+    <div class="department-title">
+      <div class="department-title-top">
+        <a routerLink="/home">
+          <opis-icon iconName="arrow_circle_left"/>
+          <span class="text"> Torna indietro </span>
+        </a>
+        <h1>{{ department()?.anno_accademico }}</h1>
+      </div>
+      <div class="department-title-bottom" [attr.data-icon]="department()?.icon">
+        <h2>{{ department()?.nome }}</h2>
+      </div>
+    </div>
+
+    <section id="cds" [class.loading]="cdsList.isLoading()">
+      @if (cdsList.isLoading()) {
+        <opis-loader/>
+      } @else {
+        <div class="cds-title">
+          @if (isCdsSelected) {
+            <button (click)="selectCds(NO_CHOICE_VALUE)">
+              <opis-icon iconName="backspace"/>
+            </button>
+          }
+          <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
+        </div>
+
+        @if (!isCdsSelected) {
+          <ul class="cds-list">
+            @let allCds = cdsList.value();
+
+            @for (cds of allCds; track $index) {
+              <li id="cds-list-{{ cds.id }}">
+                <button (click)="selectCds(cds)">
+                  <strong>({{ cds.classe }})</strong>
+                  <span> {{ cds.nome }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      }
+    </section>
+
+    @if (isCdsSelected) {
+      <opis-cds-selected-section/>
+    }
+  }
+</section>

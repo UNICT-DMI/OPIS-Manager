@@ -1,22 +1,46 @@
-import { Injectable } from '@angular/core';
-import { WeightService } from '../weight/weight.service';
-import { Teaching } from '../api/api.model';
-import { mean } from 'mathjs';
-import { TeachingSummary, SchedaOpis } from '../../utils/utils.model';
+import { inject, Injectable } from '@angular/core';
+import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
+import { AnswerWeights } from '@enums/weights.enum';
+import { SchedaOpis } from '@interfaces/opis-record.interface';
+import { QuestionService } from '@services/questions/questions.service';
+import { mean, round } from '@utils/statistics.utils';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class GraphService {
+  private readonly _questionService = inject(QuestionService);
 
+  public applyWeights(scheda: SchedaOpis): number[] {
+    const questionsWeights = this._questionService.questionWeights;
+    const { totale_schede, domande: questions } = scheda;
 
-  constructor(
-    private readonly weightService: WeightService,
-  ) { }
+    let d = 0;
+    const V: Record<OpisGroupType, number> = {
+      [OpisGroup.Group1]: 0,
+      [OpisGroup.Group2]: 0,
+      [OpisGroup.Group3]: 0,
+    };
 
-  public round(v: number, padding = 2): number {
-    const pad = parseInt(1 + '0'.repeat(padding), 10);
-    return Math.round(v * pad) / pad;
+    if (totale_schede >= 5) {
+      for (let j = 0; j < questions.length; j++) {
+        const singleQuestion = questions[j];
+
+        d = 0.0;
+        d += singleQuestion[0] * AnswerWeights.DefinitelyNo;
+        d += singleQuestion[1] * AnswerWeights.MoreNoThanYes;
+        d += singleQuestion[2] * AnswerWeights.MoreYesThanNo;
+        d += singleQuestion[3] * AnswerWeights.DefinitelyYes;
+
+        const domanda = questionsWeights.find((question) => question.id === j + 1);
+        if (!domanda) continue;
+
+        const { gruppo, peso_standard } = domanda;
+        if (Object.prototype.hasOwnProperty.call(V, gruppo)) {
+          V[gruppo] += (d / totale_schede) * peso_standard;
+        }
+      }
+    }
+
+    return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
   public elaborateFormula(schedeOpis: SchedaOpis[]): [number[], number[][]] {
@@ -30,99 +54,8 @@ export class GraphService {
       v2.push(V2);
       v3.push(V3);
     }
-
-    const means = [this.round(mean(v1)), this.round(mean(v2)), this.round(mean(v3))];
+    // debugger
+    const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
     return [means, [v1, v2, v3]];
   }
-
-  public applyWeights(scheda: SchedaOpis): number[] {
-
-    const questionsWeights = this.weightService.getQuestionsWeights();
-    const answersWeights = this.weightService.getAnswersWeights();
-
-    const N = scheda.totale_schede;
-    let d = 0;
-    let V1 = 0;
-    let V2 = 0;
-    let V3 = 0;
-
-    if (N >= 5) {
-
-      for (let j = 0; j < scheda.domande.length; j++) {
-
-        d = 0.0;
-        d += scheda.domande[j][0] * answersWeights[0];   // Decisamente no
-        d += scheda.domande[j][1] * answersWeights[1];   // Più no che sì
-        d += scheda.domande[j][2] * answersWeights[2];   // Più sì che no
-        d += scheda.domande[j][3] * answersWeights[3];   // Decisamente sì
-
-        const domanda = questionsWeights.filter(question => question.id === j + 1)[0];
-        if (domanda.gruppo === 'V1') {
-          V1 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V2') {
-          V2 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V3') {
-          V3 += (d / N) * domanda.peso_standard;
-        }
-      }
-
-    }
-
-    return [this.round(V1), this.round(V2), this.round(V3)];
-  }
-
-  public parseInsegnamentoSchede(insegnamenti: Teaching[], subjectToSearch?: string): TeachingSummary[] {
-    const insegnamentiVal: TeachingSummary[] = [];
-    for (let i = 0; i < insegnamenti.length; i++) {
-
-      if (insegnamenti[i].schedeopis == null) { continue; }
-      if (subjectToSearch != null && insegnamenti[i].nome.toUpperCase().indexOf(subjectToSearch.toUpperCase()) === -1) { continue; }
-
-      insegnamentiVal[i] = {} as TeachingSummary;
-      insegnamentiVal[i].nome = insegnamenti[i].nome;
-      insegnamentiVal[i].nome_completo = insegnamenti[i].nome;
-
-      if (insegnamentiVal[i].nome.length > 35) {
-        insegnamentiVal[i].nome = insegnamentiVal[i].nome.substring(0, 35) + '... ';
-      }
-
-
-      if (insegnamenti[i].id_modulo !== 0 && insegnamenti[i].nome_modulo != null) {
-        insegnamentiVal[i].nome += ' - ' + insegnamenti[i].nome_modulo;
-        insegnamentiVal[i].nome_completo += ' -' + insegnamenti[i].nome_modulo;
-      }
-
-      if (insegnamenti[i].canale !== 'no') {
-        insegnamentiVal[i].nome += ' (' + insegnamenti[i].canale + ')';
-        insegnamentiVal[i].nome_completo += ' (' + insegnamenti[i].canale + ')';
-      }
-
-      // insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
-      insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede;
-
-      insegnamentiVal[i].anno = insegnamenti[i].anno;
-      insegnamentiVal[i].canale = insegnamenti[i].canale;
-      insegnamentiVal[i].id_modulo = insegnamenti[i].id_modulo;
-      insegnamentiVal[i].nome_modulo = insegnamenti[i].nome_modulo;
-      insegnamentiVal[i].docente = insegnamenti[i].docente;
-      insegnamentiVal[i].tot_schedeF = insegnamenti[i].schedeopis.totale_schede;
-      insegnamentiVal[i].tot_schedeNF = insegnamenti[i].schedeopis.totale_schede_nf;
-
-      insegnamentiVal[i].domande = insegnamenti[i].schedeopis.domande;
-      /*insegnamentiVal[i].domande[0] = [];
-
-      let index = 0;
-      for (let j = 0; j < insegnamenti[i].domande.length; j++) {
-        if (j % 5 === 0 && j !== 0) {
-          index++;
-          insegnamentiVal[i].domande[index] = [];
-        }
-
-        insegnamentiVal[i].domande[index].push(insegnamenti[i].domande[j]);
-      }*/
-    }
-
-    return insegnamentiVal.filter((el) => el != null); // remove empty slot
-  }
-
 }

@@ -1,0 +1,12 @@
+<section id="years" class="animation-show" [class.show]="canShowDepartments()">
+  @for (year of allYears; track $index) {
+    <button
+      (click)="selectYear(year)"
+      role="button"
+      [class.selected]="selectedYear() === year"
+      class="btn-year"
+    >
+      <span>{{ year }}</span>
+    </button>
+  }
+</section>
