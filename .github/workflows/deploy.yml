@@ -44,7 +44,7 @@ jobs:
         run: npm ci
 
       - name: deploy opis app
-        uses: actions/deploy-pages@v1
-        # with:
-        #   branch: gh-pages
-        #   folder: dist/opis-manager
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/opis-manager
