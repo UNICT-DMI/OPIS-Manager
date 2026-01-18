@@ -32,7 +32,6 @@ Follow these instructions to run the project locally.
 - **Angular CLI**
 - A running instance of the compatible backend
 
----
 
 ### 🔌 Backend Setup
 
@@ -40,7 +39,6 @@ Before starting the frontend application, make sure the backend is up and runnin
 Follow the setup instructions available in the official OPIS Manager backend repository:  
 https://github.com/UNICT-DMI/opis-manager-core
 
----
 
 ### 📥 Installation
 
@@ -52,10 +50,13 @@ https://github.com/UNICT-DMI/opis-manager-core
 
 2. Install dependencies:
    ```sh
-   npm install || npm i
+   npm install
+   ```
+   or
+   ```sh
+   npm i
    ```
 
----
 
 ### 🌍 Environment Configuration
 
@@ -64,14 +65,16 @@ Before starting the application, the `prestart` script (`node set-env.js`) creat
 No manual `.env` file setup is required at this stage.
 
 
----
-
 ## 🧪 Development Server
 
 Start the local development server with:
 
 ```sh
-npm start || ng serve
+npm start
+```
+or
+```sh
+ng serve
 ```
 
 Then open `http://localhost:4200/` in your browser.  
@@ -101,7 +104,11 @@ ng generate --help
 To build the project run:
 
 ```sh
-npm run build || ng build
+npm run build
+```
+or
+```sh
+ng build
 ```
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
@@ -115,7 +122,11 @@ This will compile your project and store the build artifacts in the `dist/` dire
 Run unit tests with:
 
 ```sh
-npm run test || ng test
+npm run test
+```
+or
+```sh
+ng test
 ```
 
 Unit testing is configured using **[Vitest](https://vitest.dev/)**.
