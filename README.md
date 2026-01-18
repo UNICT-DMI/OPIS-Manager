@@ -1,78 +1,144 @@
 # OPISManager
 [![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
-This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
+A **frontend Angular application** for visualizing and managing OPIS results.  
+The project is designed to work in conjunction with a backend service and provides a modern Single Page Application (SPA) interface.
 
-# About this repo
+---
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+## 📌 Live Demo
 
-## How to setup the project
+The application is available online at:  
+👉 https://unict-dmi.github.io/OPIS-Manager/
 
-### Node
-For the development of this project in angular 21 was used Node v.24.11.1
+---
 
-### Backend setup
+## 🧠 About
 
-Before starting the UI, you must have the backend fully working on your machine. Follow the instruction in the [OPIS Manager backend repo](https://github.com/UNICT-DMI/opis-manager-core).
+OPIS-Manager is the frontend layer of an OPIS results management system.  
+It has been bootstrapped with [Angular CLI](https://github.com/angular/angular-cli) and follows Angular best practices regarding project structure, modularity, and maintainability.
 
-## Development server
+The application communicates with a backend service to retrieve and display data; without the backend running, most features will not function correctly.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 🚀 Getting Started
+
+Follow these instructions to run the project locally.
+
+### 🛠 Prerequisites
+
+- **Node.js** (tested with Node v24.11.1; other recent 24.x versions should work)
+- **Angular CLI**
+- A running instance of the compatible backend
+
+---
+
+### 🔌 Backend Setup
+
+Before starting the frontend application, make sure the backend is up and running.  
+Follow the setup instructions available in the official OPIS Manager backend repository:  
+https://github.com/UNICT-DMI/opis-manager-core
+
+---
+
+### 📥 Installation
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/ChiaraZuccaro/OPIS-Manager.git
+   cd OPIS-Manager
+   ```
+
+2. Install dependencies:
+   ```sh
+   npm install || npm i
+   ```
+
+---
+
+### 🌍 Environment Configuration
+
+The environment configuration is generated automatically.  
+Before starting the application, the `prestart` script (`node set-env.js`) creates the `src/enviroment.ts` file containing the required configuration values (e.g. API base URL).  
+No manual `.env` file setup is required at this stage.
+
+
+---
+
+## 🧪 Development Server
+
+Start the local development server with:
+
+```sh
+npm start || ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open `http://localhost:4200/` in your browser.  
+The application will automatically reload when you modify source files.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ⚙️ Code Scaffolding
 
-```bash
+You can generate new Angular artifacts using the Angular CLI:
+
+```sh
 ng generate component component-name
+ng generate service service-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To see all available schematics:
 
-```bash
+```sh
 ng generate --help
 ```
 
-## Building
+---
+
+## 📦 Build
 
 To build the project run:
 
-```bash
-ng build
+```sh
+npm run build || ng build
 ```
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 🧪 Tests
 
-```bash
-ng test
+### Unit Tests
+
+Run unit tests with:
+
+```sh
+npm run test || ng test
 ```
 
-## Running end-to-end tests
+Unit testing is configured using **[Vitest](https://vitest.dev/)**.
 
-For end-to-end (e2e) testing, run:
+### End-to-End Tests
 
-```bash
+```sh
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI does not include an E2E test runner by default, so you can integrate the one that best suits your needs.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🧾 License
 
-### Credits
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+
+---
+
+## 🙌 Credits
+
+Contributors include:
 
 - Stefano Borzì (Helias)
 - Pierpaolo Pecoraio
@@ -83,3 +149,10 @@ For more information on using the Angular CLI, including detailed command refere
 - Diego Sinitò
 - Salvo Asero
 - Chiara Zuccaro
+
+---
+
+## 📌 Notes
+
+- The backend service must be running for the application to function correctly.
+- The project relies entirely on standard Angular CLI tooling for development, testing, and building.
