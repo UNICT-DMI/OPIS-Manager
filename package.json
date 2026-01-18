@@ -53,6 +53,7 @@
     "@angular/compiler-cli": "21.0.3",
     "@typescript-eslint/eslint-plugin": "8.48.1",
     "@typescript-eslint/parser": "8.48.1",
+    "@vitest/coverage-v8": "4.0.17",
     "angular-eslint": "21.0.1",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
@@ -61,6 +62,6 @@
     "eslint-plugin-unicorn": "62.0.0",
     "jsdom": "27.1.0",
     "typescript": "5.9.2",
-    "vitest": "4.0.8"
+    "vitest": "4.0.17"
   }
 }
