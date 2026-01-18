@@ -1,0 +1,39 @@
+name: Opis Testing
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: setup node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "24.13.0"
+      
+      - name: install dependencies
+        run: npm ci
+
+      - name: run tests + coverage
+        run: npm run test:coverage
+      
+      - name: upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage
+
+  
