@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, effect, EffectRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  EffectRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Department } from '@interfaces/department.interface';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { RouterLink } from '@angular/router';
@@ -16,7 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [RouterLink, Loader, Icon, CdsSelectedSection],
   templateUrl: './department.html',
   styleUrl: './department.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
@@ -24,9 +34,9 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _questionService = inject(QuestionService);
 
   private readonly departmentData = signal<Department | null>(null);
-  
+
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
-  
+
   protected isCdsSelected = false;
   protected readonly department = computed(() => this.departmentData() ?? null);
   protected readonly cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);

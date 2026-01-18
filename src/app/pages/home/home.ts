@@ -10,7 +10,7 @@ import { YearSection } from '@sections/year-section/year-section';
   imports: [LogoAnimated, DepCard, YearSection, Loader],
   templateUrl: './home.html',
   styleUrl: './home.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePageComponent implements OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);

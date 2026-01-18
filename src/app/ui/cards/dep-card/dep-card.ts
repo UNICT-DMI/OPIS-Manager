@@ -8,7 +8,7 @@ import { Department } from '@interfaces/department.interface';
   imports: [RouterLink, Icon],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DepCard implements OnInit {
   readonly department = input.required<Department>();

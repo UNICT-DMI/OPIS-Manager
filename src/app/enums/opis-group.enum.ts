@@ -4,4 +4,4 @@ export const OpisGroup = {
   Group3: 'V3',
 } as const;
 
-export type OpisGroupType = typeof OpisGroup[keyof typeof OpisGroup];
+export type OpisGroupType = (typeof OpisGroup)[keyof typeof OpisGroup];

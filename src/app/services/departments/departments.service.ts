@@ -51,7 +51,9 @@ export class DepartmentsService {
     });
   }
 
-  public getCdsDepartment(department: WritableSignal<Department | null>): ResourceRef<CDS[] | undefined> {
+  public getCdsDepartment(
+    department: WritableSignal<Department | null>,
+  ): ResourceRef<CDS[] | undefined> {
     return rxResource({
       params: () => department(),
       stream: ({ params }) => {
