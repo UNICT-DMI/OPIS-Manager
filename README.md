@@ -65,7 +65,7 @@ Before starting the application, the `prestart` script (`node set-env.js`) creat
 No manual `.env` file setup is required at this stage.
 
 
-## 🧪 Development Server
+### 🧪 Development Server
 
 Start the local development server with:
 
