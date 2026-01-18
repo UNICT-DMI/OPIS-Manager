@@ -13,7 +13,8 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
     "test": "ng test",
-    "test:coverage": "ng test --coverage"
+    "test:coverage": "ng test --coverage",
+    "check-coverage": "node scripts/check-coverage-test.js"
   },
   "prettier": {
     "printWidth": 100,
