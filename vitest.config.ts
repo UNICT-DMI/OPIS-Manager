@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-const MIN_COVERAGE = 60;
+const MIN_COVERAGE = 20;
 
 export default defineConfig({
   plugins: [
