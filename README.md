@@ -1,4 +1,4 @@
-![OPIS Manager](./public/logo-static.svg)
+![OPIS Manager](./public/logo-static.webp)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
