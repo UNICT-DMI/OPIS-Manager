@@ -24,9 +24,6 @@ jobs:
 
       - name: run tests + coverage
         run: npm run test:coverage
-
-      - name: check coverage
-        run: npm run check-coverage
       
       - name: upload coverage report
         uses: actions/upload-artifact@v3

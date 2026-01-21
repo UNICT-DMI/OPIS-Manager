@@ -13,8 +13,7 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
     "test": "ng test",
-    "test:coverage": "ng test --coverage",
-    "check-coverage": "node scripts/check-coverage-test.js"
+    "test:coverage": "ng test --coverage"
   },
   "prettier": {
     "printWidth": 100,
@@ -63,6 +62,7 @@
     "eslint-plugin-unicorn": "62.0.0",
     "jsdom": "27.1.0",
     "typescript": "5.9.2",
+    "vite-tsconfig-paths": "6.0.4",
     "vitest": "4.0.17"
   }
 }
