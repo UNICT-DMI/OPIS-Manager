@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { env } from '@env';
 import { Question } from '@interfaces/question.interface';
 import { catchError, map, Observable, shareReplay, tap, throwError } from 'rxjs';
-import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {

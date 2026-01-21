@@ -14,7 +14,8 @@
       "@values/*": ["src/app/values/*"],
       "@mocks/*": ["src/app/mocks/*"],
       "@utils/*": ["src/app/utils/*"],
-      "@enums/*": ["src/app/enums/*"]
+      "@enums/*": ["src/app/enums/*"],
+      "@env": ["src/environment"]
     },
     "strict": true,
     "noImplicitOverride": true,
