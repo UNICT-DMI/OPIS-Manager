@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, ResourceRef, signal, WritableSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { env } from '@env';
 import { CDS } from '@interfaces/cds.interface';
 import { Department } from '@interfaces/department.interface';
 import { DELAY_API_MS } from '@values/delay-api';
@@ -8,7 +9,6 @@ import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
 import { AcademicYear } from '@values/years';
 import { delay, map, Observable, of } from 'rxjs';
-import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentsService {
