@@ -9,7 +9,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { DepartmentsService } from '@services/departments/departments.service';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 
 @Component({
   selector: 'opis-logo-animated',

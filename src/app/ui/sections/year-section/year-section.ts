@@ -7,7 +7,7 @@ import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
   imports: [],
   templateUrl: './year-section.html',
   styleUrl: './year-section.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YearSection {
   private readonly _departmentService = inject(DepartmentsService);

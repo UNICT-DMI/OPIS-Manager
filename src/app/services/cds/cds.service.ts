@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { env } from '@env';
 import { CDS } from '@interfaces/cds.interface';
 import { Teaching } from '@interfaces/teaching.interface';
 import { GraphService } from '@services/graph/graph.service';
@@ -18,7 +19,6 @@ import {
   throwError,
   toArray,
 } from 'rxjs';
-import { env } from 'src/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
