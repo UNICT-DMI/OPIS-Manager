@@ -39,27 +39,31 @@ export class CdsService {
 
   readonly cdsSelected = signal<CDS | null>(null);
 
-  private formatSchedaOpis(resp: CDS[]): void {
-    const cdsSchede = resp
-      .flatMap((cdsCoarse) => cdsCoarse.insegnamenti)
+  private extractValidSchedeOpis(cdsList: CDS[]): SchedaOpis[] {
+    return cdsList
+      .flatMap((cds) => cds.insegnamenti)
       .filter((insegnamento) => insegnamento.schedeopis != null)
       .flatMap((insegnamento) => insegnamento.schedeopis)
       .filter((schedaopis) => schedaopis.domande != null);
+  }
 
-    from(cdsSchede)
-      .pipe(
+  private formatAllYearsCdsStats(resp: CDS[]) {
+    const cdsSchede = this.extractValidSchedeOpis(resp);
+
+    from(cdsSchede).pipe(
         groupBy((scheda) => scheda.anno_accademico),
         mergeMap((group) => group.pipe(toArray())),
       )
       .subscribe((schede) => {
         const academicYear = schede[0].anno_accademico as AcademicYear;
 
-        this.vCds[academicYear] = this._graphService.elaborateFormula(schede)[0];
+        this.vCds[academicYear] = this._graphService.elaborateFormulaFor(schede)[0];
         // debugger
         //   this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger ngOnChange in child components
         // this.nCds[academicYear] = this.graphService.round(schede.map(scheda => scheda.totale_schede)
         //     .reduce((acc, val) => acc + val) / schede.length);
       });
+    return this.vCds;
   }
 
   private teachingCdsApi(cds: number): Observable<Teaching[]> {
@@ -75,15 +79,13 @@ export class CdsService {
     );
   }
 
-  private coarsePerCdsApi(unictCds: number): Observable<void> {
-    const url = `${this.BASE_URL}/coarse/${unictCds}/schedeopis`;
+  private coarsePerCdsApi(unictCdsId: number) {
+    const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
       map((coarse) => {
-        if (!coarse) {
-          throw new Error('Schede OPIS non trovate');
-        }
-        return this.formatSchedaOpis(coarse);
+        if (!coarse) throw new Error('Schede OPIS non trovate');
+        return this.formatAllYearsCdsStats(coarse);
       }),
     );
   }

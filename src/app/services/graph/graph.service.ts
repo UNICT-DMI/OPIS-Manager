@@ -43,18 +43,18 @@ export class GraphService {
     return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
-  public elaborateFormula(schedeOpis: SchedaOpis[]): [number[], number[][]] {
+  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): [number[], number[][]] {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];
 
-    for (const schedaOpis of schedeOpis) {
+    for (const schedaOpis of opisSchedules) {
       const [V1, V2, V3] = this.applyWeights(schedaOpis);
       v1.push(V1);
       v2.push(V2);
       v3.push(V3);
     }
-    // debugger
+
     const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
     return [means, [v1, v2, v3]];
   }
