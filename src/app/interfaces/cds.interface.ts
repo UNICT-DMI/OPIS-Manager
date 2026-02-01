@@ -1,3 +1,4 @@
+import { AcademicYear } from '@values/years';
 import { Teaching } from './teaching.interface';
 
 export interface CDS {
@@ -12,4 +13,9 @@ export interface CDS {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pesi_domande: any;
   insegnamenti: Teaching[];
+}
+
+export interface AllCdsInfoResp {
+  teachings: Teaching[],
+  coarse: Record<AcademicYear, [number[], number[][]]>
 }

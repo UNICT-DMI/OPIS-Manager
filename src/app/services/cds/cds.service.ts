@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, ResourceRef, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { env } from '@env';
-import { CDS } from '@interfaces/cds.interface';
+import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
+import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
 import { GraphService } from '@services/graph/graph.service';
 import { DELAY_API_MS } from '@values/delay-api';
@@ -11,13 +12,9 @@ import {
   catchError,
   delay,
   forkJoin,
-  from,
-  groupBy,
   map,
-  mergeMap,
   Observable,
-  throwError,
-  toArray,
+  throwError
 } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -25,17 +22,6 @@ export class CdsService {
   private readonly BASE_URL = env.api_url + '/cds';
   private readonly _http = inject(HttpClient);
   private readonly _graphService = inject(GraphService);
-
-  private vCds: Record<AcademicYear, number[] | null> = {
-    '2013/2014': null,
-    '2014/2015': null,
-    '2015/2016': null,
-    '2016/2017': null,
-    '2017/2018': null,
-    '2018/2019': null,
-    '2019/2020': null,
-    '2020/2021': null,
-  };
 
   readonly cdsSelected = signal<CDS | null>(null);
 
@@ -47,23 +33,29 @@ export class CdsService {
       .filter((schedaopis) => schedaopis.domande != null);
   }
 
-  private formatAllYearsCdsStats(resp: CDS[]) {
+  private groupByYears(schede: SchedaOpis[]): Record<AcademicYear, SchedaOpis[]> {
+    return schede.reduce((acc, scheda) => {
+      const year = scheda.anno_accademico as AcademicYear;
+      if (!acc[year]) acc[year] = [];
+      acc[year].push(scheda);
+      return acc;
+    }, {} as Record<AcademicYear, SchedaOpis[]>);
+  }
+
+  private formatAllYearsCdsStats(resp: CDS[]): Record<AcademicYear, [number[], number[][]]> {
     const cdsSchede = this.extractValidSchedeOpis(resp);
+    const schedeByYears = this.groupByYears(cdsSchede);
 
-    from(cdsSchede).pipe(
-        groupBy((scheda) => scheda.anno_accademico),
-        mergeMap((group) => group.pipe(toArray())),
-      )
-      .subscribe((schede) => {
-        const academicYear = schede[0].anno_accademico as AcademicYear;
+    const vCds = {} as Record<AcademicYear, [number[], number[][]]>;
 
-        this.vCds[academicYear] = this._graphService.elaborateFormulaFor(schede)[0];
-        // debugger
-        //   this.vCds = Object.assign({}, this.vCds); // copy into new object to trigger ngOnChange in child components
-        // this.nCds[academicYear] = this.graphService.round(schede.map(scheda => scheda.totale_schede)
-        //     .reduce((acc, val) => acc + val) / schede.length);
-      });
-    return this.vCds;
+    for(const year in schedeByYears) {
+      const yearTyped = year as AcademicYear;
+      const allSchede = schedeByYears[yearTyped];
+
+      vCds[yearTyped] = this._graphService.elaborateFormulaFor(allSchede);
+    }
+
+    return vCds;
   }
 
   private teachingCdsApi(cds: number): Observable<Teaching[]> {
@@ -79,7 +71,7 @@ export class CdsService {
     );
   }
 
-  private coarsePerCdsApi(unictCdsId: number) {
+  private cdsStatsApi(unictCdsId: number): Observable<Record<AcademicYear, [number[], number[][]]>> {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
@@ -90,7 +82,7 @@ export class CdsService {
     );
   }
 
-  public getInfoCds() {
+  public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined > {
     return rxResource({
       params: () => this.cdsSelected(),
       stream: ({ params }) => {
@@ -98,12 +90,9 @@ export class CdsService {
           return throwError(() => new Error('Id or Unict_id missing!'));
         }
 
-        const teachings$ = this.teachingCdsApi(params.id);
-        const coarse$ = this.coarsePerCdsApi(params.unict_id);
-
         return forkJoin({
-          teaching: teachings$,
-          coarse: coarse$,
+          teachings: this.teachingCdsApi(params.id),
+          coarse: this.cdsStatsApi(params.unict_id),
         }).pipe(
           delay(DELAY_API_MS),
           catchError((err) => throwError(() => err)),
