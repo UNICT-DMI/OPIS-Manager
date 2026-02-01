@@ -3,7 +3,7 @@
     <opis-loader />
   } @else {
     @if (infoCds.hasValue()) {
-      {{ infoCds.value().coarse | json }}
+      <opis-graph />
     }
 
     @if (infoCds.status() === ERR_STATUS) {
