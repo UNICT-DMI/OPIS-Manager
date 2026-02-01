@@ -2,8 +2,8 @@
   @if (infoCds.isLoading()) {
     <opis-loader />
   } @else {
-    @if (infoCds.hasValue()) {
-      <opis-graph />
+    @if (infoCds.hasValue() && infoCds.value().graphs) {
+      <opis-graph [dataChart]="infoCds.value().graphs.cds_stats" />
     }
 
     @if (infoCds.status() === ERR_STATUS) {

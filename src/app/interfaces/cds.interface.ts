@@ -1,5 +1,6 @@
 import { AcademicYear } from '@values/years';
 import { Teaching } from './teaching.interface';
+import { GraphView } from './graph-config.interface';
 
 export interface CDS {
   id: number;
@@ -18,4 +19,9 @@ export interface CDS {
 export interface AllCdsInfoResp {
   teachings: Teaching[],
   coarse: Record<AcademicYear, [number[], number[][]]>
+  graphs: {
+    cds_stats: GraphView,
+    // cds_stats_by_year: ChartData,
+    // cds_techings: ChartData
+  }
 }

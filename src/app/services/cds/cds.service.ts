@@ -90,11 +90,20 @@ export class CdsService {
           return throwError(() => new Error('Id or Unict_id missing!'));
         }
 
-        return forkJoin({
-          teachings: this.teachingCdsApi(params.id),
-          coarse: this.cdsStatsApi(params.unict_id),
-        }).pipe(
+        return forkJoin([
+          this.teachingCdsApi(params.id),
+          this.cdsStatsApi(params.unict_id),
+        ]).pipe(
           delay(DELAY_API_MS),
+          map(([ teachings, coarse ]) => {
+            const respDTO: AllCdsInfoResp = {
+              teachings, coarse,
+              graphs: {
+                cds_stats: this._graphService.formatCDSGraph(coarse)
+              }
+            }
+            return respDTO;
+          }),
           catchError((err) => throwError(() => err)),
         );
       },

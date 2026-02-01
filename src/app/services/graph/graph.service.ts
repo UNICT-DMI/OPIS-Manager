@@ -1,13 +1,46 @@
 import { inject, Injectable } from '@angular/core';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
+import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { mean, round } from '@utils/statistics.utils';
+import { AcademicYear } from '@values/years';
 
 @Injectable({ providedIn: 'root' })
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
+
+  public formatCDSGraph(dataFromResp: Record<AcademicYear, [number[], number[][]]>): GraphView {
+    const labels: AcademicYear[] = [];
+    const v1: number[] = [];
+    const v2: number[] = [];
+    const v3: number[] = [];
+
+    for(const year in dataFromResp) {
+      const yearTyped = year as AcademicYear;
+      const [ means ] = dataFromResp[yearTyped];
+      
+      const isYearAlredyIn = labels.some(year => year === yearTyped);
+      if (!isYearAlredyIn) labels.push(yearTyped);
+
+      v1.push(means[0]);
+      v2.push(means[1]);
+      v3.push(means[2]);
+    }
+    
+    return {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'V1', data: [...v1] },
+          { label: 'V2', data: [...v2] },
+          { label: 'V3', data: [...v3] }
+        ]
+      }
+    }
+  }
 
   public applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
