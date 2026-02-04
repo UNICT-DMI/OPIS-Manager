@@ -30,7 +30,7 @@ export class GraphService {
     }
     
     return {
-      type: 'bar',
+      type: 'line',
       data: {
         labels,
         datasets: [
