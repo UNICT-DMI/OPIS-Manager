@@ -7,16 +7,7 @@ import { BaseChartDirective } from 'ng2-charts';
 @Component({
   selector: 'opis-graph',
   imports: [BaseChartDirective],
-  template: ` @if (dataChart()) {
-    <section id="graph">
-      <canvas
-        baseChart
-        [data]="dataChart().data"
-        [options]="chartOptions"
-        [type]="dataChart().type"
-      ></canvas>
-    </section>
-  }`,
+  templateUrl: `./grap.html`,
   styleUrl: './graph.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
