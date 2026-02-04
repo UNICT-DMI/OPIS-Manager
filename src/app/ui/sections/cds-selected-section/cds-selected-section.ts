@@ -26,7 +26,6 @@ export class CdsSelectedSection {
   protected readonly infoCds = this._cdsService.getInfoCds();
 
   constructor() {
-    effect(() =>console.log(this.infoCds.value()));
-    
+    effect(() => console.log(this.infoCds.value()));
   }
 }

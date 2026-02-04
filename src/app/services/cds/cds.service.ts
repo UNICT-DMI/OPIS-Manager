@@ -8,14 +8,7 @@ import { Teaching } from '@interfaces/teaching.interface';
 import { GraphService } from '@services/graph/graph.service';
 import { DELAY_API_MS } from '@values/delay-api';
 import { AcademicYear } from '@values/years';
-import {
-  catchError,
-  delay,
-  forkJoin,
-  map,
-  Observable,
-  throwError
-} from 'rxjs';
+import { catchError, delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
@@ -34,12 +27,15 @@ export class CdsService {
   }
 
   private groupByYears(schede: SchedaOpis[]): Record<AcademicYear, SchedaOpis[]> {
-    return schede.reduce((acc, scheda) => {
-      const year = scheda.anno_accademico as AcademicYear;
-      if (!acc[year]) acc[year] = [];
-      acc[year].push(scheda);
-      return acc;
-    }, {} as Record<AcademicYear, SchedaOpis[]>);
+    return schede.reduce(
+      (acc, scheda) => {
+        const year = scheda.anno_accademico as AcademicYear;
+        if (!acc[year]) acc[year] = [];
+        acc[year].push(scheda);
+        return acc;
+      },
+      {} as Record<AcademicYear, SchedaOpis[]>,
+    );
   }
 
   private formatAllYearsCdsStats(resp: CDS[]): Record<AcademicYear, [number[], number[][]]> {
@@ -48,7 +44,7 @@ export class CdsService {
 
     const vCds = {} as Record<AcademicYear, [number[], number[][]]>;
 
-    for(const year in schedeByYears) {
+    for (const year in schedeByYears) {
       const yearTyped = year as AcademicYear;
       const allSchede = schedeByYears[yearTyped];
 
@@ -71,7 +67,9 @@ export class CdsService {
     );
   }
 
-  private cdsStatsApi(unictCdsId: number): Observable<Record<AcademicYear, [number[], number[][]]>> {
+  private cdsStatsApi(
+    unictCdsId: number,
+  ): Observable<Record<AcademicYear, [number[], number[][]]>> {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
@@ -82,7 +80,7 @@ export class CdsService {
     );
   }
 
-  public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined > {
+  public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined> {
     return rxResource({
       params: () => this.cdsSelected(),
       stream: ({ params }) => {
@@ -90,18 +88,16 @@ export class CdsService {
           return throwError(() => new Error('Id or Unict_id missing!'));
         }
 
-        return forkJoin([
-          this.teachingCdsApi(params.id),
-          this.cdsStatsApi(params.unict_id),
-        ]).pipe(
+        return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
           delay(DELAY_API_MS),
-          map(([ teachings, coarse ]) => {
+          map(([teachings, coarse]) => {
             const respDTO: AllCdsInfoResp = {
-              teachings, coarse,
+              teachings,
+              coarse,
               graphs: {
-                cds_stats: this._graphService.formatCDSGraph(coarse)
-              }
-            }
+                cds_stats: this._graphService.formatCDSGraph(coarse),
+              },
+            };
             return respDTO;
           }),
           catchError((err) => throwError(() => err)),

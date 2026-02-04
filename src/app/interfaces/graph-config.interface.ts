@@ -1,6 +1,6 @@
-import { ChartData, ChartType } from "chart.js";
+import { ChartData, ChartType } from 'chart.js';
 
 export interface GraphView {
-  type: ChartType,
-  data: ChartData
+  type: ChartType;
+  data: ChartData;
 }

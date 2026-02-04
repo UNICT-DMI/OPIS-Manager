@@ -17,11 +17,11 @@ export interface CDS {
 }
 
 export interface AllCdsInfoResp {
-  teachings: Teaching[],
-  coarse: Record<AcademicYear, [number[], number[][]]>
+  teachings: Teaching[];
+  coarse: Record<AcademicYear, [number[], number[][]]>;
   graphs: {
-    cds_stats: GraphView,
+    cds_stats: GraphView;
     // cds_stats_by_year: ChartData,
     // cds_techings: ChartData
-  }
+  };
 }

@@ -17,18 +17,18 @@ export class GraphService {
     const v2: number[] = [];
     const v3: number[] = [];
 
-    for(const year in dataFromResp) {
+    for (const year in dataFromResp) {
       const yearTyped = year as AcademicYear;
-      const [ means ] = dataFromResp[yearTyped];
-      
-      const isYearAlredyIn = labels.some(year => year === yearTyped);
+      const [means] = dataFromResp[yearTyped];
+
+      const isYearAlredyIn = labels.some((year) => year === yearTyped);
       if (!isYearAlredyIn) labels.push(yearTyped);
 
       v1.push(means[0]);
       v2.push(means[1]);
       v3.push(means[2]);
     }
-    
+
     return {
       type: 'line',
       data: {
@@ -36,10 +36,10 @@ export class GraphService {
         datasets: [
           { label: 'V1', data: [...v1] },
           { label: 'V2', data: [...v2] },
-          { label: 'V3', data: [...v3] }
-        ]
-      }
-    }
+          { label: 'V3', data: [...v3] },
+        ],
+      },
+    };
   }
 
   public applyWeights(scheda: SchedaOpis): number[] {
