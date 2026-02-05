@@ -6,7 +6,7 @@ import { exampleCDS } from '@mocks/cds-mock';
 import { signal } from '@angular/core';
 
 class MockCdsService {
-  cdsSelected = signal(exampleCDS);
+  readonly cdsSelected = signal(exampleCDS);
   getInfoCds() {
     return {
       status: () => 'success',
@@ -22,7 +22,6 @@ class MockCdsService {
 describe('CdsSelectedSection', () => {
   let component: CdsSelectedSection;
   let fixture: ComponentFixture<CdsSelectedSection>;
-  let mockCdsService: MockCdsService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -32,7 +31,6 @@ describe('CdsSelectedSection', () => {
 
     fixture = TestBed.createComponent(CdsSelectedSection);
     component = fixture.componentInstance;
-    mockCdsService = TestBed.inject(CdsService) as unknown as MockCdsService;
 
     fixture.detectChanges();
   });
