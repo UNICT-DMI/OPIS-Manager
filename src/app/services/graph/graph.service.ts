@@ -5,6 +5,7 @@ import { AnswerWeights } from '@enums/weights.enum';
 import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
+import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils';
 import { AcademicYear } from '@values/years';
 
@@ -18,12 +19,11 @@ export class GraphService {
     const v2: number[] = [];
     const v3: number[] = [];
 
-    for (const year in dataFromResp) {
-      const yearTyped = year as AcademicYear;
-      const [means] = dataFromResp[yearTyped];
-
-      const isYearAlredyIn = labels.some((year) => year === yearTyped);
-      if (!isYearAlredyIn) labels.push(yearTyped);
+    for (const year of typedKeys(dataFromResp)) {
+      const [means] = dataFromResp[year];
+      
+      const isYearAlredyIn = labels.some((yearLabel) => yearLabel === year);
+      if (!isYearAlredyIn) labels.push(year);
 
       v1.push(means[0]);
       v2.push(means[1]);
