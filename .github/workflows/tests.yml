@@ -1,8 +1,8 @@
-name: opis_testing
+name: OpisTesting
 
 on:
   workflow_run:
-    workflows: ["opis_lint"]
+    workflows: ["OpisLint"]
     types:
       - completed
 

@@ -1,8 +1,8 @@
-name: Opis Deploy
+name: OpisDeploy
 
 on:
   workflow_run:
-    workflows: ["opis_testing"]
+    workflows: ["OpisTesting"]
     types:
       - completed
 

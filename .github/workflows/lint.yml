@@ -1,4 +1,4 @@
-name: opis_lint
+name: OpisLint
 
 on:
   pull_request:
