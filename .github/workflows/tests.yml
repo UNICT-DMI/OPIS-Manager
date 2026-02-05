@@ -1,11 +1,7 @@
 name: OpisTesting
 
 on:
-  workflow_run:
-    workflows: ["OpisLint"]
-    types:
-      - completed
-
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -34,3 +30,13 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+
+  trigger_deploy:
+    needs: test_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deploy.yml
+          ref: ${{ github.ref }}

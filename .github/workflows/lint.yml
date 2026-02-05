@@ -10,13 +10,20 @@ jobs:
   lint_job:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code lint
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
           node-version: "24.13.0"
-      - name: install dependencies
-        run: npm ci
-      - name: lint code
-        run: npm run lint:fix
+      - run: npm ci
+      - run: npm run lint:fix
+
+  trigger_test:
+    needs: lint_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger test workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: tests.yml
+          ref: ${{ github.head_ref }}
