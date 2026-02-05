@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { Means, MeansPerYear } from '@c_types/means-graph.type';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
 import { GraphView } from '@interfaces/graph-config.interface';
@@ -11,7 +12,7 @@ import { AcademicYear } from '@values/years';
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
 
-  public formatCDSGraph(dataFromResp: Record<AcademicYear, [number[], number[][]]>): GraphView {
+  public formatCDSGraph(dataFromResp: MeansPerYear): GraphView {
     const labels: AcademicYear[] = [];
     const v1: number[] = [];
     const v2: number[] = [];
@@ -76,7 +77,7 @@ export class GraphService {
     return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
-  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): [number[], number[][]] {
+  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];

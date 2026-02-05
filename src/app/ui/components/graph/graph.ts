@@ -42,7 +42,7 @@ export class Graph implements OnInit {
     const sand = this.cssVar('--sand-500');
     const defaultGrey = this.cssVar('--gray-700');
 
-    const colors = new Map([
+    const colors = new Map<OpisGroupType, string>([
       [OpisGroup.Group1, blue],
       [OpisGroup.Group2, red],
       [OpisGroup.Group3, sand],

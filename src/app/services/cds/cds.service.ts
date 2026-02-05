@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, ResourceRef, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { MeansPerYear } from '@c_types/means-graph.type';
 import { env } from '@env';
 import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
@@ -38,11 +39,11 @@ export class CdsService {
     );
   }
 
-  private formatAllYearsCdsStats(resp: CDS[]): Record<AcademicYear, [number[], number[][]]> {
+  private formatAllYearsCdsStats(resp: CDS[]): MeansPerYear {
     const cdsSchede = this.extractValidSchedeOpis(resp);
     const schedeByYears = this.groupByYears(cdsSchede);
 
-    const vCds = {} as Record<AcademicYear, [number[], number[][]]>;
+    const vCds = {} as MeansPerYear;
 
     for (const year in schedeByYears) {
       const yearTyped = year as AcademicYear;
@@ -67,9 +68,7 @@ export class CdsService {
     );
   }
 
-  private cdsStatsApi(
-    unictCdsId: number,
-  ): Observable<Record<AcademicYear, [number[], number[][]]>> {
+  private cdsStatsApi(unictCdsId: number): Observable<MeansPerYear> {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
