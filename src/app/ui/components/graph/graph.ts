@@ -36,7 +36,7 @@ export class Graph implements OnInit {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  private getColor(labelGroup: OpisGroupType) {
+  private getColor(labelGroup: OpisGroupType): string {
     const blue = this.cssVar('--blue-900');
     const red = this.cssVar('--red-900');
     const sand = this.cssVar('--sand-500');
@@ -51,7 +51,7 @@ export class Graph implements OnInit {
     return colors.get(labelGroup) ?? defaultGrey;
   }
 
-  private addBrandColorToDataset() {
+  private addBrandColorToDataset(): void {
     const datasets = this.dataChart().data.datasets;
 
     this.dataChart().data.datasets = datasets.map((set) => {
