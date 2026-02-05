@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   ResourceStatus,
 } from '@angular/core';
@@ -24,8 +23,4 @@ export class CdsSelectedSection {
 
   protected readonly cds = computed(() => this._cdsService.cdsSelected());
   protected readonly infoCds = this._cdsService.getInfoCds();
-
-  constructor() {
-    effect(() => console.log(this.infoCds.value()));
-  }
 }

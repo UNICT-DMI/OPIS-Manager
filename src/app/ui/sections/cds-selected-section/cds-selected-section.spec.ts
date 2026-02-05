@@ -1,27 +1,40 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { exampleCDS } from '@mocks/cds-mock';
-import { CdsService } from '@services/cds/cds.service';
-import { describe } from 'vitest';
+import { describe, it, beforeEach, expect } from 'vitest';
 import { CdsSelectedSection } from './cds-selected-section';
+import { CdsService } from '@services/cds/cds.service';
+import { exampleCDS } from '@mocks/cds-mock';
+import { signal } from '@angular/core';
+
+class MockCdsService {
+  cdsSelected = signal(exampleCDS);
+  getInfoCds() {
+    return ({
+      status: () => 'success',
+      isLoading: () => false,
+      hasValue: () => true,
+      value: () => exampleCDS,
+      error: null,
+      refresh: () => { }
+    })
+  }
+}
 
 describe('CdsSelectedSection', () => {
   let component: CdsSelectedSection;
   let fixture: ComponentFixture<CdsSelectedSection>;
-  let cdsService: CdsService;
+  let mockCdsService: MockCdsService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CdsSelectedSection],
-      providers: [CdsService],
+      providers: [{ provide: CdsService, useClass: MockCdsService }],
     }).compileComponents();
 
-    cdsService = TestBed.inject(CdsService);
-    cdsService.cdsSelected.set(exampleCDS);
     fixture = TestBed.createComponent(CdsSelectedSection);
-
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    mockCdsService = TestBed.inject(CdsService) as unknown as MockCdsService;
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
