@@ -21,7 +21,7 @@ export class GraphService {
 
     for (const year of typedKeys(dataFromResp)) {
       const [means] = dataFromResp[year];
-      
+
       const isYearAlredyIn = labels.some((yearLabel) => yearLabel === year);
       if (!isYearAlredyIn) labels.push(year);
 

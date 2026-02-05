@@ -8,14 +8,14 @@ import { signal } from '@angular/core';
 class MockCdsService {
   cdsSelected = signal(exampleCDS);
   getInfoCds() {
-    return ({
+    return {
       status: () => 'success',
       isLoading: () => false,
       hasValue: () => true,
       value: () => exampleCDS,
       error: null,
-      refresh: () => { }
-    })
+      refresh: () => {},
+    };
   }
 }
 
