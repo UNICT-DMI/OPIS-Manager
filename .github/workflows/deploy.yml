@@ -1,10 +1,10 @@
 name: Opis Deploy
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
+  workflow_run:
+    workflows: ["opis_testing"]
+    types:
+      - completed
 
 permissions:
   contents: write

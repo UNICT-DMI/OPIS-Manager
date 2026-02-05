@@ -1,4 +1,4 @@
-name: Opis Lint
+name: opis_lint
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  lint:
+  lint_job:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code lint
