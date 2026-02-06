@@ -1,4 +1,4 @@
-import { DepsName } from '@c_types/deps-name';
+import { DepsName } from '@c_types/deps-name.type';
 
 export const UNICT_ID_DEPARTMENT_MAP: Record<number, DepsName> = {
   601713: 'AGRICOLTURA',

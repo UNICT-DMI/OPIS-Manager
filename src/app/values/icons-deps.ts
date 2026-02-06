@@ -1,4 +1,4 @@
-import { DepsName } from '@c_types/deps-name';
+import { DepsName } from '@c_types/deps-name.type';
 
 export const DEPARTMENT_ICONS: Record<DepsName, string> = {
   AGRICOLTURA: 'agriculture',

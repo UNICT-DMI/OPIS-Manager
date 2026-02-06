@@ -1,13 +1,47 @@
 import { inject, Injectable } from '@angular/core';
+import { Means, MeansPerYear } from '@c_types/means-graph.type';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
+import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
+import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils';
+import { AcademicYear } from '@values/years';
 
 @Injectable({ providedIn: 'root' })
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
+
+  public formatCDSGraph(dataFromResp: MeansPerYear): GraphView {
+    const labels: AcademicYear[] = [];
+    const v1: number[] = [];
+    const v2: number[] = [];
+    const v3: number[] = [];
+
+    for (const year of typedKeys(dataFromResp)) {
+      const [means] = dataFromResp[year];
+
+      const isYearAlredyIn = labels.some((yearLabel) => yearLabel === year);
+      if (!isYearAlredyIn) labels.push(year);
+
+      v1.push(means[0]);
+      v2.push(means[1]);
+      v3.push(means[2]);
+    }
+
+    return {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'V1', data: [...v1] },
+          { label: 'V2', data: [...v2] },
+          { label: 'V3', data: [...v3] },
+        ],
+      },
+    };
+  }
 
   public applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
@@ -43,18 +77,18 @@ export class GraphService {
     return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
-  public elaborateFormula(schedeOpis: SchedaOpis[]): [number[], number[][]] {
+  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];
 
-    for (const schedaOpis of schedeOpis) {
+    for (const schedaOpis of opisSchedules) {
       const [V1, V2, V3] = this.applyWeights(schedaOpis);
       v1.push(V1);
       v2.push(V2);
       v3.push(V3);
     }
-    // debugger
+
     const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
     return [means, [v1, v2, v3]];
   }

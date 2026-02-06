@@ -1,0 +1,10 @@
+@if (dataChart()) {
+  <section id="graph">
+    <canvas
+      baseChart
+      [data]="dataChart().data"
+      [options]="chartOptions"
+      [type]="dataChart().type"
+    ></canvas>
+  </section>
+}

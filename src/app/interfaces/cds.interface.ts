@@ -1,4 +1,6 @@
 import { Teaching } from './teaching.interface';
+import { GraphView } from './graph-config.interface';
+import { MeansPerYear } from '@c_types/means-graph.type';
 
 export interface CDS {
   id: number;
@@ -12,4 +14,14 @@ export interface CDS {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pesi_domande: any;
   insegnamenti: Teaching[];
+}
+
+export interface AllCdsInfoResp {
+  teachings: Teaching[];
+  coarse: MeansPerYear;
+  graphs: {
+    cds_stats: GraphView;
+    // cds_stats_by_year: ChartData,
+    // cds_techings: ChartData
+  };
 }
