@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { env } from "@env";
 import { CacheEntry, GithubUser, GitUserView } from "@interfaces/github.interface";
+import { REAL_NAME } from "@values/real-name-contributors.value";
 import { lastValueFrom } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -36,10 +37,11 @@ export class GitHubService {
       const noBots = contributors.filter(user => !user.login.includes('bot'))
       const mapped = noBots.map(user => ({
         nick: user.login ?? 'Unknown',
-        name: '',
+        name: REAL_NAME.get(user.login.toLowerCase()) ?? '',
         contributions: user.contributions ?? 0,
         github_profile: user.html_url
       }));
+      
       const sorted = mapped.sort(
         (userA, userB) => userB.contributions - userA.contributions
       );

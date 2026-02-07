@@ -15,12 +15,15 @@
   
     <div class="opis-contributors columns">
       <h4>Contribuenti</h4>
-  
       @if (contributorsView()) {
         <ul class="list">
           @for (user of contributorsView(); track $index) {
             <a [href]="user.github_profile ?? 'javascript:void(0)'">
-              {{ user.name }}
+              @if (user.name !== '') {
+                {{ user.name }}
+              } @else {
+                {{ user.nick }}
+              }
             </a>
           }
         </ul>
