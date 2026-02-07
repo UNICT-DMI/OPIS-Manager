@@ -8,7 +8,6 @@ import { IconDimension } from '@c_types/icon-dimension.type';
     span {
       display: block;
       /* stylelint-disable */
-      &.size-1rem { font-size: 1rem; }
       &.size-1-5rem { font-size: 1.5rem; }
       &.size-2rem { font-size: 2rem; }
       &.size-2-5rem { font-size: 2.5rem; }
@@ -30,6 +29,6 @@ import { IconDimension } from '@c_types/icon-dimension.type';
 })
 export class IconComponent {
   readonly iconName = input.required<string>();
-  readonly dimension = input<IconDimension>('1rem');
+  readonly dimension = input<IconDimension>('1-5rem');
   readonly svgIcon = input<string | undefined>();
 }
