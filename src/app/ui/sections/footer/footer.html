@@ -12,19 +12,34 @@
         </small>
       </a>
     </div>
+
+    <div class="opis-description">
+      <p class="quote">
+        <span class="quote-left">"</span>
+        <i>
+          Sviluppato dagli studenti
+          <br>
+          per gli studenti
+        </i>
+        <span class="quote-right">"</span>
+      </p>
+    </div>
   
     <div class="opis-contributors columns">
-      <h4>Contribuenti</h4>
+      <h4>Contributori</h4>
       @if (contributorsView()) {
         <ul class="list">
           @for (user of contributorsView(); track $index) {
-            <a [href]="user.github_profile ?? 'javascript:void(0)'">
-              @if (user.name !== '') {
-                {{ user.name }}
-              } @else {
-                {{ user.nick }}
-              }
-            </a>
+            <span>
+              <a [href]="user.github_profile ?? 'javascript:void(0)'" rel="noopener">
+                @if (user.name !== '') {
+                  {{ user.name }}
+                } @else {
+                  {{ user.nick }}
+                }
+              </a>
+              <span class="contribute">({{ user.contributions }})</span>
+            </span>
           }
         </ul>
       }

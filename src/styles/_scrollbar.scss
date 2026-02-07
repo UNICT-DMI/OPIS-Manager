@@ -1,0 +1,26 @@
+/* Target della scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  /* larghezza verticale */
+  height: 12px;
+  /* altezza orizzontale */
+}
+
+/* Track (sfondo della scrollbar) */
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 6px;
+}
+
+/* Thumb (la parte che si muove) */
+::-webkit-scrollbar-thumb {
+  background-color: var(--dark-bg);
+  // border-radius: 6px;
+  // border: 3px solid #f0f0f0;
+  /* crea spazio interno attorno al thumb */
+}
+
+/* Thumb hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gray-7100);
+}
