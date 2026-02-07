@@ -5,7 +5,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/app/ui/components/*"],
+      "@shared-ui/*": ["src/app/ui/shared/*"],
       "@sections/*": ["src/app/ui/sections/*"],
       "@cards/*": ["src/app/ui/cards/*"],
       "@services/*": ["src/app/services/*"],
