@@ -5,21 +5,30 @@
       <div class="img-container">
         <img src="./logo-static.webp" alt="full_opis_logo">
       </div>
-      <a class="opis-license" href="https://github.com/UNICT-DMI/OPIS-Manager/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
-        <opis-icon iconName="license" dimension="1-5rem"/>
-        <small>
-          GNU General Public License v3.0
-        </small>
-      </a>
+
+      <div class="links">
+        <a class="opis-license" href="https://github.com/UNICT-DMI/OPIS-Manager/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
+          <opis-icon iconName="license" dimension="1-5rem"/>
+          <div class="license-description">
+            <small>
+              GNU General Public License v3.0
+            </small>
+          </div>
+        </a>
+
+        <a class="github"  href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank" rel="noopener noreferrer">
+          <opis-icon [svgIcon]="githubIcon()" dimension="1-5rem"/>
+        </a>
+      </div>
     </div>
 
     <div class="opis-description">
       <p class="quote">
         <span class="quote-left">"</span>
         <i>
-          Sviluppato dagli studenti
+          Sviluppato da studenti
           <br>
-          per gli studenti
+          per studenti
         </i>
         <span class="quote-right">"</span>
       </p>

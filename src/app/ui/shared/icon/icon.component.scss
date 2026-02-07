@@ -1,0 +1,43 @@
+.opis-icon {
+  display: inline-flex;
+  font-size: inherit;
+  line-height: 1;
+
+  &.size-1-5rem {
+    font-size: 1.5rem;
+  }
+
+  &.size-2rem {
+    font-size: 2rem;
+  }
+
+  &.size-2-5rem {
+    font-size: 2.5rem;
+  }
+
+  &.size-3rem {
+    font-size: 3rem;
+  }
+
+  &.size-3-5rem {
+    font-size: 3.5rem;
+  }
+
+  &.size-4rem {
+    font-size: 4rem;
+  }
+
+  &.size-4-5rem {
+    font-size: 4.5rem;
+  }
+
+  &.size-5rem {
+    font-size: 5rem;
+  }
+
+  svg {
+    width: 1em;
+    height: 1em;
+    display: block;
+  }
+}
