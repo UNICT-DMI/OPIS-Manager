@@ -1,0 +1,72 @@
+.opis-footer {
+  background-color: var(--dark-bg);
+  color: var(--color-surface);
+  padding: 2rem .5rem;
+  margin-top: 3rem;
+
+  .columns {
+    @media (min-width: 800px) {
+      flex: 0 0 25%;
+    }
+  }
+
+  .footer-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: start;
+    gap: 2rem;
+    margin: 0 auto;
+    width: 90%;
+
+    .opis-info {
+      .img-container {
+        background-color: var(--blue-100);
+        padding: .8rem .7rem .6rem;
+        border-radius: .5rem;
+        margin-bottom: 1rem;
+  
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+  
+      .opis-license {
+        display: inline-flex;
+        align-items: center;
+        justify-content: start;
+        color: var(--gray-400);
+  
+        small {
+          text-decoration: underline;
+        }
+      }
+  
+      @media (min-width: 800px) {
+        margin-top: 1rem;
+        flex: 0 0 40%;
+        max-width: 30%;
+      }
+    }
+  
+    .opis-contributors {
+      display: flex;
+      flex-direction: column;
+  
+      .list {
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+  
+        a {
+          text-decoration: underline;
+          font-size: .9rem;
+        }
+      }
+    }
+  }
+
+}

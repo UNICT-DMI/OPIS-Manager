@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Department } from '@interfaces/department.interface';
-import { Icon } from '@shared-ui/icon/icon';
+import { IconComponent } from '@shared-ui/icon/icon';
 
 @Component({
   selector: 'opis-dep-card',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink, IconComponent],
   templateUrl: './dep-card.html',
   styleUrl: './dep-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

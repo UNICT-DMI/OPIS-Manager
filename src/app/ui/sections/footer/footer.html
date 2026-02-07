@@ -1,0 +1,30 @@
+<footer class="opis-footer">
+
+  <div class="footer-container">
+    <div class="opis-info">
+      <div class="img-container">
+        <img src="./logo-static.webp" alt="full_opis_logo">
+      </div>
+      <a class="opis-license" href="https://github.com/UNICT-DMI/OPIS-Manager/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
+        <opis-icon iconName="license" dimension="1-5rem"/>
+        <small>
+          GNU General Public License v3.0
+        </small>
+      </a>
+    </div>
+  
+    <div class="opis-contributors columns">
+      <h4>Contribuenti</h4>
+  
+      @if (contributorsView()) {
+        <ul class="list">
+          @for (user of contributorsView(); track $index) {
+            <a [href]="user.github_profile ?? 'javascript:void(0)'">
+              {{ user.name }}
+            </a>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</footer>

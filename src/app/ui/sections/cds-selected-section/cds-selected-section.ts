@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { CdsService } from '@services/cds/cds.service';
 import { Graph } from '@shared-ui/graph/graph';
-import { Icon } from '@shared-ui/icon/icon';
+import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [Icon, Loader, Graph],
+  imports: [IconComponent, Loader, Graph],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

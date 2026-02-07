@@ -18,12 +18,12 @@ import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 import { QuestionService } from '@services/questions/questions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Icon } from '@shared-ui/icon/icon';
+import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, Icon, CdsSelectedSection],
+  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

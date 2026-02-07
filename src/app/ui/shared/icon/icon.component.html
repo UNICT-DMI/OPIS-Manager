@@ -1,0 +1,7 @@
+@if (svgIcon()) {
+  <span [innerHTML]="svgIcon()" class="size-{{ dimension() }}"></span>
+} @else {
+  <span class="material-symbols-outlined size-{{ dimension() }}">
+    {{ iconName() }}
+  </span>
+}

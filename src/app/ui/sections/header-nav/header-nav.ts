@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { NavItem } from '@interfaces/header-nav-interface';
-import { Icon } from '@shared-ui/icon/icon';
+import { IconComponent } from '@shared-ui/icon/icon';
 
 @Component({
   selector: 'opis-header-nav',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink, IconComponent],
   templateUrl: './header-nav.html',
   styleUrl: './header-nav.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
