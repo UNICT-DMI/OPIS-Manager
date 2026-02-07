@@ -1,5 +1,5 @@
 <article class="cards department" [id]="department().unict_id">
-  <a (click)="saveInfo()" [routerLink]="detailUrl">
+  <a (click)="saveInfo()" [routerLink]="'department/' + detailUrl">
     <div class="wrappers-icon">
       <opis-icon [iconName]="department().icon ?? ''" />
     </div>
