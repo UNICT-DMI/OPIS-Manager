@@ -13,7 +13,7 @@ export class GitHubService {
 
   private cacheTTL = 0.5 * 60 * 60 * 1000; // 30 min
 
-  public contributors = signal<GitUserView[]>([]);
+  readonly contributors = signal<GitUserView[]>([]);
 
   public async getRepoContributors(): Promise<GitUserView[]> {
     const cacheKey = `contributors_${this.REPO_NAME}`;

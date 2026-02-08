@@ -5,7 +5,7 @@ import { IconDimension } from '@c_types/icon-dimension.type';
 @Component({
   selector: 'opis-icon',
   templateUrl: './icon.component.html',
-  styleUrls: ['./icon.component.scss'],
+  styleUrl: './icon.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {

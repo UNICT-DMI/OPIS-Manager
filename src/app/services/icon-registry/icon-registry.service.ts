@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, shareReplay, map } from 'rxjs';
+import { Observable, shareReplay, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class IconRegistryService {

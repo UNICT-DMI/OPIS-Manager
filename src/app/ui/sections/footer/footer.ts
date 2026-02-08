@@ -22,7 +22,7 @@ export class Footer implements OnInit {
   private readonly _iconRegistryService = inject(IconRegistryService);
 
   protected readonly contributorsView = computed(this._githubService.contributors);
-  protected githubIcon = signal<string>('');
+  protected readonly githubIcon = signal<string>('');
 
   ngOnInit(): void {
     this._githubService
