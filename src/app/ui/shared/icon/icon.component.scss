@@ -1,6 +1,5 @@
 .opis-icon {
   display: inline-flex;
-  font-size: inherit;
   line-height: 1;
 
   &.size-1-5rem {
@@ -34,10 +33,11 @@
   &.size-5rem {
     font-size: 5rem;
   }
+}
 
-  svg {
-    width: 1em;
-    height: 1em;
-    display: block;
-  }
+/* QUESTO È IL FIX */
+:host ::ng-deep svg {
+  width: 1em;
+  height: 1em;
+  display: block;
 }

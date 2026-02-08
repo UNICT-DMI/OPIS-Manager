@@ -21,7 +21,7 @@
 
     .opis-info {
       .img-container {
-        background-color: var(--blue-100);
+        background-color: var(--gray-200);
         padding: .8rem .7rem .6rem;
         border-radius: .5rem;
         margin-bottom: 1rem;
@@ -33,16 +33,27 @@
         }
       }
 
-      .opis-license {
+      .links {
         display: inline-flex;
         align-items: center;
-        justify-content: start;
+        justify-content: space-between;
+        width: 100%;
         color: var(--gray-400);
 
-        small {
-          text-decoration: underline;
+        .opis-license {
+          display: inline-flex;
+          align-items: center;
+          justify-content: start;
+          gap: .2rem;
+  
+          small {
+            text-decoration: underline;
+            margin-bottom: .4rem;
+            display: block;
+          }
         }
       }
+
 
       @media (min-width: 800px) {
         margin-top: 1rem;
