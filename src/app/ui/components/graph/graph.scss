@@ -1,0 +1,11 @@
+#graph {
+  width: 93%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 1300px) {
+    width: 60%;
+    margin: 1.5rem auto;
+  }
+}
