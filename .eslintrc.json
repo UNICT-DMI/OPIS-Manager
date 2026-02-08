@@ -24,6 +24,13 @@
             "style": "camelCase"
           }
         ],
+        "@angular-eslint/component-max-inline-declarations": [
+          "warn",
+          {
+            "template": 6,
+            "styles": 6
+          }
+        ],
         "@angular-eslint/component-selector": [
           "error",
           {
