@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',
         anchorScrolling: 'enabled',
-      })
+      }),
     ),
     provideCharts(withDefaultRegisterables()),
   ],

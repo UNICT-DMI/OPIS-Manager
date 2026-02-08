@@ -9,5 +9,5 @@ export const REAL_NAME = new Map<string, string>([
   ['mkokeshi', 'Giuseppe Ferro'],
   ['herbrant', 'Davide Carnemolla'],
   ['makapx', 'Martina Parlavecchio'],
-  ['boozec', 'Santo Cariotti']
-])
+  ['boozec', 'Santo Cariotti'],
+]);

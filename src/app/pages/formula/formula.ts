@@ -7,6 +7,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './formula.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormulaComponent {
-
-}
+export class FormulaComponent {}

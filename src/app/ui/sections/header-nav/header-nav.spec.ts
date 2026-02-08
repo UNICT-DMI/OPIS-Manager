@@ -8,9 +8,8 @@ describe('HeaderNav', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderNav]
-    })
-    .compileComponents();
+      imports: [HeaderNav],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderNav);
     component = fixture.componentInstance;

@@ -1,7 +1,7 @@
 .opis-footer {
   background-color: var(--dark-bg);
   color: var(--color-surface);
-  padding: 2rem .5rem;
+  padding: 2rem 0.5rem;
   margin-top: 3rem;
 
   .columns {
@@ -22,8 +22,8 @@
     .opis-info {
       .img-container {
         background-color: var(--gray-200);
-        padding: .8rem .7rem .6rem;
-        border-radius: .5rem;
+        padding: 0.8rem 0.7rem 0.6rem;
+        border-radius: 0.5rem;
         margin-bottom: 1rem;
 
         img {
@@ -44,16 +44,15 @@
           display: inline-flex;
           align-items: center;
           justify-content: start;
-          gap: .2rem;
-  
+          gap: 0.2rem;
+
           small {
             text-decoration: underline;
-            margin-bottom: .4rem;
+            margin-bottom: 0.4rem;
             display: block;
           }
         }
       }
-
 
       @media (min-width: 800px) {
         margin-top: 1rem;
@@ -71,7 +70,7 @@
         padding-left: 0;
         display: flex;
         flex-direction: column;
-        gap: .5rem;
+        gap: 0.5rem;
         height: 205px;
         overflow-y: scroll;
         scrollbar-width: none;
@@ -84,20 +83,20 @@
 
         a {
           text-decoration: underline;
-          font-size: .9rem;
+          font-size: 0.9rem;
         }
 
         .contribute {
           color: var(--red-500);
           text-decoration: none;
-          font-size: .8rem;
+          font-size: 0.8rem;
         }
       }
     }
 
     .opis-description {
       margin: 0 auto;
-      
+
       .quote {
         display: flex;
         justify-content: center;
@@ -112,5 +111,4 @@
       }
     }
   }
-
 }

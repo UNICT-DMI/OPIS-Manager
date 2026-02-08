@@ -6,4 +6,4 @@ export type IconDimension =
   | '3-5rem'
   | '4rem'
   | '4-5rem'
-  | '5rem'
+  | '5rem';

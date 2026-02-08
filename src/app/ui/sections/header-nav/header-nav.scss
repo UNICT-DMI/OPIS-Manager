@@ -4,7 +4,7 @@
   .header-content {
     margin: 0 auto;
     width: 100%;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     display: inline-flex;
     gap: 1rem;
     align-items: end;
@@ -18,7 +18,7 @@
       align-items: end;
       width: 3rem;
       height: 3rem;
-  
+
       img {
         width: 100%;
         height: 100%;
@@ -41,7 +41,7 @@
       display: inline-flex;
       align-items: center;
       gap: 1rem;
-      padding-bottom: .3rem;
+      padding-bottom: 0.3rem;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
 import { NavItem } from '@interfaces/header-nav-interface';
 import { IconComponent } from '@shared-ui/icon/icon';
 
@@ -19,8 +19,8 @@ export class HeaderNav {
       route: '/login',
       icon: {
         name: 'account_circle',
-        dimension: '2rem'
-      }
-    }
+        dimension: '2rem',
+      },
+    },
   ];
 }

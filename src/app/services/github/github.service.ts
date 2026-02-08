@@ -1,9 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable, signal } from "@angular/core";
-import { env } from "@env";
-import { CacheEntry, GithubUser, GitUserView } from "@interfaces/github.interface";
-import { REAL_NAME } from "@values/real-name-contributors.value";
-import { lastValueFrom } from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { env } from '@env';
+import { CacheEntry, GithubUser, GitUserView } from '@interfaces/github.interface';
+import { REAL_NAME } from '@values/real-name-contributors.value';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GitHubService {
@@ -34,17 +34,15 @@ export class GitHubService {
     const url = `${this.BASE_URL}/contributors`;
     try {
       const contributors = await lastValueFrom(this._http.get<GithubUser[]>(url));
-      const noBots = contributors.filter(user => !user.login.includes('bot'))
-      const mapped = noBots.map(user => ({
+      const noBots = contributors.filter((user) => !user.login.includes('bot'));
+      const mapped = noBots.map((user) => ({
         nick: user.login ?? 'Unknown',
         name: REAL_NAME.get(user.login.toLowerCase()) ?? '',
         contributions: user.contributions ?? 0,
-        github_profile: user.html_url
+        github_profile: user.html_url,
       }));
-      
-      const sorted = mapped.sort(
-        (userA, userB) => userB.contributions - userA.contributions
-      );
+
+      const sorted = mapped.sort((userA, userB) => userB.contributions - userA.contributions);
       localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, data: sorted }));
       return sorted;
     } catch (err) {
@@ -52,6 +50,4 @@ export class GitHubService {
       return [];
     }
   }
-
-
 }

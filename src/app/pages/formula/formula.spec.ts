@@ -8,9 +8,8 @@ describe('Formula', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Formula]
-    })
-    .compileComponents();
+      imports: [Formula],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Formula);
     component = fixture.componentInstance;
