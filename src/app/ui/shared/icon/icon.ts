@@ -15,7 +15,11 @@ export class IconComponent {
   readonly dimension = input<IconDimension>('1-5rem');
   readonly svgIcon = input<string | undefined>();
 
-  protected readonly safeSvgIcon = computed<SafeHtml | null>(() =>
-    this.svgIcon() ? this._sanitizer.bypassSecurityTrustHtml(this.svgIcon()!) : null,
-  );
+  protected readonly safeSvgIcon = computed<SafeHtml | null>(() => {
+    const svgIcon = this.svgIcon();
+    if (svgIcon) {
+      return this._sanitizer.bypassSecurityTrustHtml(svgIcon);
+    }
+    return null;
+  });
 }
