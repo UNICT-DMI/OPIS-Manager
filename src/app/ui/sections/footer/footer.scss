@@ -1,6 +1,6 @@
 .opis-footer {
   width: 100%;
-  margin: 3rem 0 .5rem;
+  margin: 3rem 0 0.5rem;
   padding: 2rem 0.5rem;
   background-color: var(--dark-bg);
   color: var(--gray-400);
@@ -29,7 +29,7 @@
     gap: 1.2rem;
     text-align: center;
   }
-  
+
   @media (min-width: 800px) {
     justify-content: space-between;
     padding: 1.5rem 2rem;

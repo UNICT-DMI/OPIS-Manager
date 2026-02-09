@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { IconRegistryService } from '@services/icon-registry/icon-registry.service';
 import { IconComponent } from '@shared-ui/icon/icon';
 
