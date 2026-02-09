@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - development
 
 permissions:
   contents: write
@@ -16,17 +17,39 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
       - name: Use Node.js 16.15.1
         uses: actions/setup-node@v1
         with:
           node-version: "16.15.1"
-      - name: Build 🔨
+
+      - name: Build Master 🔨
+        if: github.ref == 'refs/heads/master'
         run: |
           npm install -g @angular/cli@10 --legacy-peer-deps
           npm install --legacy-peer-deps
           ng build --prod --base-href=""
-      - name: Deploy 🚀
+
+      - name: Build Development 🔨
+        if: github.ref == 'refs/heads/development'
+        run: |
+          npm install -g @angular/cli@10 --legacy-peer-deps
+          npm install --legacy-peer-deps
+          ng build --prod --base-href="/development/"
+
+      - name: Deploy Master to Root 🚀
+        if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: dist/opis-manager
+          clean: false
+
+      - name: Deploy Development to /development 🚀
+        if: github.ref == 'refs/heads/development'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/opis-manager
+          target-folder: development
+          clean: false
