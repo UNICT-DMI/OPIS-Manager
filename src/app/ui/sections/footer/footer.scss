@@ -1,14 +1,12 @@
 .opis-footer {
   width: 100%;
-  margin: 3rem 0 0.5rem;
-  padding: 2rem 0.5rem;
+  margin: 20px 0px;
   background-color: var(--dark-bg);
   color: var(--gray-400);
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
 
   .opis-license {
     display: inline-flex;
@@ -32,6 +30,6 @@
 
   @media (min-width: 800px) {
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: 0.5rem 2rem;
   }
 }
