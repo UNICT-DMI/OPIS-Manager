@@ -15,7 +15,7 @@ export class IconComponent {
   readonly dimension = input<IconDimension>('1-5rem');
   readonly svgIcon = input<string | undefined>();
 
-  readonly safeSvgIcon = computed<SafeHtml | null>(() =>
+  protected readonly safeSvgIcon = computed<SafeHtml | null>(() =>
     this.svgIcon() ? this._sanitizer.bypassSecurityTrustHtml(this.svgIcon()!) : null,
   );
 }
