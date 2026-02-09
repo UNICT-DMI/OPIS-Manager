@@ -1,64 +1,23 @@
 <footer class="opis-footer">
-  <div class="footer-container">
-    <div class="opis-info">
-      <div class="img-container">
-        <img src="./logo-static.webp" alt="full_opis_logo" />
-      </div>
-
-      <div class="links">
-        <a
-          class="opis-license"
-          href="https://github.com/UNICT-DMI/OPIS-Manager/blob/master/LICENSE"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <opis-icon iconName="license" dimension="1-5rem" />
-          <div class="license-description">
-            <small> GNU General Public License v3.0 </small>
-          </div>
-        </a>
-
-        <a
-          class="github"
-          href="https://github.com/UNICT-DMI/OPIS-Manager"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <opis-icon [svgIcon]="githubIcon()" dimension="1-5rem" />
-        </a>
-      </div>
+  <a class="opis-license" href="https://github.com/UNICT-DMI/OPIS-Manager/blob/master/LICENSE" target="_blank"
+    rel="noopener noreferrer">
+    <opis-icon iconName="license" dimension="1-5rem" />
+    <div class="license-description">
+      <small> GNU General Public License v3.0 </small>
     </div>
+  </a>
 
-    <div class="opis-description">
-      <p class="quote">
-        <span class="quote-left">"</span>
-        <i>
-          Sviluppato da studenti
-          <br />
-          per studenti
-        </i>
-        <span class="quote-right">"</span>
-      </p>
-    </div>
+  <p class="opis-quote">
+    <span class="quote-left">"</span>
+    <i>
+      Sviluppato da studenti
+      <br />
+      per studenti
+    </i>
+    <span class="quote-right">"</span>
+  </p>
 
-    <div class="opis-contributors columns">
-      <h4>Contributori</h4>
-      @if (contributorsView()) {
-        <ul class="list">
-          @for (user of contributorsView(); track $index) {
-            <span>
-              <a [href]="user.github_profile ?? 'javascript:void(0)'" rel="noopener">
-                @if (user.name !== '') {
-                  {{ user.name }}
-                } @else {
-                  {{ user.nick }}
-                }
-              </a>
-              <span class="contribute">({{ user.contributions }})</span>
-            </span>
-          }
-        </ul>
-      }
-    </div>
-  </div>
+  <a class="github" href="https://github.com/UNICT-DMI/OPIS-Manager" target="_blank" rel="noopener noreferrer">
+    <opis-icon [svgIcon]="githubIcon()" dimension="2-5rem" />
+  </a>
 </footer>
