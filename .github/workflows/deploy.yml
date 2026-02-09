@@ -21,10 +21,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use Node.js 16.15.1
+      - name: Use Node.js 24.13.0
         uses: actions/setup-node@v1
         with:
-          node-version: '16.15.1'
+          node-version: '24.13.0'
 
       - name: Build Master 🔨
         if: github.ref == 'refs/heads/master'
@@ -36,7 +36,7 @@ jobs:
       - name: Build Development 🔨
         if: github.ref == 'refs/heads/development'
         run: |
-          npm install -g @angular/cli@20
+          npm install -g @angular/cli@21
           npm install
           ng build --prod --base-href="/development/"
 
