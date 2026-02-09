@@ -36,8 +36,8 @@ jobs:
       - name: Build Development 🔨
         if: github.ref == 'refs/heads/development'
         run: |
-          npm install -g @angular/cli@10 --legacy-peer-deps
-          npm install --legacy-peer-deps
+          npm install -g @angular/cli@20
+          npm install
           ng build --prod --base-href="/development/"
 
       - name: Deploy Master to Root 🚀
