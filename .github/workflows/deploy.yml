@@ -38,7 +38,7 @@ jobs:
         run: |
           npm install -g @angular/cli@21
           npm install
-          ng build --prod --base-href="/development/"
+          npm run build -- --configuration production --base-href="/development/"
 
       - name: Deploy Master to Root 🚀
         if: github.ref == 'refs/heads/master'
