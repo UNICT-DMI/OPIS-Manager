@@ -1,0 +1,20 @@
+<header role="banner" class="opis-header">
+  <div class="header-content">
+    <a routerLink="/" class="opis-logo">
+      <img src="./logo-header.png" alt="opis_manager_logo" />
+      <h1>Opis Manager</h1>
+    </a>
+
+    <div class="end-nav-items">
+      @for (navItem of NavItems; track $index) {
+        <a [routerLink]="navItem.route">
+          @if (!navItem.icon) {
+            <span>{{ navItem.label }}</span>
+          } @else {
+            <opis-icon [iconName]="navItem.icon.name" [dimension]="navItem.icon.dimension" />
+          }
+        </a>
+      }
+    </div>
+  </div>
+</header>

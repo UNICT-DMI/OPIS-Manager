@@ -1,0 +1,35 @@
+.opis-footer {
+  width: 100%;
+  margin: 20px 0px;
+  background-color: var(--dark-bg);
+  color: var(--gray-400);
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+
+  .opis-license {
+    display: inline-flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0.2rem;
+
+    small {
+      text-decoration: underline;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+  }
+
+  .opis-quote {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    text-align: center;
+  }
+
+  @media (min-width: 800px) {
+    justify-content: space-between;
+    padding: 0.5rem 2rem;
+  }
+}

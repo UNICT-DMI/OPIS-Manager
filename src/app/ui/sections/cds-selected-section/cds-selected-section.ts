@@ -5,14 +5,14 @@ import {
   inject,
   ResourceStatus,
 } from '@angular/core';
-import { Graph } from '@components/graph/graph';
-import { Icon } from '@components/icon/icon';
-import { Loader } from '@components/loader/loader';
 import { CdsService } from '@services/cds/cds.service';
+import { Graph } from '@shared-ui/graph/graph';
+import { IconComponent } from '@shared-ui/icon/icon';
+import { Loader } from '@shared-ui/loader/loader';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [Icon, Loader, Graph],
+  imports: [IconComponent, Loader, Graph],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

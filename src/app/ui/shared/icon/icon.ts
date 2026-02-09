@@ -1,0 +1,25 @@
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { IconDimension } from '@c_types/icon-dimension.type';
+
+@Component({
+  selector: 'opis-icon',
+  templateUrl: './icon.component.html',
+  styleUrl: './icon.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class IconComponent {
+  private readonly _sanitizer = inject(DomSanitizer);
+
+  readonly iconName = input<string>();
+  readonly dimension = input<IconDimension>('1-5rem');
+  readonly svgIcon = input<string | undefined>();
+
+  protected readonly safeSvgIcon = computed<SafeHtml | null>(() => {
+    const svgIcon = this.svgIcon();
+    if (svgIcon) {
+      return this._sanitizer.bypassSecurityTrustHtml(svgIcon);
+    }
+    return null;
+  });
+}

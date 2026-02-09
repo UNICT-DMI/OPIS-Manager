@@ -15,15 +15,15 @@ import { RouterLink } from '@angular/router';
 import { CdsService } from '@services/cds/cds.service';
 import { CDS } from '@interfaces/cds.interface';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
-import { Loader } from '@components/loader/loader';
-import { Icon } from '@components/icon/icon';
 import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 import { QuestionService } from '@services/questions/questions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IconComponent } from '@shared-ui/icon/icon';
+import { Loader } from '@shared-ui/loader/loader';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, Icon, CdsSelectedSection],
+  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

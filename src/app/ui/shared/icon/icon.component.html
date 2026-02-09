@@ -1,0 +1,7 @@
+@if (safeSvgIcon()) {
+  <span class="opis-icon size-{{ dimension() }}" [innerHTML]="safeSvgIcon()"></span>
+} @else {
+  <span class="opis-icon material-symbols-outlined size-{{ dimension() }}">
+    {{ iconName() }}
+  </span>
+}

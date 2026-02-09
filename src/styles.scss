@@ -1,11 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @use 'reset';
 @use 'palette';
+@use 'scrollbar';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 
 body {
   font-family: var(--font-sans);
-  border-top: 2rem solid var(--dark-bg);
-  border-bottom: 2rem solid var(--dark-bg);
   color: var(--color-text);
 }
 

@@ -1,0 +1,47 @@
+.opis-header {
+  background-color: var(--dark-bg);
+
+  .header-content {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    gap: 1rem;
+    align-items: end;
+    justify-content: space-between;
+    color: var(--color-surface);
+    font-size: 1.2rem;
+
+    .opis-logo {
+      display: inline-flex;
+      gap: 1rem;
+      align-items: end;
+      width: 3rem;
+      height: 3rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      h1 {
+        white-space: nowrap;
+        font-weight: 400;
+        font-size: 2rem;
+        display: none;
+
+        @media (min-width: 600px) {
+          display: block;
+        }
+      }
+    }
+
+    .end-nav-items {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 0.3rem;
+    }
+  }
+}
