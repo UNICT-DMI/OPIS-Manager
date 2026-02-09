@@ -15,7 +15,7 @@ export class GitHubService {
 
   readonly contributors = signal<GitUserView[]>([]);
 
-  public async getRepoContributors(): Promise<GitUserView[]> {
+  async getRepoContributors(): Promise<GitUserView[]> {
     const cacheKey = `contributors_${this.REPO_NAME}`;
     const cachedRaw = localStorage.getItem(cacheKey);
     const now = Date.now();
