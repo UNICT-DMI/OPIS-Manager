@@ -5,6 +5,7 @@
 A **frontend Angular application** for visualizing and managing OPIS results.  
 The project is designed to work in conjunction with a backend service and provides a modern Single Page Application (SPA) interface.
 
+
 ---
 
 ## 📌 Live Demo

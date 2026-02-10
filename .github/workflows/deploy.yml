@@ -1,0 +1,58 @@
+name: Deploy Angular SPA to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - development
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js 24.13.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: '24.13.0'
+
+      - name: Build Master 🔨
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npm install -g @angular/cli@10 --legacy-peer-deps
+          npm install --legacy-peer-deps
+          ng build --prod --base-href=""
+
+      - name: Build Development 🔨
+        if: github.ref == 'refs/heads/development'
+        run: |
+          npm install -g @angular/cli@21
+          npm install
+          npm run build -- --configuration production --base-href="/OPIS-Manager/development/"
+
+      - name: Deploy Master to Root 🚀
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/opis-manager
+          clean: false
+
+      - name: Deploy Development to /development 🚀
+        if: github.ref == 'refs/heads/development'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/opis-manager/browser/
+          target-folder: development
+          clean: false
