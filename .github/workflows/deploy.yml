@@ -38,7 +38,7 @@ jobs:
         run: |
           npm install -g @angular/cli@21
           npm install
-          npm run build -- --configuration production --base-href="/development/"
+          npm run build -- --configuration production --base-href="/OPIS-Manager/development/"
 
       - name: Deploy Master to Root 🚀
         if: github.ref == 'refs/heads/master'
@@ -53,6 +53,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/opis-manager
+          folder: dist/opis-manager/browser/
           target-folder: development
           clean: false
