@@ -1,6 +1,7 @@
 import { Teaching } from './teaching.interface';
 import { GraphView } from './graph-config.interface';
 import { MeansPerYear } from '@c_types/means-graph.type';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
 
 export interface CDS {
   id: number;
@@ -19,9 +20,9 @@ export interface CDS {
 export interface AllCdsInfoResp {
   teachings: Teaching[];
   coarse: MeansPerYear;
-  graphs: {
-    cds_stats: GraphView;
-    // cds_stats_by_year: ChartData,
-    // cds_techings: ChartData
-  };
+  graphs: ReadyGraph;
 }
+
+export type ReadyGraph = {
+  [key in GraphSelectionType]: GraphView | null;
+};

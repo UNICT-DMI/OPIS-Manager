@@ -89,16 +89,15 @@ export class CdsService {
 
         return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
           delay(DELAY_API_MS),
-          map(([teachings, coarse]) => {
-            const respDTO: AllCdsInfoResp = {
-              teachings,
-              coarse,
-              graphs: {
-                cds_stats: this._graphService.formatCDSGraph(coarse),
-              },
-            };
-            return respDTO;
-          }),
+          map(([teachings, coarse]) => ({
+            teachings,
+            coarse,
+            graphs: {
+              cds_general: this._graphService.formatCDSGraph(coarse),
+              teaching_cds: null,
+              cds_year: null,
+            }
+          })),
           catchError((err) => throwError(() => err)),
         );
       },

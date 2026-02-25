@@ -20,6 +20,8 @@ import { QuestionService } from '@services/questions/questions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { GraphService } from '@services/graph/graph.service';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
 
 @Component({
   selector: 'opis-department',
@@ -32,6 +34,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
   private readonly _cdsService = inject(CdsService);
   private readonly _questionService = inject(QuestionService);
+  private readonly _graphService = inject(GraphService);
 
   private readonly departmentData = signal<Department | null>(null);
 
@@ -41,6 +44,8 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   protected readonly department = computed(() => this.departmentData() ?? null);
   protected readonly cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
+
+  protected readonly graphBtns = computed(this._graphService.GraphBtns);
 
   constructor() {
     this.manageListVisibility();
@@ -81,5 +86,9 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
 
   protected selectCds(newCds: CDS): void {
     this._cdsService.cdsSelected.set(newCds);
+  }
+
+  protected selectGraphType(newGraph: GraphSelectionType): void {
+    this._graphService.graphKeySelected.set(newGraph)
   }
 }

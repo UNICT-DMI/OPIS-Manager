@@ -6,6 +6,7 @@ import {
   ResourceStatus,
 } from '@angular/core';
 import { CdsService } from '@services/cds/cds.service';
+import { GraphService } from '@services/graph/graph.service';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
@@ -19,8 +20,11 @@ import { Loader } from '@shared-ui/loader/loader';
 })
 export class CdsSelectedSection {
   private readonly _cdsService = inject(CdsService);
+  private readonly _graphService = inject(GraphService);
+
   protected readonly ERR_STATUS: ResourceStatus = 'error';
 
   protected readonly cds = computed(() => this._cdsService.cdsSelected());
   protected readonly infoCds = this._cdsService.getInfoCds();
+  protected readonly graphSelected = this._graphService.getGraphInfo();
 }

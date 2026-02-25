@@ -9,7 +9,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
 
       a {
         margin-bottom: 1rem;
@@ -42,10 +41,6 @@
           border-radius: 0.7rem;
           padding-right: 1.5rem;
         }
-      }
-
-      @media (min-width: 1300px) {
-        width: 70%;
       }
     }
 
@@ -85,7 +80,6 @@
       }
 
       @media (min-width: 1300px) {
-        width: 70%;
         padding: 3rem 1rem;
       }
     }
@@ -111,12 +105,29 @@
 
     .cds {
       &-title {
-        display: inline-flex;
-        align-items: start;
-        justify-content: start;
-        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.7rem;
+        width: 100%;
         margin-top: 1rem;
         margin-bottom: 1.2rem;
+        
+        &-name {
+          display: inline-flex;
+          align-items: start;
+          gap: 1rem;
+        }
+
+        &-graph {
+          display: inline-flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.2rem;
+
+          @media (min-width: 800px) {
+            justify-content: space-evenly;
+          }
+        }
       }
 
       &-list {
@@ -158,10 +169,6 @@
           }
         }
       }
-    }
-
-    @media (min-width: 1300px) {
-      width: 70%;
     }
   }
 }

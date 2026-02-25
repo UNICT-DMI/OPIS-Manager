@@ -2,11 +2,30 @@
   @if (infoCds.isLoading()) {
     <opis-loader />
   } @else {
-    @if (infoCds.hasValue() && infoCds.value().graphs) {
-      <opis-graph [dataChart]="infoCds.value().graphs.cds_stats" />
-    }
 
-    @if (infoCds.status() === ERR_STATUS) {
+    <div class="graph-description">
+      @if (infoCds.hasValue() && graphSelected.hasValue()) {
+        @let cds = infoCds.value();
+        @let graph = graphSelected.value();
+  
+        <p>
+          {{ graph.description }}
+        </p>
+  
+  
+        @if (cds.graphs[graph.value] !== null) {
+          <opis-graph [dataChart]="cds.graphs[graph.value]!" />
+        } @else {
+          <div class="error">
+            <opis-icon iconName="report_off" dimension="5rem" />
+            <h2>No data :/</h2>
+          </div>
+        }
+  
+      }
+    </div>
+
+    @if (infoCds.status() === ERR_STATUS || graphSelected.status() === ERR_STATUS) {
       <div class="error">
         <opis-icon iconName="report_off" dimension="5rem" />
         <h2>Qualcosa è andato storto :/</h2>

@@ -1,29 +1,44 @@
 <section id="department-page">
   @if (department() !== null) {
     <div class="department-title">
-      <div class="department-title-top">
+      <div class="department-title-top wrapper">
         <a routerLink="/home">
           <opis-icon iconName="arrow_circle_left" />
           <span class="text"> Torna indietro </span>
         </a>
         <h1>{{ department()?.anno_accademico }}</h1>
       </div>
-      <div class="department-title-bottom" [attr.data-icon]="department()?.icon">
+      <div class="department-title-bottom wrapper" [attr.data-icon]="department()?.icon">
         <h2>{{ department()?.nome }}</h2>
       </div>
     </div>
 
-    <section id="cds" [class.loading]="cdsList.isLoading()">
+    <section id="cds" class="wrapper" [class.loading]="cdsList.isLoading()">
       @if (cdsList.isLoading()) {
         <opis-loader />
       } @else {
         <div class="cds-title">
+          <div class="cds-title-name">
+            @if (isCdsSelected) {
+              <button (click)="selectCds(NO_CHOICE_VALUE)">
+                <opis-icon iconName="backspace" />
+              </button>
+            }
+            <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
+          </div>
+
           @if (isCdsSelected) {
-            <button (click)="selectCds(NO_CHOICE_VALUE)">
-              <opis-icon iconName="backspace" />
-            </button>
+            <div class="cds-title-graph">
+              @for (graph of graphBtns(); track $index) {
+                <button class="btn"
+                  [class.active]="graph.active"
+                  type="button"
+                  (click)="selectGraphType(graph.value)">
+                  <span>{{ graph.label }}</span>
+                </button>
+              }
+            </div>
           }
-          <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
         </div>
 
         @if (!isCdsSelected) {
@@ -44,7 +59,7 @@
     </section>
 
     @if (isCdsSelected) {
-      <opis-cds-selected-section />
+      <opis-cds-selected-section class="wrapper" />
     }
   }
 </section>

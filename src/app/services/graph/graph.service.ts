@@ -1,17 +1,42 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, ResourceRef, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { Means, MeansPerYear } from '@c_types/means-graph.type';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
-import { GraphView } from '@interfaces/graph-config.interface';
+import { CDS } from '@interfaces/cds.interface';
+import { GraphSelectionBtn, GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils';
+import { CHART_BTNS } from '@values/selection-graph';
 import { AcademicYear } from '@values/years';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
+
+  public graphKeySelected = signal<GraphSelectionType>('cds_general');
+  public GraphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
+  
+  public getGraphInfo(): ResourceRef<GraphSelectionBtn | undefined> {
+    return rxResource({
+      params: this.graphKeySelected,
+      stream: ({ params: graphSelected }) => {
+        const currentBtns = structuredClone(this.GraphBtns());
+        const graph = currentBtns.find(btn => btn.value === graphSelected) ?? currentBtns[0];
+
+        for (const graphStored of currentBtns) {
+          graphStored.active = graphStored.value === graph.value;
+        }
+
+        this.GraphBtns.set(currentBtns);
+        return of(graph);
+      }
+    })
+  }
 
   public formatCDSGraph(dataFromResp: MeansPerYear): GraphView {
     const labels: AcademicYear[] = [];
