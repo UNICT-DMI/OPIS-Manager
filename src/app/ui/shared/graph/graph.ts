@@ -76,7 +76,9 @@ export class Graph implements OnInit {
       // We use these empty structures as placeholders for dynamic theming.
       scales: {
         x: {},
-        y: {},
+        y: {
+          beginAtZero: true
+        },
       },
       plugins: {
         legend: {

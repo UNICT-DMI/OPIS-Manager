@@ -35,3 +35,22 @@ body {
     width: 70% !important;
   }
 }
+
+.btn {
+  &-nav {
+    border-bottom: 1px var(--color-primary) solid;
+    
+    &-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: .7rem 1.8rem;
+
+      &.active,
+      &:hover {
+        background-color: var(--color-primary);
+        color: var(--color-surface);
+      }
+    }
+  }
+}

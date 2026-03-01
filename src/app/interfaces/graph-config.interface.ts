@@ -11,8 +11,5 @@ export interface GraphSelectionBtn {
   active: boolean;
   description: string;
   label: string;
+  icon: string;
 }
-
-// export interface SelectedGraph {
-//   selected: GraphSelectionType;
-// }

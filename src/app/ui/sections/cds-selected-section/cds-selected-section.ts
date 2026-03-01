@@ -24,7 +24,7 @@ export class CdsSelectedSection {
 
   protected readonly ERR_STATUS: ResourceStatus = 'error';
 
-  protected readonly cds = computed(() => this._cdsService.cdsSelected());
+  protected readonly cds = computed(this._cdsService.cdsSelected);
   protected readonly infoCds = this._cdsService.getInfoCds();
   protected readonly graphSelected = this._graphService.getGraphInfo();
 }

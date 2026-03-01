@@ -23,6 +23,19 @@
       p {
         margin: .8rem 1rem;
       }
+      
+      @media (min-width: 1000px) {
+        display: flex;
+        justify-content: space-between;
+        
+        p {
+          flex: 0 0 35%;
+        }
+  
+        opis-graph {
+          flex: 0 0 65%;
+        }
+      }
     }
   }
 
