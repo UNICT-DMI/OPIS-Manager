@@ -14,7 +14,7 @@ import { DepartmentsService } from '@services/departments/departments.service';
 import { RouterLink } from '@angular/router';
 import { CdsService } from '@services/cds/cds.service';
 import { CDS } from '@interfaces/cds.interface';
-import { NO_CHOICE_CDS } from '@values/no-choice-cds';
+import { NO_CHOICE_CDS, NO_SELECTION_CDS_ID } from '@values/no-choice-cds';
 import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 import { QuestionService } from '@services/questions/questions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -85,6 +85,10 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   }
 
   protected selectCds(newCds: CDS): void {
+    if (newCds.id === NO_SELECTION_CDS_ID) {
+      this.selectGraphType('cds_general');
+    }
+
     this._cdsService.cdsSelected.set(newCds);
   }
 

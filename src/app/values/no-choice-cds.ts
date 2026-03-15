@@ -1,8 +1,10 @@
 import { CDS } from '@interfaces/cds.interface';
 
+export const NO_SELECTION_CDS_ID = -1;
+
 export const NO_CHOICE_CDS: CDS = {
-  id: -1,
-  unict_id: -1,
+  id: NO_SELECTION_CDS_ID,
+  unict_id: NO_SELECTION_CDS_ID,
   nome: 'Scegli un corso di studi',
   classe: '**/**',
   anno_accademico: '',
