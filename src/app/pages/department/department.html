@@ -19,7 +19,7 @@
       } @else {
         <div class="cds-title">
           <div class="cds-title-name">
-            @if (isCdsSelected) {
+            @if (isCdsSelected()) {
               <button (click)="selectCds(NO_CHOICE_VALUE)">
                 <opis-icon iconName="backspace" />
               </button>
@@ -27,7 +27,7 @@
             <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
           </div>
 
-          @if (isCdsSelected) {
+          @if (isCdsSelected()) {
             <div class="cds-title-graph btn-nav">
               @for (graphBtn of graphBtns(); track $index) {
                 <button class="btn-nav-item"
@@ -42,7 +42,7 @@
           }
         </div>
 
-        @if (!isCdsSelected) {
+        @if (!isCdsSelected()) {
           <ul class="cds-list">
             @let allCds = cdsList.value();
 
@@ -59,7 +59,7 @@
       }
     </section>
 
-    @if (isCdsSelected) {
+    @if (isCdsSelected()) {
       <opis-cds-selected-section class="wrapper" />
     }
   }

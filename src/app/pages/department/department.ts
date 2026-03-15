@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
-  EffectRef,
   inject,
   OnDestroy,
   OnInit,
@@ -40,7 +38,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
 
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
 
-  protected isCdsSelected = false;
+  protected readonly isCdsSelected = computed<boolean>(() => this.cds().id !== NO_SELECTION_CDS_ID);
   protected readonly department = computed(() => this.departmentData() ?? null);
   protected readonly cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
@@ -48,7 +46,6 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   protected readonly graphBtns = computed(this._graphService.graphBtns);
 
   constructor() {
-    this.manageListVisibility();
     this.retrieveQuestions();
   }
 
@@ -78,10 +75,6 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
 
     const correctDepFormat = JSON.parse(rawDepartment);
     this.departmentData.set(correctDepFormat);
-  }
-
-  private manageListVisibility(): EffectRef {
-    return effect(() => (this.isCdsSelected = this.cds().id !== this.NO_CHOICE_VALUE.id));
   }
 
   protected selectCds(newCds: CDS): void {
