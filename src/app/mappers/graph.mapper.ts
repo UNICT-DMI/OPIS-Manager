@@ -41,4 +41,28 @@ export class GraphMapper {
     };
   }
 
+  static toTeachingGraph(means: MeansPerYear): GraphView {
+    const labels: AcademicYear[] = [];
+    const v1: number[] = [], v2: number[] = [], v3: number[] = [];
+
+    for (const year of typedKeys(means)) {
+      const [yearMeans] = means[year];
+      labels.push(year);
+      v1.push(yearMeans[0]);
+      v2.push(yearMeans[1]);
+      v3.push(yearMeans[2]);
+    }
+
+    return {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'V1', data: [...v1] },
+          { label: 'V2', data: [...v2] },
+          { label: 'V3', data: [...v3] },
+        ],
+      },
+    };
+  }
 }

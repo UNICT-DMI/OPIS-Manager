@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   ResourceStatus,
+  signal,
 } from '@angular/core';
 import { GraphView } from '@interfaces/graph-config.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
@@ -13,6 +14,7 @@ import { TeachingService } from '@services/teachings/teachings.service';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { GRAPH_DATA } from '@values/messages.value';
 
 @Component({
   selector: 'opis-cds-selected-section',
@@ -27,6 +29,7 @@ export class CdsSelectedSection {
   private readonly _teachingService = inject(TeachingService);
 
   protected readonly ERR_STATUS: ResourceStatus = 'error';
+  protected readonly BASE_ERROR_MSG = 'Dati non disponibili :/';
 
   protected readonly cds = computed(this._cdsService.cdsSelected);
 
@@ -44,7 +47,10 @@ export class CdsSelectedSection {
         return GraphMapper.toCdsGeneralGraph(dataCds.coarse);
 
       case 'teaching_cds':
-        return this.infoTeaching.value() ?? null;
+        const dataTeaching = this.infoTeaching.value();
+        if (!dataTeaching) return null;
+
+        return GraphMapper.toTeachingGraph(dataTeaching);
 
       case 'cds_year':
         return null;
@@ -52,5 +58,16 @@ export class CdsSelectedSection {
       default:
         return null;
     }
+  });
+
+  protected readonly msgError = computed<string>(() => {
+    const graphKey = this._graphService.graphKeySelected();
+    const msg = GRAPH_DATA[graphKey];
+
+    if (!this.activeGraph() && msg) {
+      return msg;
+    }
+
+    return this.BASE_ERROR_MSG;
   });
 }

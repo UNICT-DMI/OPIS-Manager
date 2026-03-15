@@ -1,5 +1,5 @@
-<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading() && graphSelected.isLoading()" class="cds-selection_wrap">
-  @if (infoCds.isLoading() && graphSelected.isLoading()) {
+<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading() || graphSelected.isLoading()" class="cds-selection_wrap">
+  @if (infoCds.isLoading() || graphSelected.isLoading()) {
     <opis-loader />
   } @else {
 
@@ -17,7 +17,7 @@
         } @else {
           <div class="error">
             <opis-icon iconName="report_off" dimension="5rem" />
-            <h2>No data :/</h2>
+            <h2>{{ msgError() }}</h2>
           </div>
         }
   
