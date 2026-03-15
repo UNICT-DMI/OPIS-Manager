@@ -38,7 +38,6 @@ export class TeachingService {
       byYear[year].push(row.schedeopis!);
     }
 
-    // Calcola means per anno
     const meansPerYear = {} as MeansPerYear;
     for (const year of Object.keys(byYear) as AcademicYear[]) {
       meansPerYear[year] = this._graphService.elaborateFormulaFor(byYear[year]);
@@ -54,10 +53,7 @@ export class TeachingService {
         if (!params) return of(null);
 
         return this.teachingCoarseApi(params).pipe(
-          map((rows) => {
-            debugger
-            return this.formatTeachings(rows);
-          }),
+          map((rows) => this.formatTeachings(rows)),
         );
       },
     });

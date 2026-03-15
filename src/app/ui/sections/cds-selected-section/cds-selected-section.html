@@ -1,15 +1,26 @@
-<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading() || graphSelected.isLoading()" class="cds-selection_wrap">
-  @if (infoCds.isLoading() || graphSelected.isLoading()) {
+<section id="cds-{{ cds()?.id }}" [class.loading]="isAllInfoLoading()" class="cds-selection_wrap">
+  @if (isAllInfoLoading()) {
     <opis-loader />
   } @else {
 
     <div class="graph-description">
       @if (infoCds.hasValue() && graphSelected.hasValue()) {
         @let graph = graphSelected.value();
-  
-        <p>
-          {{ graph.description }}
-        </p>
+        
+        <div class="graph-description_left">
+          <p>
+            {{ graph.description }}
+          </p>
+          
+          @if (selectorOptions()) {
+            <select (change)="onSelectorChange($event)">
+              <option value="" disabled selected>Seleziona...</option>
+              @for (opt of selectorOptions()!; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          }
+        </div>
   
   
         @if (activeGraph()) {

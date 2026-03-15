@@ -4,9 +4,9 @@ import {
   computed,
   inject,
   ResourceStatus,
-  signal,
 } from '@angular/core';
-import { GraphView } from '@interfaces/graph-config.interface';
+import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
+import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
@@ -14,7 +14,9 @@ import { TeachingService } from '@services/teachings/teachings.service';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { typedKeys } from '@utils/object-helpers.utils';
 import { GRAPH_DATA } from '@values/messages.value';
+import { AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
@@ -36,6 +38,28 @@ export class CdsSelectedSection {
   protected readonly infoCds = this._cdsService.getInfoCds();
   protected readonly graphSelected = this._graphService.manageGraphSelection();
   protected readonly infoTeaching = this._teachingService.getTeachingGraph();
+  
+  protected readonly isAllInfoLoading = computed<boolean>(
+    () => this.infoCds.isLoading() ||
+    this.graphSelected.isLoading() ||
+    this.infoTeaching.isLoading()
+  );
+
+  protected readonly msgError = computed<string>(() => {
+    const graphKey = this._graphService.graphKeySelected();
+    const msg = GRAPH_DATA[graphKey];
+
+    if (!this.activeGraph() && msg) {
+      return msg;
+    }
+
+    return this.BASE_ERROR_MSG;
+  });
+
+  protected readonly availableYears = computed<AcademicYear[]>(() => {
+    const coarse = this.infoCds.value()?.coarse;
+    return coarse ? (typedKeys(coarse) as AcademicYear[]) : [];
+  });
 
   protected readonly activeGraph = computed<GraphView | null>(() => {
     const graphKey = this._graphService.graphKeySelected();
@@ -60,14 +84,31 @@ export class CdsSelectedSection {
     }
   });
 
-  protected readonly msgError = computed<string>(() => {
-    const graphKey = this._graphService.graphKeySelected();
-    const msg = GRAPH_DATA[graphKey];
+  protected readonly selectorOptions = computed<SelectOption[] | null>(() => {
+    const graph = this.graphSelected.value();
+    if (!graph?.value || graph.value === GraphSelection.CDS_GENERAL) return null;
 
-    if (!this.activeGraph() && msg) {
-      return msg;
-    }
+    const resolvers: Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> = {
+      teaching_cds: () =>
+        this.infoCds.value()?.teachings.map((t) => ({ value: t.id, label: t.nome })) ?? [],
+      cds_year: () =>
+        this.availableYears().map((y) => ({ value: y, label: y })),
+    };
 
-    return this.BASE_ERROR_MSG;
+    return resolvers[graph.value]?.() ?? null;
   });
+
+
+  protected onSelectorChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    const inputType = this.graphSelected.value()?.value;
+
+    if (inputType === 'teaching_cds') {
+      const teaching = this.infoCds.value()?.teachings.find((t) => t.id === +value) ?? null;
+      this._teachingService.selectedTeaching.set(teaching);
+    }
+    // if (inputType === 'year') {
+    //   this._graphService.selectedYear.set(value as AcademicYear);
+    // }
+  }
 }

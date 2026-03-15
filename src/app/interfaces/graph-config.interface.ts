@@ -13,3 +13,8 @@ export interface GraphSelectionBtn {
   label: string;
   icon: string;
 }
+
+export interface SelectOption {
+  value: string | number;
+  label: string;
+}
