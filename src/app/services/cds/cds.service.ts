@@ -6,10 +6,9 @@ import { env } from '@env';
 import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
+import { GraphMapper } from '@mappers/graph.mapper';
 import { GraphService } from '@services/graph/graph.service';
-import { typedKeys } from '@utils/object-helpers.utils';
 import { DELAY_API_MS } from '@values/delay-api';
-import { AcademicYear } from '@values/years';
 import { delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -32,31 +31,11 @@ export class CdsService {
       .filter((scheda): scheda is SchedaOpis => scheda?.domande != null);
   }
 
-  private groupByYears(schede: SchedaOpis[]): Record<AcademicYear, SchedaOpis[]> {
-    return schede.reduce(
-      (acc, scheda) => {
-        const year = scheda.anno_accademico as AcademicYear;
-        if (!acc[year]) acc[year] = [];
-        acc[year].push(scheda);
-        return acc;
-      },
-      {} as Record<AcademicYear, SchedaOpis[]>,
-    );
-  }
-
   private computeCdsMeans(cdsList: CDS[]): MeansPerYear {
     const cdsSchede = this.extractValidSchedeOpis(cdsList);
-    const schedeByYears = this.groupByYears(cdsSchede);
+    const schedeByYears = GraphMapper.groupByYear(cdsSchede, scheda => scheda);
 
-    const vCds = {} as MeansPerYear;
-
-    for (const year of typedKeys(schedeByYears)) {
-      const allSchede = schedeByYears[year];
-
-      vCds[year] = this._graphService.elaborateFormulaFor(allSchede);
-    }
-
-    return vCds;
+    return this._graphService.computeMeansPerYear(schedeByYears);
   }
 
   private teachingCdsApi(cds: number): Observable<Teaching[]> {

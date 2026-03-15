@@ -1,14 +1,16 @@
 import { inject, Injectable, ResourceRef, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { Means } from '@c_types/means-graph.type';
+import { Means, MeansPerYear } from '@c_types/means-graph.type';
 import { GraphSelectionType } from '@enums/chart-typology.enum';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
 import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
+import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils';
 import { CHART_BTNS } from '@values/selection-graph';
+import { AcademicYear } from '@values/years';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -52,6 +54,26 @@ export class GraphService {
   }
 
   /**
+   * Computes V1/V2/V3 scores for a set of OPIS schedules.
+   * Returns both the aggregate means and the per-schedule values.
+   */
+  private elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
+    const v1: number[] = [];
+    const v2: number[] = [];
+    const v3: number[] = [];
+
+    for (const schedaOpis of opisSchedules) {
+      const [V1, V2, V3] = this.applyWeights(schedaOpis);
+      v1.push(V1);
+      v2.push(V2);
+      v3.push(V3);
+    }
+
+    const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
+    return [means, [v1, v2, v3]];
+  }
+
+  /**
    * Returns the currently active graph button based on graphKeySelected.
    * Updates the active flag across all buttons reactively.
    */
@@ -73,22 +95,18 @@ export class GraphService {
   }
 
   /**
-   * Computes V1/V2/V3 scores for a set of OPIS schedules.
-   * Returns both the aggregate means and the per-schedule values.
+   * Computes V1/V2/V3 means for each academic year from a pre-grouped record of OPIS schedules.
+   * Delegates the formula elaboration to `elaborateFormulaFor` for each year's set of schedules.
    */
-  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
-    const v1: number[] = [];
-    const v2: number[] = [];
-    const v3: number[] = [];
+  public computeMeansPerYear(schedeByYear: Record<AcademicYear, SchedaOpis[]>): MeansPerYear {
+    const meansPerYear = {} as MeansPerYear;
 
-    for (const schedaOpis of opisSchedules) {
-      const [V1, V2, V3] = this.applyWeights(schedaOpis);
-      v1.push(V1);
-      v2.push(V2);
-      v3.push(V3);
+    for (const year of typedKeys(schedeByYear)) {
+      const allSchedules = schedeByYear[year];
+
+      meansPerYear[year] = this.elaborateFormulaFor(allSchedules);
     }
 
-    const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
-    return [means, [v1, v2, v3]];
+    return meansPerYear;
   }
 }
