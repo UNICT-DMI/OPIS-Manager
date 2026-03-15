@@ -6,11 +6,12 @@ import { env } from '@env';
 import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
+import { GraphMapper } from '@mappers/graph.mapper';
 import { GraphService } from '@services/graph/graph.service';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { DELAY_API_MS } from '@values/delay-api';
 import { AcademicYear } from '@values/years';
-import { catchError, delay, forkJoin, map, Observable, throwError } from 'rxjs';
+import { delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
@@ -20,12 +21,16 @@ export class CdsService {
 
   readonly cdsSelected = signal<CDS | null>(null);
 
+  /**
+   * Extracts valid SchedaOpis from a CDS list.
+   * Each CDS in the /coarse response represents one academic year,
+   * and each teaching has a single schedeopis (or null) for that year.
+   */
   private extractValidSchedeOpis(cdsList: CDS[]): SchedaOpis[] {
     return cdsList
       .flatMap((cds) => cds.insegnamenti)
-      .filter((insegnamento) => insegnamento.schedeopis != null)
-      .flatMap((insegnamento) => insegnamento.schedeopis)
-      .filter((schedaopis) => schedaopis.domande != null);
+      .map((insegnamento) => insegnamento.schedeopis)
+      .filter((scheda): scheda is SchedaOpis => scheda?.domande != null);
   }
 
   private groupByYears(schede: SchedaOpis[]): Record<AcademicYear, SchedaOpis[]> {
@@ -40,8 +45,8 @@ export class CdsService {
     );
   }
 
-  private formatAllYearsCdsStats(resp: CDS[]): MeansPerYear {
-    const cdsSchede = this.extractValidSchedeOpis(resp);
+  private computeCdsMeans(cdsList: CDS[]): MeansPerYear {
+    const cdsSchede = this.extractValidSchedeOpis(cdsList);
     const schedeByYears = this.groupByYears(cdsSchede);
 
     const vCds = {} as MeansPerYear;
@@ -59,11 +64,9 @@ export class CdsService {
     const url = `${this.BASE_URL}/with-id/${cds}/insegnamenti`;
 
     return this._http.get<Teaching[]>(url).pipe(
-      map((teaching) => {
-        if (!teaching?.length) {
-          throw new Error('Nessun insegnamento trovato');
-        }
-        return teaching;
+      map((teachings) => {
+        if (!teachings?.length) throw new Error('Nessun insegnamento trovato');
+        return teachings;
       }),
     );
   }
@@ -72,9 +75,9 @@ export class CdsService {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
-      map((coarse) => {
-        if (!coarse) throw new Error('Schede OPIS non trovate');
-        return this.formatAllYearsCdsStats(coarse);
+      map((rawCoarse) => {
+        if (!rawCoarse?.length) throw new Error('Schede OPIS non trovate');
+        return this.computeCdsMeans(rawCoarse);
       }),
     );
   }
@@ -93,33 +96,23 @@ export class CdsService {
             teachings,
             coarse,
             graphs: {
-              cds_general: this._graphService.formatCDSGraph(coarse),
+              cds_general: GraphMapper.toCdsGeneralGraph(coarse),
               teaching_cds: null,
               cds_year: null,
-            }
+            },
           })),
-          catchError((err) => throwError(() => err)),
         );
       },
     });
   }
 
-  // TODO ???
-  public updateCDS(cds: CDS, token: string) {
-    const httpOptions = {
-      headers: new HttpHeaders({ Authorization: token }),
-    };
+  public updateCDS(cds: CDS, token: string): Observable<unknown> {
+    const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);
+    url.searchParams.set('scostamento_numerosita', String(cds.scostamento_numerosita));
+    url.searchParams.set('scostamento_media', String(cds.scostamento_media));
 
-    return this._http.put(
-      this.BASE_URL +
-        '/with-id/' +
-        cds.id +
-        '?scostamento_numerosita=' +
-        cds.scostamento_numerosita +
-        '&scostamento_media=' +
-        cds.scostamento_media,
-      {},
-      httpOptions,
-    );
+    const headers = new HttpHeaders({ Authorization: token });
+
+    return this._http.put(url.toString(), {}, { headers });
   }
 }
