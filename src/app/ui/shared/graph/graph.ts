@@ -77,7 +77,7 @@ export class Graph implements OnInit {
       scales: {
         x: {},
         y: {
-          beginAtZero: true
+          beginAtZero: true,
         },
       },
       plugins: {

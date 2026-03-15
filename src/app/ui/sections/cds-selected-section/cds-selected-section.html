@@ -2,16 +2,15 @@
   @if (isAllInfoLoading()) {
     <opis-loader />
   } @else {
-
     <div class="graph-description">
       @if (infoCds.hasValue() && graphSelected.hasValue()) {
         @let graph = graphSelected.value();
-        
+
         <div class="graph-description_left">
           <p>
             {{ graph.description }}
           </p>
-          
+
           @if (selectorOptions()) {
             <opis-select
               [options]="selectorOptions()!"
@@ -20,8 +19,7 @@
             />
           }
         </div>
-  
-  
+
         @if (activeGraph()) {
           <opis-graph [dataChart]="activeGraph()!" />
         } @else {
@@ -30,7 +28,6 @@
             <h2>{{ msgError() }}</h2>
           </div>
         }
-  
       }
     </div>
 

@@ -30,10 +30,12 @@
           @if (isCdsSelected()) {
             <div class="cds-title-graph btn-nav">
               @for (graphBtn of graphBtns(); track $index) {
-                <button class="btn-nav-item"
+                <button
+                  class="btn-nav-item"
                   [class.active]="graphBtn.active"
                   type="button"
-                  (click)="selectGraphType(graphBtn.value)">
+                  (click)="selectGraphType(graphBtn.value)"
+                >
                   <opis-icon [iconName]="graphBtn.icon" />
                   <span class="btn-nav-item-text">{{ graphBtn.label }}</span>
                 </button>

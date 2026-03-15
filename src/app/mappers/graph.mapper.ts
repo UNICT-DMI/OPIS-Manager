@@ -10,10 +10,11 @@ import { AcademicYear } from '@values/years';
  * Use static methods directly wherever needed (service, component, resolver).
  */
 export class GraphMapper {
-
   private static buildLineGraph(means: MeansPerYear): GraphView {
     const labels: AcademicYear[] = [];
-    const v1: number[] = [], v2: number[] = [], v3: number[] = [];
+    const v1: number[] = [];
+    const v2: number[] = [];
+    const v3: number[] = [];
 
     for (const year of typedKeys(means)) {
       const [yearMeans] = means[year];
@@ -40,14 +41,17 @@ export class GraphMapper {
     items: T[],
     getScheda: (item: T) => SchedaOpis,
   ): Record<AcademicYear, SchedaOpis[]> {
-    return items.reduce((acc, item) => {
-      const year = item.anno_accademico as AcademicYear;
-      
-      if (!acc[year]) acc[year] = [];
-      acc[year].push(getScheda(item));
-      
-      return acc;
-    }, {} as Record<AcademicYear, SchedaOpis[]>);
+    return items.reduce(
+      (acc, item) => {
+        const year = item.anno_accademico as AcademicYear;
+
+        if (!acc[year]) acc[year] = [];
+        acc[year].push(getScheda(item));
+
+        return acc;
+      },
+      {} as Record<AcademicYear, SchedaOpis[]>,
+    );
   }
 
   static toCdsGeneralGraph = GraphMapper.buildLineGraph;

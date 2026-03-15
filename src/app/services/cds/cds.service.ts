@@ -33,7 +33,7 @@ export class CdsService {
 
   private computeCdsMeans(cdsList: CDS[]): MeansPerYear {
     const cdsSchede = this.extractValidSchedeOpis(cdsList);
-    const schedeByYears = GraphMapper.groupByYear(cdsSchede, scheda => scheda);
+    const schedeByYears = GraphMapper.groupByYear(cdsSchede, (scheda) => scheda);
 
     return this._graphService.computeMeansPerYear(schedeByYears);
   }
@@ -70,7 +70,7 @@ export class CdsService {
 
         return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
           delay(DELAY_API_MS),
-          map(([teachings, coarse]) => ({teachings, coarse})),
+          map(([teachings, coarse]) => ({ teachings, coarse })),
         );
       },
     });

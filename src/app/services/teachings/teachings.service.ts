@@ -1,11 +1,11 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { inject, Injectable, signal } from "@angular/core";
-import { rxResource } from "@angular/core/rxjs-interop";
-import { env } from "@env";
-import { Teaching } from "@interfaces/teaching.interface";
-import { GraphMapper } from "@mappers/graph.mapper";
-import { GraphService } from "@services/graph/graph.service";
-import { map, Observable, of } from "rxjs";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { env } from '@env';
+import { Teaching } from '@interfaces/teaching.interface';
+import { GraphMapper } from '@mappers/graph.mapper';
+import { GraphService } from '@services/graph/graph.service';
+import { map, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TeachingService {
@@ -22,13 +22,13 @@ export class TeachingService {
       .set('canale', teaching.canale ?? 'no')
       .set('id_modulo', teaching.id_modulo ?? '0');
 
-    return this._http.get<Teaching[]>(url, { params }).pipe(
-      map((rows) => rows.filter((t) => t.schedeopis?.domande != null)),
-    );
+    return this._http
+      .get<Teaching[]>(url, { params })
+      .pipe(map((rows) => rows.filter((t) => t.schedeopis?.domande != null)));
   }
 
   private computeTeachingMeans(rows: Teaching[]) {
-    const teachingScheduleByYear = GraphMapper.groupByYear(rows, teaching => teaching.schedeopis);
+    const teachingScheduleByYear = GraphMapper.groupByYear(rows, (teaching) => teaching.schedeopis);
     return this._graphService.computeMeansPerYear(teachingScheduleByYear);
   }
 
@@ -38,9 +38,7 @@ export class TeachingService {
       stream: ({ params }) => {
         if (!params) return of(null);
 
-        return this.teachingCoarseApi(params).pipe(
-          map((rows) => this.computeTeachingMeans(rows)),
-        );
+        return this.teachingCoarseApi(params).pipe(map((rows) => this.computeTeachingMeans(rows)));
       },
     });
   }

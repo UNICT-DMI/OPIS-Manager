@@ -39,11 +39,10 @@ export class CdsSelectedSection {
   protected readonly infoCds = this._cdsService.getInfoCds();
   protected readonly graphSelected = this._graphService.manageGraphSelection();
   protected readonly infoTeaching = this._teachingService.getTeachingGraph();
-  
+
   protected readonly isAllInfoLoading = computed<boolean>(
-    () => this.infoCds.isLoading() ||
-    this.graphSelected.isLoading() ||
-    this.infoTeaching.isLoading()
+    () =>
+      this.infoCds.isLoading() || this.graphSelected.isLoading() || this.infoTeaching.isLoading(),
   );
 
   protected readonly msgError = computed<string>(() => {
@@ -92,13 +91,11 @@ export class CdsSelectedSection {
     const resolvers: Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> = {
       teaching_cds: () =>
         this.infoCds.value()?.teachings.map((t) => ({ value: t.id, label: t.nome })) ?? [],
-      cds_year: () =>
-        this.availableYears().map((y) => ({ value: y, label: y })),
+      cds_year: () => this.availableYears().map((y) => ({ value: y, label: y })),
     };
 
     return resolvers[graph.value]?.() ?? null;
   });
-
 
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();

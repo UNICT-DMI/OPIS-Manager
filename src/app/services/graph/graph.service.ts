@@ -82,7 +82,7 @@ export class GraphService {
       params: this.graphKeySelected,
       stream: ({ params: graphSelected }) => {
         const currentBtns = structuredClone(this.graphBtns());
-        const graph = currentBtns.find(btn => btn.value === graphSelected) ?? currentBtns[0];
+        const graph = currentBtns.find((btn) => btn.value === graphSelected) ?? currentBtns[0];
 
         for (const graphStored of currentBtns) {
           graphStored.active = graphStored.value === graph.value;

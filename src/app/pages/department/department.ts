@@ -86,6 +86,6 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   }
 
   protected selectGraphType(newGraph: GraphSelectionType): void {
-    this._graphService.graphKeySelected.set(newGraph)
+    this._graphService.graphKeySelected.set(newGraph);
   }
 }

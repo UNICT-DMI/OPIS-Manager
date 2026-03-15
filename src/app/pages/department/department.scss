@@ -111,7 +111,7 @@
         width: 100%;
         margin-top: 1rem;
         margin-bottom: 1.2rem;
-        
+
         &-name {
           display: inline-flex;
           align-items: start;
@@ -122,7 +122,7 @@
           display: inline-flex;
           align-items: center;
           justify-content: space-between;
-          
+
           @media (min-width: 800px) {
             justify-content: space-evenly;
           }

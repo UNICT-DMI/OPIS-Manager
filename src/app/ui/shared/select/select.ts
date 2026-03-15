@@ -28,9 +28,7 @@ export class SelectComponent {
 
   protected readonly isOpen = signal(false);
 
-  protected readonly selectedLabel = computed(
-    () => this.value()?.label ?? this.placeholder()
-  );
+  protected readonly selectedLabel = computed(() => this.value()?.label ?? this.placeholder());
 
   protected toggle(): void {
     this.isOpen.update((v) => !v);

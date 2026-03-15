@@ -39,12 +39,12 @@ body {
 .btn {
   &-nav {
     border-bottom: 1px var(--color-primary) solid;
-    
+
     &-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: .7rem 1.8rem;
+      padding: 0.7rem 1.8rem;
 
       &.active,
       &:hover {
