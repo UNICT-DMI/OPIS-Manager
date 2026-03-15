@@ -14,13 +14,14 @@ import { TeachingService } from '@services/teachings/teachings.service';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { SelectComponent } from '@shared-ui/select/select';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { GRAPH_DATA } from '@values/messages.value';
 import { AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [IconComponent, Loader, Graph],
+  imports: [IconComponent, Loader, Graph, SelectComponent],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,16 +100,15 @@ export class CdsSelectedSection {
   });
 
 
-  protected onSelectorChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    const inputType = this.graphSelected.value()?.value;
+  protected onSelectorChange(option: SelectOption): void {
+    const graphKey = this._graphService.graphKeySelected();
 
-    if (inputType === 'teaching_cds') {
-      const teaching = this.infoCds.value()?.teachings.find((t) => t.id === +value) ?? null;
+    if (graphKey === 'teaching_cds') {
+      const teaching = this.infoCds.value()?.teachings.find((t) => t.id === option.value) ?? null;
       this._teachingService.selectedTeaching.set(teaching);
     }
-    // if (inputType === 'year') {
-    //   this._graphService.selectedYear.set(value as AcademicYear);
+    // if (graphKey === 'cds_year') {
+    //   this._graphService.selectedYear.set(option.value as AcademicYear);
     // }
   }
 }

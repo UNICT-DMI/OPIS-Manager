@@ -13,12 +13,11 @@
           </p>
           
           @if (selectorOptions()) {
-            <select (change)="onSelectorChange($event)">
-              <option value="" disabled selected>Seleziona...</option>
-              @for (opt of selectorOptions()!; track opt.value) {
-                <option [value]="opt.value">{{ opt.label }}</option>
-              }
-            </select>
+            <opis-select
+              [options]="selectorOptions()!"
+              placeholder="Seleziona..."
+              (changed)="onSelectorChange($event)"
+            />
           }
         </div>
   
