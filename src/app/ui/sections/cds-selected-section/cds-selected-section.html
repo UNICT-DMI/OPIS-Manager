@@ -7,6 +7,10 @@
         @let graph = graphSelected.value();
 
         <div class="graph-description_left">
+          @for (disclaimer of DISCLAIMERS_VGROUP; track $index) {
+            <opis-disclaimer [disclaimerInfo]="disclaimer"/>
+          }
+
           <p>
             {{ graph.description }}
           </p>

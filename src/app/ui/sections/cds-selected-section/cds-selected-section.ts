@@ -5,6 +5,7 @@ import {
   inject,
   ResourceStatus,
 } from '@angular/core';
+import { Disclaimer } from '@cards/disclaimer/disclaimer';
 import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
@@ -21,7 +22,7 @@ import { AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [IconComponent, Loader, Graph, SelectComponent],
+  imports: [IconComponent, Loader, Graph, SelectComponent, Disclaimer],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +35,12 @@ export class CdsSelectedSection {
   protected readonly ERR_STATUS: ResourceStatus = 'error';
   protected readonly BASE_ERROR_MSG = 'Dati non disponibili :/';
 
+  protected readonly DISCLAIMERS_VGROUP = [
+    { title: 'V1', description: 'Riferimenti domande' },
+    { title: 'V2', description: 'Riferimenti domande' },
+    { title: 'V3', description: 'Riferimenti domande' },
+  ];
+
   protected readonly cds = computed(this._cdsService.cdsSelected);
 
   protected readonly infoCds = this._cdsService.getInfoCds();
@@ -42,7 +49,8 @@ export class CdsSelectedSection {
 
   protected readonly isAllInfoLoading = computed<boolean>(
     () =>
-      this.infoCds.isLoading() || this.graphSelected.isLoading() || this.infoTeaching.isLoading(),
+      this.infoCds.isLoading() || this.graphSelected.isLoading()
+    // || this.infoTeaching.isLoading(), // TODO: to manage
   );
 
   protected readonly msgError = computed<string>(() => {
@@ -61,6 +69,7 @@ export class CdsSelectedSection {
     return coarse ? (typedKeys(coarse) as AcademicYear[]) : [];
   });
 
+  // TODO: enhancement
   protected readonly activeGraph = computed<GraphView | null>(() => {
     const graphKey = this._graphService.graphKeySelected();
 
@@ -83,7 +92,7 @@ export class CdsSelectedSection {
         return null;
     }
   });
-
+  // TODO: enhancement
   protected readonly selectorOptions = computed<SelectOption[] | null>(() => {
     const graph = this.graphSelected.value();
     if (!graph?.value || graph.value === GraphSelection.CDS_GENERAL) return null;
@@ -96,7 +105,7 @@ export class CdsSelectedSection {
 
     return resolvers[graph.value]?.() ?? null;
   });
-
+  // TODO: enhancement
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();
 
