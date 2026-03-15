@@ -17,27 +17,6 @@ export class GraphService {
 
   public graphKeySelected = signal<GraphSelectionType>('cds_general');
   public graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
-  
-    /**
- * Returns the currently active graph button based on graphKeySelected.
- * Updates the active flag across all buttons reactively.
- */
-  public getGraphInfo(): ResourceRef<GraphSelectionBtn | undefined> {
-    return rxResource({
-      params: this.graphKeySelected,
-      stream: ({ params: graphSelected }) => {
-        const currentBtns = structuredClone(this.graphBtns());
-        const graph = currentBtns.find(btn => btn.value === graphSelected) ?? currentBtns[0];
-
-        for (const graphStored of currentBtns) {
-          graphStored.active = graphStored.value === graph.value;
-        }
-
-        this.graphBtns.set(currentBtns);
-        return of(graph);
-      },
-    });
-  }
 
   private applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
@@ -70,6 +49,27 @@ export class GraphService {
     }
 
     return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
+  }
+
+  /**
+   * Returns the currently active graph button based on graphKeySelected.
+   * Updates the active flag across all buttons reactively.
+   */
+  public manageGraphSelection(): ResourceRef<GraphSelectionBtn | undefined> {
+    return rxResource({
+      params: this.graphKeySelected,
+      stream: ({ params: graphSelected }) => {
+        const currentBtns = structuredClone(this.graphBtns());
+        const graph = currentBtns.find(btn => btn.value === graphSelected) ?? currentBtns[0];
+
+        for (const graphStored of currentBtns) {
+          graphStored.active = graphStored.value === graph.value;
+        }
+
+        this.graphBtns.set(currentBtns);
+        return of(graph);
+      },
+    });
   }
 
   /**

@@ -6,7 +6,6 @@ import { env } from '@env';
 import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
-import { GraphMapper } from '@mappers/graph.mapper';
 import { GraphService } from '@services/graph/graph.service';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { DELAY_API_MS } from '@values/delay-api';
@@ -84,7 +83,7 @@ export class CdsService {
 
   public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined> {
     return rxResource({
-      params: () => this.cdsSelected(),
+      params: this.cdsSelected,
       stream: ({ params }) => {
         if (!params?.id || !params?.unict_id) {
           return throwError(() => new Error('Id or Unict_id missing!'));
@@ -92,15 +91,7 @@ export class CdsService {
 
         return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
           delay(DELAY_API_MS),
-          map(([teachings, coarse]) => ({
-            teachings,
-            coarse,
-            graphs: {
-              cds_general: GraphMapper.toCdsGeneralGraph(coarse),
-              teaching_cds: null,
-              cds_year: null,
-            },
-          })),
+          map(([teachings, coarse]) => ({teachings, coarse})),
         );
       },
     });

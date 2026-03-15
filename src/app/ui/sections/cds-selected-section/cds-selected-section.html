@@ -1,11 +1,10 @@
-<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading()" class="cds-selection_wrap">
-  @if (infoCds.isLoading()) {
+<section id="cds-{{ cds()?.id }}" [class.loading]="infoCds.isLoading() && graphSelected.isLoading()" class="cds-selection_wrap">
+  @if (infoCds.isLoading() && graphSelected.isLoading()) {
     <opis-loader />
   } @else {
 
     <div class="graph-description">
       @if (infoCds.hasValue() && graphSelected.hasValue()) {
-        @let cds = infoCds.value();
         @let graph = graphSelected.value();
   
         <p>
@@ -13,8 +12,8 @@
         </p>
   
   
-        @if (cds.graphs[graph.value] !== null) {
-          <opis-graph [dataChart]="cds.graphs[graph.value]!" />
+        @if (activeGraph()) {
+          <opis-graph [dataChart]="activeGraph()!" />
         } @else {
           <div class="error">
             <opis-icon iconName="report_off" dimension="5rem" />
