@@ -92,7 +92,7 @@ export class CdsSelectedSection {
 
     const resolvers: Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> = {
       teaching_cds: () =>
-        this.infoCds.value()?.teachings.map((t) => ({ value: t.id, label: t.nome })) ?? [],
+        this.infoCds.value()?.teachings.map((t) => ({ value: t.id, label: t.nome + ` (Canale ${t.canale})` })) ?? [],
       cds_year: () => this.availableYears().map((y) => ({ value: y, label: y })),
     };
 
