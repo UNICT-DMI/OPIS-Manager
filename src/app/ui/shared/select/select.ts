@@ -12,12 +12,13 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectOption } from '@interfaces/graph-config.interface';
+import { IconComponent } from '@shared-ui/icon/icon';
 
 const DROPDOWN_HEIGHT = 240;
 
 @Component({
   selector: 'opis-select',
-  imports: [FormsModule],
+  imports: [FormsModule, IconComponent],
   templateUrl: './select.html',
   styleUrl: './select.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

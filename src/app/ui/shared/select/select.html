@@ -1,7 +1,7 @@
 <div class="opis-select" [class.open]="isOpen()" [class.open-up]="openUp()">
   <button type="button" class="opis-select__trigger" (click)="toggle()">
     <span [class.placeholder]="!value()">{{ selectedLabel() }}</span>
-    <span class="opis-select__arrow">&#8964;</span>
+    <opis-icon class="opis-select__arrow" iconName="expand_more" />
   </button>
 
   @if (isOpen()) {
