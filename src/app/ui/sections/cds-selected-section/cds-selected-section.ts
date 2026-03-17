@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  EffectRef,
   inject,
   ResourceStatus,
 } from '@angular/core';
@@ -39,6 +41,10 @@ export class CdsSelectedSection {
   protected readonly infoCds = this._cdsService.getInfoCds();
   protected readonly graphSelected = this._graphService.manageGraphSelection();
   protected readonly infoTeaching = this._teachingService.getTeachingGraph();
+
+  constructor() {
+    this.resetTeachingGraph();
+  }
 
   protected readonly isAllInfoLoading = computed<boolean>(
     () =>
@@ -109,5 +115,13 @@ export class CdsSelectedSection {
     // if (graphKey === 'cds_year') {
     //   this._graphService.selectedYear.set(option.value as AcademicYear);
     // }
+  }
+
+  private resetTeachingGraph(): EffectRef {
+    return effect(() => {
+      if (this._graphService.graphKeySelected() !== 'teaching_cds') {
+        this._teachingService.selectedTeaching.set(null);
+      }
+    })
   }
 }
