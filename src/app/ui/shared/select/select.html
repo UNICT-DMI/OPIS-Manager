@@ -1,18 +1,37 @@
 <div class="opis-select" [class.open]="isOpen()" [class.open-up]="openUp()">
   <button type="button" class="opis-select__trigger" (click)="toggle()">
     <span [class.placeholder]="!value()">{{ selectedLabel() }}</span>
-
-    <opis-icon class="opis-select__arrow" iconName="expand_more" />
+    <span class="opis-select__arrow">&#8964;</span>
   </button>
 
   @if (isOpen()) {
-    <ul class="opis-select__dropdown" role="listbox">
-      @for (option of options(); track option.value) {
-        <li role="option" class="opis-select__option" [class.selected]="value()?.value === option.value"
-          (click)="select(option)">
-          {{ option.label }}
-        </li>
-      }
-    </ul>
+    <div class="opis-select__dropdown" role="listbox">
+      <div class="opis-select__search">
+        <input
+          #searchInput
+          type="text"
+          class="opis-select__search-input"
+          [placeholder]="searchPlaceholder()"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+
+      <ul class="opis-select__options">
+        @for (option of filteredOptions(); track option.value) {
+          <li
+            role="option"
+            class="opis-select__option"
+            [class.selected]="value()?.value === option.value"
+            (click)="select(option)"
+          >
+            {{ option.label }}
+          </li>
+        } @empty {
+          <li class="opis-select__empty">Nessun risultato</li>
+        }
+      </ul>
+    </div>
   }
 </div>
