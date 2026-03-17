@@ -1,2 +1,22 @@
-<p>{{ disclaimerInfo().title }}</p>
-<strong>{{ disclaimerInfo().description }}</strong>
+<article id="disclaimer-{{disclaimerInfo().type}}"
+  class="disclaimer disclaimer--{{disclaimerInfo().type}}"
+  [class.bg-on]="!disclaimerInfo().isAccordion"
+  [class.is-open]="isOpen">
+
+  <button class="disclaimer__header"
+    [disabled]="!disclaimerInfo().isAccordion"
+    (click)="isOpen = !isOpen" [attr.aria-expanded]="isOpen">
+    <div class="disclaimer__header-left">
+      <opis-icon class="disclaimer__icon" dimension="2rem" [iconName]="disclaimerInfo().icon"/>
+      <h5 class="disclaimer__title">{{ disclaimerInfo().title }}</h5>
+    </div>
+
+    @if (disclaimerInfo().isAccordion) {
+      <opis-icon iconName="expand_more" />
+    }
+  </button>
+
+    <div class="disclaimer__body">
+      <p class="disclaimer__description">{{ disclaimerInfo().description }}</p>
+    </div>
+</article>

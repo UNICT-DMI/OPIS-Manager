@@ -1,3 +1,4 @@
+import { DisclaimerType } from '@c_types/means-graph.type';
 import { GraphSelectionType } from '@enums/chart-typology.enum';
 import { ChartData, ChartType } from 'chart.js';
 
@@ -17,4 +18,12 @@ export interface GraphSelectionBtn {
 export interface SelectOption {
   value: string | number;
   label: string;
+}
+
+export interface DisclaimerInfo {
+  title: string;
+  description: string;
+  type: DisclaimerType;
+  icon: string;
+  isAccordion: boolean;
 }

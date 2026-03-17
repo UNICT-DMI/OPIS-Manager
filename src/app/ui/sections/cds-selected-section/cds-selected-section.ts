@@ -22,7 +22,7 @@ import { AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [IconComponent, Loader, Graph, SelectComponent, Disclaimer],
+  imports: [IconComponent, Loader, Graph, SelectComponent],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,12 +34,6 @@ export class CdsSelectedSection {
 
   protected readonly ERR_STATUS: ResourceStatus = 'error';
   protected readonly BASE_ERROR_MSG = 'Dati non disponibili :/';
-
-  protected readonly DISCLAIMERS_VGROUP = [
-    { title: 'V1', description: 'Riferimenti domande' },
-    { title: 'V2', description: 'Riferimenti domande' },
-    { title: 'V3', description: 'Riferimenti domande' },
-  ];
 
   protected readonly cds = computed(this._cdsService.cdsSelected);
 

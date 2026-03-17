@@ -20,10 +20,11 @@ import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 import { GraphService } from '@services/graph/graph.service';
 import { GraphSelectionType } from '@enums/chart-typology.enum';
+import { Disclaimer } from '@cards/disclaimer/disclaimer';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection],
+  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection, Disclaimer],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
