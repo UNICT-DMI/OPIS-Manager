@@ -64,9 +64,7 @@
     @if (isCdsSelected()) {
       <opis-cds-selected-section class="wrapper" />
 
-      @for (opisGroup of []; track $index) {
-        <opis-disclaimer [disclaimerInfo]="opisGroup"></opis-disclaimer>
-      }
+      <opis-disclaimers class="wrapper" [disclaimers]="GroupsDisclaimers" />
     }
   }
 </section>

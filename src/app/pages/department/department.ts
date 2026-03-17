@@ -20,11 +20,12 @@ import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 import { GraphService } from '@services/graph/graph.service';
 import { GraphSelectionType } from '@enums/chart-typology.enum';
-import { Disclaimer } from '@cards/disclaimer/disclaimer';
+import { Disclaimers } from '@cards/disclaimer/disclaimers';
+import { OpisGroup_Disclaimers } from '@values/disclaimers.value';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection, Disclaimer],
+  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection, Disclaimers],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +39,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly departmentData = signal<Department | null>(null);
 
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
+  protected readonly GroupsDisclaimers = OpisGroup_Disclaimers;
 
   protected readonly isCdsSelected = computed<boolean>(() => this.cds().id !== NO_SELECTION_CDS_ID);
   protected readonly department = computed(() => this.departmentData() ?? null);

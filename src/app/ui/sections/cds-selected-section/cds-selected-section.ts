@@ -5,7 +5,6 @@ import {
   inject,
   ResourceStatus,
 } from '@angular/core';
-import { Disclaimer } from '@cards/disclaimer/disclaimer';
 import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { GraphMapper } from '@mappers/graph.mapper';

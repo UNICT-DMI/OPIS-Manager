@@ -26,4 +26,5 @@ export interface DisclaimerInfo {
   type: DisclaimerType;
   icon: string;
   isAccordion: boolean;
+  isOpen: boolean;
 }
