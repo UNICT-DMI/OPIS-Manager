@@ -13,6 +13,7 @@ export class IconComponent {
 
   readonly iconName = input<string>();
   readonly dimension = input<IconDimension>('1-5rem');
+  readonly isResponsive = input<boolean>(false);
   readonly svgIcon = input<string | undefined>();
 
   protected readonly safeSvgIcon = computed<SafeHtml | null>(() => {

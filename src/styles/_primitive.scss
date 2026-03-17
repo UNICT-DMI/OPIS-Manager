@@ -1,0 +1,65 @@
+.btn {
+  &-nav {
+    border-bottom: 1px var(--color-primary) solid;
+
+    &-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.7rem 1.8rem;
+
+      &.active,
+      &:hover {
+        background-color: var(--color-primary);
+        color: var(--color-surface);
+      }
+    }
+  }
+}
+
+.opis-table {
+  &--groups {
+    margin-top: .8rem;
+    width: 100%;
+
+    thead {
+      th {
+        padding: .5rem;
+        border: 1px var(--gray-200) solid;
+
+        &:first-child {
+          text-align: start;
+        }
+
+        &:last-child {
+          text-align: center;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          padding: .7rem 0;
+          border-bottom: 1px var(--gray-200) solid;
+
+          &:first-child {
+            width: 80%;
+          }
+
+          &:last-child {
+            width: 10%;
+            text-align: center;
+          }
+        }
+
+        &:last-child {
+          td {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+
+}

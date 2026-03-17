@@ -6,17 +6,17 @@
       <button class="disclaimer__header" [disabled]="!disclaimer.isAccordion" (click)="manageOpening(disclaimer)"
         [attr.aria-expanded]="isOpen(disclaimer)">
         <div class="disclaimer__header-left">
-          <opis-icon class="disclaimer__icon" dimension="2rem" [iconName]="disclaimer.icon" />
+          <opis-icon class="disclaimer__icon" dimension="2rem" [isResponsive]="true" [iconName]="disclaimer.icon" />
           <h5 class="disclaimer__title">{{ disclaimer.title }}</h5>
         </div>
 
         @if (disclaimer.isAccordion) {
-        <opis-icon iconName="expand_more" />
+          <opis-icon iconName="expand_more" />
         }
       </button>
 
       <div class="disclaimer__body">
-        <p class="disclaimer__description">{{ disclaimer.description }}</p>
+        <div class="disclaimer__description" [innerHTML]="disclaimer.description"></div>
       </div>
     </article>
   }

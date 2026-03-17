@@ -35,6 +35,14 @@
   &.size-5rem {
     font-size: 5rem;
   }
+
+  &.size-responsive {
+    @media (max-width: 700px) {
+      &.size-2rem {
+        font-size: 1.7rem;
+      }
+    }
+  }
 }
 
 :host ::ng-deep svg {
