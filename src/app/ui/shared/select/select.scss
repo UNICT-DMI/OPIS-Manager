@@ -2,11 +2,13 @@
   position: relative;
   width: 100%;
 
+  // ─── Trigger ───────────────────────────────────────────────────────────────
   &__trigger {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: .5rem;
     padding: 0.6rem 1rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -15,7 +17,7 @@
     font-family: var(--font-sans);
     font-size: 0.9rem;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &:hover {
       border-color: var(--color-border-hover);
@@ -32,37 +34,52 @@
     }
   }
 
+  &.open &__trigger {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 105, 148, 0.12);
+  }
+
+  // ─── Arrow ─────────────────────────────────────────────────────────────────
   &__arrow {
     font-size: 1.2rem;
     color: var(--color-text-muted);
     transition: transform 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
   }
 
   &.open &__arrow {
     transform: rotate(180deg);
   }
 
-  &.open &__trigger {
-    border-color: var(--color-primary);
-  }
-
+  // ─── Dropdown ──────────────────────────────────────────────────────────────
   &__dropdown {
     position: absolute;
-    top: calc(100% + 4px);
     left: 0;
     right: 0;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     list-style: none;
     margin: 0;
     padding: 0.3rem 0;
     z-index: 100;
     max-height: 220px;
     overflow-y: auto;
+
+    // Apre verso il basso (default)
+    top: calc(100% + 4px);
+
+    // Apre verso l'alto quando vicino al footer
+    .opis-select.open-up & {
+      top: auto;
+      bottom: calc(100% + 4px);
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12);
+    }
   }
 
+  // ─── Option ────────────────────────────────────────────────────────────────
   &__option {
     padding: 0.55rem 1rem;
     font-size: 0.9rem;
