@@ -14,7 +14,7 @@ export class TeachingService {
   private readonly _http = inject(HttpClient);
   private readonly _graphService = inject(GraphService);
 
-  selectedTeaching = signal<Teaching | null>(null);
+  readonly selectedTeaching = signal<Teaching | null>(null);
 
   private teachingCoarseApi(teaching: Teaching): Observable<Teaching[]> {
     const url = `${this.BASE_URL}/coarse/${teaching.codice_gomp}/schedeopis`;

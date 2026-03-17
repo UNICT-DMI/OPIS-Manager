@@ -17,8 +17,8 @@ import { of } from 'rxjs';
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
 
-  public graphKeySelected = signal<GraphSelectionType>('cds_general');
-  public graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
+  readonly graphKeySelected = signal<GraphSelectionType>('cds_general');
+  readonly graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
 
   private applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
