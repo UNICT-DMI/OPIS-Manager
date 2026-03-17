@@ -2,7 +2,7 @@ import { MeansPerYear } from '@c_types/means-graph.type';
 import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { typedKeys } from '@utils/object-helpers.utils';
-import { AcademicYear } from '@values/years';
+import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
 /**
  * Pure mapping class: transforms pre-computed data into GraphView objects
@@ -41,19 +41,16 @@ export class GraphMapper {
     items: T[],
     getScheda: (item: T) => SchedaOpis,
   ): Record<AcademicYear, SchedaOpis[]> {
-    return items.reduce(
-      (acc, item) => {
-        const year = item.anno_accademico as AcademicYear;
+    const initial = Object.fromEntries(
+      ACADEMIC_YEARS.map(year => [year, []])
+    ) as unknown as Record<AcademicYear, SchedaOpis[]>;
 
-        if (!acc[year]) acc[year] = [];
-        acc[year].push(getScheda(item));
-
-        return acc;
-      },
-      {} as Record<AcademicYear, SchedaOpis[]>,
-    );
+    return items.reduce((acc, item) => {
+      const year = item.anno_accademico as AcademicYear;
+      acc[year]?.push(getScheda(item));
+      return acc;
+    }, initial);
   }
-
   static toCdsGeneralGraph = GraphMapper.buildLineGraph;
   static toTeachingGraph = GraphMapper.buildLineGraph;
 }
