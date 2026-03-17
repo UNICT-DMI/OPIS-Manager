@@ -1,8 +1,8 @@
-import { DisclaimerInfo } from "@interfaces/graph-config.interface";
+import { DisclaimerInfo } from '@interfaces/graph-config.interface';
 
 export const OpisGroup_Disclaimers: DisclaimerInfo[] = [
   {
-    title: "V1 – Come lo studente vede il corso",
+    title: 'V1 – Come lo studente vede il corso',
     description: `
       <p>Il punteggio è calcolato sulla base di <strong>2 domande</strong> con i seguenti pesi:</p>
       <table class="opis-table--groups">
@@ -24,13 +24,13 @@ export const OpisGroup_Disclaimers: DisclaimerInfo[] = [
         </tbody>
       </table>
     `,
-    type: "info",
-    icon: "info",
+    type: 'info',
+    icon: 'info',
     isAccordion: true,
-    isOpen: false
+    isOpen: false,
   },
   {
-    title: "V2 – Come lo studente vede il docente",
+    title: 'V2 – Come lo studente vede il docente',
     description: `
       <p>Il punteggio è calcolato sulla base di <strong>4 domande</strong> con i seguenti pesi:</p>
       <table class="opis-table--groups">
@@ -60,13 +60,13 @@ export const OpisGroup_Disclaimers: DisclaimerInfo[] = [
         </tbody>
       </table>
     `,
-    type: "info",
-    icon: "info",
+    type: 'info',
+    icon: 'info',
     isAccordion: true,
-    isOpen: false
+    isOpen: false,
   },
   {
-    title: "V3 – Come il docente interagisce con lo studente",
+    title: 'V3 – Come il docente interagisce con lo studente',
     description: `
       <p>Il punteggio è calcolato sulla base di <strong>3 domande</strong> con i seguenti pesi:</p>
       <table class="opis-table--groups">
@@ -92,9 +92,9 @@ export const OpisGroup_Disclaimers: DisclaimerInfo[] = [
         </tbody>
       </table>
     `,
-    type: "info",
-    icon: "info",
+    type: 'info',
+    icon: 'info',
     isAccordion: true,
-    isOpen: false
-  }
+    isOpen: false,
+  },
 ];

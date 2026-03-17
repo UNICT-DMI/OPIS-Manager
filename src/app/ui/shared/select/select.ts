@@ -41,7 +41,7 @@ export class SelectComponent {
   protected readonly filteredOptions = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return this.options();
-    return this.options().filter(o => o.label.toLowerCase().includes(query));
+    return this.options().filter((o) => o.label.toLowerCase().includes(query));
   });
 
   protected toggle(): void {
@@ -49,7 +49,7 @@ export class SelectComponent {
       this._checkDirection();
       this.searchQuery.set('');
     }
-    this.isOpen.update(v => !v);
+    this.isOpen.update((v) => !v);
   }
 
   protected select(option: SelectOption): void {

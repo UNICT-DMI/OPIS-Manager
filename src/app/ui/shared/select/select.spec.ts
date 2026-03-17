@@ -9,7 +9,7 @@ import { IconComponent } from '@shared-ui/icon/icon';
 // ─── Mock IconComponent ───────────────────────────────────────────────────────
 import { Component as NgComponent } from '@angular/core';
 @NgComponent({ selector: 'opis-icon', template: '', standalone: true })
-class MockIconComponent { }
+class MockIconComponent {}
 
 // ─── Mock options ─────────────────────────────────────────────────────────────
 const MOCK_OPTIONS: SelectOption[] = [
@@ -36,7 +36,9 @@ class HostComponent {
   placeholder = signal('Seleziona...');
   value: SelectOption | null = null;
   changedSpy = vi.fn();
-  onChanged(opt: SelectOption) { this.changedSpy(opt); }
+  onChanged(opt: SelectOption) {
+    this.changedSpy(opt);
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -151,11 +153,11 @@ describe('SelectComponent', () => {
     });
 
     it('dovrebbe mostrare le label corrette', () => {
-      const labels = getOptions(fixture).map(o => o.textContent?.trim());
-      expect(labels).toEqual(MOCK_OPTIONS.map(o => o.label));
+      const labels = getOptions(fixture).map((o) => o.textContent?.trim());
+      expect(labels).toEqual(MOCK_OPTIONS.map((o) => o.label));
     });
 
-    it('dovrebbe selezionare un\'opzione al click', () => {
+    it("dovrebbe selezionare un'opzione al click", () => {
       getOptions(fixture)[1].click();
       fixture.detectChanges();
       const span = getTrigger(fixture).querySelector('span');
@@ -188,7 +190,7 @@ describe('SelectComponent', () => {
   describe('ricerca', () => {
     beforeEach(() => openDropdown(fixture));
 
-    it('dovrebbe renderizzare l\'input di ricerca', () => {
+    it("dovrebbe renderizzare l'input di ricerca", () => {
       expect(getSearchInput(fixture)).toBeTruthy();
     });
 
@@ -264,7 +266,9 @@ describe('SelectComponent', () => {
   describe('direzione apertura', () => {
     it('dovrebbe aggiungere la classe "open-up" se spazio insufficiente sotto', () => {
       const el = fixture.nativeElement.querySelector('.opis-select') as HTMLElement;
-      vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({ bottom: window.innerHeight - 50 } as DOMRect);
+      vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
+        bottom: window.innerHeight - 50,
+      } as DOMRect);
 
       openDropdown(fixture);
 

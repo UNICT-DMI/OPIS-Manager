@@ -47,8 +47,7 @@ export class CdsSelectedSection {
   }
 
   protected readonly isAllInfoLoading = computed<boolean>(
-    () =>
-      this.infoCds.isLoading() || this.graphSelected.isLoading()
+    () => this.infoCds.isLoading() || this.graphSelected.isLoading(),
     // || this.infoTeaching.isLoading(), // TODO: to manage
   );
 
@@ -98,7 +97,9 @@ export class CdsSelectedSection {
 
     const resolvers: Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> = {
       teaching_cds: () =>
-        this.infoCds.value()?.teachings.map((t) => ({ value: t.id, label: t.nome + ` (Canale ${t.canale})` })) ?? [],
+        this.infoCds
+          .value()
+          ?.teachings.map((t) => ({ value: t.id, label: t.nome + ` (Canale ${t.canale})` })) ?? [],
       cds_year: () => this.availableYears().map((y) => ({ value: y, label: y })),
     };
 
@@ -122,6 +123,6 @@ export class CdsSelectedSection {
       if (this._graphService.graphKeySelected() !== 'teaching_cds') {
         this._teachingService.selectedTeaching.set(null);
       }
-    })
+    });
   }
 }

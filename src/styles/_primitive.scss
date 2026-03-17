@@ -19,12 +19,12 @@
 
 .opis-table {
   &--groups {
-    margin-top: .8rem;
+    margin-top: 0.8rem;
     width: 100%;
 
     thead {
       th {
-        padding: .5rem;
+        padding: 0.5rem;
         border: 1px var(--gray-200) solid;
 
         &:first-child {
@@ -40,7 +40,7 @@
     tbody {
       tr {
         td {
-          padding: .7rem 0;
+          padding: 0.7rem 0;
           border-bottom: 1px var(--gray-200) solid;
 
           &:first-child {
@@ -61,5 +61,4 @@
       }
     }
   }
-
 }

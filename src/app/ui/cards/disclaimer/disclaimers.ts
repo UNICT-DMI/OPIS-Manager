@@ -14,7 +14,7 @@ export class Disclaimers {
   readonly disclaimers = input.required<DisclaimerInfo[]>();
 
   private readonly _openId = linkedSignal(() => {
-    const defaultOpen = this.disclaimers().find(d => d.isOpen);
+    const defaultOpen = this.disclaimers().find((d) => d.isOpen);
     return this.getIdentityKey(defaultOpen);
   });
 
@@ -33,7 +33,7 @@ export class Disclaimers {
 
   protected manageOpening(disclaimer: DisclaimerInfo): void {
     if (!disclaimer.isAccordion) return;
-    
+
     const identityKey = this.getIdentityKey(disclaimer);
     this._openId.set(this._openId() === identityKey ? null : identityKey);
   }

@@ -42,7 +42,7 @@ export class GraphMapper {
     getScheda: (item: T) => SchedaOpis,
   ): Record<AcademicYear, SchedaOpis[]> {
     const initial = Object.fromEntries(
-      ACADEMIC_YEARS.map(year => [year, []])
+      ACADEMIC_YEARS.map((year) => [year, []]),
     ) as unknown as Record<AcademicYear, SchedaOpis[]>;
 
     return items.reduce((acc, item) => {
