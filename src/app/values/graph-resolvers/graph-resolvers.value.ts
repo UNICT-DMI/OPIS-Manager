@@ -4,7 +4,7 @@ import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
 import { CdsService } from '@services/cds/cds.service';
 import { TeachingService } from '@services/teachings/teachings.service';
-import { AcademicYear } from './years';
+import { AcademicYear } from '../years';
 
 export function GraphResolvers(
   infoCds: CdsService['getInfoCds'],

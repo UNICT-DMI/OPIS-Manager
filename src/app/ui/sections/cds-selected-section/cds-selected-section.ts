@@ -20,7 +20,7 @@ import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 import { SelectComponent } from '@shared-ui/select/select';
 import { typedKeys } from '@utils/object-helpers.utils';
-import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers.value';
+import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers/graph-resolvers.value';
 import { GRAPH_DATA } from '@values/messages.value';
 import { AcademicYear } from '@values/years';
 
