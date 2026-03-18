@@ -1,5 +1,4 @@
 import {
-  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -11,9 +10,8 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
+import { GraphSelection } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
-import { GraphMapper } from '@mappers/graph.mapper';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
@@ -22,6 +20,7 @@ import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 import { SelectComponent } from '@shared-ui/select/select';
 import { typedKeys } from '@utils/object-helpers.utils';
+import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers.value';
 import { GRAPH_DATA } from '@values/messages.value';
 import { AcademicYear } from '@values/years';
 
@@ -38,6 +37,7 @@ export class CdsSelectedSection {
   private readonly _teachingService = inject(TeachingService);
 
   private readonly _graphDescrRef = viewChild<ElementRef>('graphDesc');
+
   protected readonly minHeight = signal(0);
 
   protected readonly ERR_STATUS: ResourceStatus = 'error';
@@ -75,44 +75,20 @@ export class CdsSelectedSection {
     return coarse ? (typedKeys(coarse) as AcademicYear[]) : [];
   });
 
-  // TODO: enhancement
+  private readonly _graphResolvers = GraphResolvers(this.infoCds, this.infoTeaching);
   protected readonly activeGraph = computed<GraphView | null>(() => {
     const graphKey = this._graphService.graphKeySelected();
-
-    switch (graphKey) {
-      case 'cds_general':
-        const dataCds = this.infoCds.value();
-        if (!dataCds) return null;
-        return GraphMapper.toCdsGeneralGraph(dataCds.coarse);
-
-      case 'teaching_cds':
-        const dataTeaching = this.infoTeaching.value();
-        if (!dataTeaching) return null;
-
-        return GraphMapper.toTeachingGraph(dataTeaching);
-
-      case 'cds_year':
-        return null;
-
-      default:
-        return null;
-    }
+    return this._graphResolvers[graphKey]?.() || null;
   });
-  // TODO: enhancement
+
+  private readonly _selectorResolvers = SelectorResolvers(this.infoCds, this.availableYears);
   protected readonly selectorOptions = computed<SelectOption[] | null>(() => {
     const graph = this.graphSelected.value();
     if (!graph?.value || graph.value === GraphSelection.CDS_GENERAL) return null;
 
-    const resolvers: Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> = {
-      teaching_cds: () =>
-        this.infoCds
-          .value()
-          ?.teachings.map((t) => ({ value: t.id, label: t.nome + ` (Canale ${t.canale})` })) ?? [],
-      cds_year: () => this.availableYears().map((y) => ({ value: y, label: y })),
-    };
-
-    return resolvers[graph.value]?.() ?? null;
+    return this._selectorResolvers[graph.value]?.() ?? null;
   });
+  
   // TODO: enhancement
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();
@@ -134,13 +110,18 @@ export class CdsSelectedSection {
     });
   }
 
-  private trackMinHeight(): void {
-    afterEveryRender(() => {
+  private trackMinHeight(): EffectRef {
+    return effect(() => {
       const el = this._graphDescrRef()?.nativeElement;
       if (!el) return;
 
-      const h: number = el.offsetHeight;
-      if (h > this.minHeight()) this.minHeight.set(h);
-    })
+      const observer = new ResizeObserver(([entry]) => {
+        const h = entry.contentRect.height;
+        if (h > this.minHeight()) this.minHeight.set(h);
+      });
+
+      observer.observe(el);
+      return () => observer.disconnect();
+    });
   }
 }
