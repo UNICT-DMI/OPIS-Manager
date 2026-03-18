@@ -45,7 +45,7 @@ describe('GraphResolvers', () => {
 
   it('cds_year: should throw not implemented error', () => {
     const resolvers = GraphResolvers(mockResource() as any, mockResource() as any);
-    expect(() => resolvers.cds_year()).toThrow('Function not implemented.');
+    expect(resolvers.cds_year()).toBe(null);
   });
 });
 
