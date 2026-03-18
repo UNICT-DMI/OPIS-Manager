@@ -20,7 +20,8 @@ export function GraphResolvers(
       return data ? GraphMapper.toTeachingGraph(data) : null;
     },
     cds_year: () => {
-      throw new Error('Function not implemented.');
+      console.error('Function not implemented.');
+      return null;
     },
   };
 }
