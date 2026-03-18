@@ -64,7 +64,7 @@ describe('DepartmentPageComponent', () => {
 
     mockGraphService = {
       graphKeySelected: signal('cds_general'),
-      graphBtns: vi.fn(() => []),
+      graphBtns: signal([]),
       manageGraphSelection: vi.fn(() => mockResource),
     };
 
