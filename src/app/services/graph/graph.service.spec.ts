@@ -1,12 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { signal } from '@angular/core';
 import { describe, it, beforeEach, expect } from 'vitest';
 import { GraphService } from './graph.service';
 import { QuestionService } from '@services/questions/questions.service';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { CHART_BTNS } from '@values/selection-graph';
 import { exampleSchedaOpis } from '@mocks/scheda-mock';
-import { firstValueFrom } from 'rxjs';
 import { AcademicYear } from '@values/years';
 
 // ─── Mock SchedaOpis factory ──────────────────────────────────────────────────

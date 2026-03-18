@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ResourceStatus } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ResourceStatus } from '@angular/core';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { CdsSelectedSection } from './cds-selected-section';
 import { CdsService } from '@services/cds/cds.service';
