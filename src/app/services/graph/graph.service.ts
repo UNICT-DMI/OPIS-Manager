@@ -1,4 +1,4 @@
-import { inject, Injectable, ResourceRef, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Means, MeansPerYear } from '@c_types/means-graph.type';
 import { GraphSelectionType } from '@enums/chart-typology.enum';

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectOption } from '@interfaces/graph-config.interface';
 import { IconComponent } from '@shared-ui/icon/icon';
@@ -6,12 +6,18 @@ import { describe, expect, it, vi } from 'vitest';
 import { SelectComponent } from './select';
 
 // ─── Mock ─────────────────────────────────────────────────────────────────────
-@Component({ selector: 'opis-icon', template: '', standalone: true })
+@Component({
+  selector: 'opis-icon',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockIconComponent {}
 
 @Component({
-  standalone: true,
+  selector: 'opis-host',
   imports: [SelectComponent],
+  standalone: true,
   template: `
     <opis-select
       [options]="options()"
@@ -20,14 +26,15 @@ class MockIconComponent {}
       (changed)="onChanged($event)"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class HostComponent {
-  options = signal<SelectOption[]>([
+  readonly options = signal<SelectOption[]>([
     { value: 'v1', label: 'Option One' },
     { value: 'v2', label: 'Option Two' },
     { value: 'v3', label: 'Option Three' },
   ]);
-  placeholder = signal('Select...');
+  readonly placeholder = signal('Select...');
   value: SelectOption | null = null;
   changedSpy = vi.fn();
   onChanged(opt: SelectOption) {

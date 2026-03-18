@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   ElementRef,
-  HostListener,
   inject,
   input,
   model,
@@ -22,6 +21,9 @@ const DROPDOWN_HEIGHT = 240;
   templateUrl: './select.html',
   styleUrl: './select.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:click)': 'onOutsideClick($event)',
+  },
 })
 export class SelectComponent {
   private readonly _el = inject(ElementRef);
@@ -59,16 +61,15 @@ export class SelectComponent {
     this.searchQuery.set('');
   }
 
+  protected onOutsideClick(event: MouseEvent): void {
+    if (!this._el.nativeElement.contains(event.target)) {
+      this.isOpen.set(false);
+    }
+  }
+
   private _checkDirection(): void {
     const rect = (this._el.nativeElement as HTMLElement).getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
     this.openUp.set(spaceBelow < DROPDOWN_HEIGHT);
-  }
-
-  @HostListener('document:click', ['$event'])
-  onOutsideClick(event: MouseEvent): void {
-    if (!this._el.nativeElement.contains(event.target)) {
-      this.isOpen.set(false);
-    }
   }
 }

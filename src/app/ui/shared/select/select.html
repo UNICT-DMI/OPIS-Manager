@@ -22,9 +22,13 @@
         @for (option of filteredOptions(); track option.value) {
           <li
             role="option"
+            tabindex="0"
             class="opis-select__option"
             [class.selected]="value()?.value === option.value"
+            [attr.aria-selected]="value()?.value === option.value"
             (click)="select(option)"
+            (keydown.enter)="select(option)"
+            (keydown.space)="select(option)"
           >
             {{ option.label }}
           </li>

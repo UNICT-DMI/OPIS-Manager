@@ -12,12 +12,22 @@ import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { describe, expect, it, vi } from 'vitest';
 import { DepartmentPageComponent } from './department';
 import { of } from 'rxjs';
-import { Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 
-@Component({ selector: 'opis-cds-selected-section', template: '', standalone: true })
+@Component({
+  selector: 'opis-cds-selected-section',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockCdsSelectedSection {}
 
-@Component({ selector: 'opis-disclaimers', template: '', standalone: true })
+@Component({
+  selector: 'opis-disclaimers',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockDisclaimers {
   readonly disclaimers = input<unknown[]>([]);
 }
