@@ -8,7 +8,7 @@ import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { typedKeys } from '@utils/object-helpers.utils';
-import { mean, round } from '@utils/statistics.utils';
+import { mean, round } from '@utils/statistics.utils/statistics.utils';
 import { CHART_BTNS } from '@values/selection-graph';
 import { AcademicYear } from '@values/years';
 import { of } from 'rxjs';
