@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 import { Component, input, signal } from '@angular/core';
 
 @Component({ selector: 'opis-cds-selected-section', template: '', standalone: true })
-class MockCdsSelectedSection { }
+class MockCdsSelectedSection {}
 
 @Component({ selector: 'opis-disclaimers', template: '', standalone: true })
 class MockDisclaimers {
@@ -48,7 +48,8 @@ describe('DepartmentPageComponent', () => {
 
     mockCdsService = {
       cdsSelected: signal(NO_CHOICE_CDS),
-      getInfoCds: vi.fn(() => mockResource),
+      getInfoCds: mockResource,
+      isLoading: signal(false),
     };
 
     mockGraphService = {
@@ -85,7 +86,6 @@ describe('DepartmentPageComponent', () => {
     await fixture.whenStable();
   });
 
-  // ── Init ────────────────────────────────────────────────────────────────────
   it('[DEPARTMENT]: created', () => expect(component).toBeTruthy());
 
   it('[DEPARTMENT]: should initialize department from localStorage on ngOnInit', () => {
@@ -100,7 +100,6 @@ describe('DepartmentPageComponent', () => {
     );
   });
 
-  // ── CDS selection ───────────────────────────────────────────────────────────
   it('[DEPARTMENT]: should set isCdsSelected to true when a CDS is selected', async () => {
     component['selectCds'](mockCDS);
     fixture.detectChanges();
@@ -124,7 +123,6 @@ describe('DepartmentPageComponent', () => {
     expect(mockGraphService.graphKeySelected()).toBe('cds_general');
   });
 
-  // ── Graph selection ─────────────────────────────────────────────────────────
   it('[DEPARTMENT]: should update graphKeySelected on selectGraphType', () => {
     component['selectGraphType']('teaching_cds');
     expect(mockGraphService.graphKeySelected()).toBe('teaching_cds');
@@ -135,7 +133,6 @@ describe('DepartmentPageComponent', () => {
     expect(mockGraphService.graphKeySelected()).toBe('cds_year');
   });
 
-  // ── Destroy ─────────────────────────────────────────────────────────────────
   it('[DEPARTMENT]: should remove "department" from localStorage on ngOnDestroy', () => {
     component.ngOnDestroy();
     expect(window.localStorage.removeItem).toHaveBeenCalledWith('department');
@@ -145,5 +142,36 @@ describe('DepartmentPageComponent', () => {
     mockCdsService.cdsSelected.set(mockCDS);
     component.ngOnDestroy();
     expect(mockCdsService.cdsSelected()).toEqual(NO_CHOICE_CDS);
+  });
+
+  it('[DEPARTMENT]: should reflect cdsService.isLoading', () => {
+    expect(component['isLoading']()).toBe(false);
+  });
+
+  it('[DEPARTMENT]: should reflect graphService.graphBtns', () => {
+    const btns = [{ value: 'cds_general', label: 'Generale', active: true, icon: 'bar_chart' }];
+    mockGraphService.graphBtns.set(btns);
+    fixture.detectChanges();
+    expect(component['graphBtns']()).toEqual(btns);
+  });
+
+  it('[DEPARTMENT]: should NOT reset graphKey when selecting a valid CDS', () => {
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    component['selectCds'](mockCDS);
+    expect(mockGraphService.graphKeySelected()).toBe('teaching_cds');
+  });
+
+  it('[DEPARTMENT]: should return NO_CHOICE_VALUE when no CDS is selected', () => {
+    expect(component['cds']()).toEqual(NO_CHOICE_CDS);
+  });
+
+  it('[DEPARTMENT]: should return false for isCdsSelected when no CDS is selected', () => {
+    expect(component['isCdsSelected']()).toBe(false);
+  });
+
+  it('[DEPARTMENT]: should return null for department before ngOnInit', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValueOnce(null);
+    const freshFixture = TestBed.createComponent(DepartmentPageComponent);
+    expect(freshFixture.componentInstance['department']()).toBeNull();
   });
 });

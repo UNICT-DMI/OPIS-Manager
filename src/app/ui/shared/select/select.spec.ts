@@ -7,7 +7,7 @@ import { SelectComponent } from './select';
 
 // ─── Mock ─────────────────────────────────────────────────────────────────────
 @Component({ selector: 'opis-icon', template: '', standalone: true })
-class MockIconComponent { }
+class MockIconComponent {}
 
 @Component({
   standalone: true,
@@ -30,7 +30,9 @@ class HostComponent {
   placeholder = signal('Select...');
   value: SelectOption | null = null;
   changedSpy = vi.fn();
-  onChanged(opt: SelectOption) { this.changedSpy(opt); }
+  onChanged(opt: SelectOption) {
+    this.changedSpy(opt);
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -72,8 +74,7 @@ describe('SelectComponent', () => {
   // ── Initial rendering ───────────────────────────────────────────────────────
   it('[SELECT]: Created', () => expect(fixture.componentInstance).toBeTruthy());
 
-  it('[SELECT]: should render the trigger button', () =>
-    expect(getTrigger(fixture)).toBeTruthy());
+  it('[SELECT]: should render the trigger button', () => expect(getTrigger(fixture)).toBeTruthy());
 
   it('[SELECT]: should show placeholder when no value is selected', () => {
     const span = getTrigger(fixture).querySelector('span');
@@ -84,7 +85,9 @@ describe('SelectComponent', () => {
   it('[SELECT]: should reflect a custom placeholder', () => {
     host.placeholder.set('Choose a course...');
     fixture.detectChanges();
-    expect(getTrigger(fixture).querySelector('span')?.textContent?.trim()).toBe('Choose a course...');
+    expect(getTrigger(fixture).querySelector('span')?.textContent?.trim()).toBe(
+      'Choose a course...',
+    );
   });
 
   it('[SELECT]: should not render the dropdown initially', () =>
@@ -131,7 +134,7 @@ describe('SelectComponent', () => {
 
   it('[SELECT]: should display correct option labels', () => {
     openDropdown(fixture);
-    const labels = getOptions(fixture).map(o => o.textContent?.trim());
+    const labels = getOptions(fixture).map((o) => o.textContent?.trim());
     expect(labels).toEqual(['Option One', 'Option Two', 'Option Three']);
   });
 
@@ -204,7 +207,9 @@ describe('SelectComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.opis-select__empty')?.textContent?.trim()).toBe('Nessun risultato');
+    expect(fixture.nativeElement.querySelector('.opis-select__empty')?.textContent?.trim()).toBe(
+      'Nessun risultato',
+    );
     expect(getOptions(fixture).length).toBe(0);
   });
 
@@ -240,7 +245,9 @@ describe('SelectComponent', () => {
 
   it('[SELECT]: should add "open-up" class when space below is insufficient', () => {
     const hostEl = fixture.nativeElement.querySelector('opis-select') as HTMLElement;
-    vi.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ bottom: window.innerHeight - 50 } as DOMRect);
+    vi.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({
+      bottom: window.innerHeight - 50,
+    } as DOMRect);
     openDropdown(fixture);
     const wrapper = fixture.nativeElement.querySelector('.opis-select');
     expect(wrapper.classList).toContain('open-up');

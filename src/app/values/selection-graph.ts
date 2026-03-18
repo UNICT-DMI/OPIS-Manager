@@ -12,7 +12,7 @@ export const CHART_BTNS: GraphSelectionBtn[] = [
   {
     value: 'teaching_cds',
     description:
-      'Punteggi medi per singolo insegnamento: confronta l\'evoluzione di V1, V2 e V3 corso per corso nel tempo.',
+      "Punteggi medi per singolo insegnamento: confronta l'evoluzione di V1, V2 e V3 corso per corso nel tempo.",
     label: 'Corsi',
     active: false,
     icon: 'menu_book',

@@ -15,7 +15,7 @@
       }
 
       &:disabled {
-        opacity: .5;
+        opacity: 0.5;
         pointer-events: none;
       }
     }
@@ -27,12 +27,11 @@
     margin-top: 0.8rem;
     width: 100%;
     border: 1px var(--gray-200) solid;
-    
+
     thead {
       th {
         padding: 0.7rem;
         border: 1px var(--gray-200) solid;
-
 
         &:first-child {
           text-align: start;
@@ -47,7 +46,7 @@
     tbody {
       tr {
         td {
-          padding: 0.7rem ;
+          padding: 0.7rem;
           border: 1px var(--gray-200) solid;
 
           &:first-child {

@@ -1,10 +1,10 @@
-import { Signal } from "@angular/core";
-import { GraphSelectionType } from "@enums/chart-typology.enum";
-import { GraphView, SelectOption } from "@interfaces/graph-config.interface";
-import { GraphMapper } from "@mappers/graph.mapper";
-import { CdsService } from "@services/cds/cds.service";
-import { TeachingService } from "@services/teachings/teachings.service";
-import { AcademicYear } from "./years";
+import { Signal } from '@angular/core';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
+import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
+import { GraphMapper } from '@mappers/graph.mapper';
+import { CdsService } from '@services/cds/cds.service';
+import { TeachingService } from '@services/teachings/teachings.service';
+import { AcademicYear } from './years';
 
 export function GraphResolvers(
   infoCds: CdsService['getInfoCds'],
@@ -20,9 +20,9 @@ export function GraphResolvers(
       return data ? GraphMapper.toTeachingGraph(data) : null;
     },
     cds_year: () => {
-      throw new Error("Function not implemented.");
+      throw new Error('Function not implemented.');
     },
-  }
+  };
 }
 
 export function SelectorResolvers(
@@ -36,5 +36,5 @@ export function SelectorResolvers(
         label: t.nome + ` (Canale ${t.canale})`,
       })) ?? [],
     cds_year: () => availableYears().map((y) => ({ value: y, label: y })),
-  }
-};
+  };
+}

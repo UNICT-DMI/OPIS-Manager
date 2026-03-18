@@ -19,7 +19,7 @@ export class CdsService {
 
   readonly cdsSelected = signal<CDS | null>(null);
   readonly isLoading = computed(
-    () => this.getInfoCds.isLoading() || this._graphService.manageGraphSelection.isLoading()
+    () => this.getInfoCds.isLoading() || this._graphService.manageGraphSelection.isLoading(),
   );
 
   /**
@@ -76,7 +76,6 @@ export class CdsService {
       );
     },
   });
-  
 
   public updateCDS(cds: CDS, token: string): Observable<unknown> {
     const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);

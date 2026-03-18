@@ -85,7 +85,7 @@ export class CdsSelectedSection {
 
     return this._selectorResolvers[graph.value]?.() ?? null;
   });
-  
+
   // TODO: enhancement
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();

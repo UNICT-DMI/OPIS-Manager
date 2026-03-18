@@ -26,7 +26,6 @@
           <opis-graph [dataChart]="activeGraph()!" />
         } @else {
           <div class="graph-description_right">
-            
             @if (infoTeaching.isLoading()) {
               <opis-loader />
             } @else {
@@ -35,7 +34,6 @@
                 <h2>{{ msgError() }}</h2>
               </div>
             }
-
           </div>
         }
       }
