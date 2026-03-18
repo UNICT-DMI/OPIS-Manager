@@ -45,19 +45,16 @@ export class CdsSelectedSection {
 
   protected readonly cds = computed(this._cdsService.cdsSelected);
 
-  protected readonly infoCds = this._cdsService.getInfoCds();
-  protected readonly graphSelected = this._graphService.manageGraphSelection();
+  protected readonly infoCds = this._cdsService.getInfoCds;
+  protected readonly graphSelected = this._graphService.manageGraphSelection;
   protected readonly infoTeaching = this._teachingService.getTeachingGraph();
+
+  protected readonly isAllInfoLoading = this._cdsService.isLoading;
 
   constructor() {
     this.resetTeachingGraph();
     this.trackMinHeight();
   }
-
-  protected readonly isAllInfoLoading = computed<boolean>(
-    () => this.infoCds.isLoading() || this.graphSelected.isLoading(),
-    // || this.infoTeaching.isLoading(), // TODO: to manage
-  );
 
   protected readonly msgError = computed<string>(() => {
     const graphKey = this._graphService.graphKeySelected();

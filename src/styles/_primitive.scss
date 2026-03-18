@@ -13,6 +13,11 @@
         background-color: var(--color-primary);
         color: var(--color-surface);
       }
+
+      &:disabled {
+        opacity: .5;
+        pointer-events: none;
+      }
     }
   }
 }

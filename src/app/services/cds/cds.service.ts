@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable, ResourceRef, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { MeansPerYear } from '@c_types/means-graph.type';
 import { env } from '@env';
@@ -18,6 +18,9 @@ export class CdsService {
   private readonly _graphService = inject(GraphService);
 
   readonly cdsSelected = signal<CDS | null>(null);
+  readonly isLoading = computed(
+    () => this.getInfoCds.isLoading() || this._graphService.manageGraphSelection.isLoading()
+  );
 
   /**
    * Extracts valid SchedaOpis from a CDS list.
@@ -60,21 +63,20 @@ export class CdsService {
     );
   }
 
-  public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined> {
-    return rxResource({
-      params: this.cdsSelected,
-      stream: ({ params }) => {
-        if (!params?.id || !params?.unict_id) {
-          return throwError(() => new Error('Id or Unict_id missing!'));
-        }
+  public getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
+    params: this.cdsSelected,
+    stream: ({ params }) => {
+      if (!params?.id || !params?.unict_id) {
+        return throwError(() => new Error('Id or Unict_id missing!'));
+      }
 
-        return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
-          delay(DELAY_API_MS),
-          map(([teachings, coarse]) => ({ teachings, coarse })),
-        );
-      },
-    });
-  }
+      return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
+        delay(DELAY_API_MS),
+        map(([teachings, coarse]) => ({ teachings, coarse })),
+      );
+    },
+  });
+  
 
   public updateCDS(cds: CDS, token: string): Observable<unknown> {
     const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);

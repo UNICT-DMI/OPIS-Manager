@@ -25,9 +25,17 @@
         @if (activeGraph()) {
           <opis-graph [dataChart]="activeGraph()!" />
         } @else {
-          <div class="error">
-            <opis-icon iconName="report_off" dimension="5rem" />
-            <h2>{{ msgError() }}</h2>
+          <div class="graph-description_right">
+            
+            @if (infoTeaching.isLoading()) {
+              <opis-loader />
+            } @else {
+              <div class="error">
+                <opis-icon iconName="report_off" dimension="5rem" />
+                <h2>{{ msgError() }}</h2>
+              </div>
+            }
+
           </div>
         }
       }

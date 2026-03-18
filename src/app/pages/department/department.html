@@ -31,6 +31,7 @@
             <div class="cds-title-graph btn-nav">
               @for (graphBtn of graphBtns(); track $index) {
                 <button
+                  [disabled]="isLoading()"
                   class="btn-nav-item"
                   [class.active]="graphBtn.active"
                   type="button"

@@ -77,22 +77,20 @@ export class GraphService {
    * Returns the currently active graph button based on graphKeySelected.
    * Updates the active flag across all buttons reactively.
    */
-  public manageGraphSelection(): ResourceRef<GraphSelectionBtn | undefined> {
-    return rxResource({
-      params: this.graphKeySelected,
-      stream: ({ params: graphSelected }) => {
-        const currentBtns = structuredClone(this.graphBtns());
-        const graph = currentBtns.find((btn) => btn.value === graphSelected) ?? currentBtns[0];
+  public manageGraphSelection = rxResource<GraphSelectionBtn, GraphSelectionType>({
+    params: this.graphKeySelected,
+    stream: ({ params: graphSelected }) => {
+      const currentBtns = structuredClone(this.graphBtns());
+      const graph = currentBtns.find((btn) => btn.value === graphSelected) ?? currentBtns[0];
 
-        for (const graphStored of currentBtns) {
-          graphStored.active = graphStored.value === graph.value;
-        }
+      for (const graphStored of currentBtns) {
+        graphStored.active = graphStored.value === graph.value;
+      }
 
-        this.graphBtns.set(currentBtns);
-        return of(graph);
-      },
-    });
-  }
+      this.graphBtns.set(currentBtns);
+      return of(graph);
+    },
+  });
 
   /**
    * Computes V1/V2/V3 means for each academic year from a pre-grouped record of OPIS schedules.

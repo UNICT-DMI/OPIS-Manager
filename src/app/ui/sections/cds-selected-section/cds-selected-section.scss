@@ -35,6 +35,12 @@
         }
       }
 
+      &_right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       @media (min-width: 1000px) {
         display: flex;
         justify-content: space-between;
@@ -43,6 +49,7 @@
           flex: 0 0 35%;
         }
 
+        &_right,
         opis-graph {
           flex: 0 0 65%;
         }

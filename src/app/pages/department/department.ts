@@ -47,6 +47,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 
   protected readonly graphBtns = computed(this._graphService.graphBtns);
+  protected readonly isLoading = this._cdsService.isLoading;
 
   constructor() {
     this.retrieveQuestions();

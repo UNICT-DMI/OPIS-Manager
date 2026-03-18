@@ -7,7 +7,7 @@ import { TeachingService } from "@services/teachings/teachings.service";
 import { AcademicYear } from "./years";
 
 export function GraphResolvers(
-  infoCds: ReturnType<CdsService['getInfoCds']>,
+  infoCds: CdsService['getInfoCds'],
   infoTeaching: ReturnType<TeachingService['getTeachingGraph']>,
 ): Record<GraphSelectionType, () => GraphView | null> {
   return {
@@ -26,7 +26,7 @@ export function GraphResolvers(
 }
 
 export function SelectorResolvers(
-  infoCds: ReturnType<CdsService['getInfoCds']>,
+  infoCds: CdsService['getInfoCds'],
   availableYears: Signal<AcademicYear[]>,
 ): Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> {
   return {
