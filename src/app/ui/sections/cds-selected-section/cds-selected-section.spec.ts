@@ -13,17 +13,37 @@ import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 
 // ─── Mock componenti ──────────────────────────────────────────────────────────
-@Component({ selector: 'opis-graph', standalone: true, template: '', changeDetection: ChangeDetectionStrategy.OnPush })
-class MockGraph { }
+@Component({
+  selector: 'opis-graph',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MockGraph {}
 
-@Component({ selector: 'opis-select', standalone: true, template: '', changeDetection: ChangeDetectionStrategy.OnPush })
-class MockSelect { }
+@Component({
+  selector: 'opis-select',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MockSelect {}
 
-@Component({ selector: 'opis-icon', standalone: true, template: '', changeDetection: ChangeDetectionStrategy.OnPush })
-class MockIcon { }
+@Component({
+  selector: 'opis-icon',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MockIcon {}
 
-@Component({ selector: 'opis-loader', standalone: true, template: '', changeDetection: ChangeDetectionStrategy.OnPush })
-class MockLoader { }
+@Component({
+  selector: 'opis-loader',
+  standalone: true,
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MockLoader {}
 
 // ─── Mock resource factory ────────────────────────────────────────────────────
 const mockResource = (overrides = {}) => ({
@@ -123,7 +143,9 @@ describe('CdsSelectedSection', () => {
   it('[CDS-SECTION]: should add "loading" class to section when loading', async () => {
     mockCdsService.isLoading.set(true);
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('.cds-selection_wrap').classList).toContain('loading');
+    expect(fixture.nativeElement.querySelector('.cds-selection_wrap').classList).toContain(
+      'loading',
+    );
   });
 
   // ── Error state ───────────────────────────────────────────────────────────
@@ -143,7 +165,9 @@ describe('CdsSelectedSection', () => {
   it('[CDS-SECTION]: should render graph label and description when data is available', async () => {
     mockCdsService.getInfoCds.hasValue.set(true);
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('.graph-description_left h2')?.textContent?.trim()).toBe('Generale');
+    expect(
+      fixture.nativeElement.querySelector('.graph-description_left h2')?.textContent?.trim(),
+    ).toBe('Generale');
   });
 
   it('[CDS-SECTION]: should not render opis-select when selectorOptions is null', async () => {

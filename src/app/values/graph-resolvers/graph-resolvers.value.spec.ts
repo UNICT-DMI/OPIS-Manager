@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { GraphResolvers, SelectorResolvers } from './graph-resolvers.value';
 import { GraphMapper } from '@mappers/graph.mapper';
 
-
 // ─── Mock factory ─────────────────────────────────────────────────────────────
 const mockResource = (value: unknown = null) => ({
   value: signal(value),
