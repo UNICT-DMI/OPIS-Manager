@@ -2,7 +2,7 @@
   @if (isAllInfoLoading()) {
     <opis-loader />
   } @else {
-    <div class="graph-description">
+    <div #graphDesc class="graph-description" [style.min-height.px]="minHeight()">
       @if (infoCds.hasValue() && graphSelected.hasValue()) {
         @let graph = graphSelected.value();
 

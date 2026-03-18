@@ -1,11 +1,15 @@
 import {
+  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   EffectRef,
+  ElementRef,
   inject,
   ResourceStatus,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
@@ -33,6 +37,9 @@ export class CdsSelectedSection {
   private readonly _graphService = inject(GraphService);
   private readonly _teachingService = inject(TeachingService);
 
+  private readonly _graphDescrRef = viewChild<ElementRef>('graphDesc');
+  protected readonly minHeight = signal(0);
+
   protected readonly ERR_STATUS: ResourceStatus = 'error';
   protected readonly BASE_ERROR_MSG = 'Dati non disponibili :/';
 
@@ -44,6 +51,7 @@ export class CdsSelectedSection {
 
   constructor() {
     this.resetTeachingGraph();
+    this.trackMinHeight();
   }
 
   protected readonly isAllInfoLoading = computed<boolean>(
@@ -124,5 +132,15 @@ export class CdsSelectedSection {
         this._teachingService.selectedTeaching.set(null);
       }
     });
+  }
+
+  private trackMinHeight(): void {
+    afterEveryRender(() => {
+      const el = this._graphDescrRef()?.nativeElement;
+      if (!el) return;
+
+      const h: number = el.offsetHeight;
+      if (h > this.minHeight()) this.minHeight.set(h);
+    })
   }
 }
