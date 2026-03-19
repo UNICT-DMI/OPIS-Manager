@@ -77,7 +77,7 @@ export class GraphService {
    * Returns the currently active graph button based on graphKeySelected.
    * Updates the active flag across all buttons reactively.
    */
-  public manageGraphSelection = rxResource<GraphSelectionBtn, GraphSelectionType>({
+  readonly manageGraphSelection = rxResource<GraphSelectionBtn, GraphSelectionType>({
     params: this.graphKeySelected,
     stream: ({ params: graphSelected }) => {
       const currentBtns = structuredClone(this.graphBtns());
@@ -96,7 +96,7 @@ export class GraphService {
    * Computes V1/V2/V3 means for each academic year from a pre-grouped record of OPIS schedules.
    * Delegates the formula elaboration to `elaborateFormulaFor` for each year's set of schedules.
    */
-  public computeMeansPerYear(schedeByYear: Record<AcademicYear, SchedaOpis[]>): MeansPerYear {
+  computeMeansPerYear(schedeByYear: Record<AcademicYear, SchedaOpis[]>): MeansPerYear {
     const meansPerYear = {} as MeansPerYear;
 
     for (const year of typedKeys(schedeByYear)) {

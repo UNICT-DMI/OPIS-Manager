@@ -15,9 +15,9 @@ export class DepartmentsService {
   private readonly BASE_URL = env.api_url + '/dipartimento';
   private readonly _http = inject(HttpClient);
 
-  public readonly logoAlreadyAnimated = signal(false);
-  public readonly canStartUserFlow = signal(false);
-  public readonly selectedYear = signal<AcademicYear>('2020/2021');
+  readonly logoAlreadyAnimated = signal(false);
+  readonly canStartUserFlow = signal(false);
+  readonly selectedYear = signal<AcademicYear>('2020/2021');
 
   private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;
@@ -44,14 +44,14 @@ export class DepartmentsService {
     return this._http.get<CDS[]>(url).pipe(delay(DELAY_API_MS));
   }
 
-  public getDepartmentByYear(): ResourceRef<Department[] | undefined> {
+  getDepartmentByYear(): ResourceRef<Department[] | undefined> {
     return rxResource({
       params: () => this.selectedYear(),
       stream: ({ params }) => this.departmentsApi(params),
     });
   }
 
-  public getCdsDepartment(
+  getCdsDepartment(
     department: WritableSignal<Department | null>,
   ): ResourceRef<CDS[] | undefined> {
     return rxResource({

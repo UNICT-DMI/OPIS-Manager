@@ -32,7 +32,7 @@ export class TeachingService {
     return this._graphService.computeMeansPerYear(teachingScheduleByYear);
   }
 
-  public getTeachingGraph() {
+  getTeachingGraph() {
     return rxResource({
       params: this.selectedTeaching,
       stream: ({ params }) => {

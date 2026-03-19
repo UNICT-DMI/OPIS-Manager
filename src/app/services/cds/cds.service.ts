@@ -63,7 +63,7 @@ export class CdsService {
     );
   }
 
-  public getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
+  readonly getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
     params: this.cdsSelected,
     stream: ({ params }) => {
       if (!params?.id || !params?.unict_id) {
@@ -77,7 +77,7 @@ export class CdsService {
     },
   });
 
-  public updateCDS(cds: CDS, token: string): Observable<unknown> {
+  updateCDS(cds: CDS, token: string): Observable<unknown> {
     const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);
     url.searchParams.set('scostamento_numerosita', String(cds.scostamento_numerosita));
     url.searchParams.set('scostamento_media', String(cds.scostamento_media));
