@@ -56,9 +56,9 @@ export class CdsService {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
-      map((rawCoarse) => {
-        if (!rawCoarse?.length) throw new Error('Schede OPIS non trovate');
-        return this.computeCdsMeans(rawCoarse);
+      map((rawCourse) => {
+        if (!rawCourse?.length) throw new Error('Schede OPIS non trovate');
+        return this.computeCdsMeans(rawCourse);
       }),
     );
   }
@@ -72,7 +72,7 @@ export class CdsService {
 
       return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
         delay(DELAY_API_MS),
-        map(([teachings, coarse]) => ({ teachings, coarse })),
+        map(([teachings, courses]) => ({ teachings, courses })),
       );
     },
   });
