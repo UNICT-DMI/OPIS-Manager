@@ -14,7 +14,6 @@ import { Loader } from '@shared-ui/loader/loader';
 // ─── Mock componenti ──────────────────────────────────────────────────────────
 @Component({
   selector: 'opis-graph',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,7 +21,6 @@ class MockGraph {}
 
 @Component({
   selector: 'opis-select',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,7 +28,6 @@ class MockSelect {}
 
 @Component({
   selector: 'opis-icon',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,7 +35,6 @@ class MockIcon {}
 
 @Component({
   selector: 'opis-loader',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

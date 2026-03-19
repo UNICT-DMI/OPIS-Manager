@@ -8,7 +8,6 @@ import { SelectComponent } from './select';
 // ─── Mock ─────────────────────────────────────────────────────────────────────
 @Component({
   selector: 'opis-icon',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -17,7 +16,6 @@ class MockIconComponent {}
 @Component({
   selector: 'opis-host',
   imports: [SelectComponent],
-  standalone: true,
   template: `
     <opis-select
       [options]="options()"
