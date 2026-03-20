@@ -21,9 +21,9 @@ export class QuestionService {
     catchError(() => throwError(() => new Error('Recupero dei pesi delle domande fallito'))),
   );
 
-  public questionWeights: Question[];
+  questionWeights: Question[];
 
-  public loadQuestionsWeights(): Observable<Question[]> {
+  loadQuestionsWeights(): Observable<Question[]> {
     return this._questionWeights$;
   }
 

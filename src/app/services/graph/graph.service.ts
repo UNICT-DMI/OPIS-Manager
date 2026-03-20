@@ -1,83 +1,63 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { Means, MeansPerYear } from '@c_types/means-graph.type';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
-import { GraphView } from '@interfaces/graph-config.interface';
+import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { typedKeys } from '@utils/object-helpers.utils';
-import { mean, round } from '@utils/statistics.utils';
+import { mean, round } from '@utils/statistics.utils/statistics.utils';
+import { CHART_BTNS } from '@values/selection-graph';
 import { AcademicYear } from '@values/years';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
 
-  public formatCDSGraph(dataFromResp: MeansPerYear): GraphView {
-    const labels: AcademicYear[] = [];
-    const v1: number[] = [];
-    const v2: number[] = [];
-    const v3: number[] = [];
+  readonly graphKeySelected = signal<GraphSelectionType>('cds_general');
+  readonly graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
 
-    for (const year of typedKeys(dataFromResp)) {
-      const [means] = dataFromResp[year];
-
-      const isYearAlredyIn = labels.some((yearLabel) => yearLabel === year);
-      if (!isYearAlredyIn) labels.push(year);
-
-      v1.push(means[0]);
-      v2.push(means[1]);
-      v3.push(means[2]);
-    }
-
-    return {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'V1', data: [...v1] },
-          { label: 'V2', data: [...v2] },
-          { label: 'V3', data: [...v3] },
-        ],
-      },
-    };
-  }
-
-  public applyWeights(scheda: SchedaOpis): number[] {
+  private applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
     const { totale_schede, domande: questions } = scheda;
 
-    let d = 0;
+    if (totale_schede < 5) return [0, 0, 0];
+
     const V: Record<OpisGroupType, number> = {
       [OpisGroup.Group1]: 0,
       [OpisGroup.Group2]: 0,
       [OpisGroup.Group3]: 0,
     };
 
-    if (totale_schede >= 5) {
-      for (let j = 0; j < questions.length; j++) {
-        const singleQuestion = questions[j];
+    for (let j = 0; j < questions.length; j++) {
+      const singleQuestion = questions[j];
 
-        d = 0.0;
-        d += singleQuestion[0] * AnswerWeights.DefinitelyNo;
-        d += singleQuestion[1] * AnswerWeights.MoreNoThanYes;
-        d += singleQuestion[2] * AnswerWeights.MoreYesThanNo;
-        d += singleQuestion[3] * AnswerWeights.DefinitelyYes;
+      let d = 0;
+      d += singleQuestion[0] * AnswerWeights.DefinitelyNo;
+      d += singleQuestion[1] * AnswerWeights.MoreNoThanYes;
+      d += singleQuestion[2] * AnswerWeights.MoreYesThanNo;
+      d += singleQuestion[3] * AnswerWeights.DefinitelyYes;
 
-        const domanda = questionsWeights.find((question) => question.id === j + 1);
-        if (!domanda) continue;
+      const domanda = questionsWeights.find((question) => question.id === j + 1);
+      if (!domanda) continue;
 
-        const { gruppo, peso_standard } = domanda;
-        if (Object.prototype.hasOwnProperty.call(V, gruppo)) {
-          V[gruppo] += (d / totale_schede) * peso_standard;
-        }
+      const { gruppo, peso_standard } = domanda;
+      if (Object.prototype.hasOwnProperty.call(V, gruppo)) {
+        V[gruppo] += (d / totale_schede) * peso_standard;
       }
     }
 
     return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
-  public elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
+  /**
+   * Computes V1/V2/V3 scores for a set of OPIS schedules.
+   * Returns both the aggregate means and the per-schedule values.
+   */
+  private elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];
@@ -91,5 +71,40 @@ export class GraphService {
 
     const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
     return [means, [v1, v2, v3]];
+  }
+
+  /**
+   * Returns the currently active graph button based on graphKeySelected.
+   * Updates the active flag across all buttons reactively.
+   */
+  readonly manageGraphSelection = rxResource<GraphSelectionBtn, GraphSelectionType>({
+    params: this.graphKeySelected,
+    stream: ({ params: graphSelected }) => {
+      const currentBtns = structuredClone(this.graphBtns());
+      const graph = currentBtns.find((btn) => btn.value === graphSelected) ?? currentBtns[0];
+
+      for (const graphStored of currentBtns) {
+        graphStored.active = graphStored.value === graph.value;
+      }
+
+      this.graphBtns.set(currentBtns);
+      return of(graph);
+    },
+  });
+
+  /**
+   * Computes V1/V2/V3 means for each academic year from a pre-grouped record of OPIS schedules.
+   * Delegates the formula elaboration to `elaborateFormulaFor` for each year's set of schedules.
+   */
+  computeMeansPerYear(schedeByYear: Record<AcademicYear, SchedaOpis[]>): MeansPerYear {
+    const meansPerYear = {} as MeansPerYear;
+
+    for (const year of typedKeys(schedeByYear)) {
+      const allSchedules = schedeByYear[year];
+
+      meansPerYear[year] = this.elaborateFormulaFor(allSchedules);
+    }
+
+    return meansPerYear;
   }
 }

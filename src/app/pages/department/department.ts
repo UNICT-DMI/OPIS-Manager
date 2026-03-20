@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
-  EffectRef,
   inject,
   OnDestroy,
   OnInit,
@@ -14,16 +12,20 @@ import { DepartmentsService } from '@services/departments/departments.service';
 import { RouterLink } from '@angular/router';
 import { CdsService } from '@services/cds/cds.service';
 import { CDS } from '@interfaces/cds.interface';
-import { NO_CHOICE_CDS } from '@values/no-choice-cds';
+import { NO_CHOICE_CDS, NO_SELECTION_CDS_ID } from '@values/no-choice-cds';
 import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 import { QuestionService } from '@services/questions/questions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { GraphService } from '@services/graph/graph.service';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
+import { Disclaimers } from '@cards/disclaimer/disclaimers';
+import { OpisGroup_Disclaimers } from '@values/disclaimers.value';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection],
+  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection, Disclaimers],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,18 +34,22 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _departmentService = inject(DepartmentsService);
   private readonly _cdsService = inject(CdsService);
   private readonly _questionService = inject(QuestionService);
+  private readonly _graphService = inject(GraphService);
 
   private readonly departmentData = signal<Department | null>(null);
 
   protected readonly NO_CHOICE_VALUE = NO_CHOICE_CDS;
+  protected readonly GroupsDisclaimers = OpisGroup_Disclaimers;
 
-  protected isCdsSelected = false;
+  protected readonly isCdsSelected = computed<boolean>(() => this.cds().id !== NO_SELECTION_CDS_ID);
   protected readonly department = computed(() => this.departmentData() ?? null);
   protected readonly cds = computed(() => this._cdsService.cdsSelected() ?? this.NO_CHOICE_VALUE);
   protected cdsList = this._departmentService.getCdsDepartment(this.departmentData);
 
+  protected readonly graphBtns = computed(this._graphService.graphBtns);
+  protected readonly isLoading = this._cdsService.isLoading;
+
   constructor() {
-    this.manageListVisibility();
     this.retrieveQuestions();
   }
 
@@ -75,11 +81,15 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
     this.departmentData.set(correctDepFormat);
   }
 
-  private manageListVisibility(): EffectRef {
-    return effect(() => (this.isCdsSelected = this.cds().id !== this.NO_CHOICE_VALUE.id));
+  protected selectCds(newCds: CDS): void {
+    if (newCds.id === NO_SELECTION_CDS_ID) {
+      this.selectGraphType('cds_general');
+    }
+
+    this._cdsService.cdsSelected.set(newCds);
   }
 
-  protected selectCds(newCds: CDS): void {
-    this._cdsService.cdsSelected.set(newCds);
+  protected selectGraphType(newGraph: GraphSelectionType): void {
+    this._graphService.graphKeySelected.set(newGraph);
   }
 }

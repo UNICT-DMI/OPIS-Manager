@@ -1,16 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable, ResourceRef, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { MeansPerYear } from '@c_types/means-graph.type';
 import { env } from '@env';
 import { AllCdsInfoResp, CDS } from '@interfaces/cds.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
+import { GraphMapper } from '@mappers/graph.mapper';
 import { GraphService } from '@services/graph/graph.service';
-import { typedKeys } from '@utils/object-helpers.utils';
 import { DELAY_API_MS } from '@values/delay-api';
-import { AcademicYear } from '@values/years';
-import { catchError, delay, forkJoin, map, Observable, throwError } from 'rxjs';
+import { delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
@@ -19,51 +18,36 @@ export class CdsService {
   private readonly _graphService = inject(GraphService);
 
   readonly cdsSelected = signal<CDS | null>(null);
+  readonly isLoading = computed(
+    () => this.getInfoCds.isLoading() || this._graphService.manageGraphSelection.isLoading(),
+  );
 
+  /**
+   * Extracts valid SchedaOpis from a CDS list.
+   * Each CDS in the /coarse response represents one academic year,
+   * and each teaching has a single schedeopis (or null) for that year.
+   */
   private extractValidSchedeOpis(cdsList: CDS[]): SchedaOpis[] {
     return cdsList
       .flatMap((cds) => cds.insegnamenti)
-      .filter((insegnamento) => insegnamento.schedeopis != null)
-      .flatMap((insegnamento) => insegnamento.schedeopis)
-      .filter((schedaopis) => schedaopis.domande != null);
+      .map((insegnamento) => insegnamento.schedeopis)
+      .filter((scheda): scheda is SchedaOpis => scheda?.domande != null);
   }
 
-  private groupByYears(schede: SchedaOpis[]): Record<AcademicYear, SchedaOpis[]> {
-    return schede.reduce(
-      (acc, scheda) => {
-        const year = scheda.anno_accademico as AcademicYear;
-        if (!acc[year]) acc[year] = [];
-        acc[year].push(scheda);
-        return acc;
-      },
-      {} as Record<AcademicYear, SchedaOpis[]>,
-    );
-  }
+  private computeCdsMeans(cdsList: CDS[]): MeansPerYear {
+    const cdsSchede = this.extractValidSchedeOpis(cdsList);
+    const schedeByYears = GraphMapper.groupByYear(cdsSchede, (scheda) => scheda);
 
-  private formatAllYearsCdsStats(resp: CDS[]): MeansPerYear {
-    const cdsSchede = this.extractValidSchedeOpis(resp);
-    const schedeByYears = this.groupByYears(cdsSchede);
-
-    const vCds = {} as MeansPerYear;
-
-    for (const year of typedKeys(schedeByYears)) {
-      const allSchede = schedeByYears[year];
-
-      vCds[year] = this._graphService.elaborateFormulaFor(allSchede);
-    }
-
-    return vCds;
+    return this._graphService.computeMeansPerYear(schedeByYears);
   }
 
   private teachingCdsApi(cds: number): Observable<Teaching[]> {
     const url = `${this.BASE_URL}/with-id/${cds}/insegnamenti`;
 
     return this._http.get<Teaching[]>(url).pipe(
-      map((teaching) => {
-        if (!teaching?.length) {
-          throw new Error('Nessun insegnamento trovato');
-        }
-        return teaching;
+      map((teachings) => {
+        if (!teachings?.length) throw new Error('Nessun insegnamento trovato');
+        return teachings;
       }),
     );
   }
@@ -72,55 +56,34 @@ export class CdsService {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
-      map((coarse) => {
-        if (!coarse) throw new Error('Schede OPIS non trovate');
-        return this.formatAllYearsCdsStats(coarse);
+      map((rawCourse) => {
+        if (!rawCourse?.length) throw new Error('Schede OPIS non trovate');
+        return this.computeCdsMeans(rawCourse);
       }),
     );
   }
 
-  public getInfoCds(): ResourceRef<AllCdsInfoResp | undefined> {
-    return rxResource({
-      params: () => this.cdsSelected(),
-      stream: ({ params }) => {
-        if (!params?.id || !params?.unict_id) {
-          return throwError(() => new Error('Id or Unict_id missing!'));
-        }
+  readonly getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
+    params: this.cdsSelected,
+    stream: ({ params }) => {
+      if (!params?.id || !params?.unict_id) {
+        return throwError(() => new Error('Id or Unict_id missing!'));
+      }
 
-        return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
-          delay(DELAY_API_MS),
-          map(([teachings, coarse]) => {
-            const respDTO: AllCdsInfoResp = {
-              teachings,
-              coarse,
-              graphs: {
-                cds_stats: this._graphService.formatCDSGraph(coarse),
-              },
-            };
-            return respDTO;
-          }),
-          catchError((err) => throwError(() => err)),
-        );
-      },
-    });
-  }
+      return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
+        delay(DELAY_API_MS),
+        map(([teachings, courses]) => ({ teachings, courses })),
+      );
+    },
+  });
 
-  // TODO ???
-  public updateCDS(cds: CDS, token: string) {
-    const httpOptions = {
-      headers: new HttpHeaders({ Authorization: token }),
-    };
+  updateCDS(cds: CDS, token: string): Observable<unknown> {
+    const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);
+    url.searchParams.set('scostamento_numerosita', String(cds.scostamento_numerosita));
+    url.searchParams.set('scostamento_media', String(cds.scostamento_media));
 
-    return this._http.put(
-      this.BASE_URL +
-        '/with-id/' +
-        cds.id +
-        '?scostamento_numerosita=' +
-        cds.scostamento_numerosita +
-        '&scostamento_media=' +
-        cds.scostamento_media,
-      {},
-      httpOptions,
-    );
+    const headers = new HttpHeaders({ Authorization: token });
+
+    return this._http.put(url.toString(), {}, { headers });
   }
 }

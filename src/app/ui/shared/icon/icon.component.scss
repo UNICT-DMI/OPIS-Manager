@@ -1,5 +1,7 @@
 .opis-icon {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 
   &.size-1-5rem {
@@ -33,9 +35,16 @@
   &.size-5rem {
     font-size: 5rem;
   }
+
+  &.size-responsive {
+    @media (max-width: 700px) {
+      &.size-2rem {
+        font-size: 1.7rem;
+      }
+    }
+  }
 }
 
-/* QUESTO È IL FIX */
 :host ::ng-deep svg {
   width: 1em;
   height: 1em;

@@ -2,6 +2,7 @@
 @use 'reset';
 @use 'palette';
 @use 'scrollbar';
+@use 'primitive';
 
 html,
 body {
@@ -23,5 +24,15 @@ body {
     opacity: 1;
     transform: translateY(0);
     transition: all 0.3s ease-in-out;
+  }
+}
+
+.wrapper {
+  display: block;
+  width: 90%;
+  margin: 0 auto;
+
+  @media (min-width: 1300px) {
+    width: 70% !important;
   }
 }

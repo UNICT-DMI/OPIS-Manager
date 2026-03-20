@@ -9,13 +9,50 @@
     }
 
     .error {
-      margin: 2rem auto;
-      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      width: 90%;
       color: var(--red-500);
 
       h2 {
         margin-top: 1rem;
+
+        @media (min-width: 1000px) {
+          width: 70%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+
+    .graph-description {
+      &_left {
+        p {
+          margin: 0.8rem 0 1.8rem;
+        }
+      }
+
+      &_right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (min-width: 1000px) {
+        display: flex;
+        justify-content: space-between;
+
+        &_left {
+          flex: 0 0 35%;
+        }
+
+        &_right,
+        opis-graph {
+          flex: 0 0 65%;
+        }
       }
     }
   }
