@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, ResourceRef, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { MeansPerYear } from '@c_types/means-graph.type';
 import { env } from '@env';
 import { Teaching } from '@interfaces/teaching.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
@@ -32,7 +33,7 @@ export class TeachingService {
     return this._graphService.computeMeansPerYear(teachingScheduleByYear);
   }
 
-  public getTeachingGraph() {
+  getTeachingGraph(): ResourceRef<MeansPerYear | null | undefined> {
     return rxResource({
       params: this.selectedTeaching,
       stream: ({ params }) => {

@@ -68,8 +68,8 @@ export class CdsSelectedSection {
   });
 
   protected readonly availableYears = computed<AcademicYear[]>(() => {
-    const coarse = this.infoCds.value()?.coarse;
-    return coarse ? (typedKeys(coarse) as AcademicYear[]) : [];
+    const courses = this.infoCds.value()?.courses;
+    return courses ? (typedKeys(courses) as AcademicYear[]) : [];
   });
 
   private readonly _graphResolvers = GraphResolvers(this.infoCds, this.infoTeaching);

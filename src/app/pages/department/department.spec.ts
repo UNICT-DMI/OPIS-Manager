@@ -16,7 +16,6 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 
 @Component({
   selector: 'opis-cds-selected-section',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -24,7 +23,6 @@ class MockCdsSelectedSection {}
 
 @Component({
   selector: 'opis-disclaimers',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

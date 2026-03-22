@@ -18,13 +18,13 @@ describe('GraphResolvers', () => {
   it('cds_general: should call GraphMapper.toCdsGeneralGraph when data is available', () => {
     vi.spyOn(GraphMapper, 'toCdsGeneralGraph').mockReturnValue({} as any);
 
-    const coarse = { '2023/2024': [] };
-    const infoCds = mockResource({ teachings: [], coarse });
+    const courses = { '2023/2024': [] };
+    const infoCds = mockResource({ teachings: [], courses });
     const resolvers = GraphResolvers(infoCds as any, mockResource() as any);
 
     resolvers.cds_general();
 
-    expect(GraphMapper.toCdsGeneralGraph).toHaveBeenCalledWith(coarse);
+    expect(GraphMapper.toCdsGeneralGraph).toHaveBeenCalledWith(courses);
   });
 
   it('teaching_cds: should return null when infoTeaching has no value', () => {
@@ -61,7 +61,7 @@ describe('SelectorResolvers', () => {
       { id: 1, nome: 'Matematica', canale: 'A - L' },
       { id: 2, nome: 'Fisica', canale: 'no' },
     ];
-    const infoCds = mockResource({ teachings, coarse: {} });
+    const infoCds = mockResource({ teachings, courses: {} });
     const resolvers = SelectorResolvers(infoCds as any, signal([]));
 
     expect(resolvers.teaching_cds()).toEqual([

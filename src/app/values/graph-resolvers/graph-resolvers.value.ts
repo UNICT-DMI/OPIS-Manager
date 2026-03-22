@@ -13,7 +13,7 @@ export function GraphResolvers(
   return {
     cds_general: () => {
       const data = infoCds.value();
-      return data ? GraphMapper.toCdsGeneralGraph(data.coarse) : null;
+      return data ? GraphMapper.toCdsGeneralGraph(data.courses) : null;
     },
     teaching_cds: () => {
       const data = infoTeaching.value();

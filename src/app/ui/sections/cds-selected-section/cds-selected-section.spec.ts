@@ -14,7 +14,6 @@ import { Loader } from '@shared-ui/loader/loader';
 // ─── Mock componenti ──────────────────────────────────────────────────────────
 @Component({
   selector: 'opis-graph',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,7 +21,6 @@ class MockGraph {}
 
 @Component({
   selector: 'opis-select',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,7 +28,6 @@ class MockSelect {}
 
 @Component({
   selector: 'opis-icon',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,7 +35,6 @@ class MockIcon {}
 
 @Component({
   selector: 'opis-loader',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -198,7 +194,7 @@ describe('CdsSelectedSection', () => {
   it('[CDS-SECTION]: should set selectedTeaching on selector change when graphKey is teaching_cds', () => {
     const teaching = { id: 42, nome: 'Matematica', canale: 'A' };
     mockGraphService.graphKeySelected.set('teaching_cds');
-    mockCdsService.getInfoCds.value.set({ teachings: [teaching], coarse: {} } as any);
+    mockCdsService.getInfoCds.value.set({ teachings: [teaching], courses: {} } as any);
 
     component['onSelectorChange']({ value: 42, label: 'Matematica (Canale A)' });
 
@@ -207,7 +203,7 @@ describe('CdsSelectedSection', () => {
 
   it('[CDS-SECTION]: should set selectedTeaching to null if teaching not found', () => {
     mockGraphService.graphKeySelected.set('teaching_cds');
-    mockCdsService.getInfoCds.value.set({ teachings: [], coarse: {} } as any);
+    mockCdsService.getInfoCds.value.set({ teachings: [], courses: {} } as any);
 
     component['onSelectorChange']({ value: 99, label: 'Non esiste' });
 

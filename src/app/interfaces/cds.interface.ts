@@ -17,5 +17,5 @@ export interface CDS {
 
 export interface AllCdsInfoResp {
   teachings: Teaching[];
-  coarse: MeansPerYear;
+  courses: MeansPerYear;
 }

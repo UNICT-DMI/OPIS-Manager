@@ -56,14 +56,14 @@ export class CdsService {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
-      map((rawCoarse) => {
-        if (!rawCoarse?.length) throw new Error('Schede OPIS non trovate');
-        return this.computeCdsMeans(rawCoarse);
+      map((rawCourse) => {
+        if (!rawCourse?.length) throw new Error('Schede OPIS non trovate');
+        return this.computeCdsMeans(rawCourse);
       }),
     );
   }
 
-  public getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
+  readonly getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
     params: this.cdsSelected,
     stream: ({ params }) => {
       if (!params?.id || !params?.unict_id) {
@@ -72,12 +72,12 @@ export class CdsService {
 
       return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
         delay(DELAY_API_MS),
-        map(([teachings, coarse]) => ({ teachings, coarse })),
+        map(([teachings, courses]) => ({ teachings, courses })),
       );
     },
   });
 
-  public updateCDS(cds: CDS, token: string): Observable<unknown> {
+  updateCDS(cds: CDS, token: string): Observable<unknown> {
     const url = new URL(`${this.BASE_URL}/with-id/${cds.id}`);
     url.searchParams.set('scostamento_numerosita', String(cds.scostamento_numerosita));
     url.searchParams.set('scostamento_media', String(cds.scostamento_media));
