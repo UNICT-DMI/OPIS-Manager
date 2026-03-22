@@ -35,3 +35,16 @@ export interface GitUserView {
   name?: string;
   github_profile?: string;
 }
+
+export interface FeatureCard {
+  icon: string;
+  title: string;
+  description: string;
+  link?: string;
+}
+
+export interface ContributorSocials {
+  email?: string;
+  linkedin?: string;
+  telegram?: string;
+}
