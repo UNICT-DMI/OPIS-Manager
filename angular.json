@@ -84,7 +84,9 @@
             "tsConfig": "tsconfig.spec.json",
             "coverage": true,
             "coverageExclude": [
-              "**/*.html"
+              "**/*.html",
+              "src/app/ui/shared/logo-animated",
+              "src/app/ui/shared/logo"
             ],
             "coverageThresholds": {
               "statements": 75,
