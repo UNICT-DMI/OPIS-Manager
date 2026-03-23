@@ -10,14 +10,14 @@
     @for (feature of features; track feature.title) {
       <div class="info-feature">
         <div class="info-feature__icon">
-          <opis-icon [iconName]="feature.icon" dimension="2rem" />
+          <opis-icon [iconName]="feature.icon" dimension="3-5rem" />
         </div>
         <h3 class="info-feature__title">{{ feature.title }}</h3>
         <p class="info-feature__description">{{ feature.description }}</p>
         @if (feature.link) {
           <a [href]="feature.link" target="_blank" rel="noopener noreferrer" class="info-feature__link">
-            Vai al repository
-            <opis-icon iconName="open_in_new" dimension="1-5rem" />
+            <span>Vai al repository</span>
+            <opis-icon iconName="open_in_new" dimension="1rem" />
           </a>
         }
       </div>
@@ -33,20 +33,22 @@
     <ul class="info-contributors__list">
       @for (contributor of contributors(); track contributor.nick) {
         <li class="contributor">
-          <img
-            class="contributor__avatar"
-            [src]="'https://github.com/' + contributor.nick + '.png?size=64'"
-            [alt]="contributor.nick"
-          />
-          <div class="contributor__info">
-            @if (contributor.name) {
-              <span class="contributor__name">{{ contributor.name }}</span>
-            }
-            <span class="contributor__nick">@{{ contributor.nick }}</span>
-            <span class="contributor__contributions">
-              <opis-icon iconName="commit" dimension="1-5rem" />
-              {{ contributor.contributions }}
-            </span>
+          <div class="contributor-left">
+            <img
+              class="contributor__avatar"
+              [src]="'https://github.com/' + contributor.nick + '.png?size=64'"
+              [alt]="contributor.nick"
+            />
+            <div class="contributor__info">
+              @if (contributor.name) {
+                <span class="contributor__name">{{ contributor.name }}</span>
+              }
+              <span class="contributor__nick">@{{ contributor.nick }}</span>
+              <span class="contributor__contributions">
+                <opis-icon iconName="commit" dimension="1-5rem" />
+                {{ contributor.contributions }}
+              </span>
+            </div>
           </div>
           <div class="contributor__links">
             <a
