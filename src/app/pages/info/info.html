@@ -1,1 +1,113 @@
-<p>info works!</p>
+<section id="info-page">
+  <div class="info-hero wrapper">
+    <p class="info-hero__subtitle">
+      Strumento di analisi delle opinioni degli studenti dell'Università di Catania
+    </p>
+  </div>
+
+  <div class="info-features wrapper">
+    @for (feature of features; track feature.title) {
+      <div class="info-feature">
+        <div class="info-feature__icon">
+          <opis-icon [iconName]="feature.icon" dimension="3-5rem" />
+        </div>
+        <h3 class="info-feature__title">{{ feature.title }}</h3>
+        <p class="info-feature__description">{{ feature.description }}</p>
+        @if (feature.link) {
+          <a
+            [href]="feature.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="info-feature__link"
+          >
+            <span>Vai al repository</span>
+            <opis-icon iconName="open_in_new" dimension="1rem" />
+          </a>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="info-contributors wrapper">
+    <h2 class="info-contributors__title">Contributors</h2>
+    <p class="info-contributors__subtitle">
+      Persone che hanno contribuito allo sviluppo del progetto
+    </p>
+
+    <ul class="info-contributors__list">
+      @for (contributor of contributors(); track contributor.nick) {
+        <li class="contributor">
+          <div class="contributor-left">
+            <img
+              class="contributor__avatar"
+              [src]="'https://github.com/' + contributor.nick + '.png?size=64'"
+              [alt]="contributor.nick"
+            />
+            <div class="contributor__info">
+              @if (contributor.name) {
+                <span class="contributor__name">{{ contributor.name }}</span>
+              }
+              <span class="contributor__nick">@{{ contributor.nick }}</span>
+              <span class="contributor__contributions">
+                <opis-icon iconName="commit" dimension="1-5rem" />
+                {{ contributor.contributions }}
+              </span>
+            </div>
+          </div>
+          <div class="contributor__links">
+            <a
+              [href]="contributor.github_profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contributor__link"
+              aria-label="GitHub profile"
+            >
+              <opis-icon iconName="open_in_new" dimension="1-5rem" />
+            </a>
+
+            <a
+              [href]="'mailto:' + contributor.email"
+              [class.no-link]="!contributor.email"
+              class="contributor__link"
+              aria-label="Email"
+            >
+              <opis-icon iconName="mail" dimension="1-5rem" />
+            </a>
+
+            <a
+              [href]="contributor.linkedin"
+              target="_blank"
+              [class.no-link]="!contributor.linkedin"
+              rel="noopener noreferrer"
+              class="contributor__link"
+              aria-label="LinkedIn"
+            >
+              <opis-icon iconName="business_center" dimension="1-5rem" />
+            </a>
+
+            <a
+              [href]="contributor.telegram"
+              [class.no-link]="!contributor.telegram"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contributor__link"
+              aria-label="Telegram"
+            >
+              <opis-icon iconName="send" dimension="1-5rem" />
+            </a>
+          </div>
+        </li>
+      } @empty {
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <li class="contributor contributor--skeleton">
+            <div class="skeleton skeleton--avatar"></div>
+            <div class="contributor__info">
+              <div class="skeleton skeleton--name"></div>
+              <div class="skeleton skeleton--nick"></div>
+            </div>
+          </li>
+        }
+      }
+    </ul>
+  </div>
+</section>

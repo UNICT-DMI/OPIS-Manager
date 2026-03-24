@@ -29,6 +29,10 @@
     }
 
     .graph-description {
+      display: flex;
+      flex-direction: column;
+      gap: 5rem;
+
       &_left {
         p {
           margin: 0.8rem 0 1.8rem;
@@ -42,8 +46,9 @@
       }
 
       @media (min-width: 1000px) {
-        display: flex;
         justify-content: space-between;
+        flex-direction: row;
+        gap: 1rem;
 
         &_left {
           flex: 0 0 35%;
