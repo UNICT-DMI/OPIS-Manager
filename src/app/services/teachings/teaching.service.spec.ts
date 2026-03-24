@@ -12,11 +12,6 @@ import { GraphService } from '@services/graph/graph.service';
 
 const BASE_URL = 'https://api-opis.unictdev.org/api/v2/insegnamento';
 
-const exampleTeachingWithoutDomande: Teaching = {
-  ...exampleTeaching,
-  schedeopis: { ...exampleTeaching.schedeopis, domande: null as any },
-};
-
 const mockMeansPerYear: MeansPerYear = {
   '2020/2021': [
     [1, 2],
