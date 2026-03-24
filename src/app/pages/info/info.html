@@ -1,5 +1,4 @@
 <section id="info-page">
-
   <div class="info-hero wrapper">
     <p class="info-hero__subtitle">
       Strumento di analisi delle opinioni degli studenti dell'Università di Catania
@@ -15,7 +14,12 @@
         <h3 class="info-feature__title">{{ feature.title }}</h3>
         <p class="info-feature__description">{{ feature.description }}</p>
         @if (feature.link) {
-          <a [href]="feature.link" target="_blank" rel="noopener noreferrer" class="info-feature__link">
+          <a
+            [href]="feature.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="info-feature__link"
+          >
             <span>Vai al repository</span>
             <opis-icon iconName="open_in_new" dimension="1rem" />
           </a>
@@ -91,11 +95,10 @@
             >
               <opis-icon iconName="send" dimension="1-5rem" />
             </a>
-
           </div>
         </li>
       } @empty {
-        @for (i of [1,2,3,4,5]; track i) {
+        @for (i of [1, 2, 3, 4, 5]; track i) {
           <li class="contributor contributor--skeleton">
             <div class="skeleton skeleton--avatar"></div>
             <div class="contributor__info">
@@ -107,5 +110,4 @@
       }
     </ul>
   </div>
-
 </section>

@@ -1,4 +1,4 @@
-import { Teaching } from "@interfaces/teaching.interface";
+import { Teaching } from '@interfaces/teaching.interface';
 
 export const exampleTeaching: Teaching = {
   id: 1,
@@ -32,7 +32,10 @@ export const exampleTeaching: Teaching = {
     ragg_uni: {},
     studio_gg: {},
     studio_tot: {},
-    domande: [[5, 4, 3], [4, 3, 5]],
+    domande: [
+      [5, 4, 3],
+      [4, 3, 5],
+    ],
     domande_nf: {},
     motivo_nf: {},
     sugg: {},

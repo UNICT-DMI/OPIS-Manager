@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Disclaimers } from "./disclaimers";
-import { ComponentRef } from "@angular/core";
-import { DisclaimerInfo } from "@interfaces/graph-config.interface";
-import { IconComponent } from "@shared-ui/icon/icon";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Disclaimers } from './disclaimers';
+import { ComponentRef } from '@angular/core';
+import { DisclaimerInfo } from '@interfaces/graph-config.interface';
+import { IconComponent } from '@shared-ui/icon/icon';
 import { exampleDisclaimer } from '@mocks/disclaimer-mock';
 
 describe('[DISCLAIMER]: init', () => {
@@ -10,10 +10,9 @@ describe('[DISCLAIMER]: init', () => {
   let component: Disclaimers;
   let componentRef: ComponentRef<Disclaimers>;
 
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Disclaimers, IconComponent]
+      imports: [Disclaimers, IconComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Disclaimers);
@@ -85,5 +84,4 @@ describe('[DISCLAIMER]: init', () => {
     expect(component['isOpen'](first)).toBe(false);
     expect(component['isOpen'](second)).toBe(true);
   });
-
 });

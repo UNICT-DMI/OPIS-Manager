@@ -1,5 +1,5 @@
-import { OpisGroup } from "@enums/opis-group.enum";
-import { Question } from "@interfaces/question.interface";
+import { OpisGroup } from '@enums/opis-group.enum';
+import { Question } from '@interfaces/question.interface';
 
 export const exampleQuestion: Question = {
   id: 1,

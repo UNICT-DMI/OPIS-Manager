@@ -1,22 +1,19 @@
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { QuestionService } from "./questions.service";
-import { TestBed } from "@angular/core/testing";
-import { provideHttpClient } from "@angular/common/http";
-import { exampleQuestion } from '@mocks/question-mock'
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { QuestionService } from './questions.service';
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { exampleQuestion } from '@mocks/question-mock';
 
 const BASE_URL = 'https://api-opis.unictdev.org/api/v2/domande';
 
 describe('[SERVICE] == Question', () => {
   let service: QuestionService;
   let httpMock: HttpTestingController;
-  
+
   beforeEach(() => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(QuestionService);
@@ -25,7 +22,7 @@ describe('[SERVICE] == Question', () => {
 
   afterEach(() => {
     httpMock.verify();
-  })
+  });
 
   it('[LOAD_QUESTIONS_WEIGHTS]: Returns questions and sets questionWeights', () => {
     const questions = [exampleQuestion];

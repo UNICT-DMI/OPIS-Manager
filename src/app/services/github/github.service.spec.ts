@@ -1,18 +1,11 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import { GitHubService } from './github.service';
 import { env } from '@env';
-import {
-  CacheEntry,
-  GithubUser,
-  GitUserView,
-} from '@interfaces/github.interface';
+import { CacheEntry, GithubUser, GitUserView } from '@interfaces/github.interface';
 import { CONTRIBUTOR_SOCIALS, REAL_NAMES } from '@values/contributors.value';
 
 const REPO = 'OPIS-Manager';
@@ -20,7 +13,7 @@ const API_URL = `${env.github_api_url}/${REPO}/contributors`;
 const CACHE_KEY = `contributors_${REPO}`;
 
 const makeUser = (login: string, contributions: number): GithubUser =>
-  ({ login, contributions, html_url: `https://github.com/${login}` } as GithubUser);
+  ({ login, contributions, html_url: `https://github.com/${login}` }) as GithubUser;
 
 const RAW_USERS: GithubUser[] = [
   makeUser('alice', 50),
@@ -64,7 +57,12 @@ describe('GitHubService', () => {
 
   it('[GET CONTRIBUTORS]: valid cache, return cached data without calling API', async () => {
     const cached: GitUserView[] = [
-      { nick: 'alice', name: 'Alice', contributions: 50, github_profile: 'https://github.com/alice' },
+      {
+        nick: 'alice',
+        name: 'Alice',
+        contributions: 50,
+        github_profile: 'https://github.com/alice',
+      },
     ];
     localStorage.setItem(CACHE_KEY, buildCache(cached, 1_000));
 
@@ -95,7 +93,7 @@ describe('GitHubService', () => {
     http.expectOne(API_URL).flush(RAW_USERS);
 
     const result = await promise;
-    expect(result.map(u => u.nick)).not.toContain('dependabot');
+    expect(result.map((u) => u.nick)).not.toContain('dependabot');
   });
 
   it('[GET CONTRIBUTORS]: sort by contributions descending', async () => {
@@ -111,7 +109,7 @@ describe('GitHubService', () => {
     http.expectOne(API_URL).flush(RAW_USERS);
 
     const result = await promise;
-    expect(result.find(u => u.nick === 'bob')?.name).toBe('bob');
+    expect(result.find((u) => u.nick === 'bob')?.name).toBe('bob');
   });
 
   it('[GET CONTRIBUTORS]: save result to localStorage', async () => {

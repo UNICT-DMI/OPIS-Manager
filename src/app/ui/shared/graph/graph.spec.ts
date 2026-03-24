@@ -19,7 +19,6 @@ describe('Graph', () => {
   let component: Graph;
 
   beforeEach(async () => {
-
     await TestBed.configureTestingModule({
       imports: [Graph],
       providers: [provideZonelessChangeDetection()],
@@ -78,7 +77,7 @@ describe('Graph', () => {
   });
 
   it('[IS_OPIS_GROUP]: V1, V2, V3 are valid OpisGroupType', () => {
-    [OpisGroup.Group1, OpisGroup.Group2, OpisGroup.Group3].forEach(v =>
+    [OpisGroup.Group1, OpisGroup.Group2, OpisGroup.Group3].forEach((v) =>
       expect(component['isOpisGroup'](v)).toBe(true),
     );
   });

@@ -1,4 +1,4 @@
-import { SchedaOpis } from "@interfaces/opis-record.interface";
+import { SchedaOpis } from '@interfaces/opis-record.interface';
 
 export const exampleSchedaOpis: SchedaOpis = {
   id: 1,

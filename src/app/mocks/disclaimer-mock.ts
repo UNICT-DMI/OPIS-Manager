@@ -1,5 +1,5 @@
-import { DisclaimerType } from "@c_types/means-graph.type";
-import { DisclaimerInfo } from "@interfaces/graph-config.interface";
+import { DisclaimerType } from '@c_types/means-graph.type';
+import { DisclaimerInfo } from '@interfaces/graph-config.interface';
 
 export const exampleDisclaimer = (overrides: Partial<DisclaimerInfo> = {}): DisclaimerInfo => ({
   title: 'Test Title',

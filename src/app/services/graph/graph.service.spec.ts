@@ -8,7 +8,10 @@ import { exampleSchedaOpis } from '@mocks/scheda-mock';
 import { AcademicYear } from '@values/years';
 
 // ─── Mock SchedaOpis factory ──────────────────────────────────────────────────
-const mockScheda = (overrides: Partial<SchedaOpis> = {}): SchedaOpis => ({ ...exampleSchedaOpis, ...overrides});
+const mockScheda = (overrides: Partial<SchedaOpis> = {}): SchedaOpis => ({
+  ...exampleSchedaOpis,
+  ...overrides,
+});
 
 // ─── Mock QuestionService ─────────────────────────────────────────────────────
 const buildMockQuestionService = () => ({
@@ -28,10 +31,7 @@ describe('GraphService', () => {
     mockQuestionService = buildMockQuestionService();
 
     TestBed.configureTestingModule({
-      providers: [
-        GraphService,
-        { provide: QuestionService, useValue: mockQuestionService },
-      ],
+      providers: [GraphService, { provide: QuestionService, useValue: mockQuestionService }],
     });
 
     service = TestBed.inject(GraphService);
@@ -54,16 +54,16 @@ describe('GraphService', () => {
 
   // ── manageGraphSelection ──────────────────────────────────────────────────
   it('[GRAPH-SERVICE]: should set cds_general as active on init', async () => {
-    await new Promise(r => setTimeout(r, 0));
-    const activeBtns = service.graphBtns().filter(b => b.active);
+    await new Promise((r) => setTimeout(r, 0));
+    const activeBtns = service.graphBtns().filter((b) => b.active);
     expect(activeBtns.length).toBe(1);
     expect(activeBtns[0].value).toBe('cds_general');
   });
 
   it('[GRAPH-SERVICE]: should update active button when graphKeySelected changes', async () => {
     service.graphKeySelected.set('teaching_cds');
-    await new Promise(r => setTimeout(r, 0));
-    const activeBtns = service.graphBtns().filter(b => b.active);
+    await new Promise((r) => setTimeout(r, 0));
+    const activeBtns = service.graphBtns().filter((b) => b.active);
     expect(activeBtns.length).toBe(1);
     expect(activeBtns[0].value).toBe('teaching_cds');
   });
