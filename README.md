@@ -1,4 +1,5 @@
 # OPIS-Manager
+
 [![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
 This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
@@ -16,7 +17,11 @@ Before starting the UI, you must have the backend fully working on your machine.
 ### Application setup
 
 First of all, install the required dependencies with:
-`$ npm install`
+
+```bash
+$ npm install --legacy-peer-deps
+$ export NODE_OPTIONS=--openssl-legacy-provider
+`
 
 Install the last version of angular-cli to run the app locally with:
 `$ npm install -g @angular/cli`
@@ -24,10 +29,12 @@ Install the last version of angular-cli to run the app locally with:
 Configure the years and the API path, so copy src/assets/default.json into src/assets/config.json and configure the related years and API url, like:
 
 ```
+
 {
-  "apiUrl": "http://localhost:8000/api/",
-  "years": ["2013/2014", "2014/2015", "2016/2017", "2017/2018", "2018/2019"]
+"apiUrl": "http://localhost:8000/api/",
+"years": ["2013/2014", "2014/2015", "2016/2017", "2017/2018", "2018/2019"]
 }
+
 ```
 
 Finally can run the front-end application with `$ ng serve -o` then navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -62,3 +69,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Alessio Piazza
 - Diego Sinitò
 - Salvo Asero
+```
