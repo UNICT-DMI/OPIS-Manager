@@ -21,7 +21,7 @@ First of all, install the required dependencies with:
 ```bash
 $ npm install --legacy-peer-deps
 $ export NODE_OPTIONS=--openssl-legacy-provider
-`
+```
 
 Install the last version of angular-cli to run the app locally with:
 `$ npm install -g @angular/cli`
@@ -69,4 +69,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Alessio Piazza
 - Diego Sinitò
 - Salvo Asero
+
+```
+
 ```
