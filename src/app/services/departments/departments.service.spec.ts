@@ -6,12 +6,13 @@ import { Department } from '@interfaces/department.interface';
 import { exampleCDS } from '@mocks/cds-mock';
 import { exampleDepartment } from '@mocks/department-mock';
 import { DepartmentsService } from './departments.service';
+import { env } from '@env';
 import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
 
 vi.mock('@values/delay-api', () => ({ DELAY_API_MS: 0 }));
 
-const BASE_URL = 'https://api-opis.unictdev.org/api/v2/dipartimento';
+const BASE_URL = env.api_url + '/dipartimento';
 
 const tick = async (times = 2): Promise<void> => {
   for (let i = 0; i < times; i++) {
@@ -40,7 +41,7 @@ describe('DepartmentsService', () => {
     it.each([
       ['logoAlreadyAnimated', false],
       ['canStartUserFlow', false],
-      ['selectedYear', '2020/2021'],
+      ['selectedYear', '2024/2025'],
     ])('[SIGNAL]: %s has correct initial value', (key, expected) => {
       const signalFn = service[key as keyof DepartmentsService] as () => unknown;
       expect(signalFn()).toBe(expected);
@@ -52,7 +53,7 @@ describe('DepartmentsService', () => {
       const resource = TestBed.runInInjectionContext(() => service.getDepartmentByYear());
       await tick();
 
-      httpMock.expectOne(`${BASE_URL}?anno_accademico=2020/2021`).flush([exampleDepartment]);
+      httpMock.expectOne(`${BASE_URL}?anno_accademico=2024/2025`).flush([exampleDepartment]);
 
       await vi.waitFor(async () => {
         TestBed.tick();
@@ -67,7 +68,7 @@ describe('DepartmentsService', () => {
       await tick();
 
       httpMock
-        .expectOne(`${BASE_URL}?anno_accademico=2020/2021`)
+        .expectOne(`${BASE_URL}?anno_accademico=2024/2025`)
         .flush([{ ...exampleDepartment, unict_id: 999 }]);
 
       await vi.waitFor(async () => {
@@ -81,7 +82,7 @@ describe('DepartmentsService', () => {
       const resource = TestBed.runInInjectionContext(() => service.getDepartmentByYear());
       await tick();
 
-      httpMock.expectOne(`${BASE_URL}?anno_accademico=2020/2021`).flush([]);
+      httpMock.expectOne(`${BASE_URL}?anno_accademico=2024/2025`).flush([]);
       await tick();
 
       service.selectedYear.set('2019/2020');

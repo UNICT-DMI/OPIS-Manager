@@ -1,0 +1,204 @@
+#formula-page {
+  padding-bottom: 4rem;
+}
+
+.formula-hero {
+  padding: 3rem 0 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 2.5rem;
+
+  &__title {
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1.35;
+    margin-bottom: 1rem;
+  }
+
+  &__subtitle {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+}
+
+.formula-section {
+  margin-bottom: 2.5rem;
+
+  &__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+}
+
+.formula-table-wrap {
+  overflow-x: auto;
+  background: var(--color-surface);
+}
+
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+
+  thead {
+    background: var(--gray-100);
+
+    th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+
+      &:last-child {
+        text-align: center;
+        width: 6rem;
+      }
+    }
+  }
+
+  tbody {
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  &--answers {
+    max-width: 520px;
+    margin: 0 auto;
+
+    tbody td {
+      &:first-child {
+        font-weight: 500;
+      }
+
+      &:nth-child(2),
+      &:last-child {
+        text-align: center;
+      }
+    }
+  }
+
+  &--questions {
+    tbody td {
+      vertical-align: top;
+
+      strong {
+        display: inline-block;
+        min-width: 1.5rem;
+        color: var(--color-primary);
+        margin-right: 0.35rem;
+      }
+    }
+  }
+
+  &__group {
+    width: 4rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-align: center !important;
+  }
+
+  &__weight {
+    text-align: center !important;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  &__spacer td {
+    padding: 0 !important;
+    height: 0.5rem;
+    background: var(--gray-100);
+    border-bottom: none !important;
+  }
+
+  &__dismissed {
+    color: var(--color-text-muted);
+
+    s {
+      color: var(--color-text-muted);
+    }
+
+    .formula-table__group {
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__legend {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+.formula-definition {
+  max-width: 820px;
+
+  p {
+    color: var(--color-text);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  &__recap {
+    text-align: center;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-top: 1.2rem;
+  }
+}
+
+.formula-math {
+  display: flex;
+  justify-content: center;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  background: var(--gray-100);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+
+  math {
+    font-size: 1.25rem;
+    color: var(--color-text);
+  }
+
+  &--big math {
+    font-size: 1.5rem;
+  }
+}
+
+.formula-loader {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.formula-error {
+  text-align: center;
+  color: var(--color-accent);
+  padding: 1.5rem;
+  background: var(--red-100);
+  border: 1px solid var(--red-300);
+  border-radius: 0.75rem;
+}
