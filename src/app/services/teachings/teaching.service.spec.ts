@@ -8,9 +8,10 @@ import { GraphMapper } from '@mappers/graph.mapper';
 import { AcademicYear } from '@values/years';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { provideHttpClient } from '@angular/common/http';
+import { env } from '@env';
 import { GraphService } from '@services/graph/graph.service';
 
-const BASE_URL = 'https://api-opis.unictdev.org/api/v2/insegnamento';
+const BASE_URL = env.api_url + '/insegnamento';
 
 const mockMeansPerYear: MeansPerYear = {
   '2020/2021': [

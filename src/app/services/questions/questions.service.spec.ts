@@ -2,9 +2,10 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { QuestionService } from './questions.service';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
+import { env } from '@env';
 import { exampleQuestion } from '@mocks/question-mock';
 
-const BASE_URL = 'https://api-opis.unictdev.org/api/v2/domande';
+const BASE_URL = env.api_url + '/domande';
 
 describe('[SERVICE] == Question', () => {
   let service: QuestionService;
