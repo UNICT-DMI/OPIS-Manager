@@ -101,7 +101,7 @@ export class AcademicYearComponent implements OnChanges {
   }
 
   public showAcademicYearChartForSelectedYear(): void {
-    if (this.selectedYear !== '--') {
+    if (this.selectedYear !== '--' && this.cdsSchede != null) {
       const teachingOfSelectedYear =
         this.cdsSchede.filter(cds => cds.anno_accademico === this.selectedYear)
         .flatMap(cds => cds.insegnamenti);
@@ -121,6 +121,10 @@ export class AcademicYearComponent implements OnChanges {
             return 1;
           }
       });
+
+      if (this.teachings.length === 0 || this.vCds[this.selectedYear] == null) {
+        return;
+      }
 
       const [, values] = this.graphService.elaborateFormula(this.teachings
         .map(insegnamento => ({ totale_schede: insegnamento.tot_schedeF, domande: insegnamento.domande } as SchedaOpis) ));
@@ -200,7 +204,7 @@ export class AcademicYearComponent implements OnChanges {
     const fitColorInsegnamenti = this.getColorTeachings(maxSchede, minSchede);
 
     const materie: string[] = this.teachings.map(a => a.nome); // labels chartjs
-    const docenti: string[] = this.teachings.map(a => a.docente); // tooltips/labels
+    const docenti: string[] = this.teachings.map(a => a.docente ?? ''); // tooltips/labels
     const materieComplete: string[] = this.teachings.map(a => a.nome_completo); // labels chartjs
 
     // chartjs stuff
