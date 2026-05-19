@@ -120,6 +120,7 @@ export class CdsSelectedSection {
   private resetTeachingGraph(): EffectRef {
     return effect(() => {
       const graphKey = this._graphService.graphKeySelected();
+      this.minHeight.set(0);
       if (graphKey !== 'teaching_cds') {
         this._teachingService.selectedTeaching.set(null);
       }
