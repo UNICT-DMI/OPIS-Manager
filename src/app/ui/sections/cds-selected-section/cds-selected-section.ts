@@ -48,6 +48,10 @@ export class CdsSelectedSection {
   protected readonly infoCds = this._cdsService.getInfoCds;
   protected readonly graphSelected = this._graphService.manageGraphSelection;
   protected readonly infoTeaching = this._teachingService.getTeachingGraph();
+  protected readonly selectedYear = this._graphService.selectedYear;
+  protected readonly selectedVIndex = this._graphService.selectedVIndex;
+  protected readonly teachingSearch = this._graphService.teachingSearch;
+  protected readonly vIndexes: (0 | 1 | 2)[] = [0, 1, 2];
 
   protected readonly isAllInfoLoading = this._cdsService.isLoading;
 
@@ -72,7 +76,11 @@ export class CdsSelectedSection {
     return courses ? (typedKeys(courses) as AcademicYear[]) : [];
   });
 
-  private readonly _graphResolvers = GraphResolvers(this.infoCds, this.infoTeaching);
+  private readonly _graphResolvers = GraphResolvers(
+    this.infoCds,
+    this.infoTeaching,
+    this._graphService,
+  );
   protected readonly activeGraph = computed<GraphView | null>(() => {
     const graphKey = this._graphService.graphKeySelected();
     return this._graphResolvers[graphKey]?.() || null;
@@ -88,7 +96,6 @@ export class CdsSelectedSection {
     return this._selectorResolvers[graph.value]?.() ?? null;
   });
 
-  // TODO: enhancement
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();
 
@@ -96,15 +103,30 @@ export class CdsSelectedSection {
       const teaching = this.infoCds.value()?.teachings.find((t) => t.id === option.value) ?? null;
       this._teachingService.selectedTeaching.set(teaching);
     }
-    // if (graphKey === 'cds_year') {
-    //   this._graphService.selectedYear.set(option.value as AcademicYear);
-    // }
+    if (graphKey === 'cds_year') {
+      this._graphService.selectedYear.set(option.value as AcademicYear);
+    }
+  }
+
+  protected selectVIndex(index: 0 | 1 | 2): void {
+    this._graphService.selectedVIndex.set(index);
+  }
+
+  protected onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this._graphService.teachingSearch.set(value);
   }
 
   private resetTeachingGraph(): EffectRef {
     return effect(() => {
-      if (this._graphService.graphKeySelected() !== 'teaching_cds') {
+      const graphKey = this._graphService.graphKeySelected();
+      if (graphKey !== 'teaching_cds') {
         this._teachingService.selectedTeaching.set(null);
+      }
+      if (graphKey !== 'cds_year') {
+        this._graphService.selectedYear.set(null);
+        this._graphService.selectedVIndex.set(0);
+        this._graphService.teachingSearch.set('');
       }
     });
   }

@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, OnInit } from '@angular/core';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { GraphView } from '@interfaces/graph-config.interface';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import { BaseChartDirective } from 'ng2-charts';
+
+Chart.register(annotationPlugin);
 
 @Component({
   selector: 'opis-graph',
@@ -12,7 +15,18 @@ import { BaseChartDirective } from 'ng2-charts';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Graph implements OnInit {
-  protected readonly chartOptions = this.setInitOptions();
+  private readonly _baseOptions = this.setInitOptions();
+  protected readonly chartOptions = computed<ChartConfiguration['options']>(() => {
+    const override = this.dataChart()?.options;
+    if (!override) return this._baseOptions;
+
+    return {
+      ...this._baseOptions,
+      ...override,
+      scales: { ...this._baseOptions?.scales, ...override.scales },
+      plugins: { ...this._baseOptions?.plugins, ...override.plugins },
+    };
+  });
 
   readonly dataChart = input.required<GraphView>();
   protected coloredDataChart: ChartData;

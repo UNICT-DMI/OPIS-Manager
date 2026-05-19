@@ -1,9 +1,9 @@
 @if (dataChart()) {
-  <section id="graph">
+  <section id="graph" [style.height.px]="dataChart().heightPx ?? null">
     <canvas
       baseChart
       [data]="dataChart().data"
-      [options]="chartOptions"
+      [options]="chartOptions()"
       [type]="dataChart().type"
     ></canvas>
   </section>

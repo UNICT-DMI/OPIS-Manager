@@ -1,10 +1,12 @@
 import { DisclaimerType } from '@c_types/means-graph.type';
 import { GraphSelectionType } from '@enums/chart-typology.enum';
-import { ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 export interface GraphView {
   type: ChartType;
   data: ChartData;
+  options?: ChartConfiguration['options'];
+  heightPx?: number;
 }
 
 export interface GraphSelectionBtn {

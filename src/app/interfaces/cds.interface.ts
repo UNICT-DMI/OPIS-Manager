@@ -1,5 +1,6 @@
 import { Teaching } from './teaching.interface';
 import { MeansPerYear } from '@c_types/means-graph.type';
+import { AcademicYear } from '@values/years';
 
 export interface CDS {
   id: number;
@@ -18,4 +19,5 @@ export interface CDS {
 export interface AllCdsInfoResp {
   teachings: Teaching[];
   courses: MeansPerYear;
+  teachingsByYear: Partial<Record<AcademicYear, Teaching[]>>;
 }

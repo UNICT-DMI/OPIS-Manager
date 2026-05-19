@@ -22,6 +22,40 @@
           }
         </div>
 
+        @if (graph?.value === 'cds_year' && selectedYear() !== null) {
+          <div class="academic-year-controls">
+            <div class="v-switcher btn-nav">
+              @for (i of vIndexes; track i) {
+                <button
+                  type="button"
+                  class="btn-nav-item"
+                  [class.active]="selectedVIndex() === i"
+                  (click)="selectVIndex(i)"
+                >
+                  <span class="btn-nav-item-text">V{{ i + 1 }}</span>
+                </button>
+              }
+            </div>
+
+            <label class="teaching-search">
+              <opis-icon iconName="search" />
+              <input
+                type="text"
+                placeholder="Cerca insegnamento..."
+                [value]="teachingSearch()"
+                (input)="onSearchInput($event)"
+              />
+            </label>
+          </div>
+
+          <div class="color-legend">
+            <span>Colore per numerosità di schede</span>
+            <strong>MIN</strong>
+            <span class="color-bar"></span>
+            <strong>MAX</strong>
+          </div>
+        }
+
         @if (activeGraph()) {
           <opis-graph [dataChart]="activeGraph()!" />
         } @else {

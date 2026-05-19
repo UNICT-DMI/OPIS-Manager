@@ -19,6 +19,9 @@ export class GraphService {
 
   readonly graphKeySelected = signal<GraphSelectionType>('cds_general');
   readonly graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
+  readonly selectedYear = signal<AcademicYear | null>(null);
+  readonly selectedVIndex = signal<0 | 1 | 2>(0);
+  readonly teachingSearch = signal<string>('');
 
   private applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;
@@ -57,7 +60,7 @@ export class GraphService {
    * Computes V1/V2/V3 scores for a set of OPIS schedules.
    * Returns both the aggregate means and the per-schedule values.
    */
-  private elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
+  elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];

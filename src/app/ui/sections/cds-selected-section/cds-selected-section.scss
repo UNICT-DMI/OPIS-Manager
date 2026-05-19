@@ -63,5 +63,54 @@
         justify-content: center;
       }
     }
+
+    .academic-year-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.5rem 0;
+
+      .v-switcher {
+        display: inline-flex;
+        gap: 0.25rem;
+      }
+
+      .teaching-search {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.6rem;
+        border: 1px solid var(--gray-300, #d0d0d0);
+        border-radius: 0.4rem;
+        flex: 1 1 220px;
+        min-width: 0;
+
+        input {
+          border: none;
+          outline: none;
+          background: transparent;
+          font-size: 0.95rem;
+          width: 100%;
+          min-width: 0;
+        }
+      }
+    }
+
+    .color-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.25rem 0 0.75rem;
+      font-size: 0.9rem;
+
+      .color-bar {
+        display: inline-block;
+        width: 200px;
+        height: 18px;
+        background: linear-gradient(to right, rgb(255, 200, 45), rgb(0, 121, 107));
+        border-radius: 0.25rem;
+      }
+    }
   }
 }

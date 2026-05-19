@@ -9,6 +9,7 @@ import { Teaching } from '@interfaces/teaching.interface';
 import { GraphMapper } from '@mappers/graph.mapper';
 import { GraphService } from '@services/graph/graph.service';
 import { DELAY_API_MS } from '@values/delay-api';
+import { AcademicYear } from '@values/years';
 import { delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -52,15 +53,28 @@ export class CdsService {
     );
   }
 
-  private cdsStatsApi(unictCdsId: number): Observable<MeansPerYear> {
+  private cdsStatsApi(
+    unictCdsId: number,
+  ): Observable<{ courses: MeansPerYear; rawCds: CDS[] }> {
     const url = `${this.BASE_URL}/coarse/${unictCdsId}/schedeopis`;
 
     return this._http.get<CDS[]>(url).pipe(
       map((rawCourse) => {
         if (!rawCourse?.length) throw new Error('Schede OPIS non trovate');
-        return this.computeCdsMeans(rawCourse);
+        return {
+          courses: this.computeCdsMeans(rawCourse),
+          rawCds: rawCourse,
+        };
       }),
     );
+  }
+
+  private buildTeachingsByYear(cdsList: CDS[]): Partial<Record<AcademicYear, Teaching[]>> {
+    const result: Partial<Record<AcademicYear, Teaching[]>> = {};
+    for (const cds of cdsList) {
+      result[cds.anno_accademico as AcademicYear] = cds.insegnamenti ?? [];
+    }
+    return result;
   }
 
   readonly getInfoCds = rxResource<AllCdsInfoResp, CDS | null>({
@@ -72,7 +86,11 @@ export class CdsService {
 
       return forkJoin([this.teachingCdsApi(params.id), this.cdsStatsApi(params.unict_id)]).pipe(
         delay(DELAY_API_MS),
-        map(([teachings, courses]) => ({ teachings, courses })),
+        map(([teachings, stats]) => ({
+          teachings,
+          courses: stats.courses,
+          teachingsByYear: this.buildTeachingsByYear(stats.rawCds),
+        })),
       );
     },
   });
