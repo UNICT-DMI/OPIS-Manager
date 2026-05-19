@@ -36,6 +36,9 @@ export function SelectorResolvers(
         value: t.id,
         label: t.canale === 'no' ? t.nome : `${t.nome} (${t.canale})`,
       })) ?? [],
-    cds_year: () => availableYears().map((y) => ({ value: y, label: y })),
+    cds_year: () =>
+      availableYears()
+        .map((y) => ({ value: y, label: y }))
+        .reverse(),
   };
 }
