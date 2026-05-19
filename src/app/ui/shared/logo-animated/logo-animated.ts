@@ -20,7 +20,7 @@ import { gsap } from 'gsap';
 export class LogoAnimated implements AfterViewInit {
   private readonly _departmentService = inject(DepartmentsService);
 
-  private readonly TOTAL_DURATION = 3;
+  private readonly TOTAL_DURATION = 1;
   private readonly PHASES_PERCENTAGE = {
     arrows: 0.2,
     bars: 0.27,

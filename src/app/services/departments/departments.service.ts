@@ -7,7 +7,7 @@ import { Department } from '@interfaces/department.interface';
 import { DELAY_API_MS } from '@values/delay-api';
 import { UNICT_ID_DEPARTMENT_MAP } from '@values/deps-id-unict';
 import { DEPARTMENT_ICONS } from '@values/icons-deps';
-import { AcademicYear } from '@values/years';
+import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 import { delay, map, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +17,7 @@ export class DepartmentsService {
 
   readonly logoAlreadyAnimated = signal(false);
   readonly canStartUserFlow = signal(false);
-  readonly selectedYear = signal<AcademicYear>('2024/2025');
+  readonly selectedYear = signal<AcademicYear>(ACADEMIC_YEARS[ACADEMIC_YEARS.length - 1]);
 
   private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;

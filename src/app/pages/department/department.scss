@@ -10,6 +10,22 @@
       align-items: center;
       justify-content: space-between;
 
+      h2 {
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+          content: attr(data-icon);
+          font-family: 'Material Symbols Outlined';
+          font-size: 3.5em;
+          line-height: 1;
+          color: var(--blue-100);
+          pointer-events: none;
+        }
+      }
+
       a {
         margin-bottom: 1rem;
         display: inline-flex;
@@ -41,46 +57,6 @@
           border-radius: 0.7rem;
           padding-right: 1.5rem;
         }
-      }
-    }
-
-    &-bottom {
-      border-left: 2px var(--blue-500) solid;
-      border-right: 2px var(--blue-500) solid;
-      padding: 2rem 0.7rem;
-      margin-top: 0.5rem;
-      margin-bottom: 1.5rem;
-      width: 90%;
-
-      &::before {
-        content: attr(data-icon);
-        font-family: 'Material Symbols Outlined';
-        font-size: 140px;
-        color: var(--blue-100);
-        position: absolute;
-        top: 15%;
-        left: 10%;
-        z-index: 0;
-        pointer-events: none;
-        white-space: nowrap;
-
-        @media (min-width: 1300px) {
-          left: 25%;
-          top: 20%;
-        }
-      }
-
-      > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      h2 {
-        text-align: center;
-      }
-
-      @media (min-width: 1300px) {
-        padding: 3rem 1rem;
       }
     }
   }
@@ -130,39 +106,82 @@
 
       &-list {
         display: flex;
-        flex-direction: column;
-        gap: 0.7rem;
-        align-items: start;
+        flex-flow: row wrap;
         justify-content: start;
-        padding-left: 0;
+        gap: 1.3rem;
         width: 100%;
 
-        @media (min-width: 1200px) {
-          width: 40%;
-        }
-
-        @media (min-width: 1500px) {
-          width: 38%;
-        }
-
-        li {
+        .cds-card {
           width: 100%;
+
+          @media (min-width: 700px) {
+            flex: 0 0 48%;
+            max-width: 48%;
+          }
+
+          @media (min-width: 1300px) {
+            flex: 0 0 32%;
+            max-width: 32%;
+          }
 
           button {
             width: 100%;
-            display: inline-flex;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
             text-align: start;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px var(--gray-200) solid;
+            padding: 0;
+            background: none;
+            border: none;
 
-            strong {
-              display: block;
-              flex: 0 0 25%;
+            .wrappers {
+              &-icon {
+                background-color: var(--color-secondary);
+                color: white;
+                border-radius: 0.3rem;
+                padding: 1rem;
+                font-weight: 600;
+                white-space: nowrap;
+                width: 125px;
+                flex: 0 0 125px;
+                text-align: center;
+                box-sizing: border-box;
+              }
+
+              &-text {
+                display: inline-flex;
+                align-items: center;
+                justify-content: space-between;
+                min-width: 0;
+
+                border-top: 1px var(--color-secondary) solid;
+                border-right: 1px var(--color-secondary) solid;
+                border-bottom: 1px var(--color-secondary) solid;
+                border-top-right-radius: 1.2rem;
+                padding: 0.8rem 1rem 0.8rem 0;
+                width: 100%;
+
+                background-color: var(--sand-100);
+                transition: all 0.3s ease-in-out;
+
+                h4 {
+                  padding-left: 1rem;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  width: 100%;
+                  min-width: 0;
+                  font-weight: 500;
+                }
+              }
             }
 
-            span {
-              display: block;
-              flex: 0 0 75%;
+            &:hover {
+              .wrappers-text {
+                background-color: var(--sand-300);
+                color: var(--gray-900);
+                transition: all 0.3s ease-in-out;
+              }
             }
           }
         }

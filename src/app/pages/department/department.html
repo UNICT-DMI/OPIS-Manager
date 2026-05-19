@@ -6,10 +6,8 @@
           <opis-icon iconName="arrow_circle_left" />
           <span class="text"> Torna indietro </span>
         </a>
+        <h2 [attr.data-icon]="department()?.icon">{{ department()?.nome }}</h2>
         <h1>{{ department()?.anno_accademico }}</h1>
-      </div>
-      <div class="department-title-bottom wrapper" [attr.data-icon]="department()?.icon">
-        <h2>{{ department()?.nome }}</h2>
       </div>
     </div>
 
@@ -46,18 +44,20 @@
         </div>
 
         @if (!isCdsSelected()) {
-          <ul class="cds-list">
+          <div class="cds-list">
             @let allCds = cdsList.value();
 
             @for (cds of allCds; track $index) {
-              <li id="cds-list-{{ cds.id }}">
+              <article class="cards cds-card" id="cds-list-{{ cds.id }}">
                 <button (click)="selectCds(cds)">
-                  <strong>({{ cds.classe }})</strong>
-                  <span> {{ cds.nome }}</span>
+                  <div class="wrappers-icon">{{ cds.classe }}</div>
+                  <div class="wrappers-text">
+                    <h4>{{ cds.nome }}</h4>
+                  </div>
                 </button>
-              </li>
+              </article>
             }
-          </ul>
+          </div>
         }
       }
     </section>
