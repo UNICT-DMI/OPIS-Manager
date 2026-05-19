@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavItem } from '@interfaces/header-nav-interface';
+import { DepartmentsService } from '@services/departments/departments.service';
 import { IconComponent } from '@shared-ui/icon/icon';
 
 @Component({
@@ -11,6 +12,8 @@ import { IconComponent } from '@shared-ui/icon/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderNav {
+  protected readonly currentDepartment = inject(DepartmentsService).currentDepartment;
+
   protected readonly NavItems: NavItem[] = [
     { label: 'Formula', route: '/formula' },
     { label: 'Info', route: '/info' },

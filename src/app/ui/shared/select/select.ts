@@ -6,6 +6,7 @@ import {
   inject,
   input,
   model,
+  OnInit,
   output,
   signal,
 } from '@angular/core';
@@ -25,7 +26,7 @@ const DROPDOWN_HEIGHT = 240;
     '(document:click)': 'onOutsideClick($event)',
   },
 })
-export class SelectComponent {
+export class SelectComponent implements OnInit {
   private readonly _el = inject(ElementRef);
 
   readonly options = input.required<SelectOption[]>();
@@ -45,6 +46,10 @@ export class SelectComponent {
     if (!query) return this.options();
     return this.options().filter((o) => o.label.toLowerCase().includes(query));
   });
+
+  ngOnInit(): void {
+    this.select(this.options()[0]);
+  }
 
   protected toggle(): void {
     if (!this.isOpen()) {

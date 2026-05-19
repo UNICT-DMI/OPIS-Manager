@@ -1,16 +1,5 @@
 <section id="department-page">
   @if (department() !== null) {
-    <div class="department-title">
-      <div class="department-title-top wrapper">
-        <a routerLink="/home">
-          <opis-icon iconName="arrow_circle_left" />
-          <span class="text"> Torna indietro </span>
-        </a>
-        <h2 [attr.data-icon]="department()?.icon">{{ department()?.nome }}</h2>
-        <h1>{{ department()?.anno_accademico }}</h1>
-      </div>
-    </div>
-
     <section id="cds" class="wrapper" [class.loading]="cdsList.isLoading()">
       @if (cdsList.isLoading()) {
         <opis-loader />
@@ -19,7 +8,7 @@
           <div class="cds-title-name">
             @if (isCdsSelected()) {
               <button (click)="selectCds(NO_CHOICE_VALUE)">
-                <opis-icon iconName="backspace" />
+                <opis-icon iconName="arrow_circle_left" />
               </button>
             }
             <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>

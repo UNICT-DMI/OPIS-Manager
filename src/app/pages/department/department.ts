@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { Department } from '@interfaces/department.interface';
 import { DepartmentsService } from '@services/departments/departments.service';
-import { RouterLink } from '@angular/router';
 import { CdsService } from '@services/cds/cds.service';
 import { CDS } from '@interfaces/cds.interface';
 import { NO_CHOICE_CDS, NO_SELECTION_CDS_ID } from '@values/no-choice-cds';
@@ -25,7 +24,7 @@ import { OpisGroup_Disclaimers } from '@values/disclaimers.value';
 
 @Component({
   selector: 'opis-department',
-  imports: [RouterLink, Loader, IconComponent, CdsSelectedSection, Disclaimers],
+  imports: [Loader, IconComponent, CdsSelectedSection, Disclaimers],
   templateUrl: './department.html',
   styleUrl: './department.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +59,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     localStorage.removeItem('department');
     this._cdsService.cdsSelected.set(this.NO_CHOICE_VALUE);
+    this._departmentService.currentDepartment.set(null);
   }
 
   private retrieveQuestions(): void {
@@ -79,6 +79,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
 
     const correctDepFormat = JSON.parse(rawDepartment);
     this.departmentData.set(correctDepFormat);
+    this._departmentService.currentDepartment.set(correctDepFormat);
   }
 
   protected selectCds(newCds: CDS): void {

@@ -34,7 +34,7 @@ export function SelectorResolvers(
     teaching_cds: () =>
       infoCds.value()?.teachings.map((t) => ({
         value: t.id,
-        label: t.nome + ` (Canale ${t.canale})`,
+        label: t.canale === 'no' ? t.nome : `${t.nome} (${t.canale})`,
       })) ?? [],
     cds_year: () => availableYears().map((y) => ({ value: y, label: y })),
   };

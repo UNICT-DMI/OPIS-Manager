@@ -81,7 +81,9 @@ export class CdsSelectedSection {
   private readonly _selectorResolvers = SelectorResolvers(this.infoCds, this.availableYears);
   protected readonly selectorOptions = computed<SelectOption[] | null>(() => {
     const graph = this.graphSelected.value();
-    if (!graph?.value || graph.value === GraphSelection.CDS_GENERAL) return null;
+    if (!graph?.value || graph.value === GraphSelection.CDS_GENERAL) {
+      return null;
+    }
 
     return this._selectorResolvers[graph.value]?.() ?? null;
   });

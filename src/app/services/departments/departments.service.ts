@@ -18,6 +18,7 @@ export class DepartmentsService {
   readonly logoAlreadyAnimated = signal(false);
   readonly canStartUserFlow = signal(false);
   readonly selectedYear = signal<AcademicYear>(ACADEMIC_YEARS[ACADEMIC_YEARS.length - 1]);
+  readonly currentDepartment = signal<Department | null>(null);
 
   private departmentsApi(year: AcademicYear): Observable<Department[]> {
     const url = `${this.BASE_URL}?anno_accademico=${year}`;

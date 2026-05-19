@@ -161,7 +161,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.hasValue.set(true);
     await fixture.whenStable();
     expect(
-      fixture.nativeElement.querySelector('.graph-description_left h2')?.textContent?.trim(),
+      fixture.nativeElement.querySelector('.graph-description_top h2')?.textContent?.trim(),
     ).toBe('Generale');
   });
 

@@ -1,66 +1,4 @@
 #department-page {
-  .department-title {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    &-top {
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-
-      h2 {
-        text-align: center;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        &::before {
-          content: attr(data-icon);
-          font-family: 'Material Symbols Outlined';
-          font-size: 3.5em;
-          line-height: 1;
-          color: var(--blue-100);
-          pointer-events: none;
-        }
-      }
-
-      a {
-        margin-bottom: 1rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding-left: 0.7rem;
-
-        .text {
-          text-decoration: underline;
-        }
-      }
-
-      h1 {
-        background-color: var(--blue-500);
-        color: white;
-        margin: 1.2rem 0;
-        padding: 0.6rem 0.7rem 0.5rem 1.5rem;
-        border-top-left-radius: 0.7rem;
-        border-bottom-left-radius: 0.7rem;
-
-        @media (min-width: 700px) {
-          margin: 1.5rem 0;
-          padding-top: 0.5rem;
-          padding-right: 2rem;
-          font-size: 2.5rem;
-        }
-
-        @media (min-width: 1300px) {
-          border-radius: 0.7rem;
-          padding-right: 1.5rem;
-        }
-      }
-    }
-  }
-
   #cds {
     position: relative;
     display: flex;
@@ -81,22 +19,26 @@
     .cds {
       &-title {
         display: flex;
-        flex-direction: column;
-        gap: 1.7rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px;
         width: 100%;
         margin-top: 1rem;
         margin-bottom: 1.2rem;
 
         &-name {
           display: inline-flex;
-          align-items: start;
-          gap: 1rem;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 0 0 auto;
         }
 
         &-graph {
           display: inline-flex;
           align-items: center;
           justify-content: space-between;
+          flex: 1 1 auto;
 
           @media (min-width: 800px) {
             justify-content: space-evenly;

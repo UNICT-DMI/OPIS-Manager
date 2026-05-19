@@ -31,11 +31,29 @@
     .graph-description {
       display: flex;
       flex-direction: column;
-      gap: 5rem;
 
-      &_left {
+      &_top {
         p {
-          margin: 0.8rem 0 1.8rem;
+          margin: 10px;
+        }
+      }
+
+      &_heading {
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+
+        h2 {
+          flex: 0 0 auto;
+          margin: 0;
+        }
+
+        p {
+          flex: 1 1 0;
+          min-width: 0;
+          margin: 0;
         }
       }
 
@@ -43,21 +61,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-
-      @media (min-width: 1000px) {
-        justify-content: space-between;
-        flex-direction: row;
-        gap: 1rem;
-
-        &_left {
-          flex: 0 0 35%;
-        }
-
-        &_right,
-        opis-graph {
-          flex: 0 0 65%;
-        }
       }
     }
   }
