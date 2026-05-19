@@ -84,7 +84,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
 
   protected selectCds(newCds: CDS): void {
     if (newCds.id === NO_SELECTION_CDS_ID) {
-      this.selectGraphType('cds_general');
+      this.selectGraphType('cds_year');
     }
 
     this._cdsService.cdsSelected.set(newCds);

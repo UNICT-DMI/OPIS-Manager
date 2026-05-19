@@ -17,7 +17,7 @@ import { of } from 'rxjs';
 export class GraphService {
   private readonly _questionService = inject(QuestionService);
 
-  readonly graphKeySelected = signal<GraphSelectionType>('cds_general');
+  readonly graphKeySelected = signal<GraphSelectionType>('cds_year');
   readonly graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
   readonly selectedYear = signal<AcademicYear | null>(null);
   readonly selectedVIndex = signal<0 | 1 | 2>(0);
