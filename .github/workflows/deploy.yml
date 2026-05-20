@@ -40,19 +40,19 @@ jobs:
           npm install --legacy-peer-deps
           npm run build -- --configuration production --base-href="/old/"
 
-      - name: Deploy Master to Root 🚀
+      - name: Deploy Master to / 🚀
         if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/opis-manager
+          folder: dist/opis-manager/browser/
           clean: false
 
-      - name: Deploy Old to /old 🚀
+      - name: Deploy Old to old/ 🚀
         if: github.ref == 'refs/heads/old'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/opis-manager/browser/
+          folder: dist/opis-manager
           target-folder: old
           clean: false
