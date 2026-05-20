@@ -38,7 +38,7 @@ jobs:
         run: |
           npm install -g @angular/cli@10 --legacy-peer-deps
           npm install --legacy-peer-deps
-          npm run build -- --configuration production --base-href="/old/"
+          npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
 
       - name: Deploy Master to / 🚀
         if: github.ref == 'refs/heads/master'
