@@ -43,9 +43,99 @@ describe('GraphResolvers', () => {
     expect(GraphMapper.toTeachingGraph).toHaveBeenCalledWith(teachingData);
   });
 
-  it('cds_year: should throw not implemented error', () => {
+  it('cds_year: should return null without data or year', () => {
     const resolvers = GraphResolvers(mockResource() as any, mockResource() as any);
     expect(resolvers.cds_year()).toBe(null);
+  });
+
+  it('cds_year: should return null when selectedYear is not set', () => {
+    const infoCds = mockResource({ teachingsByYear: {}, courses: {} });
+    const graphService = {
+      selectedYear: signal(null),
+      teachingSearch: signal(''),
+      selectedVIndex: signal(0),
+      elaborateFormulaFor: vi.fn(),
+    };
+    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    expect(resolvers.cds_year()).toBe(null);
+  });
+
+  it('cds_year: should return null when no teachings match for the selected year', () => {
+    const infoCds = mockResource({ teachingsByYear: { '2023/2024': [] }, courses: {} });
+    const graphService = {
+      selectedYear: signal('2023/2024'),
+      teachingSearch: signal(''),
+      selectedVIndex: signal(0),
+      elaborateFormulaFor: vi.fn(),
+    };
+    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    expect(resolvers.cds_year()).toBe(null);
+  });
+
+  it('cds_year: should filter, sort and call GraphMapper.toAcademicYearGraph', () => {
+    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as any);
+
+    const teachings = [
+      { id: 1, nome: 'Fisica', anno: 2, schedeopis: { domande: [[1]] } },
+      { id: 2, nome: 'Algebra', anno: 1, schedeopis: { domande: [[1]] } },
+      { id: 3, nome: 'NoSchede', anno: 1, schedeopis: { domande: null } },
+    ];
+    const infoCds = mockResource({
+      teachingsByYear: { '2023/2024': teachings },
+      courses: { '2023/2024': [[5, 6, 7]] },
+    });
+    const graphService = {
+      selectedYear: signal('2023/2024'),
+      teachingSearch: signal(''),
+      selectedVIndex: signal(1),
+      elaborateFormulaFor: vi.fn(() => [
+        [0, 0, 0],
+        [
+          [1, 2],
+          [3, 4],
+          [5, 6],
+        ],
+      ]),
+    };
+
+    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    resolvers.cds_year();
+
+    expect(graphService.elaborateFormulaFor).toHaveBeenCalled();
+    const [teachingsArg, valuesArg, cdsMeanArg, vIndexArg] = spy.mock.calls[0];
+    expect((teachingsArg as any[]).map((t) => t.id)).toEqual([2, 1]);
+    expect(valuesArg).toEqual([3, 4]);
+    expect(cdsMeanArg).toBe(6);
+    expect(vIndexArg).toBe(1);
+  });
+
+  it('cds_year: should filter by search query (case-insensitive)', () => {
+    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as any);
+    spy.mockClear();
+
+    const teachings = [
+      { id: 1, nome: 'Fisica', anno: 1, schedeopis: { domande: [[1]] } },
+      { id: 2, nome: 'Algebra', anno: 1, schedeopis: { domande: [[1]] } },
+    ];
+    const infoCds = mockResource({
+      teachingsByYear: { '2023/2024': teachings },
+      courses: { '2023/2024': [[1, 2, 3]] },
+    });
+    const graphService = {
+      selectedYear: signal('2023/2024'),
+      teachingSearch: signal('fisica'),
+      selectedVIndex: signal(0),
+      elaborateFormulaFor: vi.fn(() => [
+        [0, 0, 0],
+        [[1], [2], [3]],
+      ]),
+    };
+
+    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    resolvers.cds_year();
+
+    const [teachingsArg] = spy.mock.calls[0];
+    expect((teachingsArg as any[]).map((t) => t.id)).toEqual([1]);
   });
 });
 
@@ -65,8 +155,8 @@ describe('SelectorResolvers', () => {
     const resolvers = SelectorResolvers(infoCds as any, signal([]));
 
     expect(resolvers.teaching_cds()).toEqual([
-      { value: 1, label: 'Matematica (Canale A - L)' },
-      { value: 2, label: 'Fisica (Canale no)' },
+      { value: 1, label: 'Matematica (A - L)' },
+      { value: 2, label: 'Fisica' },
     ]);
   });
 
@@ -80,8 +170,8 @@ describe('SelectorResolvers', () => {
     const resolvers = SelectorResolvers(mockResource() as any, signal(years));
 
     expect(resolvers.cds_year()).toEqual([
-      { value: '2022/2023', label: '2022/2023' },
       { value: '2023/2024', label: '2023/2024' },
+      { value: '2022/2023', label: '2022/2023' },
     ]);
   });
 });

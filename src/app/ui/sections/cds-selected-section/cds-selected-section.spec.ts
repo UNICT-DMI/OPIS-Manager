@@ -61,6 +61,9 @@ const buildMockCdsService = () => ({
 const buildMockGraphService = () => ({
   graphKeySelected: signal('cds_general'),
   graphBtns: signal([]),
+  selectedYear: signal(null),
+  selectedVIndex: signal(0),
+  teachingSearch: signal(''),
   manageGraphSelection: mockResource({
     hasValue: signal(true),
     value: signal({ value: 'cds_general', label: 'Generale', description: 'Desc', active: true }),
@@ -208,5 +211,45 @@ describe('CdsSelectedSection', () => {
     component['onSelectorChange']({ value: 99, label: 'Non esiste' });
 
     expect(mockTeachingService.selectedTeaching()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: should set selectedYear when graphKey is cds_year', () => {
+    mockGraphService.graphKeySelected.set('cds_year');
+    component['onSelectorChange']({ value: '2023/2024', label: '2023/2024' });
+    expect(mockGraphService.selectedYear()).toBe('2023/2024');
+  });
+
+  it('[CDS-SECTION]: selectVIndex should set selectedVIndex', () => {
+    component['selectVIndex'](2);
+    expect(mockGraphService.selectedVIndex()).toBe(2);
+  });
+
+  it('[CDS-SECTION]: onSearchInput should set teachingSearch', () => {
+    component['onSearchInput']({ target: { value: 'math' } } as any);
+    expect(mockGraphService.teachingSearch()).toBe('math');
+  });
+
+  it('[CDS-SECTION]: availableYears returns empty array when no courses', () => {
+    mockCdsService.getInfoCds.value.set(null);
+    expect(component['availableYears']()).toEqual([]);
+  });
+
+  it('[CDS-SECTION]: availableYears returns keys when courses exist', () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2022/2023': [], '2023/2024': [] },
+    } as any);
+    expect(component['availableYears']()).toEqual(['2022/2023', '2023/2024']);
+  });
+
+  it('[CDS-SECTION]: selectorOptions returns null when graph is cds_general', async () => {
+    mockGraphService.graphKeySelected.set('cds_general');
+    await fixture.whenStable();
+    expect(component['selectorOptions']()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: msgError returns BASE_ERROR_MSG when activeGraph is truthy', () => {
+    const msg = component['msgError']();
+    expect(typeof msg).toBe('string');
   });
 });

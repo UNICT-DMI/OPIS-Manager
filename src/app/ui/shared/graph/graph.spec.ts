@@ -41,12 +41,12 @@ describe('Graph', () => {
 
   it('[GRAPH]: chartOptions has beginAtZero on y axis', () => {
     fixture.componentRef.setInput('dataChart', makeGraphView());
-    expect(component['chartOptions']?.scales?.['y']).toMatchObject({ beginAtZero: true });
+    expect(component['chartOptions']()?.scales?.['y']).toMatchObject({ beginAtZero: true });
   });
 
   it('[GRAPH]: chartOptions has legend display true', () => {
     fixture.componentRef.setInput('dataChart', makeGraphView());
-    expect(component['chartOptions']?.plugins?.legend?.display).toBe(true);
+    expect(component['chartOptions']()?.plugins?.legend?.display).toBe(true);
   });
 
   it('[ADD_BRAND_COLOR]: unknown label, dataset is returned unchanged', () => {

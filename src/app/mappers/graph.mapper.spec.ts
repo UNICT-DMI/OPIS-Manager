@@ -124,4 +124,73 @@ describe('GraphMapper', () => {
       expect(result[YEAR_B]).toEqual([sB]);
     });
   });
+
+  describe('toAcademicYearGraph', () => {
+    const makeTeaching = (overrides: Record<string, unknown> = {}): any => ({
+      id: 1,
+      nome: 'Algebra',
+      canale: 'no',
+      docente: 'Mario',
+      schedeopis: { totale_schede: 10 },
+      ...overrides,
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: type is "bar"', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [3.5], null, 0);
+      expect(graph.type).toBe('bar');
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: labels include canale when canale !== "no"', () => {
+      const graph = GraphMapper.toAcademicYearGraph(
+        [makeTeaching({ canale: 'A - L' })],
+        [1],
+        null,
+        0,
+      );
+      expect(graph.data.labels).toEqual(['Algebra (A - L)']);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: labels omit canale when canale === "no"', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [1], null, 0);
+      expect(graph.data.labels).toEqual(['Algebra']);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: cdsMean annotation present when cdsMean is a finite number', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [1], 5, 1);
+      const ann = (graph.options as any)?.plugins?.annotation?.annotations;
+      expect(ann.cdsMean).toBeDefined();
+      expect(ann.cdsMean.xMin).toBe(5);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: cdsMean annotation absent when cdsMean is null', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [1], null, 0);
+      const ann = (graph.options as any)?.plugins?.annotation?.annotations;
+      expect(ann.cdsMean).toBeUndefined();
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: handles missing schedeopis and docente', () => {
+      const graph = GraphMapper.toAcademicYearGraph(
+        [{ id: 1, nome: 'X', canale: 'no' } as any],
+        [1],
+        null,
+        0,
+      );
+      expect(graph.data.labels).toEqual(['X']);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: empty teachings yields empty datasets', () => {
+      const graph = GraphMapper.toAcademicYearGraph([], [], null, 0);
+      expect(graph.data.labels).toEqual([]);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: same schede count gradient maps all to max color', () => {
+      const teachings = [
+        makeTeaching({ id: 1, schedeopis: { totale_schede: 5 } }),
+        makeTeaching({ id: 2, schedeopis: { totale_schede: 5 } }),
+      ];
+      const graph = GraphMapper.toAcademicYearGraph(teachings, [1, 2], null, 0);
+      const colors = graph.data.datasets[0].backgroundColor as string[];
+      expect(colors[0]).toBe(colors[1]);
+    });
+  });
 });

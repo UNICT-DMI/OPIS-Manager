@@ -38,8 +38,8 @@ describe('GraphService', () => {
   });
 
   // ── graphKeySelected ──────────────────────────────────────────────────────
-  it('[GRAPH-SERVICE]: should initialize graphKeySelected as cds_general', () => {
-    expect(service.graphKeySelected()).toBe('cds_general');
+  it('[GRAPH-SERVICE]: should initialize graphKeySelected as cds_year', () => {
+    expect(service.graphKeySelected()).toBe('cds_year');
   });
 
   it('[GRAPH-SERVICE]: should update graphKeySelected', () => {
@@ -53,11 +53,11 @@ describe('GraphService', () => {
   });
 
   // ── manageGraphSelection ──────────────────────────────────────────────────
-  it('[GRAPH-SERVICE]: should set cds_general as active on init', async () => {
+  it('[GRAPH-SERVICE]: should set cds_year as active on init', async () => {
     await new Promise((r) => setTimeout(r, 0));
     const activeBtns = service.graphBtns().filter((b) => b.active);
     expect(activeBtns.length).toBe(1);
-    expect(activeBtns[0].value).toBe('cds_general');
+    expect(activeBtns[0].value).toBe('cds_year');
   });
 
   it('[GRAPH-SERVICE]: should update active button when graphKeySelected changes', async () => {

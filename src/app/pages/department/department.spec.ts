@@ -53,6 +53,7 @@ describe('DepartmentPageComponent', () => {
 
     const mockDepartmentsService = {
       getCdsDepartment: vi.fn(() => mockResource),
+      currentDepartment: signal(null),
     };
 
     mockCdsService = {
@@ -135,9 +136,9 @@ describe('DepartmentPageComponent', () => {
     expect(component['isCdsSelected']()).toBe(false);
   });
 
-  it('[DEPARTMENT]: should reset graphKey to "cds_general" when deselecting a CDS', () => {
+  it('[DEPARTMENT]: should reset graphKey to "cds_year" when deselecting a CDS', () => {
     component['selectCds'](NO_CHOICE_CDS);
-    expect(mockGraphService.graphKeySelected()).toBe('cds_general');
+    expect(mockGraphService.graphKeySelected()).toBe('cds_year');
   });
 
   it('[DEPARTMENT]: should update graphKeySelected on selectGraphType', () => {

@@ -82,17 +82,27 @@ describe('SelectComponent', () => {
   it('[SELECT]: should render the trigger button', () => expect(getTrigger(fixture)).toBeTruthy());
 
   it('[SELECT]: should show placeholder when no value is selected', () => {
-    const span = getTrigger(fixture).querySelector('span');
+    const emptyFixture = TestBed.createComponent(HostComponent);
+    emptyFixture.componentInstance.options.set([]);
+    emptyFixture.detectChanges();
+    const span = emptyFixture.nativeElement
+      .querySelector('.opis-select__trigger')
+      .querySelector('span');
     expect(span?.textContent?.trim()).toBe('Select...');
     expect(span?.classList).toContain('placeholder');
   });
 
   it('[SELECT]: should reflect a custom placeholder', () => {
-    host.placeholder.set('Choose a course...');
-    fixture.detectChanges();
-    expect(getTrigger(fixture).querySelector('span')?.textContent?.trim()).toBe(
-      'Choose a course...',
-    );
+    const emptyFixture = TestBed.createComponent(HostComponent);
+    emptyFixture.componentInstance.options.set([]);
+    emptyFixture.componentInstance.placeholder.set('Choose a course...');
+    emptyFixture.detectChanges();
+    expect(
+      emptyFixture.nativeElement
+        .querySelector('.opis-select__trigger')
+        .querySelector('span')
+        ?.textContent?.trim(),
+    ).toBe('Choose a course...');
   });
 
   it('[SELECT]: should not render the dropdown initially', () =>
