@@ -3,11 +3,10 @@ name: Deploy Angular SPA to GitHub Pages
 on:
   push:
     branches:
-      - master
-      - development
+      - old
   pull_request:
     branches:
-      - development
+      - old
 
 permissions:
   contents: write
@@ -21,10 +20,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use Node.js 16.15.1
+      - name: Use Node.js 24.13.0
         uses: actions/setup-node@v1
         with:
-          node-version: "16.15.1"
+          node-version: "24.13.0"
 
       - name: Build Master 🔨
         if: github.ref == 'refs/heads/master'
@@ -33,12 +32,12 @@ jobs:
           npm install --legacy-peer-deps
           ng build --prod --base-href=""
 
-      - name: Build Development 🔨
-        if: github.ref == 'refs/heads/development'
+      - name: Build Old 🔨
+        if: github.ref == 'refs/heads/old'
         run: |
-          npm install -g @angular/cli@10 --legacy-peer-deps
-          npm install --legacy-peer-deps
-          ng build --prod --base-href="/development/"
+          npm install -g @angular/cli@21
+          npm install
+          npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
 
       - name: Deploy Master to Root 🚀
         if: github.ref == 'refs/heads/master'
@@ -48,11 +47,11 @@ jobs:
           folder: dist/opis-manager
           clean: false
 
-      - name: Deploy Development to /development 🚀
-        if: github.ref == 'refs/heads/development'
+      - name: Deploy Old to /old 🚀
+        if: github.ref == 'refs/heads/old'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/opis-manager
-          target-folder: development
+          folder: dist/opis-manager/browser/
+          target-folder: old
           clean: false
