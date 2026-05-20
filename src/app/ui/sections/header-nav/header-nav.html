@@ -1,0 +1,30 @@
+<header role="banner" class="opis-header">
+  <div class="header-content">
+    <a routerLink="/" class="opis-logo">
+      <img src="./logo-header.png" alt="opis_manager_logo" />
+      <h1>Opis Manager</h1>
+    </a>
+
+    <div class="department-nav">
+      @if (currentDepartment(); as dep) {
+        <a routerLink="/" class="back-link" aria-label="Torna ai dipartimenti">
+          <opis-icon iconName="arrow_circle_left" />
+        </a>
+        <span class="name" [attr.data-icon]="dep.icon">{{ dep.nome }}</span>
+        <span class="year">{{ dep.anno_accademico }}</span>
+      }
+    </div>
+
+    <div class="end-nav-items">
+      @for (navItem of NavItems; track $index) {
+        <a [routerLink]="navItem.route">
+          @if (!navItem.icon) {
+            <span>{{ navItem.label }}</span>
+          } @else {
+            <opis-icon [iconName]="navItem.icon.name" [dimension]="navItem.icon.dimension" />
+          }
+        </a>
+      }
+    </div>
+  </div>
+</header>

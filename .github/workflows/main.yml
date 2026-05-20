@@ -1,58 +1,59 @@
-name: Deploy Angular SPA to GitHub Pages
+name: Opis CI/CD
 
 on:
+  pull_request:
+    branches:
+      - '**'
   push:
     branches:
       - master
-      - development
-  pull_request:
-    branches:
-      - development
+      - old
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout code
         uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          persist-credentials: false
+          node-version: '24.13.0'
+      - run: npm ci
+      - run: npm run lint:fix
 
-      - name: Use Node.js 16.15.1
-        uses: actions/setup-node@v1
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "16.15.1"
-
-      - name: Build Master 🔨
-        if: github.ref == 'refs/heads/master'
-        run: |
-          npm install -g @angular/cli@10 --legacy-peer-deps
-          npm install --legacy-peer-deps
-          ng build --prod --base-href=""
-
-      - name: Build Development 🔨
-        if: github.ref == 'refs/heads/development'
-        run: |
-          npm install -g @angular/cli@10 --legacy-peer-deps
-          npm install --legacy-peer-deps
-          ng build --prod --base-href="/development/"
-
-      - name: Deploy Master to Root 🚀
-        if: github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@v4
+          node-version: '24.13.0'
+      - run: npm ci
+      - run: npm run test:coverage
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
         with:
-          branch: gh-pages
-          folder: dist/opis-manager
-          clean: false
+          name: coverage-report
+          path: coverage
 
-      - name: Deploy Development to /development 🚀
-        if: github.ref == 'refs/heads/development'
-        uses: JamesIves/github-pages-deploy-action@v4
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          branch: gh-pages
-          folder: dist/opis-manager
-          target-folder: development
-          clean: false
+          node-version: '24.13.0'
+      - run: npm ci
+      - run: npm run build

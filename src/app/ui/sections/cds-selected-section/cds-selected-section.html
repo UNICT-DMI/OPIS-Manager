@@ -1,0 +1,84 @@
+<section id="cds-{{ cds()?.id }}" [class.loading]="isAllInfoLoading()" class="cds-selection_wrap">
+  @if (isAllInfoLoading()) {
+    <opis-loader />
+  } @else {
+    <div #graphDesc class="graph-description" [style.min-height.px]="minHeight()">
+      @if (infoCds.hasValue() && graphSelected.hasValue()) {
+        @let graph = graphSelected.value();
+
+        <div class="graph-description_top">
+          <h2>{{ graph.label }}</h2>
+
+          <p>
+            {{ graph.description }}
+          </p>
+
+          @if (selectorOptions()) {
+            <opis-select
+              [options]="selectorOptions()!"
+              [value]="currentSelectorValue()"
+              placeholder="Seleziona..."
+              (changed)="onSelectorChange($event)"
+            />
+          }
+        </div>
+
+        @if (graph?.value === 'cds_year' && selectedYear() !== null) {
+          <div class="academic-year-controls">
+            <div class="v-switcher btn-nav">
+              @for (i of vIndexes; track i) {
+                <button
+                  type="button"
+                  class="btn-nav-item"
+                  [class.active]="selectedVIndex() === i"
+                  (click)="selectVIndex(i)"
+                >
+                  <span class="btn-nav-item-text">V{{ i + 1 }}</span>
+                </button>
+              }
+            </div>
+
+            <label class="teaching-search">
+              <opis-icon iconName="search" />
+              <input
+                type="text"
+                placeholder="Cerca insegnamento..."
+                [value]="teachingSearch()"
+                (input)="onSearchInput($event)"
+              />
+            </label>
+          </div>
+
+          <div class="color-legend">
+            <span>Colore per numerosità di schede</span>
+            <strong>MIN</strong>
+            <span class="color-bar"></span>
+            <strong>MAX</strong>
+          </div>
+        }
+
+        @if (activeGraph()) {
+          <opis-graph [dataChart]="activeGraph()!" />
+        } @else {
+          <div class="graph-description_right">
+            @if (infoTeaching.isLoading()) {
+              <opis-loader />
+            } @else {
+              <div class="error">
+                <opis-icon iconName="report_off" dimension="5rem" />
+                <h2>{{ msgError() }}</h2>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    @if (infoCds.status() === ERR_STATUS || graphSelected.status() === ERR_STATUS) {
+      <div class="error">
+        <opis-icon iconName="report_off" dimension="5rem" />
+        <h2>Qualcosa è andato storto :/</h2>
+      </div>
+    }
+  }
+</section>

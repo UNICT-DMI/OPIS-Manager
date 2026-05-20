@@ -1,0 +1,59 @@
+<section id="department-page">
+  @if (department() !== null) {
+    <section id="cds" class="wrapper" [class.loading]="cdsList.isLoading()">
+      @if (cdsList.isLoading()) {
+        <opis-loader />
+      } @else {
+        <div class="cds-title">
+          <div class="cds-title-name">
+            @if (isCdsSelected()) {
+              <button (click)="selectCds(NO_CHOICE_VALUE)">
+                <opis-icon iconName="arrow_circle_left" />
+              </button>
+            }
+            <h3>( {{ cds().classe }} ) {{ cds().nome }}</h3>
+          </div>
+
+          @if (isCdsSelected()) {
+            <div class="cds-title-graph btn-nav">
+              @for (graphBtn of graphBtns(); track $index) {
+                <button
+                  [disabled]="isLoading()"
+                  class="btn-nav-item"
+                  [class.active]="graphBtn.active"
+                  type="button"
+                  (click)="selectGraphType(graphBtn.value)"
+                >
+                  <opis-icon [iconName]="graphBtn.icon" />
+                  <span class="btn-nav-item-text">{{ graphBtn.label }}</span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        @if (!isCdsSelected()) {
+          <div class="cds-list">
+            @let allCds = cdsList.value();
+
+            @for (cds of allCds; track $index) {
+              <article class="cards cds-card" id="cds-list-{{ cds.id }}">
+                <button (click)="selectCds(cds)">
+                  <div class="wrappers-icon">{{ cds.classe }}</div>
+                  <div class="wrappers-text">
+                    <h4>{{ cds.nome }}</h4>
+                  </div>
+                </button>
+              </article>
+            }
+          </div>
+        }
+      }
+    </section>
+
+    @if (isCdsSelected()) {
+      <opis-disclaimers class="wrapper" [disclaimers]="GroupsDisclaimers" />
+      <opis-cds-selected-section class="wrapper" />
+    }
+  }
+</section>

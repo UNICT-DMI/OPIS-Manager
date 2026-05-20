@@ -1,128 +1,113 @@
-import { Injectable } from '@angular/core';
-import { WeightService } from '../weight/weight.service';
-import { Teaching } from '../api/api.model';
-import { mean } from 'mathjs';
-import { TeachingSummary, SchedaOpis } from '../../utils/utils.model';
+import { inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Means, MeansPerYear } from '@c_types/means-graph.type';
+import { GraphSelectionType } from '@enums/chart-typology.enum';
+import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
+import { AnswerWeights } from '@enums/weights.enum';
+import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
+import { SchedaOpis } from '@interfaces/opis-record.interface';
+import { QuestionService } from '@services/questions/questions.service';
+import { typedKeys } from '@utils/object-helpers.utils';
+import { mean, round } from '@utils/statistics.utils/statistics.utils';
+import { CHART_BTNS } from '@values/selection-graph';
+import { AcademicYear } from '@values/years';
+import { of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class GraphService {
+  private readonly _questionService = inject(QuestionService);
 
+  readonly graphKeySelected = signal<GraphSelectionType>('cds_year');
+  readonly graphBtns = signal<GraphSelectionBtn[]>(CHART_BTNS);
+  readonly selectedYear = signal<AcademicYear | null>(null);
+  readonly selectedVIndex = signal<0 | 1 | 2>(0);
+  readonly teachingSearch = signal<string>('');
 
-  constructor(
-    private readonly weightService: WeightService,
-  ) { }
+  private applyWeights(scheda: SchedaOpis): number[] {
+    const questionsWeights = this._questionService.questionWeights;
+    const { totale_schede, domande: questions } = scheda;
 
-  public round(v: number, padding = 2): number {
-    const pad = parseInt(1 + '0'.repeat(padding), 10);
-    return Math.round(v * pad) / pad;
+    if (totale_schede < 5) return [0, 0, 0];
+
+    const V: Record<OpisGroupType, number> = {
+      [OpisGroup.Group1]: 0,
+      [OpisGroup.Group2]: 0,
+      [OpisGroup.Group3]: 0,
+    };
+
+    for (let j = 0; j < questions.length; j++) {
+      const singleQuestion = questions[j];
+
+      let d = 0;
+      d += singleQuestion[0] * AnswerWeights.DefinitelyNo;
+      d += singleQuestion[1] * AnswerWeights.MoreNoThanYes;
+      d += singleQuestion[2] * AnswerWeights.MoreYesThanNo;
+      d += singleQuestion[3] * AnswerWeights.DefinitelyYes;
+
+      const domanda = questionsWeights.find((question) => question.id === j + 1);
+      if (!domanda) continue;
+
+      const { gruppo, peso_standard } = domanda;
+      if (Object.prototype.hasOwnProperty.call(V, gruppo)) {
+        V[gruppo] += (d / totale_schede) * peso_standard;
+      }
+    }
+
+    return [round(V[OpisGroup.Group1]), round(V[OpisGroup.Group2]), round(V[OpisGroup.Group3])];
   }
 
-  public elaborateFormula(schedeOpis: SchedaOpis[]): [number[], number[][]] {
+  /**
+   * Computes V1/V2/V3 scores for a set of OPIS schedules.
+   * Returns both the aggregate means and the per-schedule values.
+   */
+  elaborateFormulaFor(opisSchedules: SchedaOpis[]): Means {
     const v1: number[] = [];
     const v2: number[] = [];
     const v3: number[] = [];
 
-    for (const schedaOpis of schedeOpis) {
+    for (const schedaOpis of opisSchedules) {
       const [V1, V2, V3] = this.applyWeights(schedaOpis);
       v1.push(V1);
       v2.push(V2);
       v3.push(V3);
     }
 
-    const means = [this.round(mean(v1)), this.round(mean(v2)), this.round(mean(v3))];
+    const means = [round(mean(v1)), round(mean(v2)), round(mean(v3))];
     return [means, [v1, v2, v3]];
   }
 
-  public applyWeights(scheda: SchedaOpis): number[] {
+  /**
+   * Returns the currently active graph button based on graphKeySelected.
+   * Updates the active flag across all buttons reactively.
+   */
+  readonly manageGraphSelection = rxResource<GraphSelectionBtn, GraphSelectionType>({
+    params: this.graphKeySelected,
+    stream: ({ params: graphSelected }) => {
+      const currentBtns = structuredClone(this.graphBtns());
+      const graph = currentBtns.find((btn) => btn.value === graphSelected) ?? currentBtns[0];
 
-    const questionsWeights = this.weightService.getQuestionsWeights();
-    const answersWeights = this.weightService.getAnswersWeights();
-
-    const N = scheda.totale_schede;
-    let d = 0;
-    let V1 = 0;
-    let V2 = 0;
-    let V3 = 0;
-
-    if (N >= 5) {
-
-      for (let j = 0; j < scheda.domande.length; j++) {
-
-        d = 0.0;
-        d += scheda.domande[j][0] * answersWeights[0];   // Decisamente no
-        d += scheda.domande[j][1] * answersWeights[1];   // Più no che sì
-        d += scheda.domande[j][2] * answersWeights[2];   // Più sì che no
-        d += scheda.domande[j][3] * answersWeights[3];   // Decisamente sì
-
-        const domanda = questionsWeights.filter(question => question.id === j + 1)[0];
-        if (domanda.gruppo === 'V1') {
-          V1 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V2') {
-          V2 += (d / N) * domanda.peso_standard;
-        } else if (domanda.gruppo === 'V3') {
-          V3 += (d / N) * domanda.peso_standard;
-        }
+      for (const graphStored of currentBtns) {
+        graphStored.active = graphStored.value === graph.value;
       }
 
+      this.graphBtns.set(currentBtns);
+      return of(graph);
+    },
+  });
+
+  /**
+   * Computes V1/V2/V3 means for each academic year from a pre-grouped record of OPIS schedules.
+   * Delegates the formula elaboration to `elaborateFormulaFor` for each year's set of schedules.
+   */
+  computeMeansPerYear(schedeByYear: Record<AcademicYear, SchedaOpis[]>): MeansPerYear {
+    const meansPerYear = {} as MeansPerYear;
+
+    for (const year of typedKeys(schedeByYear)) {
+      const allSchedules = schedeByYear[year];
+
+      meansPerYear[year] = this.elaborateFormulaFor(allSchedules);
     }
 
-    return [this.round(V1), this.round(V2), this.round(V3)];
+    return meansPerYear;
   }
-
-  public parseInsegnamentoSchede(insegnamenti: Teaching[], subjectToSearch?: string): TeachingSummary[] {
-    const insegnamentiVal: TeachingSummary[] = [];
-    for (let i = 0; i < insegnamenti.length; i++) {
-
-      if (insegnamenti[i].schedeopis == null) { continue; }
-      if (subjectToSearch != null && insegnamenti[i].nome.toUpperCase().indexOf(subjectToSearch.toUpperCase()) === -1) { continue; }
-
-      insegnamentiVal[i] = {} as TeachingSummary;
-      insegnamentiVal[i].nome = insegnamenti[i].nome;
-      insegnamentiVal[i].nome_completo = insegnamenti[i].nome;
-
-      if (insegnamentiVal[i].nome.length > 35) {
-        insegnamentiVal[i].nome = insegnamentiVal[i].nome.substring(0, 35) + '... ';
-      }
-
-
-      if (insegnamenti[i].id_modulo !== 0 && insegnamenti[i].nome_modulo != null) {
-        insegnamentiVal[i].nome += ' - ' + insegnamenti[i].nome_modulo;
-        insegnamentiVal[i].nome_completo += ' -' + insegnamenti[i].nome_modulo;
-      }
-
-      if (insegnamenti[i].canale !== 'no') {
-        insegnamentiVal[i].nome += ' (' + insegnamenti[i].canale + ')';
-        insegnamentiVal[i].nome_completo += ' (' + insegnamenti[i].canale + ')';
-      }
-
-      // insegnamentiVal[i].nome += ' - ' + insegnamenti[i].schedeopis.totale_schede;
-      insegnamentiVal[i].nome_completo += ' - ' + insegnamenti[i].schedeopis.totale_schede;
-
-      insegnamentiVal[i].anno = insegnamenti[i].anno;
-      insegnamentiVal[i].canale = insegnamenti[i].canale;
-      insegnamentiVal[i].id_modulo = insegnamenti[i].id_modulo;
-      insegnamentiVal[i].nome_modulo = insegnamenti[i].nome_modulo;
-      insegnamentiVal[i].docente = insegnamenti[i].docente;
-      insegnamentiVal[i].tot_schedeF = insegnamenti[i].schedeopis.totale_schede;
-      insegnamentiVal[i].tot_schedeNF = insegnamenti[i].schedeopis.totale_schede_nf;
-
-      insegnamentiVal[i].domande = insegnamenti[i].schedeopis.domande;
-      /*insegnamentiVal[i].domande[0] = [];
-
-      let index = 0;
-      for (let j = 0; j < insegnamenti[i].domande.length; j++) {
-        if (j % 5 === 0 && j !== 0) {
-          index++;
-          insegnamentiVal[i].domande[index] = [];
-        }
-
-        insegnamentiVal[i].domande[index].push(insegnamenti[i].domande[j]);
-      }*/
-    }
-
-    return insegnamentiVal.filter((el) => el != null); // remove empty slot
-  }
-
 }

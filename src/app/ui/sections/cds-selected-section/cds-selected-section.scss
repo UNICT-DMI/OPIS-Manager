@@ -1,0 +1,116 @@
+.cds-selection {
+  &_wrap {
+    &.loading {
+      opis-loader {
+        margin: 10rem auto;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 90%;
+      color: var(--red-500);
+
+      h2 {
+        margin-top: 1rem;
+
+        @media (min-width: 1000px) {
+          width: 70%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+
+    .graph-description {
+      display: flex;
+      flex-direction: column;
+
+      &_top {
+        p {
+          margin: 10px;
+        }
+      }
+
+      &_heading {
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+
+        h2 {
+          flex: 0 0 auto;
+          margin: 0;
+        }
+
+        p {
+          flex: 1 1 0;
+          min-width: 0;
+          margin: 0;
+        }
+      }
+
+      &_right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .academic-year-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.5rem 0;
+
+      .v-switcher {
+        display: inline-flex;
+        gap: 0.25rem;
+      }
+
+      .teaching-search {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.6rem;
+        border: 1px solid var(--gray-300, #d0d0d0);
+        border-radius: 0.4rem;
+        flex: 1 1 220px;
+        min-width: 0;
+
+        input {
+          border: none;
+          outline: none;
+          background: transparent;
+          font-size: 0.95rem;
+          width: 100%;
+          min-width: 0;
+        }
+      }
+    }
+
+    .color-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.25rem 0 0.75rem;
+      font-size: 0.9rem;
+
+      .color-bar {
+        display: inline-block;
+        width: 200px;
+        height: 18px;
+        background: linear-gradient(to right, rgb(255, 200, 45), rgb(0, 121, 107));
+        border-radius: 0.25rem;
+      }
+    }
+  }
+}

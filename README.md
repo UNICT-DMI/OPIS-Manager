@@ -1,65 +1,161 @@
 # OPIS-Manager
 
+# ![OPIS Manager](./public/logo-static.webp)
+
 [![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
-This tool performs the data visualization of the OPIS results. [Live Demo](https://unict-dmi.github.io/OPIS-Manager/)
+A **frontend Angular application** for visualizing and managing OPIS results.  
+The project is designed to work in conjunction with a backend service and provides a modern Single Page Application (SPA) interface.
 
-## About this repo
+---
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+## 📌 Live Demo
 
-## How to setup the project
+The application is available online at:  
+👉 https://unict-dmi.github.io/OPIS-Manager/
 
-### Backend setup
+---
 
-Before starting the UI, you must have the backend fully working on your machine. Follow the instruction in the [OPIS Manager backend repo](https://github.com/UNICT-DMI/opis-manager-core).
+## 🧠 About
 
-### Application setup
+OPIS-Manager is the frontend layer of an OPIS results management system.  
+It has been bootstrapped with [Angular CLI](https://github.com/angular/angular-cli) and follows Angular best practices regarding project structure, modularity, and maintainability.
 
-First of all, install the required dependencies with:
+The application communicates with a backend service to retrieve and display data; without the backend running, most features will not function correctly.
 
-```bash
-$ npm install --legacy-peer-deps
-$ export NODE_OPTIONS=--openssl-legacy-provider
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to run the project locally.
+
+### 🛠 Prerequisites
+
+- **Node.js** (tested with Node v24.11.1; other recent 24.x versions should work)
+- **Angular CLI**
+- A running instance of the compatible backend
+
+### 🔌 Backend Setup
+
+Before starting the frontend application, make sure the backend is up and running.  
+Follow the setup instructions available in the official OPIS Manager backend repository:  
+https://github.com/UNICT-DMI/opis-manager-core
+
+### 📥 Installation
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/ChiaraZuccaro/OPIS-Manager.git
+   cd OPIS-Manager
+   ```
+
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+   or
+   ```sh
+   npm i
+   ```
+
+### 🌍 Environment Configuration
+
+The environment configuration is generated automatically.  
+Before starting the application, the `prestart` script (`node set-env.js`) creates the `src/enviroment.ts` file containing the required configuration values (e.g. API base URL).  
+No manual `.env` file setup is required at this stage.
+
+### 🧪 Development Server
+
+Start the local development server with:
+
+```sh
+npm start
 ```
 
-Install the last version of angular-cli to run the app locally with:
-`$ npm install -g @angular/cli`
+or
 
-Configure the years and the API path, so copy src/assets/default.json into src/assets/config.json and configure the related years and API url, like:
-
+```sh
+ng serve
 ```
 
-{
-"apiUrl": "http://localhost:8000/api/",
-"years": ["2013/2014", "2014/2015", "2016/2017", "2017/2018", "2018/2019"]
-}
+Then open `http://localhost:4200/` in your browser.  
+The application will automatically reload when you modify source files.
 
+---
+
+## ⚙️ Code Scaffolding
+
+You can generate new Angular artifacts using the Angular CLI:
+
+```sh
+ng generate component component-name
+ng generate service service-name
 ```
 
-Finally can run the front-end application with `$ ng serve -o` then navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+To see all available schematics:
 
-## Code scaffolding
+```sh
+ng generate --help
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 📦 Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+To build the project run:
 
-## Running unit tests
+```sh
+npm run build
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+or
 
-## Running end-to-end tests
+```sh
+ng build
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## 🧪 Tests
 
-### Credits
+### Unit Tests
+
+Run unit tests with:
+
+```sh
+npm run test
+```
+
+or
+
+```sh
+ng test
+```
+
+Unit testing is configured using **[Vitest](https://vitest.dev/)**.
+
+### End-to-End Tests
+
+```sh
+ng e2e
+```
+
+Angular CLI does not include an E2E test runner by default, so you can integrate the one that best suits your needs.
+
+---
+
+## 🧾 License
+
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+
+---
+
+## 🙌 Credits
+
+Contributors include:
 
 - Stefano Borzì (Helias)
 - Pierpaolo Pecoraio
@@ -69,7 +165,18 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Alessio Piazza
 - Diego Sinitò
 - Salvo Asero
+  <<<<<<< HEAD
+- Chiara Zuccaro
+
+---
+
+## 📌 Notes
+
+- The backend service must be running for the application to function correctly.
+- # The project relies entirely on standard Angular CLI tooling for development, testing, and building.
 
 ```
 
 ```
+
+> > > > > > > master

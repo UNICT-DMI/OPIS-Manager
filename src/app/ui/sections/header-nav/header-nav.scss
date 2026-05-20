@@ -1,0 +1,100 @@
+.opis-header {
+  background-color: var(--dark-bg);
+
+  .header-content {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    gap: 1rem;
+    align-items: end;
+    justify-content: space-between;
+    color: var(--color-surface);
+    font-size: 1.2rem;
+
+    .opis-logo {
+      display: inline-flex;
+      gap: 1rem;
+      align-items: end;
+      width: 3rem;
+      height: 3rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      h1 {
+        white-space: nowrap;
+        font-weight: 400;
+        font-size: 2rem;
+        display: none;
+
+        @media (min-width: 600px) {
+          display: block;
+        }
+      }
+    }
+
+    .department-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.3rem;
+      min-width: 0;
+      flex: 1 1 auto;
+      justify-content: center;
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--color-surface);
+        flex-shrink: 0;
+      }
+
+      .name {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+
+        &::before {
+          content: attr(data-icon);
+          font-family: 'Material Symbols Outlined';
+          font-size: 1.5em;
+          line-height: 1;
+          color: var(--blue-100);
+          pointer-events: none;
+          flex-shrink: 0;
+        }
+      }
+
+      .year {
+        background-color: var(--blue-500);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+        display: none;
+
+        @media (min-width: 700px) {
+          display: inline-block;
+        }
+      }
+    }
+
+    .end-nav-items {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 0.3rem;
+    }
+  }
+}

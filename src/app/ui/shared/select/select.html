@@ -1,0 +1,41 @@
+<div class="opis-select" [class.open]="isOpen()" [class.open-up]="openUp()">
+  <button type="button" class="opis-select__trigger" (click)="toggle()">
+    <span [class.placeholder]="!value()">{{ selectedLabel() }}</span>
+    <opis-icon class="opis-select__arrow" iconName="expand_more" />
+  </button>
+
+  @if (isOpen()) {
+    <div class="opis-select__dropdown" role="listbox">
+      <div class="opis-select__search">
+        <input
+          #searchInput
+          type="text"
+          class="opis-select__search-input"
+          [placeholder]="searchPlaceholder()"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+
+      <ul class="opis-select__options">
+        @for (option of filteredOptions(); track option.value) {
+          <li
+            role="option"
+            tabindex="0"
+            class="opis-select__option"
+            [class.selected]="value()?.value === option.value"
+            [attr.aria-selected]="value()?.value === option.value"
+            (click)="select(option)"
+            (keydown.enter)="select(option)"
+            (keydown.space)="select(option)"
+          >
+            {{ option.label }}
+          </li>
+        } @empty {
+          <li class="opis-select__empty">Nessun risultato</li>
+        }
+      </ul>
+    </div>
+  }
+</div>

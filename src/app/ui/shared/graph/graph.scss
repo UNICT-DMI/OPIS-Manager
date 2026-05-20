@@ -1,0 +1,11 @@
+#graph {
+  width: 93%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  canvas {
+    max-width: 100%;
+  }
+}

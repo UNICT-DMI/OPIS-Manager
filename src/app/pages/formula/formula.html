@@ -1,0 +1,193 @@
+<section id="formula-page">
+  <div class="formula-hero wrapper">
+    <h1 class="formula-hero__title">
+      Modello per l'individuazione di indici atti a monitorare i servizi didattici
+    </h1>
+    <p class="formula-hero__subtitle">
+      La scheda OPIS viene suddivisa in tre parti, ciascuna contenente un gruppo di n domande, e
+      viene effettuata una prima valutazione relativamente a ciascun gruppo. Consideriamo la
+      generica domanda <em>D<sub>j</sub></em> del gruppo e assegniamo valori numerici agli esiti
+      secondo la seguente tabella.
+    </p>
+  </div>
+
+  <div class="formula-section wrapper">
+    <h2 class="formula-section__title">Pesi delle risposte</h2>
+    <div class="formula-table-wrap">
+      <table class="formula-table formula-table--answers">
+        <thead>
+          <tr>
+            <th>Esito</th>
+            <th>Codice</th>
+            <th>Valore</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of answerRows; track row.code) {
+            <tr>
+              <td>{{ row.label }}</td>
+              <td>
+                <em>{{ row.code.charAt(0) }}<sub>{{ row.code.charAt(1) }}</sub></em>
+              </td>
+              <td>{{ row.value }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="formula-definition wrapper">
+    <p>
+      Sia <em>X<sub>ij</sub></em> il numero di studenti che hanno dato la risposta
+      <em>E<sub>i</sub></em> alla domanda <em>D<sub>j</sub></em> e sia <em>N</em> il numero
+      complessivo di studenti.
+    </p>
+
+    <div class="formula-math">
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+        <msub><mi>D</mi><mi>j</mi></msub>
+        <mo>=</mo>
+        <mfrac><mn>1</mn><mi>N</mi></mfrac>
+        <munderover>
+          <mo>&#x2211;</mo>
+          <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+          <mn>4</mn>
+        </munderover>
+        <msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub>
+        <mo>&#x22C5;</mo>
+        <msub><mi>E</mi><mi>i</mi></msub>
+        <mo>&#x22C5;</mo>
+        <msub><mi>p</mi><mi>j</mi></msub>
+      </math>
+    </div>
+
+    <p>
+      rappresenta la valutazione pesata relativa alla domanda <em>D<sub>j</sub></em> secondo il peso
+      <em>p<sub>j</sub></em>.
+    </p>
+    <p>
+      I pesi sono numeri compresi tra zero e uno e vengono assegnati – all'interno di un singolo
+      gruppo di domande – in modo che la loro somma sia pari ad uno. La valutazione complessiva del
+      corso – relativamente al gruppo di domande considerato – si ottiene sommando le valutazioni
+      ottenute secondo la formula:
+    </p>
+
+    <div class="formula-math formula-math--big">
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+        <mi>V</mi>
+        <mo>=</mo>
+        <mfrac><mn>1</mn><mi>N</mi></mfrac>
+        <munderover>
+          <mo>&#x2211;</mo>
+          <mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow>
+          <mi>n</mi>
+        </munderover>
+        <munderover>
+          <mo>&#x2211;</mo>
+          <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+          <mn>4</mn>
+        </munderover>
+        <msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub>
+        <mo>&#x22C5;</mo>
+        <msub><mi>E</mi><mi>i</mi></msub>
+        <mo>&#x22C5;</mo>
+        <msub><mi>p</mi><mi>j</mi></msub>
+      </math>
+    </div>
+
+    <p class="formula-definition__recap">
+      La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo –
+      (<em>V<sub>1</sub></em>, <em>V<sub>2</sub></em>, <em>V<sub>3</sub></em>).
+    </p>
+  </div>
+
+  <div class="formula-section wrapper">
+    <h2 class="formula-section__title">Valutazioni, domande e relativi pesi</h2>
+
+    @if (isLoading()) {
+      <div class="formula-loader">
+        <opis-loader />
+      </div>
+    } @else if (hasError()) {
+      <p class="formula-error">
+        Impossibile recuperare i pesi delle domande. Riprova più tardi.
+      </p>
+    } @else {
+      <div class="formula-table-wrap">
+        <table class="formula-table formula-table--questions">
+          <thead>
+            <tr>
+              <th>Gruppo</th>
+              <th>Domanda</th>
+              <th>Peso</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of groupedRows().V1; track row.id) {
+              <tr>
+                <td class="formula-table__group">{{ Groups.Group1 }}</td>
+                <td>
+                  <strong>{{ row.id }}</strong>
+                  <span>{{ row.text }}</span>
+                </td>
+                <td class="formula-table__weight">{{ getWeight(row.id) ?? '–' }}</td>
+              </tr>
+            }
+
+            <tr class="formula-table__spacer">
+              <td colspan="3"></td>
+            </tr>
+
+            @for (row of groupedRows().V2; track row.id) {
+              <tr>
+                <td class="formula-table__group">{{ Groups.Group2 }}</td>
+                <td>
+                  <strong>{{ row.id }}</strong>
+                  <span>{{ row.text }}</span>
+                </td>
+                <td class="formula-table__weight">{{ getWeight(row.id) ?? '–' }}</td>
+              </tr>
+            }
+
+            <tr class="formula-table__spacer">
+              <td colspan="3"></td>
+            </tr>
+
+            @for (row of groupedRows().V3; track row.id) {
+              <tr>
+                <td class="formula-table__group">{{ Groups.Group3 }}</td>
+                <td>
+                  <strong>{{ row.id }}</strong>
+                  <span>{{ row.text }}</span>
+                </td>
+                <td class="formula-table__weight">{{ getWeight(row.id) ?? '–' }}</td>
+              </tr>
+            }
+
+            @if (groupedRows().dismissed.length > 0) {
+              <tr class="formula-table__spacer">
+                <td colspan="3"></td>
+              </tr>
+
+              @for (row of groupedRows().dismissed; track row.id) {
+                <tr class="formula-table__dismissed">
+                  <td class="formula-table__group">–</td>
+                  <td>
+                    <strong>{{ row.id }}</strong>
+                    <s>{{ row.text }}</s>
+                  </td>
+                  <td class="formula-table__weight">{{ getWeight(row.id) ?? '–' }}</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="formula-table__legend">
+        Le domande barrate non concorrono al calcolo dei tre indici di valutazione.
+      </p>
+    }
+  </div>
+</section>
