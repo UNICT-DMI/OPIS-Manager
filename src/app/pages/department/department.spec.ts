@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { exampleCDS } from '@mocks/cds-mock';
 import { exampleDepartment } from '@mocks/department-mock';
 import { CdsService } from '@services/cds/cds.service';
@@ -191,5 +191,240 @@ describe('DepartmentPageComponent', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValueOnce(null);
     const freshFixture = TestBed.createComponent(DepartmentPageComponent);
     expect(freshFixture.componentInstance['department']()).toBeNull();
+  });
+});
+
+// ─── Route restoration & sync ────────────────────────────────────────────────
+describe('DepartmentPageComponent route handling', () => {
+  const buildSetup = (queryParams: Record<string, string>, cdsListValue: any[] = []) => {
+    const cdsListResource = {
+      isLoading: () => false,
+      hasValue: () => true,
+      value: signal(cdsListValue),
+      error: () => null,
+      status: () => 'success',
+    };
+    const infoCdsResource = {
+      isLoading: () => false,
+      hasValue: () => true,
+      value: signal<any>(null),
+      error: () => null,
+      status: () => 'success',
+    };
+
+    const mockDepartmentsService = {
+      getCdsDepartment: vi.fn(() => cdsListResource),
+      currentDepartment: signal(null),
+    };
+    const mockCdsService = {
+      cdsSelected: signal<any>(NO_CHOICE_CDS),
+      getInfoCds: infoCdsResource,
+      isLoading: signal(false),
+    };
+    const mockGraphService = {
+      graphKeySelected: signal<string>('cds_general'),
+      graphBtns: signal([]),
+      manageGraphSelection: vi.fn(() => infoCdsResource),
+      selectedYear: signal<string | null>(null),
+      selectedVIndex: signal(0),
+      teachingSearch: signal(''),
+    };
+    const mockQuestionService = { loadQuestionsWeights: vi.fn(() => of(null)) };
+    const mockTeachingService = { selectedTeaching: signal<any>(null) };
+
+    const mockRouter = { navigate: vi.fn(() => Promise.resolve(true)) };
+    const mockRoute = {
+      snapshot: {
+        queryParamMap: { get: (key: string) => queryParams[key] ?? null },
+      },
+    };
+
+    vi.restoreAllMocks();
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(exampleDepartment));
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => undefined);
+
+    return {
+      cdsListResource,
+      infoCdsResource,
+      mockDepartmentsService,
+      mockCdsService,
+      mockGraphService,
+      mockQuestionService,
+      mockTeachingService,
+      mockRouter,
+      mockRoute,
+    };
+  };
+
+  const createFixture = (deps: ReturnType<typeof buildSetup>) =>
+    TestBed.configureTestingModule({
+      imports: [DepartmentPageComponent],
+      providers: [
+        { provide: DepartmentsService, useValue: deps.mockDepartmentsService },
+        { provide: CdsService, useValue: deps.mockCdsService },
+        { provide: GraphService, useValue: deps.mockGraphService },
+        { provide: QuestionService, useValue: deps.mockQuestionService },
+        { provide: TeachingService, useValue: deps.mockTeachingService },
+        { provide: Router, useValue: deps.mockRouter },
+        { provide: ActivatedRoute, useValue: deps.mockRoute },
+      ],
+    })
+      .overrideComponent(DepartmentPageComponent, {
+        remove: { imports: [CdsSelectedSection, Disclaimers] },
+        add: { imports: [MockCdsSelectedSection, MockDisclaimers] },
+      })
+      .compileComponents()
+      .then(() => TestBed.createComponent(DepartmentPageComponent));
+
+  it('[DEPARTMENT-ROUTE]: should restore view from query params', async () => {
+    const deps = buildSetup({ view: 'teaching_cds' });
+    await createFixture(deps);
+    expect(deps.mockGraphService.graphKeySelected()).toBe('teaching_cds');
+  });
+
+  it('[DEPARTMENT-ROUTE]: should ignore invalid view query param', async () => {
+    const deps = buildSetup({ view: 'invalid_view' });
+    await createFixture(deps);
+    expect(deps.mockGraphService.graphKeySelected()).toBe('cds_general');
+  });
+
+  it('[DEPARTMENT-ROUTE]: should restore year from query params', async () => {
+    const deps = buildSetup({ year: '2023/2024' });
+    await createFixture(deps);
+    expect(deps.mockGraphService.selectedYear()).toBe('2023/2024');
+  });
+
+  it('[DEPARTMENT-ROUTE]: should ignore unknown year query param', async () => {
+    const deps = buildSetup({ year: '1999/2000' });
+    await createFixture(deps);
+    expect(deps.mockGraphService.selectedYear()).toBeNull();
+  });
+
+  it('[DEPARTMENT-ROUTE]: should restore search from query params', async () => {
+    const deps = buildSetup({ search: 'algebra' });
+    await createFixture(deps);
+    expect(deps.mockGraphService.teachingSearch()).toBe('algebra');
+  });
+
+  it('[DEPARTMENT-ROUTE]: should set pending teaching id from query params', async () => {
+    const deps = buildSetup({ teaching: '42' });
+    const fixture = await createFixture(deps);
+    expect(fixture.componentInstance['_pendingTeachingId']()).toBe(42);
+  });
+
+  it('[DEPARTMENT-ROUTE]: should ignore non-numeric teaching query param', async () => {
+    const deps = buildSetup({ teaching: 'not-a-number' });
+    const fixture = await createFixture(deps);
+    expect(fixture.componentInstance['_pendingTeachingId']()).toBeNull();
+  });
+
+  it('[DEPARTMENT-ROUTE]: should restore CDS from cds query param when list loads', async () => {
+    const list = [exampleCDS];
+    const deps = buildSetup({ cds: String(exampleCDS.id) }, list);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(deps.mockCdsService.cdsSelected().id).toBe(exampleCDS.id);
+  });
+
+  it('[DEPARTMENT-ROUTE]: should leave CDS unchanged when query param id is not in list', async () => {
+    const deps = buildSetup({ cds: '999' }, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(deps.mockCdsService.cdsSelected()).toEqual(NO_CHOICE_CDS);
+  });
+
+  it('[DEPARTMENT-ROUTE]: syncRouteWithState should call router.navigate with null params when no CDS', async () => {
+    const deps = buildSetup({}, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(deps.mockRouter.navigate).toHaveBeenCalled();
+    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    expect(lastCall?.[1]?.queryParams).toMatchObject({ cds: null, view: null });
+  });
+
+  it('[DEPARTMENT-ROUTE]: syncRouteWithState should include cds and view when CDS is selected', async () => {
+    const deps = buildSetup({}, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    deps.mockCdsService.cdsSelected.set(exampleCDS);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    expect(lastCall?.[1]?.queryParams).toMatchObject({
+      cds: String(exampleCDS.id),
+      view: 'cds_general',
+    });
+  });
+
+  it('[DEPARTMENT-ROUTE]: syncRouteWithState should include year and search for cds_year view', async () => {
+    const deps = buildSetup({}, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    deps.mockCdsService.cdsSelected.set(exampleCDS);
+    deps.mockGraphService.graphKeySelected.set('cds_year');
+    deps.mockGraphService.selectedYear.set('2023/2024');
+    deps.mockGraphService.teachingSearch.set('algebra');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    expect(lastCall?.[1]?.queryParams).toMatchObject({
+      year: '2023/2024',
+      search: 'algebra',
+    });
+  });
+
+  it('[DEPARTMENT-ROUTE]: syncRouteWithState should include teaching for teaching_cds view', async () => {
+    const deps = buildSetup({}, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    deps.mockCdsService.cdsSelected.set(exampleCDS);
+    deps.mockGraphService.graphKeySelected.set('teaching_cds');
+    deps.mockTeachingService.selectedTeaching.set({ id: 7 });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    expect(lastCall?.[1]?.queryParams).toMatchObject({ teaching: '7' });
+  });
+
+  it('[DEPARTMENT-ROUTE]: syncRouteWithState should use pendingTeaching when teaching not yet loaded', async () => {
+    const deps = buildSetup({ teaching: '99' }, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    deps.mockCdsService.cdsSelected.set(exampleCDS);
+    deps.mockGraphService.graphKeySelected.set('teaching_cds');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    expect(lastCall?.[1]?.queryParams).toMatchObject({ teaching: '99' });
+  });
+
+  it('[DEPARTMENT-ROUTE]: applyPendingTeaching should set selectedTeaching when info loads', async () => {
+    const deps = buildSetup({ teaching: '5' }, [exampleCDS]);
+    const fixture = await createFixture(deps);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const teaching = { id: 5, nome: 'X' };
+    (deps.infoCdsResource.value as any).set({ teachings: [teaching], courses: {} });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(deps.mockTeachingService.selectedTeaching()).toEqual(teaching);
   });
 });
