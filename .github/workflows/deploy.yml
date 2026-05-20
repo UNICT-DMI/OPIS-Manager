@@ -29,15 +29,15 @@ jobs:
       - name: Build Master 🔨
         if: github.ref == 'refs/heads/master'
         run: |
-          npm install -g @angular/cli@10 --legacy-peer-deps
-          npm install --legacy-peer-deps
+          npm install -g @angular/cli@21
+          npm install
           ng build --prod --base-href=""
 
       - name: Build Old 🔨
         if: github.ref == 'refs/heads/old'
         run: |
-          npm install -g @angular/cli@21
-          npm install
+          npm install -g @angular/cli@10 --legacy-peer-deps
+          npm install --legacy-peer-deps
           npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
 
       - name: Deploy Master to Root 🚀
