@@ -16,12 +16,11 @@
       display: inline-flex;
       gap: 1rem;
       align-items: end;
-      width: 3rem;
-      height: 3rem;
+      flex-shrink: 0;
 
       img {
-        width: 100%;
-        height: 100%;
+        width: 3rem;
+        height: 3rem;
         object-fit: contain;
       }
 
