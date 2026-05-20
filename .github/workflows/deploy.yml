@@ -28,6 +28,7 @@ jobs:
       - name: Build Master 🔨
         if: github.ref == 'refs/heads/master'
         run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
           npm install -g @angular/cli@10 --legacy-peer-deps
           npm install --legacy-peer-deps
           ng build --prod --base-href=""
@@ -35,6 +36,7 @@ jobs:
       - name: Build Old 🔨
         if: github.ref == 'refs/heads/old'
         run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
           npm install -g @angular/cli@21
           npm install
           npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
