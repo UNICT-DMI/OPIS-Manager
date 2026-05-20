@@ -6,7 +6,8 @@ on:
       - '**'
   push:
     branches:
-      - main
+      - master
+      - old
 
 permissions:
   contents: write
@@ -56,21 +57,3 @@ jobs:
           node-version: '24.13.0'
       - run: npm ci
       - run: npm run build
-
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # deploy solo su main
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "24.13.0"
-  #     - run: npm ci
-  #     - name: Deploy Opis App
-  #       uses: JamesIves/github-pages-deploy-action@v4
-  #       with:
-  #         branch: gh-pages
-  #         folder: dist/opis-manager

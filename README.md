@@ -1,10 +1,11 @@
-![OPIS Manager](./public/logo-static.webp)
+# OPIS-Manager
+
+# ![OPIS Manager](./public/logo-static.webp)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/unict-dmi/opis-manager/badge)](https://www.codefactor.io/repository/github/unict-dmi/opis-manager)
 
 A **frontend Angular application** for visualizing and managing OPIS results.  
 The project is designed to work in conjunction with a backend service and provides a modern Single Page Application (SPA) interface.
-
 
 ---
 
@@ -34,17 +35,16 @@ Follow these instructions to run the project locally.
 - **Angular CLI**
 - A running instance of the compatible backend
 
-
 ### 🔌 Backend Setup
 
 Before starting the frontend application, make sure the backend is up and running.  
 Follow the setup instructions available in the official OPIS Manager backend repository:  
 https://github.com/UNICT-DMI/opis-manager-core
 
-
 ### 📥 Installation
 
 1. Clone the repository:
+
    ```sh
    git clone https://github.com/ChiaraZuccaro/OPIS-Manager.git
    cd OPIS-Manager
@@ -59,13 +59,11 @@ https://github.com/UNICT-DMI/opis-manager-core
    npm i
    ```
 
-
 ### 🌍 Environment Configuration
 
 The environment configuration is generated automatically.  
 Before starting the application, the `prestart` script (`node set-env.js`) creates the `src/enviroment.ts` file containing the required configuration values (e.g. API base URL).  
 No manual `.env` file setup is required at this stage.
-
 
 ### 🧪 Development Server
 
@@ -74,7 +72,9 @@ Start the local development server with:
 ```sh
 npm start
 ```
+
 or
+
 ```sh
 ng serve
 ```
@@ -108,7 +108,9 @@ To build the project run:
 ```sh
 npm run build
 ```
+
 or
+
 ```sh
 ng build
 ```
@@ -126,7 +128,9 @@ Run unit tests with:
 ```sh
 npm run test
 ```
+
 or
+
 ```sh
 ng test
 ```
@@ -161,6 +165,7 @@ Contributors include:
 - Alessio Piazza
 - Diego Sinitò
 - Salvo Asero
+  <<<<<<< HEAD
 - Chiara Zuccaro
 
 ---
@@ -168,4 +173,10 @@ Contributors include:
 ## 📌 Notes
 
 - The backend service must be running for the application to function correctly.
-- The project relies entirely on standard Angular CLI tooling for development, testing, and building.
+- # The project relies entirely on standard Angular CLI tooling for development, testing, and building.
+
+```
+
+```
+
+> > > > > > > master
