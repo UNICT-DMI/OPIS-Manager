@@ -31,7 +31,7 @@ jobs:
           export NODE_OPTIONS=--openssl-legacy-provider
           npm install -g @angular/cli@10 --legacy-peer-deps
           npm install --legacy-peer-deps
-          npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
+          npm run build -- --configuration production --base-href="/old/"
 
       - name: Deploy Master to Root 🚀
         if: github.ref == 'refs/heads/master'
