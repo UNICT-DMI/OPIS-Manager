@@ -9,7 +9,7 @@ export class IconRegistryService {
 
   load(name: 'github' | 'linkedin'): Observable<string> {
     if (!this.cache.has(name)) {
-      const request$ = this._http.get(`/icons/${name}-icon.svg`, { responseType: 'text' }).pipe(
+      const request$ = this._http.get(`icons/${name}-icon.svg`, { responseType: 'text' }).pipe(
         map((svg) => svg.trim()),
         shareReplay(1),
       );

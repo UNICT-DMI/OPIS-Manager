@@ -21,7 +21,7 @@ describe('IconRegistryService', () => {
 
   it('[ICON-REGISTRY]: should fetch the requested icon and trim it', async () => {
     const promise = firstValueFrom(service.load('github'));
-    const req = httpMock.expectOne('/icons/github-icon.svg');
+    const req = httpMock.expectOne('icons/github-icon.svg');
     expect(req.request.method).toBe('GET');
     req.flush('  <svg></svg>  ');
     await expect(promise).resolves.toBe('<svg></svg>');
@@ -29,11 +29,11 @@ describe('IconRegistryService', () => {
 
   it('[ICON-REGISTRY]: should cache and not hit HTTP again on subsequent calls', async () => {
     const first = firstValueFrom(service.load('linkedin'));
-    httpMock.expectOne('/icons/linkedin-icon.svg').flush('<svg/>');
+    httpMock.expectOne('icons/linkedin-icon.svg').flush('<svg/>');
     await first;
 
     const second = firstValueFrom(service.load('linkedin'));
-    httpMock.expectNone('/icons/linkedin-icon.svg');
+    httpMock.expectNone('icons/linkedin-icon.svg');
     await expect(second).resolves.toBe('<svg/>');
   });
 });
