@@ -137,4 +137,27 @@ describe('CdsService', () => {
     httpMock.expectOne(() => true).flush({});
     await expect(promise).resolves.toBeDefined();
   });
+
+  // ── buildTeachingsByYear ──────────────────────────────────────────────────
+  it('[CDS-SERVICE]: buildTeachingsByYear groups teachings by academic year', () => {
+    const cdsList = [
+      { anno_accademico: '2022/2023', insegnamenti: [{ id: 1 }] },
+      { anno_accademico: '2023/2024', insegnamenti: [{ id: 2 }, { id: 3 }] },
+    ] as any;
+    const result = service['buildTeachingsByYear'](cdsList);
+    expect(result['2022/2023']).toEqual([{ id: 1 }]);
+    expect(result['2023/2024']).toEqual([{ id: 2 }, { id: 3 }]);
+  });
+
+  it('[CDS-SERVICE]: buildTeachingsByYear defaults to empty array when insegnamenti missing', () => {
+    const cdsList = [{ anno_accademico: '2023/2024' }] as any;
+    const result = service['buildTeachingsByYear'](cdsList);
+    expect(result['2023/2024']).toEqual([]);
+  });
+
+  it('[CDS-SERVICE]: computeCdsMeans delegates to graphService', () => {
+    const cdsList = [{ insegnamenti: [] }] as any;
+    service['computeCdsMeans'](cdsList);
+    expect(mockGraphService.computeMeansPerYear).toHaveBeenCalled();
+  });
 });

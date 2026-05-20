@@ -45,8 +45,8 @@ const mockResource = (overrides = {}) => ({
   status: signal<ResourceStatus>('idle'),
   isLoading: signal(false),
   hasValue: signal(false),
-  value: signal(null),
-  error: signal(null),
+  value: signal<any>(null),
+  error: signal<any>(null),
   refresh: vi.fn(),
   ...overrides,
 });
@@ -61,17 +61,22 @@ const buildMockCdsService = () => ({
 const buildMockGraphService = () => ({
   graphKeySelected: signal('cds_general'),
   graphBtns: signal([]),
-  selectedYear: signal(null),
+  selectedYear: signal<string | null>(null),
   selectedVIndex: signal(0),
   teachingSearch: signal(''),
   manageGraphSelection: mockResource({
     hasValue: signal(true),
-    value: signal({ value: 'cds_general', label: 'Generale', description: 'Desc', active: true }),
+    value: signal<any>({
+      value: 'cds_general',
+      label: 'Generale',
+      description: 'Desc',
+      active: true,
+    }),
   }),
 });
 
 const buildMockTeachingService = () => ({
-  selectedTeaching: signal(null),
+  selectedTeaching: signal<any>(null),
   getTeachingGraph: vi.fn(() => mockResource()),
 });
 
@@ -251,5 +256,86 @@ describe('CdsSelectedSection', () => {
   it('[CDS-SECTION]: msgError returns BASE_ERROR_MSG when activeGraph is truthy', () => {
     const msg = component['msgError']();
     expect(typeof msg).toBe('string');
+  });
+
+  // ── currentSelectorValue ──────────────────────────────────────────────────
+  it('[CDS-SECTION]: currentSelectorValue returns null when there are no options', () => {
+    expect(component['currentSelectorValue']()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: currentSelectorValue returns matching year option in cds_year view', async () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2022/2023': [], '2023/2024': [] },
+    } as any);
+    mockGraphService.graphKeySelected.set('cds_year');
+    mockGraphService.manageGraphSelection.value.set({
+      value: 'cds_year',
+      label: 'Per anno',
+      description: '',
+      active: true,
+    });
+    mockGraphService.selectedYear.set('2023/2024');
+    await fixture.whenStable();
+
+    expect(component['currentSelectorValue']()).toEqual({
+      value: '2023/2024',
+      label: '2023/2024',
+    });
+  });
+
+  it('[CDS-SECTION]: currentSelectorValue returns null when selected year not in options', async () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2022/2023': [] },
+    } as any);
+    mockGraphService.graphKeySelected.set('cds_year');
+    mockGraphService.manageGraphSelection.value.set({
+      value: 'cds_year',
+      label: 'Per anno',
+      description: '',
+      active: true,
+    });
+    mockGraphService.selectedYear.set('1999/2000');
+    await fixture.whenStable();
+
+    expect(component['currentSelectorValue']()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: currentSelectorValue returns matching teaching option in teaching_cds view', async () => {
+    const teaching = { id: 7, nome: 'Algebra', canale: 'no' };
+    mockCdsService.getInfoCds.value.set({
+      teachings: [teaching],
+      courses: {},
+    } as any);
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    mockGraphService.manageGraphSelection.value.set({
+      value: 'teaching_cds',
+      label: 'Per insegnamento',
+      description: '',
+      active: true,
+    });
+    mockTeachingService.selectedTeaching.set(teaching as any);
+    await fixture.whenStable();
+
+    expect(component['currentSelectorValue']()).toEqual({ value: 7, label: 'Algebra' });
+  });
+
+  it('[CDS-SECTION]: currentSelectorValue returns null when no teaching is selected in teaching_cds view', async () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [{ id: 1, nome: 'X', canale: 'no' }],
+      courses: {},
+    } as any);
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    mockGraphService.manageGraphSelection.value.set({
+      value: 'teaching_cds',
+      label: 'Per insegnamento',
+      description: '',
+      active: true,
+    });
+    mockTeachingService.selectedTeaching.set(null);
+    await fixture.whenStable();
+
+    expect(component['currentSelectorValue']()).toBeNull();
   });
 });
