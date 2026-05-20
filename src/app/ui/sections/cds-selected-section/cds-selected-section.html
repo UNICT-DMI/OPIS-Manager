@@ -16,6 +16,7 @@
           @if (selectorOptions()) {
             <opis-select
               [options]="selectorOptions()!"
+              [value]="currentSelectorValue()"
               placeholder="Seleziona..."
               (changed)="onSelectorChange($event)"
             />

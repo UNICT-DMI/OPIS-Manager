@@ -6,6 +6,7 @@ import { CdsService } from '@services/cds/cds.service';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { GraphService } from '@services/graph/graph.service';
 import { QuestionService } from '@services/questions/questions.service';
+import { TeachingService } from '@services/teachings/teachings.service';
 import { CdsSelectedSection } from '@sections/cds-selected-section/cds-selected-section';
 import { Disclaimers } from '@cards/disclaimer/disclaimers';
 import { NO_CHOICE_CDS } from '@values/no-choice-cds';
@@ -64,10 +65,17 @@ describe('DepartmentPageComponent', () => {
       graphKeySelected: signal('cds_general'),
       graphBtns: signal([]),
       manageGraphSelection: vi.fn(() => mockResource),
+      selectedYear: signal(null),
+      selectedVIndex: signal(0),
+      teachingSearch: signal(''),
     };
 
     const mockQuestionService = {
       loadQuestionsWeights: vi.fn(() => of(null)),
+    };
+
+    const mockTeachingService = {
+      selectedTeaching: signal(null),
     };
 
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockDepartment));
@@ -80,6 +88,7 @@ describe('DepartmentPageComponent', () => {
         { provide: CdsService, useValue: mockCdsService },
         { provide: GraphService, useValue: mockGraphService },
         { provide: QuestionService, useValue: mockQuestionService },
+        { provide: TeachingService, useValue: mockTeachingService },
         provideRouter([]),
       ],
     })

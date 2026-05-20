@@ -96,6 +96,28 @@ export class CdsSelectedSection {
     return this._selectorResolvers[graph.value]?.() ?? null;
   });
 
+  protected readonly currentSelectorValue = computed<SelectOption | null>(() => {
+    const opts = this.selectorOptions();
+    if (!opts?.length) return null;
+
+    const graphKey = this._graphService.graphKeySelected();
+    if (graphKey === GraphSelection.YEAR) {
+      const year = this._graphService.selectedYear();
+
+      return year ? (opts.find((o) => o.value === year) ?? null) : null;
+    }
+
+    if (graphKey === GraphSelection.TEACHINGS_CDS) {
+      const teaching = this._teachingService.selectedTeaching();
+
+      if (teaching) {
+        return opts.find((o) => o.value === teaching.id) ?? null;
+      }
+    }
+
+    return null;
+  });
+
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();
 

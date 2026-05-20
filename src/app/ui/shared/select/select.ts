@@ -48,7 +48,9 @@ export class SelectComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.select(this.options()[0]);
+    if (this.value()) return;
+    const first = this.options()[0];
+    if (first) this.select(first);
   }
 
   protected toggle(): void {
