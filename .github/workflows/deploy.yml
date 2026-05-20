@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - master
-      - development
+      - old
   pull_request:
     branches:
-      - development
+      - old
 
 permissions:
   contents: write
@@ -33,12 +33,12 @@ jobs:
           npm install --legacy-peer-deps
           ng build --prod --base-href=""
 
-      - name: Build Development 🔨
-        if: github.ref == 'refs/heads/development'
+      - name: Build Old 🔨
+        if: github.ref == 'refs/heads/old'
         run: |
           npm install -g @angular/cli@21
           npm install
-          npm run build -- --configuration production --base-href="/OPIS-Manager/development/"
+          npm run build -- --configuration production --base-href="/OPIS-Manager/old/"
 
       - name: Deploy Master to Root 🚀
         if: github.ref == 'refs/heads/master'
@@ -48,11 +48,11 @@ jobs:
           folder: dist/opis-manager
           clean: false
 
-      - name: Deploy Development to /development 🚀
-        if: github.ref == 'refs/heads/development'
+      - name: Deploy Old to /old 🚀
+        if: github.ref == 'refs/heads/old'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: dist/opis-manager/browser/
-          target-folder: development
+          target-folder: old
           clean: false
