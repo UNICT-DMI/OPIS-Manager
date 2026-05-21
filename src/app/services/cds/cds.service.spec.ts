@@ -1,16 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { signal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { firstValueFrom } from 'rxjs';
 import { CdsService } from './cds.service';
 import { GraphService } from '@services/graph/graph.service';
+import { CDS } from '@interfaces/cds.interface';
 import { exampleCDS } from '@mocks/cds-mock';
 import { env } from '@env';
 
 // ─── Mock GraphService ────────────────────────────────────────────────────────
-const buildMockGraphService = () => ({
+const buildMockGraphService = (): {
+  graphKeySelected: WritableSignal<string>;
+  graphBtns: WritableSignal<never[]>;
+  manageGraphSelection: { isLoading: WritableSignal<boolean> };
+  computeMeansPerYear: ReturnType<typeof vi.fn>;
+} => ({
   graphKeySelected: signal('cds_general'),
   graphBtns: signal([]),
   manageGraphSelection: { isLoading: signal(false) },
@@ -105,13 +111,13 @@ describe('CdsService', () => {
         ],
       },
       { insegnamenti: [{ schedeopis: { domande: null } }] },
-    ] as any;
+    ] as unknown as CDS[];
 
     expect(service['extractValidSchedeOpis'](cdsList).length).toBe(1);
   });
 
   it('[CDS-SERVICE]: should return empty array when no valid SchedeOpis exist', () => {
-    const cdsList = [{ insegnamenti: [{ schedeopis: null }] }] as any;
+    const cdsList = [{ insegnamenti: [{ schedeopis: null }] }] as unknown as CDS[];
     expect(service['extractValidSchedeOpis'](cdsList)).toEqual([]);
   });
 
@@ -143,20 +149,20 @@ describe('CdsService', () => {
     const cdsList = [
       { anno_accademico: '2022/2023', insegnamenti: [{ id: 1 }] },
       { anno_accademico: '2023/2024', insegnamenti: [{ id: 2 }, { id: 3 }] },
-    ] as any;
+    ] as unknown as CDS[];
     const result = service['buildTeachingsByYear'](cdsList);
     expect(result['2022/2023']).toEqual([{ id: 1 }]);
     expect(result['2023/2024']).toEqual([{ id: 2 }, { id: 3 }]);
   });
 
   it('[CDS-SERVICE]: buildTeachingsByYear defaults to empty array when insegnamenti missing', () => {
-    const cdsList = [{ anno_accademico: '2023/2024' }] as any;
+    const cdsList = [{ anno_accademico: '2023/2024' }] as unknown as CDS[];
     const result = service['buildTeachingsByYear'](cdsList);
     expect(result['2023/2024']).toEqual([]);
   });
 
   it('[CDS-SERVICE]: computeCdsMeans delegates to graphService', () => {
-    const cdsList = [{ insegnamenti: [] }] as any;
+    const cdsList = [{ insegnamenti: [] }] as unknown as CDS[];
     service['computeCdsMeans'](cdsList);
     expect(mockGraphService.computeMeansPerYear).toHaveBeenCalled();
   });

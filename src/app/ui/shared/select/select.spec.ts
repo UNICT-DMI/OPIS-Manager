@@ -35,7 +35,7 @@ class HostComponent {
   readonly placeholder = signal('Select...');
   value: SelectOption | null = null;
   changedSpy = vi.fn();
-  onChanged(opt: SelectOption) {
+  onChanged(opt: SelectOption): void {
     this.changedSpy(opt);
   }
 }

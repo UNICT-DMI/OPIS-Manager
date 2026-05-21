@@ -124,7 +124,7 @@ describe('GitHubService', () => {
 
   it('[GET CONTRIBUTORS]: contributions undefined, fallback to 0', async () => {
     const promise = service.getRepoContributors();
-    http.expectOne(API_URL).flush([makeUser('ghost', undefined as any)]);
+    http.expectOne(API_URL).flush([makeUser('ghost', undefined as unknown as number)]);
 
     const result = await promise;
     expect(result[0].contributions).toBe(0);

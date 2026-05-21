@@ -28,7 +28,7 @@ export class TeachingService {
       .pipe(map((rows) => rows.filter((t) => t.schedeopis?.domande != null)));
   }
 
-  private computeTeachingMeans(rows: Teaching[]) {
+  private computeTeachingMeans(rows: Teaching[]): MeansPerYear {
     const teachingScheduleByYear = GraphMapper.groupByYear(rows, (teaching) => teaching.schedeopis);
     return this._graphService.computeMeansPerYear(teachingScheduleByYear);
   }

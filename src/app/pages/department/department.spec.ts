@@ -13,7 +13,9 @@ import { NO_CHOICE_CDS } from '@values/no-choice-cds';
 import { describe, expect, it, vi } from 'vitest';
 import { DepartmentPageComponent } from './department';
 import { of } from 'rxjs';
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal, WritableSignal } from '@angular/core';
+import { CDS } from '@interfaces/cds.interface';
+import { Teaching } from '@interfaces/teaching.interface';
 
 @Component({
   selector: 'opis-cds-selected-section',
@@ -44,11 +46,11 @@ describe('DepartmentPageComponent', () => {
 
   beforeEach(async () => {
     const mockResource = {
-      isLoading: () => false,
-      hasValue: () => true,
-      value: () => [],
-      error: () => null,
-      status: () => 'success',
+      isLoading: (): boolean => false,
+      hasValue: (): boolean => true,
+      value: (): unknown[] => [],
+      error: (): null => null,
+      status: (): string => 'success',
     };
 
     const mockDepartmentsService = {
@@ -196,20 +198,39 @@ describe('DepartmentPageComponent', () => {
 
 // ─── Route restoration & sync ────────────────────────────────────────────────
 describe('DepartmentPageComponent route handling', () => {
-  const buildSetup = (queryParams: Record<string, string>, cdsListValue: any[] = []) => {
+  type MockSimpleResource = {
+    isLoading: () => boolean;
+    hasValue: () => boolean;
+    value: WritableSignal<unknown>;
+    error: () => null;
+    status: () => string;
+  };
+  type BuildSetupResult = {
+    cdsListResource: { isLoading: () => boolean; hasValue: () => boolean; value: WritableSignal<CDS[]>; error: () => null; status: () => string };
+    infoCdsResource: MockSimpleResource;
+    mockDepartmentsService: { getCdsDepartment: ReturnType<typeof vi.fn>; currentDepartment: WritableSignal<null> };
+    mockCdsService: { cdsSelected: WritableSignal<CDS>; getInfoCds: MockSimpleResource; isLoading: WritableSignal<boolean> };
+    mockGraphService: { graphKeySelected: WritableSignal<string>; graphBtns: WritableSignal<never[]>; manageGraphSelection: ReturnType<typeof vi.fn>; selectedYear: WritableSignal<string | null>; selectedVIndex: WritableSignal<number>; teachingSearch: WritableSignal<string> };
+    mockQuestionService: { loadQuestionsWeights: ReturnType<typeof vi.fn> };
+    mockTeachingService: { selectedTeaching: WritableSignal<Teaching | null> };
+    mockRouter: { navigate: ReturnType<typeof vi.fn> };
+    mockRoute: { snapshot: { queryParamMap: { get: (key: string) => string | null } } };
+  };
+
+  const buildSetup = (queryParams: Record<string, string>, cdsListValue: CDS[] = []): BuildSetupResult => {
     const cdsListResource = {
-      isLoading: () => false,
-      hasValue: () => true,
+      isLoading: (): boolean => false,
+      hasValue: (): boolean => true,
       value: signal(cdsListValue),
-      error: () => null,
-      status: () => 'success',
+      error: (): null => null,
+      status: (): string => 'success',
     };
     const infoCdsResource = {
-      isLoading: () => false,
-      hasValue: () => true,
-      value: signal<any>(null),
-      error: () => null,
-      status: () => 'success',
+      isLoading: (): boolean => false,
+      hasValue: (): boolean => true,
+      value: signal<unknown>(null),
+      error: (): null => null,
+      status: (): string => 'success',
     };
 
     const mockDepartmentsService = {
@@ -217,7 +238,7 @@ describe('DepartmentPageComponent route handling', () => {
       currentDepartment: signal(null),
     };
     const mockCdsService = {
-      cdsSelected: signal<any>(NO_CHOICE_CDS),
+      cdsSelected: signal<CDS>(NO_CHOICE_CDS),
       getInfoCds: infoCdsResource,
       isLoading: signal(false),
     };
@@ -230,12 +251,12 @@ describe('DepartmentPageComponent route handling', () => {
       teachingSearch: signal(''),
     };
     const mockQuestionService = { loadQuestionsWeights: vi.fn(() => of(null)) };
-    const mockTeachingService = { selectedTeaching: signal<any>(null) };
+    const mockTeachingService = { selectedTeaching: signal<Teaching | null>(null) };
 
     const mockRouter = { navigate: vi.fn(() => Promise.resolve(true)) };
     const mockRoute = {
       snapshot: {
-        queryParamMap: { get: (key: string) => queryParams[key] ?? null },
+        queryParamMap: { get: (key: string): string | null => queryParams[key] ?? null },
       },
     };
 
@@ -256,7 +277,7 @@ describe('DepartmentPageComponent route handling', () => {
     };
   };
 
-  const createFixture = (deps: ReturnType<typeof buildSetup>) =>
+  const createFixture = (deps: ReturnType<typeof buildSetup>): Promise<ComponentFixture<DepartmentPageComponent>> =>
     TestBed.configureTestingModule({
       imports: [DepartmentPageComponent],
       providers: [
@@ -342,7 +363,7 @@ describe('DepartmentPageComponent route handling', () => {
     await fixture.whenStable();
 
     expect(deps.mockRouter.navigate).toHaveBeenCalled();
-    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    const lastCall = deps.mockRouter.navigate.mock.calls.at(-1) as [unknown, { queryParams: Record<string, unknown> }] | undefined;
     expect(lastCall?.[1]?.queryParams).toMatchObject({ cds: null, view: null });
   });
 
@@ -356,7 +377,7 @@ describe('DepartmentPageComponent route handling', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    const lastCall = deps.mockRouter.navigate.mock.calls.at(-1) as [unknown, { queryParams: Record<string, unknown> }] | undefined;
     expect(lastCall?.[1]?.queryParams).toMatchObject({
       cds: String(exampleCDS.id),
       view: 'cds_general',
@@ -376,7 +397,7 @@ describe('DepartmentPageComponent route handling', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    const lastCall = deps.mockRouter.navigate.mock.calls.at(-1) as [unknown, { queryParams: Record<string, unknown> }] | undefined;
     expect(lastCall?.[1]?.queryParams).toMatchObject({
       year: '2023/2024',
       search: 'algebra',
@@ -391,11 +412,11 @@ describe('DepartmentPageComponent route handling', () => {
 
     deps.mockCdsService.cdsSelected.set(exampleCDS);
     deps.mockGraphService.graphKeySelected.set('teaching_cds');
-    deps.mockTeachingService.selectedTeaching.set({ id: 7 });
+    deps.mockTeachingService.selectedTeaching.set({ id: 7 } as unknown as Teaching);
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    const lastCall = deps.mockRouter.navigate.mock.calls.at(-1) as [unknown, { queryParams: Record<string, unknown> }] | undefined;
     expect(lastCall?.[1]?.queryParams).toMatchObject({ teaching: '7' });
   });
 
@@ -410,7 +431,7 @@ describe('DepartmentPageComponent route handling', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const lastCall: any = deps.mockRouter.navigate.mock.calls.at(-1);
+    const lastCall = deps.mockRouter.navigate.mock.calls.at(-1) as [unknown, { queryParams: Record<string, unknown> }] | undefined;
     expect(lastCall?.[1]?.queryParams).toMatchObject({ teaching: '99' });
   });
 
@@ -421,7 +442,7 @@ describe('DepartmentPageComponent route handling', () => {
     await fixture.whenStable();
 
     const teaching = { id: 5, nome: 'X' };
-    (deps.infoCdsResource.value as any).set({ teachings: [teaching], courses: {} });
+    deps.infoCdsResource.value.set({ teachings: [teaching], courses: {} });
     fixture.detectChanges();
     await fixture.whenStable();
 
