@@ -14,7 +14,6 @@ export class YearSection {
 
   protected readonly allYears = ACADEMIC_YEARS;
   protected readonly selectedYear = computed(this._departmentService.selectedYear);
-  protected readonly canShowDepartments = computed(this._departmentService.canStartUserFlow);
 
   protected selectYear(year: AcademicYear): void {
     const isValidAcademicYear = this.allYears.includes(year);

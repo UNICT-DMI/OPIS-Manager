@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { describe, expect, it } from 'vitest';
@@ -8,7 +7,6 @@ describe('HomePageComponent', () => {
   let component: HomePageComponent;
   let fixture: ComponentFixture<HomePageComponent>;
 
-  const canStartUserFlow = signal(false);
   const mockResource = {
     isLoading: () => false,
     hasValue: () => true,
@@ -16,7 +14,6 @@ describe('HomePageComponent', () => {
     error: () => null,
   };
   const mockDepartmentService = {
-    canStartUserFlow,
     getDepartmentByYear: () => mockResource,
   };
 
@@ -31,18 +28,4 @@ describe('HomePageComponent', () => {
   });
 
   it('[HOME]: Created', () => expect(component).toBeTruthy());
-
-  it('[HOME]: should reflect canStartUserFlow', () => {
-    canStartUserFlow.set(true);
-    expect(component['canShowDepartments']()).toBe(true);
-
-    canStartUserFlow.set(false);
-    expect(component['canShowDepartments']()).toBe(false);
-  });
-
-  it('[HOME]: reset canStartUserFlow on Destroy', () => {
-    canStartUserFlow.set(true);
-    component.ngOnDestroy();
-    expect(canStartUserFlow()).toBe(false);
-  });
 });

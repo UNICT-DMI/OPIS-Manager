@@ -40,7 +40,6 @@ describe('DepartmentsService', () => {
   describe('signals', () => {
     it.each([
       ['logoAlreadyAnimated', false],
-      ['canStartUserFlow', false],
       ['selectedYear', '2024/2025'],
     ])('[SIGNAL]: %s has correct initial value', (key, expected) => {
       const signalFn = service[key as keyof DepartmentsService] as () => unknown;

@@ -10,13 +10,11 @@ describe('YearSection', () => {
   let fixture: ComponentFixture<YearSection>;
   let mockDepartmentsService: {
     selectedYear: ReturnType<typeof signal<AcademicYear | null>>;
-    canStartUserFlow: ReturnType<typeof signal<boolean>>;
   };
 
   beforeEach(async () => {
     mockDepartmentsService = {
       selectedYear: signal<AcademicYear | null>(null),
-      canStartUserFlow: signal(false),
     };
 
     await TestBed.configureTestingModule({

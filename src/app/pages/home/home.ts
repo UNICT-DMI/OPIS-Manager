@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DepCard } from '@cards/dep-card/dep-card';
 import { DepartmentsService } from '@services/departments/departments.service';
 import { YearSection } from '@sections/year-section/year-section';
@@ -12,13 +12,8 @@ import { LogoAnimated } from '@shared-ui/logo-animated/logo-animated';
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePageComponent implements OnDestroy {
+export class HomePageComponent {
   private readonly _departmentService = inject(DepartmentsService);
 
-  protected readonly canShowDepartments = computed(this._departmentService.canStartUserFlow);
   protected readonly respDepartments = this._departmentService.getDepartmentByYear();
-
-  ngOnDestroy(): void {
-    this._departmentService.canStartUserFlow.set(false);
-  }
 }

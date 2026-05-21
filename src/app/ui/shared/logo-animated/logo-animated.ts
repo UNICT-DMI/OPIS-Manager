@@ -20,7 +20,7 @@ import { gsap } from 'gsap';
 export class LogoAnimated implements AfterViewInit {
   private readonly _departmentService = inject(DepartmentsService);
 
-  private readonly TOTAL_DURATION = 1;
+  private readonly TOTAL_DURATION = 3;
   private readonly PHASES_PERCENTAGE = {
     arrows: 0.2,
     bars: 0.27,
@@ -53,7 +53,7 @@ export class LogoAnimated implements AfterViewInit {
     }
 
     this._departmentService.logoAlreadyAnimated.set(true);
-    this.animateLogo();
+    requestAnimationFrame(() => this.animateLogo());
   }
 
   private phaseDuration(phase: keyof typeof this.PHASES_PERCENTAGE): number {
@@ -143,8 +143,7 @@ export class LogoAnimated implements AfterViewInit {
           stagger: 0.12,
         },
         `>-${this.phaseDuration('letters') * 0.3}`,
-      )
-      .eventCallback('onComplete', () => this._departmentService.canStartUserFlow.set(true));
+      );
   }
 
   private showFinalState(): void {
@@ -157,7 +156,5 @@ export class LogoAnimated implements AfterViewInit {
     gsap.set(bars, { scaleY: 1 });
     gsap.set(circle, { opacity: 1 });
     gsap.set(letters, { strokeDashoffset: 0 });
-
-    this._departmentService.canStartUserFlow.set(true);
   }
 }

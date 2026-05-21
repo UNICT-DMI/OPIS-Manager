@@ -16,7 +16,6 @@ export class DepartmentsService {
   private readonly _http = inject(HttpClient);
 
   readonly logoAlreadyAnimated = signal(false);
-  readonly canStartUserFlow = signal(false);
   readonly selectedYear = signal<AcademicYear>(ACADEMIC_YEARS[ACADEMIC_YEARS.length - 1]);
   readonly currentDepartment = signal<Department | null>(null);
 

@@ -1,4 +1,4 @@
-<section id="years" class="animation-show" [class.show]="canShowDepartments()">
+<section id="years">
   @for (year of allYears; track $index) {
     <button
       (click)="selectYear(year)"

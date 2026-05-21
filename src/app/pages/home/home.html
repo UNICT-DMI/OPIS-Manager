@@ -2,8 +2,8 @@
   <opis-logo-animated />
   <opis-year-section />
 
-  <section id="departments" class="animation-show" [class.show]="canShowDepartments()">
-    @if (respDepartments.isLoading() || !canShowDepartments()) {
+  <section id="departments">
+    @if (respDepartments.isLoading()) {
       <opis-loader />
     } @else if (respDepartments.hasValue()) {
       @let departments = respDepartments.value();
