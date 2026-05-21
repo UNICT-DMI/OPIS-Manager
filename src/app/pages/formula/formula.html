@@ -27,7 +27,9 @@
             <tr>
               <td>{{ row.label }}</td>
               <td>
-                <em>{{ row.code.charAt(0) }}<sub>{{ row.code.charAt(1) }}</sub></em>
+                <em
+                  >{{ row.code.charAt(0) }}<sub>{{ row.code.charAt(1) }}</sub></em
+                >
               </td>
               <td>{{ row.value }}</td>
             </tr>
@@ -54,7 +56,9 @@
           <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
           <mn>4</mn>
         </munderover>
-        <msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub>
+        <msub
+          ><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub
+        >
         <mo>&#x22C5;</mo>
         <msub><mi>E</mi><mi>i</mi></msub>
         <mo>&#x22C5;</mo>
@@ -64,7 +68,8 @@
 
     <p>
       rappresenta la valutazione pesata relativa alla domanda <em>D<sub>j</sub></em> secondo il peso
-      <em>p<sub>j</sub></em>.
+      <em>p<sub>j</sub></em
+      >.
     </p>
     <p>
       I pesi sono numeri compresi tra zero e uno e vengono assegnati – all'interno di un singolo
@@ -88,7 +93,9 @@
           <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
           <mn>4</mn>
         </munderover>
-        <msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub>
+        <msub
+          ><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub
+        >
         <mo>&#x22C5;</mo>
         <msub><mi>E</mi><mi>i</mi></msub>
         <mo>&#x22C5;</mo>
@@ -97,8 +104,22 @@
     </div>
 
     <p class="formula-definition__recap">
-      La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo –
-      (<em>V<sub>1</sub></em>, <em>V<sub>2</sub></em>, <em>V<sub>3</sub></em>).
+      La valutazione dell'intero corso è così una terna di numeri – uno per ciascun gruppo – (<em
+        >V<sub>1</sub></em
+      >, <em>V<sub>2</sub></em
+      >, <em>V<sub>3</sub></em
+      >).
+    </p>
+
+    <p class="formula-definition__author">
+      Questa formula è stata ideata dal
+      <a
+        class="formula-definition__author-link"
+        target="_blank"
+        href="https://web.dmi.unict.it/docenti/giuseppe.difazio"
+        >Professore Giuseppe Di Fazio</a
+      >
+      del Dipartimento di Matematica e Informatica.
     </p>
   </div>
 
@@ -110,9 +131,7 @@
         <opis-loader />
       </div>
     } @else if (hasError()) {
-      <p class="formula-error">
-        Impossibile recuperare i pesi delle domande. Riprova più tardi.
-      </p>
+      <p class="formula-error">Impossibile recuperare i pesi delle domande. Riprova più tardi.</p>
     } @else {
       <div class="formula-table-wrap">
         <table class="formula-table formula-table--questions">
