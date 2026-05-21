@@ -12,6 +12,7 @@ export const REAL_NAMES = new Map<string, string>([
   ['herbrant', 'Davide Carnemolla'],
   ['makapx', 'Martina Parlavecchio'],
   ['boozec', 'Santo Cariotti'],
+  ['chiarazuccaro', 'Chiara Zuccaro'],
 ]);
 
 export const CONTRIBUTOR_SOCIALS = new Map<string, ContributorSocials>([
@@ -48,14 +49,15 @@ export const CONTRIBUTOR_SOCIALS = new Map<string, ContributorSocials>([
     },
   ],
   [
-    'FilippoMarletta',
+    'filippomarletta',
     {
       linkedin: 'https://www.linkedin.com/in/filippo-marletta-a17973298/',
     },
   ],
   [
-    'ChiaraZuccaro',
+    'chiarazuccaro',
     {
+      email: 'chiara.zuccaro.dev@gmail.com',
       linkedin: 'https://www.linkedin.com/in/chiara-zuccaro/',
     },
   ],

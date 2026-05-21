@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { env } from '@env';
 import { CacheEntry, GithubUser, GitUserView } from '@interfaces/github.interface';
+import { slug } from '@utils/strings.utils';
 import { CONTRIBUTOR_SOCIALS, REAL_NAMES } from '@values/contributors.value';
 import { lastValueFrom } from 'rxjs';
 
@@ -36,13 +37,13 @@ export class GitHubService {
       const contributors = await lastValueFrom(this._http.get<GithubUser[]>(url));
       const noBots = contributors.filter((user) => !user.login.includes('bot'));
       const mapped = noBots.map((user) => {
-        const socials = CONTRIBUTOR_SOCIALS.get(user.login.toLowerCase()) ?? {};
+        const key = slug(user.login);
         return {
           nick: user.login ?? 'Unknown',
-          name: REAL_NAMES.get(user.login.toLowerCase()) ?? user.login,
+          name: REAL_NAMES.get(key) ?? user.login,
           contributions: user.contributions ?? 0,
           github_profile: user.html_url,
-          ...socials,
+          ...CONTRIBUTOR_SOCIALS.get(key),
         };
       });
 
