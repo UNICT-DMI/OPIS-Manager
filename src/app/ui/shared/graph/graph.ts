@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, OnInit } from '@angular/core';
 import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { GraphView } from '@interfaces/graph-config.interface';
+import { BoxAndWiskers, BoxPlotController } from '@sgratzl/chartjs-chart-boxplot';
 import { Chart, ChartConfiguration, ChartData } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { BaseChartDirective } from 'ng2-charts';
 
-Chart.register(annotationPlugin);
+Chart.register(annotationPlugin, BoxPlotController, BoxAndWiskers);
 
 @Component({
   selector: 'opis-graph',

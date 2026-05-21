@@ -25,4 +25,12 @@ export const CHART_BTNS: GraphSelectionBtn[] = [
     active: false,
     icon: 'menu_book',
   },
+  {
+    value: 'cds_boxplot',
+    description:
+      'Distribuzione statistica delle valutazioni V1, V2 e V3: mediana, quartili e outlier di tutti gli insegnamenti per anno accademico.',
+    label: 'Boxplot',
+    active: false,
+    icon: 'candlestick_chart',
+  },
 ];

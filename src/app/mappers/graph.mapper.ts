@@ -2,8 +2,10 @@ import { MeansPerYear } from '@c_types/means-graph.type';
 import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
+import { boxplotStats } from '@utils/statistics.utils/statistics.utils';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
+import { ChartData, ChartType } from 'chart.js';
 
 /**
  * Pure mapping class: transforms pre-computed data into GraphView objects
@@ -136,6 +138,50 @@ export class GraphMapper {
             },
           },
           annotation: { annotations },
+        },
+      },
+    };
+  }
+
+  static toBoxplotGraph(valuesPerV: number[][]): GraphView {
+    const groups = ['V1', 'V2', 'V3'] as const;
+
+    return {
+      type: 'boxplot' as ChartType,
+      data: {
+        labels: ['Distribuzione'],
+        datasets: groups.map((label, i) => ({
+          label,
+          data: [boxplotStats(valuesPerV[i] ?? [])],
+        })),
+      } as unknown as ChartData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          tooltip: {
+            callbacks: {
+              label: (item) => {
+                const p = item.raw as {
+                  min: number;
+                  q1: number;
+                  median: number;
+                  q3: number;
+                  max: number;
+                  outliers?: number[];
+                };
+                const lines = [
+                  `Min: ${p.min}`,
+                  `Q1: ${p.q1}`,
+                  `Mediana: ${p.median}`,
+                  `Q3: ${p.q3}`,
+                  `Max: ${p.max}`,
+                ];
+                if (p.outliers?.length) lines.push(`Outlier: ${p.outliers.join(', ')}`);
+                return lines;
+              },
+            },
+          },
         },
       },
     };
