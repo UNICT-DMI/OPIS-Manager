@@ -28,7 +28,7 @@ const flushAllRepos = (
   http: HttpTestingController,
   body: GithubUser[] | null,
   opts?: { status: number; statusText: string },
-) => {
+): void => {
   for (const url of API_URLS) {
     const req = http.expectOne(url);
     if (opts) {
