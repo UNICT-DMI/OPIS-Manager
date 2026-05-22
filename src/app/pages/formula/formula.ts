@@ -8,24 +8,12 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
+import { OpisGroup } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
+import { AnswerRow, QuestionRow } from '@interfaces/formula.interface';
 import { Question } from '@interfaces/question.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { Loader } from '@shared-ui/loader/loader';
-
-interface QuestionRow {
-  readonly id: number;
-  readonly text: string;
-  readonly group: OpisGroupType | null;
-  readonly dismissed: boolean;
-}
-
-interface AnswerRow {
-  readonly label: string;
-  readonly code: string;
-  readonly value: number;
-}
 
 const QUESTION_TEXTS: Record<number, string> = {
   1: "Le conoscenze preliminari possedute sono risultate sufficienti per la comprensione degli argomenti previsti nel programma d'esame?",
