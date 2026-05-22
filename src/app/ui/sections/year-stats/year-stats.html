@@ -1,0 +1,60 @@
+@if (selectedYear() && cds() && yearTeachings().length) {
+  <section class="year-stats card">
+    <header class="year-stats_header">
+      <h5>
+        Statistiche sul Corso di Studio {{ cds()!.unict_id }} - anno accademico
+        {{ selectedYear() }}
+      </h5>
+      <div class="year-stats_means">
+        <span><strong>Media V{{ selectedVIndex() + 1 }}:</strong> {{ vCdsMean() }}</span>
+        <span><strong>Media schede:</strong> {{ nCdsMean() }}</span>
+      </div>
+    </header>
+
+    <div class="year-stats_grid">
+      @if (stats().badVal.length) {
+        <div class="year-stats_col">
+          <p>Ins. con scarsa valutazione V{{ selectedVIndex() + 1 }}</p>
+          <ul>
+            @for (name of stats().badVal; track $index) {
+              <li class="bad">{{ name }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (stats().goodVal.length) {
+        <div class="year-stats_col">
+          <p>Ins. con buona valutazione V{{ selectedVIndex() + 1 }}</p>
+          <ul>
+            @for (name of stats().goodVal; track $index) {
+              <li class="good">{{ name }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (stats().badN.length) {
+        <div class="year-stats_col">
+          <p>Ins. con basso numero di schede</p>
+          <ul>
+            @for (name of stats().badN; track $index) {
+              <li class="bad">{{ name }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (stats().goodN.length) {
+        <div class="year-stats_col">
+          <p>Ins. con elevato numero di schede</p>
+          <ul>
+            @for (name of stats().goodN; track $index) {
+              <li class="good">{{ name }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </section>
+}

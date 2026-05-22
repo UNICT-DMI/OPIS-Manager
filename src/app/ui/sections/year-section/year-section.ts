@@ -4,7 +4,6 @@ import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-year-section',
-  imports: [],
   templateUrl: './year-section.html',
   styleUrl: './year-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
