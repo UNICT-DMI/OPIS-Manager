@@ -1,30 +1,42 @@
-import { ResourceStatus, signal } from '@angular/core';
+import { ResourceStatus, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { YearStats } from './year-stats';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { exampleCDS } from '@mocks/cds-mock';
+import { Teaching } from '@interfaces/teaching.interface';
+import { SchedaOpis } from '@interfaces/opis-record.interface';
 
-const mockResource = (overrides = {}) => ({
+type MockResourceShape = {
+  status: WritableSignal<ResourceStatus>;
+  isLoading: WritableSignal<boolean>;
+  hasValue: WritableSignal<boolean>;
+  value: WritableSignal<unknown>;
+  error: WritableSignal<unknown>;
+  refresh: ReturnType<typeof vi.fn>;
+};
+
+const mockResource = (overrides: Partial<MockResourceShape> = {}): MockResourceShape => ({
   status: signal<ResourceStatus>('idle'),
   isLoading: signal(false),
   hasValue: signal(false),
-  value: signal<any>(null),
-  error: signal<any>(null),
+  value: signal<unknown>(null),
+  error: signal<unknown>(null),
   refresh: vi.fn(),
   ...overrides,
 });
 
-const buildSchedaOpis = (totale: number) => ({
-  totale_schede: totale,
-  domande: [
-    [1, 1, 1, 1],
-    [1, 1, 1, 1],
-  ],
-});
+const buildSchedaOpis = (totale: number): SchedaOpis =>
+  ({
+    totale_schede: totale,
+    domande: [
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+    ],
+  }) as SchedaOpis;
 
-const buildTeaching = (id: number, nome: string, totale: number) => ({
+const buildTeaching = (id: number, nome: string, totale: number): Teaching => ({
   id,
   codice_gomp: id,
   nome,

@@ -20,7 +20,7 @@ describe('[DISCLAIMER]: init', () => {
     componentRef = fixture.componentRef;
   });
 
-  const setInput = (disclaimers: DisclaimerInfo[]) => {
+  const setInput = (disclaimers: DisclaimerInfo[]): void => {
     componentRef.setInput('disclaimers', disclaimers);
     fixture.detectChanges();
   };

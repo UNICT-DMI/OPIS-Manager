@@ -1,12 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 
-import { GitHubService } from './github.service';
 import { env } from '@env';
 import { CacheEntry, GithubUser, GitUserView } from '@interfaces/github.interface';
 import { CONTRIBUTOR_SOCIALS, REAL_NAMES } from '@values/contributors.value';
+import { GitHubService } from './github.service';
 
 const REPOS = ['OPIS-Manager', 'opis-manager-core', 'opis-manager-scraper'];
 const API_URLS = REPOS.map((repo) => `${env.github_api_url}/${repo}/contributors`);
@@ -24,7 +24,11 @@ const RAW_USERS: GithubUser[] = [
 const buildCache = (data: GitUserView[], ageMs = 0): string =>
   JSON.stringify({ timestamp: Date.now() - ageMs, data } as CacheEntry<GitUserView[]>);
 
-const flushAllRepos = (http: HttpTestingController, body: GithubUser[] | null, opts?: { status: number; statusText: string }) => {
+const flushAllRepos = (
+  http: HttpTestingController,
+  body: GithubUser[] | null,
+  opts?: { status: number; statusText: string },
+): void => {
   for (const url of API_URLS) {
     const req = http.expectOne(url);
     if (opts) {
@@ -145,7 +149,7 @@ describe('GitHubService', () => {
 
   it('[GET CONTRIBUTORS]: contributions undefined, fallback to 0', async () => {
     const promise = service.getRepoContributors();
-    http.expectOne(API_URLS[0]).flush([makeUser('ghost', undefined as any)]);
+    http.expectOne(API_URLS[0]).flush([makeUser('ghost', undefined as unknown as number)]);
     http.expectOne(API_URLS[1]).flush([]);
     http.expectOne(API_URLS[2]).flush([]);
 
