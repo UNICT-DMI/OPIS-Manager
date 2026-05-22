@@ -15,6 +15,7 @@ import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
+import { YearStats } from '@sections/year-stats/year-stats';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
@@ -26,7 +27,7 @@ import { AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [IconComponent, Loader, Graph, SelectComponent],
+  imports: [IconComponent, Loader, Graph, SelectComponent, YearStats],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +40,7 @@ export class CdsSelectedSection {
   private readonly _graphDescrRef = viewChild<ElementRef>('graphDesc');
 
   protected readonly minHeight = signal(0);
+  protected readonly showStats = signal(false);
 
   protected readonly ERR_STATUS: ResourceStatus = 'error';
   protected readonly BASE_ERROR_MSG = 'Dati non disponibili :/';
@@ -137,6 +139,10 @@ export class CdsSelectedSection {
   protected onSearchInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this._graphService.teachingSearch.set(value);
+  }
+
+  protected toggleStats(): void {
+    this.showStats.update((v) => !v);
   }
 
   private resetTeachingGraph(): EffectRef {
