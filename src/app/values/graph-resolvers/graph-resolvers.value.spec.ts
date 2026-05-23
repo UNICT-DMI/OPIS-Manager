@@ -62,6 +62,44 @@ describe('GraphResolvers', () => {
     expect(GraphMapper.toTeachingGraph).toHaveBeenCalledWith(teachingData);
   });
 
+  it('cds_general: should map the range-filtered courses when a graphService is given', () => {
+    vi.spyOn(GraphMapper, 'toCdsGeneralGraph').mockReturnValue({} as unknown as GraphView);
+
+    const courses = { '2014/2015': [], '2020/2021': [] };
+    const filtered = { '2020/2021': [] };
+    const graphService = { filterMeansByRange: vi.fn().mockReturnValue(filtered) };
+
+    const resolvers = GraphResolvers(
+      mockResource({ teachings: [], courses }) as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
+
+    resolvers.cds_general();
+
+    expect(graphService.filterMeansByRange).toHaveBeenCalledWith(courses);
+    expect(GraphMapper.toCdsGeneralGraph).toHaveBeenCalledWith(filtered);
+  });
+
+  it('teaching_cds: should map the range-filtered means when a graphService is given', () => {
+    vi.spyOn(GraphMapper, 'toTeachingGraph').mockReturnValue({} as unknown as GraphView);
+
+    const means = { '2014/2015': [], '2020/2021': [] };
+    const filtered = { '2014/2015': [] };
+    const graphService = { filterMeansByRange: vi.fn().mockReturnValue(filtered) };
+
+    const resolvers = GraphResolvers(
+      mockResource() as unknown as CdsArg,
+      mockResource(means) as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
+
+    resolvers.teaching_cds();
+
+    expect(graphService.filterMeansByRange).toHaveBeenCalledWith(means);
+    expect(GraphMapper.toTeachingGraph).toHaveBeenCalledWith(filtered);
+  });
+
   it('cds_year: should return null without data or year', () => {
     const resolvers = GraphResolvers(
       mockResource() as unknown as CdsArg,

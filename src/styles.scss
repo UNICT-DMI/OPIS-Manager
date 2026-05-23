@@ -3,6 +3,7 @@
 @use 'palette';
 @use 'scrollbar';
 @use 'primitive';
+@use '@angular-slider/ngx-slider/scss/ngx-slider' with ($enableNgDeep: false);
 
 html,
 body {

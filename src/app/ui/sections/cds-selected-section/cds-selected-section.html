@@ -75,6 +75,13 @@
 
         @if (activeGraph()) {
           <opis-graph [dataChart]="activeGraph()!" />
+
+          @if (
+            (graph?.value === 'cds_general' || graph?.value === 'teaching_cds') &&
+            rangeYears().length > 1
+          ) {
+            <opis-year-range [years]="rangeYears()" (rangeChange)="onRangeChange($event)" />
+          }
         } @else {
           <div class="graph-description_right">
             @if (infoTeaching.isLoading()) {

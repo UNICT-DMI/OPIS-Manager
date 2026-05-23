@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, signal, ResourceStatus, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  signal,
+  ResourceStatus,
+  WritableSignal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { CdsSelectedSection } from './cds-selected-section';
@@ -13,6 +21,7 @@ import { Graph } from '@shared-ui/graph/graph';
 import { SelectComponent } from '@shared-ui/select/select';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
+import { YearRange } from '@shared-ui/year-range/year-range';
 
 // ─── Mock componenti ──────────────────────────────────────────────────────────
 @Component({
@@ -20,7 +29,19 @@ import { Loader } from '@shared-ui/loader/loader';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class MockGraph {}
+class MockGraph {
+  readonly dataChart = input<unknown>();
+}
+
+@Component({
+  selector: 'opis-year-range',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MockYearRange {
+  readonly years = input<readonly string[]>();
+  readonly rangeChange = output<unknown>();
+}
 
 @Component({
   selector: 'opis-select',
@@ -79,6 +100,8 @@ const buildMockGraphService = (): {
   selectedYear: WritableSignal<string | null>;
   selectedVIndex: WritableSignal<number>;
   teachingSearch: WritableSignal<string>;
+  yearRange: WritableSignal<unknown>;
+  filterMeansByRange: ReturnType<typeof vi.fn>;
   manageGraphSelection: MockResourceShape;
 } => ({
   graphKeySelected: signal('cds_general'),
@@ -86,6 +109,8 @@ const buildMockGraphService = (): {
   selectedYear: signal<string | null>(null),
   selectedVIndex: signal(0),
   teachingSearch: signal(''),
+  yearRange: signal<unknown>(null),
+  filterMeansByRange: vi.fn((m) => m),
   manageGraphSelection: mockResource({
     hasValue: signal(true),
     value: signal<unknown>({
@@ -100,11 +125,16 @@ const buildMockGraphService = (): {
 
 const buildMockTeachingService = (): {
   selectedTeaching: WritableSignal<Teaching | null>;
+  teachingGraph: MockResourceShape;
   getTeachingGraph: ReturnType<typeof vi.fn>;
-} => ({
-  selectedTeaching: signal<Teaching | null>(null),
-  getTeachingGraph: vi.fn(() => mockResource()),
-});
+} => {
+  const teachingGraph = mockResource();
+  return {
+    selectedTeaching: signal<Teaching | null>(null),
+    teachingGraph,
+    getTeachingGraph: vi.fn(() => teachingGraph),
+  };
+};
 
 // ─── Suite ────────────────────────────────────────────────────────────────────
 describe('CdsSelectedSection', () => {
@@ -132,8 +162,8 @@ describe('CdsSelectedSection', () => {
       ],
     })
       .overrideComponent(CdsSelectedSection, {
-        remove: { imports: [Graph, SelectComponent, IconComponent, Loader] },
-        add: { imports: [MockGraph, MockSelect, MockIcon, MockLoader] },
+        remove: { imports: [Graph, SelectComponent, IconComponent, Loader, YearRange] },
+        add: { imports: [MockGraph, MockSelect, MockIcon, MockLoader, MockYearRange] },
       })
       .compileComponents();
 
@@ -363,5 +393,84 @@ describe('CdsSelectedSection', () => {
     await fixture.whenStable();
 
     expect(component['currentSelectorValue']()).toBeNull();
+  });
+
+  // ── year-range slider ─────────────────────────────────────────────────────
+  it('[CDS-SECTION]: rangeYears is empty for graphs other than Generale/Corsi', async () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2022/2023': [], '2023/2024': [] },
+    });
+    mockGraphService.graphKeySelected.set('cds_year');
+    await fixture.whenStable();
+    expect(component['rangeYears']()).toEqual([]);
+  });
+
+  it('[CDS-SECTION]: rangeYears returns sorted course years for Generale', async () => {
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2023/2024': [], '2020/2021': [] },
+    });
+    mockGraphService.graphKeySelected.set('cds_general');
+    await fixture.whenStable();
+    expect(component['rangeYears']()).toEqual(['2020/2021', '2023/2024']);
+  });
+
+  it('[CDS-SECTION]: rangeYears returns teaching means years for Corsi', async () => {
+    mockTeachingService.teachingGraph.value.set({ '2024/2025': [], '2021/2022': [] });
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    await fixture.whenStable();
+    expect(component['rangeYears']()).toEqual(['2021/2022', '2024/2025']);
+  });
+
+  it('[CDS-SECTION]: onRangeChange sets the graph service yearRange', () => {
+    component['onRangeChange']({
+      startIndex: 1,
+      endIndex: 2,
+      startYear: '2015/2016',
+      endYear: '2016/2017',
+    });
+    expect(mockGraphService.yearRange()).toEqual({
+      startYear: '2015/2016',
+      endYear: '2016/2017',
+    });
+  });
+
+  it('[CDS-SECTION]: resets yearRange when the graph type changes', async () => {
+    mockGraphService.yearRange.set({ startYear: '2015/2016', endYear: '2016/2017' });
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    await fixture.whenStable();
+    expect(mockGraphService.yearRange()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: resets yearRange when a different teaching is selected', () => {
+    mockGraphService.graphKeySelected.set('teaching_cds');
+    mockCdsService.getInfoCds.value.set({ teachings: [{ id: 1, nome: 'X', canale: 'no' }], courses: {} });
+    mockGraphService.yearRange.set({ startYear: '2015/2016', endYear: '2016/2017' });
+
+    component['onSelectorChange']({ value: 1, label: 'X' });
+
+    expect(mockGraphService.yearRange()).toBeNull();
+  });
+
+  it('[CDS-SECTION]: renders opis-year-range for Generale when more than one year', async () => {
+    const means = [[1, 2, 3], [[], [], []]];
+    mockCdsService.getInfoCds.hasValue.set(true);
+    mockCdsService.getInfoCds.value.set({
+      teachings: [],
+      courses: { '2022/2023': means, '2023/2024': means },
+    });
+    mockGraphService.graphKeySelected.set('cds_general');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('opis-year-range')).toBeTruthy();
+  });
+
+  it('[CDS-SECTION]: does not render opis-year-range with a single year', async () => {
+    const means = [[1, 2, 3], [[], [], []]];
+    mockCdsService.getInfoCds.hasValue.set(true);
+    mockCdsService.getInfoCds.value.set({ teachings: [], courses: { '2023/2024': means } });
+    mockGraphService.graphKeySelected.set('cds_general');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('opis-year-range')).toBeNull();
   });
 });

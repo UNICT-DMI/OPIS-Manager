@@ -7,6 +7,8 @@ import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { CHART_BTNS } from '@values/selection-graph';
 import { exampleSchedaOpis } from '@mocks/scheda-mock';
 import { AcademicYear } from '@values/years';
+import { MeansPerYear } from '@c_types/means-graph.type';
+import { typedKeys } from '@utils/object-helpers.utils';
 
 // ─── Mock SchedaOpis factory ──────────────────────────────────────────────────
 const mockScheda = (overrides: Partial<SchedaOpis> = {}): SchedaOpis => ({
@@ -138,5 +140,54 @@ describe('GraphService', () => {
 
   it('[GRAPH-SERVICE]: should return empty object for empty input', () => {
     expect(service.computeMeansPerYear({} as unknown as Record<AcademicYear, SchedaOpis[]>)).toEqual({});
+  });
+
+  // ── yearRange ─────────────────────────────────────────────────────────────
+  it('[GRAPH-SERVICE]: should initialize yearRange as null', () => {
+    expect(service.yearRange()).toBeNull();
+  });
+
+  it('[GRAPH-SERVICE]: should update yearRange', () => {
+    service.yearRange.set({ startYear: '2015/2016', endYear: '2018/2019' });
+    expect(service.yearRange()).toEqual({ startYear: '2015/2016', endYear: '2018/2019' });
+  });
+
+  // ── filterMeansByRange ────────────────────────────────────────────────────
+  const meansFixture = (): MeansPerYear =>
+    ({
+      '2014/2015': [[14], [[]]],
+      '2016/2017': [[16], [[]]],
+      '2018/2019': [[18], [[]]],
+      '2020/2021': [[20], [[]]],
+    }) as unknown as MeansPerYear;
+
+  it('[GRAPH-SERVICE]: filterMeansByRange returns input untouched when no range set', () => {
+    const means = meansFixture();
+    expect(service.filterMeansByRange(means)).toBe(means);
+  });
+
+  it('[GRAPH-SERVICE]: filterMeansByRange keeps only years within the inclusive interval', () => {
+    service.yearRange.set({ startYear: '2016/2017', endYear: '2018/2019' });
+    expect(typedKeys(service.filterMeansByRange(meansFixture()))).toEqual(['2016/2017', '2018/2019']);
+  });
+
+  it('[GRAPH-SERVICE]: filterMeansByRange handles a reversed interval', () => {
+    service.yearRange.set({ startYear: '2018/2019', endYear: '2016/2017' });
+    expect(typedKeys(service.filterMeansByRange(meansFixture()))).toEqual(['2016/2017', '2018/2019']);
+  });
+
+  it('[GRAPH-SERVICE]: filterMeansByRange keeps a single year when start equals end', () => {
+    service.yearRange.set({ startYear: '2016/2017', endYear: '2016/2017' });
+    expect(typedKeys(service.filterMeansByRange(meansFixture()))).toEqual(['2016/2017']);
+  });
+
+  it('[GRAPH-SERVICE]: filterMeansByRange preserves chronological key order', () => {
+    service.yearRange.set({ startYear: '2014/2015', endYear: '2020/2021' });
+    expect(typedKeys(service.filterMeansByRange(meansFixture()))).toEqual([
+      '2014/2015',
+      '2016/2017',
+      '2018/2019',
+      '2020/2021',
+    ]);
   });
 });

@@ -15,11 +15,17 @@ export function GraphResolvers(
   return {
     cds_general: (): GraphView | null => {
       const data = infoCds.value();
-      return data ? GraphMapper.toCdsGeneralGraph(data.courses) : null;
+      if (!data) return null;
+      const courses = graphService
+        ? graphService.filterMeansByRange(data.courses)
+        : data.courses;
+      return GraphMapper.toCdsGeneralGraph(courses);
     },
     teaching_cds: (): GraphView | null => {
       const data = infoTeaching.value();
-      return data ? GraphMapper.toTeachingGraph(data) : null;
+      if (!data) return null;
+      const means = graphService ? graphService.filterMeansByRange(data) : data;
+      return GraphMapper.toTeachingGraph(means);
     },
     cds_year: (): GraphView | null => {
       const data = infoCds.value();

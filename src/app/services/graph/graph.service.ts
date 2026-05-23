@@ -6,11 +6,12 @@ import { OpisGroup, OpisGroupType } from '@enums/opis-group.enum';
 import { AnswerWeights } from '@enums/weights.enum';
 import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
+import { YearInterval } from '@interfaces/year-range.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils/statistics.utils';
 import { CHART_BTNS } from '@values/selection-graph';
-import { AcademicYear } from '@values/years';
+import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +23,24 @@ export class GraphService {
   readonly selectedYear = signal<AcademicYear | null>(null);
   readonly selectedVIndex = signal<0 | 1 | 2>(0);
   readonly teachingSearch = signal<string>('');
+  readonly yearRange = signal<YearInterval | null>(null);
+
+  /** Restricts a means map to the selected year interval (no-op when unset). */
+  filterMeansByRange(means: MeansPerYear): MeansPerYear {
+    const range = this.yearRange();
+    if (!range) return means;
+
+    const a = ACADEMIC_YEARS.indexOf(range.startYear);
+    const b = ACADEMIC_YEARS.indexOf(range.endYear);
+    const [lo, hi] = a <= b ? [a, b] : [b, a];
+
+    const filtered = {} as MeansPerYear;
+    for (const year of typedKeys(means)) {
+      const idx = ACADEMIC_YEARS.indexOf(year);
+      if (idx >= lo && idx <= hi) filtered[year] = means[year];
+    }
+    return filtered;
+  }
 
   private applyWeights(scheda: SchedaOpis): number[] {
     const questionsWeights = this._questionService.questionWeights;

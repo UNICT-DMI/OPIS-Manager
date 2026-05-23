@@ -1,0 +1,11 @@
+@if (years().length > 1) {
+  <div class="year-range">
+    <ngx-slider
+      [value]="startIndex()"
+      [highValue]="endIndex()"
+      [options]="options()"
+      (valueChange)="onStartChange($event)"
+      (highValueChange)="onEndChange($event)"
+    />
+  </div>
+}

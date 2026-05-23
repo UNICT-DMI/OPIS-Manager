@@ -1,0 +1,40 @@
+.year-range {
+  width: 100%;
+  padding: 2.5rem 1.5rem 0.5rem;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .ngx-slider {
+  .ngx-slider-bar {
+    background: var(--gray-300);
+  }
+
+  .ngx-slider-selection {
+    background: var(--blue-700);
+  }
+
+  .ngx-slider-pointer {
+    background: var(--blue-900);
+
+    &::after {
+      background: var(--color-text-inverse);
+    }
+
+    &.ngx-slider-active::after {
+      background: var(--blue-100);
+    }
+  }
+
+  .ngx-slider-bubble {
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+
+  .ngx-slider-tick {
+    background: var(--gray-300);
+
+    &.ngx-slider-selected {
+      background: var(--blue-500);
+    }
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { GraphSelection } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
+import { YearRangeSelection } from '@interfaces/year-range.interface';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
@@ -20,14 +21,15 @@ import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
 import { SelectComponent } from '@shared-ui/select/select';
+import { YearRange } from '@shared-ui/year-range/year-range';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers/graph-resolvers.value';
 import { GRAPH_DATA } from '@values/messages.value';
-import { AcademicYear } from '@values/years';
+import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
 @Component({
   selector: 'opis-cds-selected-section',
-  imports: [IconComponent, Loader, Graph, SelectComponent, YearStats],
+  imports: [IconComponent, Loader, Graph, SelectComponent, YearStats, YearRange],
   templateUrl: './cds-selected-section.html',
   styleUrl: './cds-selected-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,6 +80,28 @@ export class CdsSelectedSection {
     return courses ? (typedKeys(courses) as AcademicYear[]) : [];
   });
 
+  protected readonly rangeYears = computed<AcademicYear[]>(() => {
+    const graphKey = this._graphService.graphKeySelected();
+
+    let years: AcademicYear[] = [];
+    if (graphKey === GraphSelection.CDS_GENERAL) {
+      const courses = this.infoCds.value()?.courses;
+      years = courses ? (typedKeys(courses) as AcademicYear[]) : [];
+    } else if (graphKey === GraphSelection.TEACHINGS_CDS) {
+      const teachingMeans = this.infoTeaching.value();
+      years = teachingMeans ? (typedKeys(teachingMeans) as AcademicYear[]) : [];
+    }
+
+    return [...years].sort((a, b) => ACADEMIC_YEARS.indexOf(a) - ACADEMIC_YEARS.indexOf(b));
+  });
+
+  protected onRangeChange(range: YearRangeSelection): void {
+    this._graphService.yearRange.set({
+      startYear: range.startYear as AcademicYear,
+      endYear: range.endYear as AcademicYear,
+    });
+  }
+
   private readonly _graphResolvers = GraphResolvers(
     this.infoCds,
     this.infoTeaching,
@@ -124,6 +148,7 @@ export class CdsSelectedSection {
     if (graphKey === GraphSelection.TEACHINGS_CDS) {
       const teaching = this.infoCds.value()?.teachings.find((t) => t.id === option.value) ?? null;
       this._teachingService.selectedTeaching.set(teaching);
+      this._graphService.yearRange.set(null);
     }
     if (graphKey === GraphSelection.YEAR || graphKey === GraphSelection.BOXPLOT) {
       this._graphService.selectedYear.set(option.value as AcademicYear);
@@ -147,6 +172,7 @@ export class CdsSelectedSection {
     return effect(() => {
       const graphKey = this._graphService.graphKeySelected();
       this.minHeight.set(0);
+      this._graphService.yearRange.set(null);
       if (graphKey !== 'teaching_cds') {
         this._teachingService.selectedTeaching.set(null);
       }
