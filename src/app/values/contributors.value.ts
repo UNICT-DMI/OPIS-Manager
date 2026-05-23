@@ -13,6 +13,7 @@ export const REAL_NAMES = new Map<string, string>([
   ['makapx', 'Martina Parlavecchio'],
   ['boozec', 'Santo Cariotti'],
   ['chiarazuccaro', 'Chiara Zuccaro'],
+  ['filippomarletta', 'Filippo Marletta'],
 ]);
 
 export const CONTRIBUTOR_SOCIALS = new Map<string, ContributorSocials>([
