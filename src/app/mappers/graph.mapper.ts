@@ -173,7 +173,7 @@ export class GraphMapper {
           legend: { display: true },
           tooltip: {
             callbacks: {
-              label: (item) => {
+              label: (item): string | string[] | void => {
                 const p = item.raw as {
                   min: number;
                   q1: number;

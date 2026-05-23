@@ -47,7 +47,7 @@ export function GraphResolvers(
 
       return GraphMapper.toAcademicYearGraph(teachings, values, cdsMean, vIndex);
     },
-    cds_boxplot: () => {
+    cds_boxplot: (): GraphView | null => {
       const data = infoCds.value();
       const year = graphService?.selectedYear();
       if (!data || !year) return null;
@@ -68,7 +68,7 @@ export function SelectorResolvers(
   infoCds: CdsService['getInfoCds'],
   availableYears: Signal<AcademicYear[]>,
 ): Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> {
-  const yearOptions = () => availableYears().map((y) => ({ value: y, label: y })).reverse();
+  const yearOptions = (): { value: AcademicYear; label: AcademicYear; }[] => availableYears().map((y) => ({ value: y, label: y })).reverse();
 
   return {
     teaching_cds: () =>
