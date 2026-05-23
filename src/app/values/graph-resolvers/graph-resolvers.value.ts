@@ -13,15 +13,15 @@ export function GraphResolvers(
   graphService?: GraphService,
 ): Record<GraphSelectionType, () => GraphView | null> {
   return {
-    cds_general: () => {
+    cds_general: (): GraphView | null => {
       const data = infoCds.value();
       return data ? GraphMapper.toCdsGeneralGraph(data.courses) : null;
     },
-    teaching_cds: () => {
+    teaching_cds: (): GraphView | null => {
       const data = infoTeaching.value();
       return data ? GraphMapper.toTeachingGraph(data) : null;
     },
-    cds_year: () => {
+    cds_year: (): GraphView | null => {
       const data = infoCds.value();
       const year = graphService?.selectedYear();
       if (!data || !year) return null;

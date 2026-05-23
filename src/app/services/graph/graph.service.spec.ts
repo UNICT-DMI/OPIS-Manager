@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect } from 'vitest';
 import { GraphService } from './graph.service';
 import { QuestionService } from '@services/questions/questions.service';
+import { Question } from '@interfaces/question.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { CHART_BTNS } from '@values/selection-graph';
 import { exampleSchedaOpis } from '@mocks/scheda-mock';
@@ -14,7 +15,7 @@ const mockScheda = (overrides: Partial<SchedaOpis> = {}): SchedaOpis => ({
 });
 
 // ─── Mock QuestionService ─────────────────────────────────────────────────────
-const buildMockQuestionService = () => ({
+const buildMockQuestionService = (): { questionWeights: Pick<Question, 'id' | 'gruppo' | 'peso_standard'>[] } => ({
   questionWeights: [
     { id: 1, gruppo: 'V1', peso_standard: 1 },
     { id: 2, gruppo: 'V2', peso_standard: 1 },
@@ -136,6 +137,6 @@ describe('GraphService', () => {
   });
 
   it('[GRAPH-SERVICE]: should return empty object for empty input', () => {
-    expect(service.computeMeansPerYear({} as any)).toEqual({});
+    expect(service.computeMeansPerYear({} as unknown as Record<AcademicYear, SchedaOpis[]>)).toEqual({});
   });
 });

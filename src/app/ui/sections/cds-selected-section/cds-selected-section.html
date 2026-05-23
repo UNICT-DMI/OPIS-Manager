@@ -49,12 +49,28 @@
             </label>
           </div>
 
-          <div class="color-legend">
-            <span>Colore per numerosità di schede</span>
-            <strong>MIN</strong>
-            <span class="color-bar"></span>
-            <strong>MAX</strong>
+          <div class="color-legend-row">
+            <div class="color-legend">
+              <span>Colore per numerosità di schede</span>
+              <strong>MIN</strong>
+              <span class="color-bar"></span>
+              <strong>MAX</strong>
+            </div>
+
+            <button
+              type="button"
+              class="btn-stats"
+              [class.active]="showStats()"
+              (click)="toggleStats()"
+            >
+              <opis-icon iconName="analytics" />
+              <span>Stats</span>
+            </button>
           </div>
+
+          @if (showStats()) {
+            <opis-year-stats />
+          }
         }
 
         @if (activeGraph()) {

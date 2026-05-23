@@ -79,7 +79,7 @@ describe('[SERVICE] == Teaching', () => {
   });
 
   it('[GET_TEACHING_GRAPH]: Uses canale "no" if canale is not set', async () => {
-    const teachingNoCanale: Teaching = { ...exampleTeaching, canale: null as any };
+    const teachingNoCanale: Teaching = { ...exampleTeaching, canale: null as unknown as string };
     service.selectedTeaching.set(teachingNoCanale);
     const resource = TestBed.runInInjectionContext(() => service.getTeachingGraph());
     await flush();

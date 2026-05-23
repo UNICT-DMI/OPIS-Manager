@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, ResourceStatus } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ResourceStatus, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { CdsSelectedSection } from './cds-selected-section';
@@ -6,6 +6,9 @@ import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
 import { exampleCDS } from '@mocks/cds-mock';
+import { CDS } from '@interfaces/cds.interface';
+import { Teaching } from '@interfaces/teaching.interface';
+import { GraphSelectionBtn } from '@interfaces/graph-config.interface';
 import { Graph } from '@shared-ui/graph/graph';
 import { SelectComponent } from '@shared-ui/select/select';
 import { IconComponent } from '@shared-ui/icon/icon';
@@ -41,24 +44,43 @@ class MockIcon {}
 class MockLoader {}
 
 // ─── Mock resource factory ────────────────────────────────────────────────────
-const mockResource = (overrides = {}) => ({
+type MockResourceShape = {
+  status: WritableSignal<ResourceStatus>;
+  isLoading: WritableSignal<boolean>;
+  hasValue: WritableSignal<boolean>;
+  value: WritableSignal<unknown>;
+  error: WritableSignal<unknown>;
+  refresh: ReturnType<typeof vi.fn>;
+};
+const mockResource = (overrides: Partial<MockResourceShape> = {}): MockResourceShape => ({
   status: signal<ResourceStatus>('idle'),
   isLoading: signal(false),
   hasValue: signal(false),
-  value: signal<any>(null),
-  error: signal<any>(null),
+  value: signal<unknown>(null),
+  error: signal<unknown>(null),
   refresh: vi.fn(),
   ...overrides,
 });
 
 // ─── Mock services ────────────────────────────────────────────────────────────
-const buildMockCdsService = () => ({
+const buildMockCdsService = (): {
+  cdsSelected: WritableSignal<CDS>;
+  getInfoCds: MockResourceShape;
+  isLoading: WritableSignal<boolean>;
+} => ({
   cdsSelected: signal(exampleCDS),
   getInfoCds: mockResource(),
   isLoading: signal(false),
 });
 
-const buildMockGraphService = () => ({
+const buildMockGraphService = (): {
+  graphKeySelected: WritableSignal<string>;
+  graphBtns: WritableSignal<never[]>;
+  selectedYear: WritableSignal<string | null>;
+  selectedVIndex: WritableSignal<number>;
+  teachingSearch: WritableSignal<string>;
+  manageGraphSelection: MockResourceShape;
+} => ({
   graphKeySelected: signal('cds_general'),
   graphBtns: signal([]),
   selectedYear: signal<string | null>(null),
@@ -66,17 +88,21 @@ const buildMockGraphService = () => ({
   teachingSearch: signal(''),
   manageGraphSelection: mockResource({
     hasValue: signal(true),
-    value: signal<any>({
+    value: signal<unknown>({
       value: 'cds_general',
       label: 'Generale',
       description: 'Desc',
       active: true,
-    }),
+      icon: '',
+    } satisfies GraphSelectionBtn),
   }),
 });
 
-const buildMockTeachingService = () => ({
-  selectedTeaching: signal<any>(null),
+const buildMockTeachingService = (): {
+  selectedTeaching: WritableSignal<Teaching | null>;
+  getTeachingGraph: ReturnType<typeof vi.fn>;
+} => ({
+  selectedTeaching: signal<Teaching | null>(null),
   getTeachingGraph: vi.fn(() => mockResource()),
 });
 
@@ -184,7 +210,7 @@ describe('CdsSelectedSection', () => {
     mockGraphService.graphKeySelected.set('teaching_cds');
     await fixture.whenStable();
 
-    mockTeachingService.selectedTeaching.set({ id: 1 } as any);
+    mockTeachingService.selectedTeaching.set({ id: 1 } as unknown as Teaching);
     mockGraphService.graphKeySelected.set('cds_general');
     await fixture.whenStable();
 
@@ -192,7 +218,7 @@ describe('CdsSelectedSection', () => {
   });
 
   it('[CDS-SECTION]: should not reset selectedTeaching when graphKey is teaching_cds', () => {
-    const teaching = { id: 1 } as any;
+    const teaching = { id: 1 } as unknown as Teaching;
     mockTeachingService.selectedTeaching.set(teaching);
     mockGraphService.graphKeySelected.set('teaching_cds');
     expect(mockTeachingService.selectedTeaching()).toEqual(teaching);
@@ -202,7 +228,7 @@ describe('CdsSelectedSection', () => {
   it('[CDS-SECTION]: should set selectedTeaching on selector change when graphKey is teaching_cds', () => {
     const teaching = { id: 42, nome: 'Matematica', canale: 'A' };
     mockGraphService.graphKeySelected.set('teaching_cds');
-    mockCdsService.getInfoCds.value.set({ teachings: [teaching], courses: {} } as any);
+    mockCdsService.getInfoCds.value.set({ teachings: [teaching], courses: {} });
 
     component['onSelectorChange']({ value: 42, label: 'Matematica (Canale A)' });
 
@@ -211,7 +237,7 @@ describe('CdsSelectedSection', () => {
 
   it('[CDS-SECTION]: should set selectedTeaching to null if teaching not found', () => {
     mockGraphService.graphKeySelected.set('teaching_cds');
-    mockCdsService.getInfoCds.value.set({ teachings: [], courses: {} } as any);
+    mockCdsService.getInfoCds.value.set({ teachings: [], courses: {} });
 
     component['onSelectorChange']({ value: 99, label: 'Non esiste' });
 
@@ -230,7 +256,7 @@ describe('CdsSelectedSection', () => {
   });
 
   it('[CDS-SECTION]: onSearchInput should set teachingSearch', () => {
-    component['onSearchInput']({ target: { value: 'math' } } as any);
+    component['onSearchInput']({ target: { value: 'math' } } as unknown as InputEvent);
     expect(mockGraphService.teachingSearch()).toBe('math');
   });
 
@@ -243,7 +269,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.value.set({
       teachings: [],
       courses: { '2022/2023': [], '2023/2024': [] },
-    } as any);
+    });
     expect(component['availableYears']()).toEqual(['2022/2023', '2023/2024']);
   });
 
@@ -267,7 +293,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.value.set({
       teachings: [],
       courses: { '2022/2023': [], '2023/2024': [] },
-    } as any);
+    });
     mockGraphService.graphKeySelected.set('cds_year');
     mockGraphService.manageGraphSelection.value.set({
       value: 'cds_year',
@@ -288,7 +314,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.value.set({
       teachings: [],
       courses: { '2022/2023': [] },
-    } as any);
+    });
     mockGraphService.graphKeySelected.set('cds_year');
     mockGraphService.manageGraphSelection.value.set({
       value: 'cds_year',
@@ -307,7 +333,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.value.set({
       teachings: [teaching],
       courses: {},
-    } as any);
+    });
     mockGraphService.graphKeySelected.set('teaching_cds');
     mockGraphService.manageGraphSelection.value.set({
       value: 'teaching_cds',
@@ -315,7 +341,7 @@ describe('CdsSelectedSection', () => {
       description: '',
       active: true,
     });
-    mockTeachingService.selectedTeaching.set(teaching as any);
+    mockTeachingService.selectedTeaching.set(teaching as unknown as Teaching);
     await fixture.whenStable();
 
     expect(component['currentSelectorValue']()).toEqual({ value: 7, label: 'Algebra' });
@@ -325,7 +351,7 @@ describe('CdsSelectedSection', () => {
     mockCdsService.getInfoCds.value.set({
       teachings: [{ id: 1, nome: 'X', canale: 'no' }],
       courses: {},
-    } as any);
+    });
     mockGraphService.graphKeySelected.set('teaching_cds');
     mockGraphService.manageGraphSelection.value.set({
       value: 'teaching_cds',
