@@ -1,26 +1,39 @@
-import { signal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { describe, it, expect, vi } from 'vitest';
 import { GraphResolvers, SelectorResolvers } from './graph-resolvers.value';
 import { GraphMapper } from '@mappers/graph.mapper';
+import { GraphView } from '@interfaces/graph-config.interface';
+import { AcademicYear } from '@values/years';
+
+type CdsArg = Parameters<typeof GraphResolvers>[0];
+type TeachingArg = Parameters<typeof GraphResolvers>[1];
+type GraphSvcArg = NonNullable<Parameters<typeof GraphResolvers>[2]>;
+type SelectorCdsArg = Parameters<typeof SelectorResolvers>[0];
 
 // ─── Mock factory ─────────────────────────────────────────────────────────────
-const mockResource = (value: unknown = null) => ({
+const mockResource = (value: unknown = null): { value: WritableSignal<unknown> } => ({
   value: signal(value),
 });
 
 // ─── GraphResolvers ───────────────────────────────────────────────────────────
 describe('GraphResolvers', () => {
   it('cds_general: should return null when infoCds has no value', () => {
-    const resolvers = GraphResolvers(mockResource() as any, mockResource() as any);
+    const resolvers = GraphResolvers(
+      mockResource() as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+    );
     expect(resolvers.cds_general()).toBeNull();
   });
 
   it('cds_general: should call GraphMapper.toCdsGeneralGraph when data is available', () => {
-    vi.spyOn(GraphMapper, 'toCdsGeneralGraph').mockReturnValue({} as any);
+    vi.spyOn(GraphMapper, 'toCdsGeneralGraph').mockReturnValue({} as unknown as GraphView);
 
     const courses = { '2023/2024': [] };
     const infoCds = mockResource({ teachings: [], courses });
-    const resolvers = GraphResolvers(infoCds as any, mockResource() as any);
+    const resolvers = GraphResolvers(
+      infoCds as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+    );
 
     resolvers.cds_general();
 
@@ -28,15 +41,21 @@ describe('GraphResolvers', () => {
   });
 
   it('teaching_cds: should return null when infoTeaching has no value', () => {
-    const resolvers = GraphResolvers(mockResource() as any, mockResource() as any);
+    const resolvers = GraphResolvers(
+      mockResource() as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+    );
     expect(resolvers.teaching_cds()).toBeNull();
   });
 
   it('teaching_cds: should call GraphMapper.toTeachingGraph when data is available', () => {
-    vi.spyOn(GraphMapper, 'toTeachingGraph').mockReturnValue({} as any);
+    vi.spyOn(GraphMapper, 'toTeachingGraph').mockReturnValue({} as unknown as GraphView);
 
     const teachingData = { id: 1 };
-    const resolvers = GraphResolvers(mockResource() as any, mockResource(teachingData) as any);
+    const resolvers = GraphResolvers(
+      mockResource() as unknown as CdsArg,
+      mockResource(teachingData) as unknown as TeachingArg,
+    );
 
     resolvers.teaching_cds();
 
@@ -44,7 +63,10 @@ describe('GraphResolvers', () => {
   });
 
   it('cds_year: should return null without data or year', () => {
-    const resolvers = GraphResolvers(mockResource() as any, mockResource() as any);
+    const resolvers = GraphResolvers(
+      mockResource() as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+    );
     expect(resolvers.cds_year()).toBe(null);
   });
 
@@ -56,7 +78,11 @@ describe('GraphResolvers', () => {
       selectedVIndex: signal(0),
       elaborateFormulaFor: vi.fn(),
     };
-    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    const resolvers = GraphResolvers(
+      infoCds as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
     expect(resolvers.cds_year()).toBe(null);
   });
 
@@ -68,12 +94,16 @@ describe('GraphResolvers', () => {
       selectedVIndex: signal(0),
       elaborateFormulaFor: vi.fn(),
     };
-    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    const resolvers = GraphResolvers(
+      infoCds as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
     expect(resolvers.cds_year()).toBe(null);
   });
 
   it('cds_year: should filter, sort and call GraphMapper.toAcademicYearGraph', () => {
-    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as any);
+    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as unknown as GraphView);
 
     const teachings = [
       { id: 1, nome: 'Fisica', anno: 2, schedeopis: { domande: [[1]] } },
@@ -98,19 +128,23 @@ describe('GraphResolvers', () => {
       ]),
     };
 
-    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    const resolvers = GraphResolvers(
+      infoCds as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
     resolvers.cds_year();
 
     expect(graphService.elaborateFormulaFor).toHaveBeenCalled();
     const [teachingsArg, valuesArg, cdsMeanArg, vIndexArg] = spy.mock.calls[0];
-    expect((teachingsArg as any[]).map((t) => t.id)).toEqual([2, 1]);
+    expect((teachingsArg as { id: number }[]).map((t) => t.id)).toEqual([2, 1]);
     expect(valuesArg).toEqual([3, 4]);
     expect(cdsMeanArg).toBe(6);
     expect(vIndexArg).toBe(1);
   });
 
   it('cds_year: should filter by search query (case-insensitive)', () => {
-    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as any);
+    const spy = vi.spyOn(GraphMapper, 'toAcademicYearGraph').mockReturnValue({} as unknown as GraphView);
     spy.mockClear();
 
     const teachings = [
@@ -131,18 +165,22 @@ describe('GraphResolvers', () => {
       ]),
     };
 
-    const resolvers = GraphResolvers(infoCds as any, mockResource() as any, graphService as any);
+    const resolvers = GraphResolvers(
+      infoCds as unknown as CdsArg,
+      mockResource() as unknown as TeachingArg,
+      graphService as unknown as GraphSvcArg,
+    );
     resolvers.cds_year();
 
     const [teachingsArg] = spy.mock.calls[0];
-    expect((teachingsArg as any[]).map((t) => t.id)).toEqual([1]);
+    expect((teachingsArg as { id: number }[]).map((t) => t.id)).toEqual([1]);
   });
 });
 
 // ─── SelectorResolvers ────────────────────────────────────────────────────────
 describe('SelectorResolvers', () => {
   it('teaching_cds: should return empty array when infoCds has no value', () => {
-    const resolvers = SelectorResolvers(mockResource() as any, signal([]));
+    const resolvers = SelectorResolvers(mockResource() as unknown as SelectorCdsArg, signal([]));
     expect(resolvers.teaching_cds()).toEqual([]);
   });
 
@@ -152,7 +190,7 @@ describe('SelectorResolvers', () => {
       { id: 2, nome: 'Fisica', canale: 'no' },
     ];
     const infoCds = mockResource({ teachings, courses: {} });
-    const resolvers = SelectorResolvers(infoCds as any, signal([]));
+    const resolvers = SelectorResolvers(infoCds as unknown as SelectorCdsArg, signal([]));
 
     expect(resolvers.teaching_cds()).toEqual([
       { value: 1, label: 'Matematica (A - L)' },
@@ -161,13 +199,13 @@ describe('SelectorResolvers', () => {
   });
 
   it('cds_year: should return empty array when no years available', () => {
-    const resolvers = SelectorResolvers(mockResource() as any, signal([]));
+    const resolvers = SelectorResolvers(mockResource() as unknown as SelectorCdsArg, signal([]));
     expect(resolvers.cds_year()).toEqual([]);
   });
 
   it('cds_year: should map years to SelectOption[]', () => {
-    const years = ['2022/2023', '2023/2024'] as any;
-    const resolvers = SelectorResolvers(mockResource() as any, signal(years));
+    const years = ['2022/2023', '2023/2024'] as AcademicYear[];
+    const resolvers = SelectorResolvers(mockResource() as unknown as SelectorCdsArg, signal(years));
 
     expect(resolvers.cds_year()).toEqual([
       { value: '2023/2024', label: '2023/2024' },

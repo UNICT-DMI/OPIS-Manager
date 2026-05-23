@@ -8,13 +8,13 @@ describe('HomePageComponent', () => {
   let fixture: ComponentFixture<HomePageComponent>;
 
   const mockResource = {
-    isLoading: () => false,
-    hasValue: () => true,
-    value: () => [],
-    error: () => null,
+    isLoading: (): boolean => false,
+    hasValue: (): boolean => true,
+    value: (): unknown[] => [],
+    error: (): null => null,
   };
   const mockDepartmentService = {
-    getDepartmentByYear: () => mockResource,
+    getDepartmentByYear: (): typeof mockResource => mockResource,
   };
 
   beforeEach(async () => {

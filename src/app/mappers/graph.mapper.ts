@@ -126,7 +126,7 @@ export class GraphMapper {
             padding: 10,
             callbacks: {
               title: (items) => meta[items[0].dataIndex]?.label ?? '',
-              label: (item) => {
+              label: (item): string | string[] => {
                 const m = meta[item.dataIndex];
                 if (!m) return '';
                 return [
