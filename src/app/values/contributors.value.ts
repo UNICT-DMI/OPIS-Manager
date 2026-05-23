@@ -49,12 +49,12 @@ export const CONTRIBUTOR_SOCIALS = new Map<string, ContributorSocials>([
       linkedin: 'https://www.linkedin.com/in/salvo-asero-2a19a620a/',
     },
   ],
-  // [
-  //   'filippomarletta',
-  //   {
-  //     linkedin: 'https://www.linkedin.com/in/filippo-marletta-a17973298/',
-  //   },
-  // ],
+  [
+    'filippomarletta',
+    {
+      linkedin: 'https://www.linkedin.com/in/filippo-marletta-a17973298/',
+    },
+  ],
   [
     'chiarazuccaro',
     {
