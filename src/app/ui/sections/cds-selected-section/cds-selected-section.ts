@@ -103,15 +103,13 @@ export class CdsSelectedSection {
     if (!opts?.length) return null;
 
     const graphKey = this._graphService.graphKeySelected();
-    if (graphKey === GraphSelection.YEAR) {
+    if (graphKey === GraphSelection.YEAR || graphKey === GraphSelection.BOXPLOT) {
       const year = this._graphService.selectedYear();
-
       return year ? (opts.find((o) => o.value === year) ?? null) : null;
     }
 
     if (graphKey === GraphSelection.TEACHINGS_CDS) {
       const teaching = this._teachingService.selectedTeaching();
-
       if (teaching) {
         return opts.find((o) => o.value === teaching.id) ?? null;
       }
@@ -123,11 +121,11 @@ export class CdsSelectedSection {
   protected onSelectorChange(option: SelectOption): void {
     const graphKey = this._graphService.graphKeySelected();
 
-    if (graphKey === 'teaching_cds') {
+    if (graphKey === GraphSelection.TEACHINGS_CDS) {
       const teaching = this.infoCds.value()?.teachings.find((t) => t.id === option.value) ?? null;
       this._teachingService.selectedTeaching.set(teaching);
     }
-    if (graphKey === 'cds_year') {
+    if (graphKey === GraphSelection.YEAR || graphKey === GraphSelection.BOXPLOT) {
       this._graphService.selectedYear.set(option.value as AcademicYear);
     }
   }

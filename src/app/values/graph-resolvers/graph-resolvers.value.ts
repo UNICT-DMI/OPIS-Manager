@@ -47,6 +47,20 @@ export function GraphResolvers(
 
       return GraphMapper.toAcademicYearGraph(teachings, values, cdsMean, vIndex);
     },
+    cds_boxplot: (): GraphView | null => {
+      const data = infoCds.value();
+      const year = graphService?.selectedYear();
+      if (!data || !year) return null;
+
+      const yearTeachings = data.teachingsByYear[year] ?? [];
+      const teachings = yearTeachings.filter((t) => t.schedeopis?.domande != null);
+      if (!teachings.length) return null;
+
+      const schede = teachings.map((t) => t.schedeopis);
+      const [, valuesPerV] = graphService!.elaborateFormulaFor(schede);
+
+      return GraphMapper.toBoxplotGraph(valuesPerV);
+    },
   };
 }
 
@@ -54,15 +68,15 @@ export function SelectorResolvers(
   infoCds: CdsService['getInfoCds'],
   availableYears: Signal<AcademicYear[]>,
 ): Record<Exclude<GraphSelectionType, 'cds_general'>, () => SelectOption[]> {
+  const yearOptions = (): { value: AcademicYear; label: AcademicYear; }[] => availableYears().map((y) => ({ value: y, label: y })).reverse();
+
   return {
     teaching_cds: () =>
       infoCds.value()?.teachings.map((t) => ({
         value: t.id,
         label: t.canale === 'no' ? t.nome : `${t.nome} (${t.canale})`,
       })) ?? [],
-    cds_year: () =>
-      availableYears()
-        .map((y) => ({ value: y, label: y }))
-        .reverse(),
+    cds_year: yearOptions,
+    cds_boxplot: yearOptions,
   };
 }
