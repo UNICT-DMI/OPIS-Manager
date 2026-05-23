@@ -7,6 +7,9 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { BaseChartDirective } from 'ng2-charts';
 
 Chart.register(annotationPlugin, BoxPlotController, BoxAndWiskers);
+const boxDefaults = (Chart.defaults.elements as unknown as Record<string, Record<string, unknown>>)['boxandwhiskers'];
+boxDefaults['meanRadius'] = 0;
+boxDefaults['outlierRadius'] = 0;
 
 @Component({
   selector: 'opis-graph',

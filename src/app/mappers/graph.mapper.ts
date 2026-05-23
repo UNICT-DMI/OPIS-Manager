@@ -2,7 +2,7 @@ import { MeansPerYear } from '@c_types/means-graph.type';
 import { GraphView } from '@interfaces/graph-config.interface';
 import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
-import { boxplotStats } from '@utils/statistics.utils/statistics.utils';
+import { boxplotStats, round } from '@utils/statistics.utils/statistics.utils';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 import { ChartData, ChartType } from 'chart.js';
@@ -145,18 +145,30 @@ export class GraphMapper {
 
   static toBoxplotGraph(valuesPerV: number[][]): GraphView {
     const groups = ['V1', 'V2', 'V3'] as const;
+    const allStats = groups.map((_, i) => boxplotStats(valuesPerV[i] ?? []));
+
+    const dataMin = Math.min(...allStats.map((s) => s.min));
+    const dataMax = Math.max(...allStats.map((s) => s.max));
+    const padding = Math.max(0.5, round((dataMax - dataMin) * 0.1));
 
     return {
       type: 'boxplot' as ChartType,
       data: {
-        labels: ['Distribuzione'],
+        labels: [''],
         datasets: groups.map((label, i) => ({
           label,
-          data: [boxplotStats(valuesPerV[i] ?? [])],
+          data: [allStats[i]],
         })),
       } as unknown as ChartData,
       options: {
+        indexAxis: 'y',
         responsive: true,
+        scales: {
+          x: {
+            min: round(dataMin - padding),
+            max: round(dataMax + padding),
+          },
+        },
         plugins: {
           legend: { display: true },
           tooltip: {
@@ -166,19 +178,18 @@ export class GraphMapper {
                   min: number;
                   q1: number;
                   median: number;
+                  mean: number;
                   q3: number;
                   max: number;
-                  outliers?: number[];
                 };
-                const lines = [
+                return [
                   `Min: ${p.min}`,
                   `Q1: ${p.q1}`,
                   `Mediana: ${p.median}`,
+                  `Media: ${p.mean}`,
                   `Q3: ${p.q3}`,
                   `Max: ${p.max}`,
                 ];
-                if (p.outliers?.length) lines.push(`Outlier: ${p.outliers.join(', ')}`);
-                return lines;
               },
             },
           },

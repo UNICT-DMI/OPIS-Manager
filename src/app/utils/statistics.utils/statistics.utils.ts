@@ -24,18 +24,20 @@ function quantile(sorted: number[], p: number): number {
   const pos = p * (sorted.length - 1);
   const lo = Math.floor(pos);
   const hi = Math.ceil(pos);
-  return round(sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo));
+  // No round() here: rounding intermediate quantiles corrupts IQR, fences and
+  // whisker computation. Round only in the final boxplotStats() return values.
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
 }
 
 export function boxplotStats(values: number[]): {
   min: number;
   q1: number;
   median: number;
+  mean: number;
   q3: number;
   max: number;
-  outliers: number[];
 } {
-  if (values.length === 0) return { min: 0, q1: 0, median: 0, q3: 0, max: 0, outliers: [] };
+  if (values.length === 0) return { min: 0, q1: 0, median: 0, mean: 0, q3: 0, max: 0 };
 
   const sorted = [...values].sort((a, b) => a - b);
   const q1 = quantile(sorted, 0.25);
@@ -48,10 +50,10 @@ export function boxplotStats(values: number[]): {
 
   return {
     min: round(inliers[0] ?? sorted[0]),
-    q1,
-    median,
-    q3,
+    q1: round(q1),
+    median: round(median),
+    mean: round(mean(values)),
+    q3: round(q3),
     max: round(inliers[inliers.length - 1] ?? sorted[sorted.length - 1]),
-    outliers: sorted.filter((v) => v < fenceLo || v > fenceHi).map((v) => round(v)),
   };
 }
