@@ -6,6 +6,7 @@ import { YearRange } from './year-range';
 import { YearRangeSelection } from '@interfaces/year-range.interface';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ngx-slider',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
