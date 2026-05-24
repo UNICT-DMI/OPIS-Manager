@@ -132,6 +132,52 @@
       </div>
     } @else if (hasError()) {
       <p class="formula-error">Impossibile recuperare i pesi delle domande. Riprova più tardi.</p>
+    } @else if (isLogged()) {
+      <div class="formula-edit">
+        @for (group of editGroups(); track group.label) {
+          <div class="formula-edit__group">
+            <div class="formula-edit__group-head">
+              <h3>Gruppo {{ group.label }}</h3>
+              <span class="formula-edit__sum" [class.is-invalid]="!group.valid">
+                Somma: {{ group.sum | number: '1.2-2' }}
+              </span>
+            </div>
+
+            @for (row of group.rows; track row.id) {
+              <div class="formula-edit__row">
+                <p class="formula-edit__question">
+                  <strong>{{ row.id }}</strong> {{ row.text }}
+                </p>
+                <div class="formula-edit__control">
+                  <ngx-slider
+                    [value]="getWeight(row.id) ?? 0"
+                    [options]="sliderOptions"
+                    (valueChange)="setWeight(row.id, $event)"
+                  />
+                  <span class="formula-edit__value">{{ getWeight(row.id) | number: '1.2-2' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (groupsError(); as errorMessage) {
+          <p class="formula-edit__message is-error">{{ errorMessage }}</p>
+        } @else if (saveMessage(); as message) {
+          <p class="formula-edit__message" [class.is-error]="message.type === 'error'">
+            {{ message.text }}
+          </p>
+        }
+
+        <button
+          type="button"
+          class="formula-edit__save"
+          [disabled]="saving() || !groupsValid()"
+          (click)="save()"
+        >
+          {{ saving() ? 'Salvataggio…' : 'Salva modifiche' }}
+        </button>
+      </div>
     } @else {
       <div class="formula-table-wrap">
         <table class="formula-table formula-table--questions">

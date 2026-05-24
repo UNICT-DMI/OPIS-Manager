@@ -27,6 +27,9 @@ import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers/graph
 import { GRAPH_DATA } from '@values/messages.value';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 
+/** Quiet window (ms) after the last resize before the graph is considered fully rendered. */
+const GRAPH_SETTLE_MS = 200;
+
 @Component({
   selector: 'opis-cds-selected-section',
   imports: [IconComponent, Loader, Graph, SelectComponent, YearStats, YearRange],
@@ -185,17 +188,29 @@ export class CdsSelectedSection {
   }
 
   private trackMinHeight(): EffectRef {
-    return effect(() => {
+    return effect((onCleanup) => {
       const el = this._graphDescrRef()?.nativeElement;
       if (!el) return;
 
+      let settleTimer: ReturnType<typeof setTimeout> | undefined;
+
       const observer = new ResizeObserver(([entry]) => {
-        const h = entry.contentRect.height;
-        if (h > this.minHeight()) this.minHeight.set(h);
+        const height = entry.contentRect.height;
+        // Record the height only once the element has stopped resizing, i.e. the
+        // graph has finished loading/rendering. Measuring mid-render would lock in
+        // a transient overshoot that ends up taller than the settled graph.
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
+          if (height > this.minHeight()) this.minHeight.set(height);
+        }, GRAPH_SETTLE_MS);
       });
 
       observer.observe(el);
-      return () => observer.disconnect();
+
+      onCleanup(() => {
+        clearTimeout(settleTimer);
+        observer.disconnect();
+      });
     });
   }
 }

@@ -2,6 +2,7 @@ import { ResourceStatus, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { YearStats } from './year-stats';
+import { AuthService } from '@services/auth/auth.service';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { exampleCDS } from '@mocks/cds-mock';
@@ -91,12 +92,18 @@ describe('YearStats', () => {
     ]),
   };
 
+  const authServiceMock = {
+    isLogged: signal(false),
+    getAuthToken: (): string | null => null,
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [YearStats],
       providers: [
         { provide: CdsService, useValue: cdsServiceMock },
         { provide: GraphService, useValue: graphServiceMock },
+        { provide: AuthService, useValue: authServiceMock },
       ],
     }).compileComponents();
 

@@ -6,7 +6,7 @@ import { catchError, map, Observable, shareReplay, tap, throwError } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
-  private readonly BASE_URL = env.api_url + '/domande';
+  private readonly BASE_URL = env.api_url + '/v2/domande';
   private readonly _http = inject(HttpClient);
 
   private readonly _questionWeights$ = this._http.get<Question[]>(this.BASE_URL).pipe(

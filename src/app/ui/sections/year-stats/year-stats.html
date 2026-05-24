@@ -11,6 +11,39 @@
       </div>
     </header>
 
+    @if (isLogged()) {
+      <div class="year-stats_edit">
+        <label>
+          <span>Scostamento media</span>
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            [ngModel]="editMedia()"
+            (ngModelChange)="editMedia.set($event)"
+          />
+        </label>
+        <label>
+          <span>Scostamento numerosità</span>
+          <input
+            type="number"
+            step="1"
+            min="0"
+            [ngModel]="editNumerosita()"
+            (ngModelChange)="editNumerosita.set($event)"
+          />
+        </label>
+        <button type="button" [disabled]="saving()" (click)="saveDeviations()">
+          {{ saving() ? 'Salvataggio…' : 'Salva' }}
+        </button>
+        @if (saveMessage(); as message) {
+          <span class="year-stats_edit-msg" [class.is-error]="message.type === 'error'">
+            {{ message.text }}
+          </span>
+        }
+      </div>
+    }
+
     <div class="year-stats_grid">
       @if (stats().badVal.length) {
         <div class="year-stats_col">

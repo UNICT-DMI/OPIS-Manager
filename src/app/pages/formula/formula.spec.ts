@@ -7,7 +7,7 @@ import { Question } from '@interfaces/question.interface';
 import { describe, expect, it } from 'vitest';
 import { FormulaComponent } from './formula';
 
-const BASE_URL = env.api_url + '/domande';
+const BASE_URL = env.api_url + '/v2/domande';
 
 const makeQuestion = (id: number, gruppo: (typeof OpisGroup)[keyof typeof OpisGroup]): Question => ({
   id,

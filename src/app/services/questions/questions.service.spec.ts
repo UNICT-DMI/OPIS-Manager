@@ -5,7 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { env } from '@env';
 import { exampleQuestion } from '@mocks/question-mock';
 
-const BASE_URL = env.api_url + '/domande';
+const BASE_URL = env.api_url + '/v2/domande';
 
 describe('[SERVICE] == Question', () => {
   let service: QuestionService;

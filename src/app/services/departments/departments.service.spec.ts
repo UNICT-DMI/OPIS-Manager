@@ -12,7 +12,7 @@ import { DEPARTMENT_ICONS } from '@values/icons-deps';
 
 vi.mock('@values/delay-api', () => ({ DELAY_API_MS: 0 }));
 
-const BASE_URL = env.api_url + '/dipartimento';
+const BASE_URL = env.api_url + '/v2/dipartimento';
 
 const tick = async (times = 2): Promise<void> => {
   for (let i = 0; i < times; i++) {

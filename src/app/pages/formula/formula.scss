@@ -201,6 +201,119 @@
   }
 }
 
+.formula-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__group {
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  &__group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--gray-200);
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+  }
+
+  &__sum {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--color-text-muted);
+
+    &.is-invalid {
+      color: var(--color-accent);
+    }
+  }
+
+  &__row {
+    padding: 0.6rem 0;
+
+    & + & {
+      border-top: 1px solid var(--gray-100);
+    }
+  }
+
+  &__question {
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+    color: var(--color-text);
+
+    strong {
+      color: var(--color-primary);
+      margin-right: 0.35rem;
+    }
+  }
+
+  &__control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    ngx-slider {
+      flex: 1 1 auto;
+    }
+  }
+
+  &__value {
+    min-width: 3rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__message {
+    margin: 0;
+    padding: 0.7rem 1rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    color: var(--blue-900);
+    background: var(--blue-100);
+
+    &.is-error {
+      color: var(--color-accent);
+      background: var(--red-100);
+    }
+  }
+
+  &__save {
+    align-self: center;
+    padding: 0.75rem 2rem;
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
 .formula-loader {
   display: flex;
   justify-content: center;

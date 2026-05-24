@@ -1,1 +1,35 @@
-<p>login works!</p>
+<section class="login-page">
+  <article class="login-card">
+    <h1 class="login-card__title">Log In</h1>
+
+    @if (error()) {
+      <p class="login-card__error" role="alert">Email o password errati</p>
+    }
+
+    <form class="login-form" (ngSubmit)="login()">
+      <label class="login-field">
+        <opis-icon iconName="mail" dimension="1-5rem" />
+        <input
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="Email"
+          [(ngModel)]="email"
+        />
+      </label>
+
+      <label class="login-field">
+        <opis-icon iconName="lock" dimension="1-5rem" />
+        <input
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Password"
+          [(ngModel)]="password"
+        />
+      </label>
+
+      <button type="submit" class="login-submit">Login</button>
+    </form>
+  </article>
+</section>

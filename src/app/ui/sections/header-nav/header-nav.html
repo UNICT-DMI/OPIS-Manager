@@ -25,6 +25,16 @@
           }
         </a>
       }
+
+      @if (!isLogged()) {
+        <a [routerLink]="loginItem.route" aria-label="Login">
+          <opis-icon [iconName]="loginItem.icon!.name" [dimension]="loginItem.icon!.dimension" />
+        </a>
+      } @else {
+        <button type="button" class="logout-btn" (click)="logout()">
+          <span>Logout</span>
+        </button>
+      }
     </div>
   </div>
 </header>

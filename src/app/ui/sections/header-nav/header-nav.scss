@@ -94,6 +94,19 @@
       align-items: center;
       gap: 1rem;
       padding-bottom: 0.3rem;
+
+      .logout-btn {
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+
+        &:hover {
+          color: var(--blue-100);
+        }
+      }
     }
   }
 }

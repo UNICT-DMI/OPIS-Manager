@@ -14,7 +14,7 @@ import { delay, forkJoin, map, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CdsService {
-  private readonly BASE_URL = env.api_url + '/cds';
+  private readonly BASE_URL = env.api_url + '/v2/cds';
   private readonly _http = inject(HttpClient);
   private readonly _graphService = inject(GraphService);
 

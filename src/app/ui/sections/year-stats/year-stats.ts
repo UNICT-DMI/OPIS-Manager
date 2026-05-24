@@ -1,11 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { CDS } from '@interfaces/cds.interface';
+import { SaveMessage } from '@interfaces/save-message.interface';
 import { TeachingStats } from '@interfaces/year-stats.interface';
+import { AuthService } from '@services/auth/auth.service';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { mean, round } from '@utils/statistics.utils/statistics.utils';
 
 @Component({
   selector: 'opis-year-stats',
+  imports: [FormsModule],
   templateUrl: './year-stats.html',
   styleUrl: './year-stats.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,10 +27,22 @@ import { mean, round } from '@utils/statistics.utils/statistics.utils';
 export class YearStats {
   private readonly _cdsService = inject(CdsService);
   private readonly _graphService = inject(GraphService);
+  private readonly _authService = inject(AuthService);
+  private readonly _destroyRef = inject(DestroyRef);
 
   protected readonly cds = this._cdsService.cdsSelected;
   protected readonly selectedYear = this._graphService.selectedYear;
   protected readonly selectedVIndex = this._graphService.selectedVIndex;
+
+  protected readonly isLogged = this._authService.isLogged;
+  protected readonly saving = signal<boolean>(false);
+  protected readonly saveMessage = signal<SaveMessage | null>(null);
+
+  /** Editable copies of the deviation thresholds; reset whenever the selected CDS changes. */
+  protected readonly editMedia = linkedSignal(() => this.cds()?.scostamento_media ?? 0);
+  protected readonly editNumerosita = linkedSignal(
+    () => this.cds()?.scostamento_numerosita ?? 0,
+  );
 
   private readonly _infoCds = this._cdsService.getInfoCds;
 
@@ -82,5 +108,35 @@ export class YearStats {
     const channel = teaching.canale && teaching.canale !== 'no' ? ` (${teaching.canale})` : '';
     const prof = teaching.docente ? ` — ${teaching.docente}` : '';
     return `${teaching.nome}${channel}${prof}`;
+  }
+
+  protected saveDeviations(): void {
+    const current = this.cds();
+    const token = this._authService.getAuthToken();
+    if (!current || !token) return;
+
+    const updated: CDS = {
+      ...current,
+      scostamento_media: this.editMedia(),
+      scostamento_numerosita: this.editNumerosita(),
+    };
+
+    this.saving.set(true);
+    this.saveMessage.set(null);
+    this._cdsService
+      .updateCDS(updated, token)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: () => {
+          this.saving.set(false);
+          // Reflect the new thresholds so the good/bad split recomputes.
+          this._cdsService.cdsSelected.set(updated);
+          this.saveMessage.set({ type: 'success', text: 'Scostamenti aggiornati correttamente!' });
+        },
+        error: () => {
+          this.saving.set(false);
+          this.saveMessage.set({ type: 'error', text: "Errore nell'aggiornare gli scostamenti." });
+        },
+      });
   }
 }

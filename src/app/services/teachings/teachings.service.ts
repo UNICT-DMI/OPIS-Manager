@@ -10,7 +10,7 @@ import { map, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TeachingService {
-  private readonly BASE_URL = env.api_url + '/insegnamento';
+  private readonly BASE_URL = env.api_url + '/v2/insegnamento';
 
   private readonly _http = inject(HttpClient);
   private readonly _graphService = inject(GraphService);

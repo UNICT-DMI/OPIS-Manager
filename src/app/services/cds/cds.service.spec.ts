@@ -67,7 +67,7 @@ describe('CdsService', () => {
   it('[CDS-SERVICE]: should call teachings API with correct URL', async () => {
     const promise = firstValueFrom(service['teachingCdsApi'](exampleCDS.id));
 
-    const req = httpMock.expectOne(`${env.api_url}/cds/with-id/${exampleCDS.id}/insegnamenti`);
+    const req = httpMock.expectOne(`${env.api_url}/v2/cds/with-id/${exampleCDS.id}/insegnamenti`);
     expect(req.request.method).toBe('GET');
     req.flush([{ id: 1, nome: 'Matematica' }]);
 
@@ -77,7 +77,7 @@ describe('CdsService', () => {
   it('[CDS-SERVICE]: should throw when teachings API returns empty array', async () => {
     const promise = firstValueFrom(service['teachingCdsApi'](exampleCDS.id));
 
-    httpMock.expectOne(`${env.api_url}/cds/with-id/${exampleCDS.id}/insegnamenti`).flush([]);
+    httpMock.expectOne(`${env.api_url}/v2/cds/with-id/${exampleCDS.id}/insegnamenti`).flush([]);
 
     await expect(promise).rejects.toThrow('Nessun insegnamento trovato');
   });
@@ -86,7 +86,7 @@ describe('CdsService', () => {
   it('[CDS-SERVICE]: should call stats API with correct URL', async () => {
     const promise = firstValueFrom(service['cdsStatsApi'](exampleCDS.unict_id));
 
-    const req = httpMock.expectOne(`${env.api_url}/cds/coarse/${exampleCDS.unict_id}/schedeopis`);
+    const req = httpMock.expectOne(`${env.api_url}/v2/cds/coarse/${exampleCDS.unict_id}/schedeopis`);
     expect(req.request.method).toBe('GET');
     req.flush([{ insegnamenti: [] }]);
 
@@ -96,7 +96,7 @@ describe('CdsService', () => {
   it('[CDS-SERVICE]: should throw when stats API returns empty array', async () => {
     const promise = firstValueFrom(service['cdsStatsApi'](exampleCDS.unict_id));
 
-    httpMock.expectOne(`${env.api_url}/cds/coarse/${exampleCDS.unict_id}/schedeopis`).flush([]);
+    httpMock.expectOne(`${env.api_url}/v2/cds/coarse/${exampleCDS.unict_id}/schedeopis`).flush([]);
 
     await expect(promise).rejects.toThrow('Schede OPIS non trovate');
   });
@@ -126,7 +126,7 @@ describe('CdsService', () => {
     const token = 'test-token';
     const promise = firstValueFrom(service.updateCDS(exampleCDS, token));
 
-    const url = new URL(`${env.api_url}/cds/with-id/${exampleCDS.id}`);
+    const url = new URL(`${env.api_url}/v2/cds/with-id/${exampleCDS.id}`);
     url.searchParams.set('scostamento_numerosita', String(exampleCDS.scostamento_numerosita));
     url.searchParams.set('scostamento_media', String(exampleCDS.scostamento_media));
 

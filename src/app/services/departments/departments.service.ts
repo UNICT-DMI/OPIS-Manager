@@ -12,7 +12,7 @@ import { delay, map, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentsService {
-  private readonly BASE_URL = env.api_url + '/dipartimento';
+  private readonly BASE_URL = env.api_url + '/v2/dipartimento';
   private readonly _http = inject(HttpClient);
 
   readonly logoAlreadyAnimated = signal(false);

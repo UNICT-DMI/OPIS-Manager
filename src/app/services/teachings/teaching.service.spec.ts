@@ -11,7 +11,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { env } from '@env';
 import { GraphService } from '@services/graph/graph.service';
 
-const BASE_URL = env.api_url + '/insegnamento';
+const BASE_URL = env.api_url + '/v2/insegnamento';
 
 const mockMeansPerYear: MeansPerYear = {
   '2020/2021': [
