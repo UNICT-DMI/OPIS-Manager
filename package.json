@@ -5,15 +5,14 @@
   "packageManager": "npm@11.6.2",
   "scripts": {
     "ng": "ng",
-    "prestart": "node scripts/set-env.js",
     "start": "ng serve",
-    "build": "node scripts/set-env.js && ng build",
+    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
     "test": "ng test",
-    "test:coverage": "node scripts/set-env.js && ng test --coverage"
+    "test:coverage": "ng test --coverage"
   },
   "prettier": {
     "printWidth": 100,
@@ -57,7 +56,6 @@
     "@typescript-eslint/parser": "8.48.1",
     "@vitest/coverage-v8": "4.0.17",
     "angular-eslint": "21.0.1",
-    "dotenv": "17.2.3",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",

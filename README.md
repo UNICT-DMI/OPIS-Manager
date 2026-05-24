@@ -61,9 +61,9 @@ https://github.com/UNICT-DMI/opis-manager-core
 
 ### 🌍 Environment Configuration
 
-The environment configuration is generated automatically.  
-Before starting the application, the `prestart` script (`node set-env.js`) creates the `src/enviroment.ts` file containing the required configuration values (e.g. API base URL).  
-No manual `.env` file setup is required at this stage.
+The configuration lives in `src/environment.ts`, a committed source file holding public values
+(the API base URL and the GitHub API URL). Edit it directly to change them — no `.env` file or
+generation step is required.
 
 ### 🧪 Development Server
 

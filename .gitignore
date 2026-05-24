@@ -40,5 +40,4 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-environment.ts
 .angular/
