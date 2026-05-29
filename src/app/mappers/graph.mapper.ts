@@ -4,6 +4,7 @@ import { SchedaOpis } from '@interfaces/opis-record.interface';
 import { Teaching } from '@interfaces/teaching.interface';
 import { boxplotStats, round } from '@utils/statistics.utils/statistics.utils';
 import { typedKeys } from '@utils/object-helpers.utils';
+import { MIN_VALID_SCHEDE } from '@values/opis-thresholds';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 import { ChartData, ChartType } from 'chart.js';
 
@@ -65,16 +66,28 @@ export class GraphMapper {
   ): GraphView {
     const vLabel = `V${vIndex + 1}`;
     const schedeCounts = teachings.map((t) => t.schedeopis?.totale_schede ?? 0);
-    const colors = GraphMapper.buildSchedeColorGradient(schedeCounts);
+    const insufficient = schedeCounts.map((count) => count < MIN_VALID_SCHEDE);
 
-    const labels = teachings.map((t) =>
-      t.canale && t.canale !== 'no' ? `${t.nome} (${t.canale})` : t.nome,
+    // Sub-threshold sections get a small grey stub (not their misleading ~0 score):
+    // a visible marker that reads as "no usable data", scaled so it stays a sliver
+    // regardless of the V range. Grey sets it apart from the score gradient.
+    const maxValid = values.reduce((m, v, i) => (insufficient[i] ? m : Math.max(m, v)), 0);
+    const stub = (maxValid > 0 ? maxValid : 1) * 0.03;
+    const barData = values.map((v, i) => (insufficient[i] ? stub : v));
+    const colors = GraphMapper.buildSchedeColorGradient(schedeCounts).map((color, i) =>
+      insufficient[i] ? 'rgba(200, 200, 200, 0.6)' : color,
     );
+
+    const labels = teachings.map((t) => {
+      const base = t.nome_modulo ? `${t.nome} - ${t.nome_modulo}` : t.nome;
+      return t.canale && t.canale !== 'no' ? `${base} (${t.canale})` : base;
+    });
 
     const meta = teachings.map((t, i) => ({
       docente: t.docente ?? '—',
       schede: schedeCounts[i],
       label: labels[i],
+      insufficient: insufficient[i],
     }));
 
     const annotations: Record<string, object> = {};
@@ -103,7 +116,7 @@ export class GraphMapper {
         labels,
         datasets: [
           {
-            data: values,
+            data: barData,
             backgroundColor: colors,
             hoverBackgroundColor: colors,
             borderWidth: 1,
@@ -132,7 +145,7 @@ export class GraphMapper {
                 return [
                   `Docente: ${m.docente}`,
                   `Schede OPIS: ${m.schede}`,
-                  `${vLabel}: ${item.parsed.x}`,
+                  m.insufficient ? 'Dati insufficienti (N/D)' : `${vLabel}: ${item.parsed.x}`,
                 ];
               },
             },

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Department } from '@interfaces/department.interface';
+import { AnalyticsService } from '@services/analytics/analytics.service';
 import { IconComponent } from '@shared-ui/icon/icon';
 
 @Component({
@@ -11,6 +12,8 @@ import { IconComponent } from '@shared-ui/icon/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DepCard implements OnInit {
+  private readonly _analytics = inject(AnalyticsService);
+
   readonly department = input.required<Department>();
   protected detailUrl: string;
 
@@ -25,7 +28,11 @@ export class DepCard implements OnInit {
   }
 
   protected saveInfo(): void {
-    const formatToSave = JSON.stringify(this.department());
-    localStorage.setItem('department', formatToSave);
+    const department = this.department();
+    localStorage.setItem('department', JSON.stringify(department));
+    this._analytics.trackEvent('select_department', {
+      department_id: department.unict_id,
+      department_name: department.nome,
+    });
   }
 }

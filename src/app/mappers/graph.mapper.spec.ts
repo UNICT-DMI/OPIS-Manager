@@ -195,5 +195,73 @@ describe('GraphMapper', () => {
       const colors = graph.data.datasets[0].backgroundColor as string[];
       expect(colors[0]).toBe(colors[1]);
     });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: label includes nome_modulo and canale when both present', () => {
+      const graph = GraphMapper.toAcademicYearGraph(
+        [makeTeaching({ canale: '1', nome_modulo: 'LABORATORIO' })],
+        [1],
+        null,
+        0,
+      );
+      expect(graph.data.labels).toEqual(['Algebra - LABORATORIO (1)']);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: sub-threshold schede render as a small grey stub', () => {
+      const teachings = [
+        makeTeaching({ id: 1, schedeopis: { totale_schede: 4 } as unknown as SchedaOpis }),
+        makeTeaching({ id: 2, schedeopis: { totale_schede: 50 } as unknown as SchedaOpis }),
+      ];
+      const graph = GraphMapper.toAcademicYearGraph(teachings, [0, 2], null, 0);
+      const data = graph.data.datasets[0].data as number[];
+      const colors = graph.data.datasets[0].backgroundColor as string[];
+      expect(data[0]).toBeGreaterThan(0);
+      expect(data[0]).toBeLessThan(data[1]);
+      expect(data[1]).toBe(2);
+      expect(colors[0]).toBe('rgba(200, 200, 200, 0.6)');
+      expect(colors[1]).not.toBe('rgba(200, 200, 200, 0.6)');
+    });
+
+    type TooltipCallbacks = {
+      title: (items: { dataIndex: number }[]) => string;
+      label: (item: { dataIndex: number; parsed: { x: number } }) => string | string[];
+    };
+    const tooltipCallbacks = (graph: { options?: unknown }): TooltipCallbacks =>
+      (graph.options as { plugins: { tooltip: { callbacks: TooltipCallbacks } } }).plugins.tooltip
+        .callbacks;
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: tooltip title returns the row label', () => {
+      const graph = GraphMapper.toAcademicYearGraph(
+        [makeTeaching({ canale: 'A' })],
+        [1],
+        null,
+        0,
+      );
+      expect(tooltipCallbacks(graph).title([{ dataIndex: 0 }])).toBe('Algebra (A)');
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: tooltip label shows docente, schede and the V value', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [3.5], null, 1);
+      expect(tooltipCallbacks(graph).label({ dataIndex: 0, parsed: { x: 3.5 } })).toEqual([
+        'Docente: Mario',
+        'Schede OPIS: 10',
+        'V2: 3.5',
+      ]);
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: tooltip label reads "Dati insufficienti" for sub-threshold rows', () => {
+      const graph = GraphMapper.toAcademicYearGraph(
+        [makeTeaching({ schedeopis: { totale_schede: 4 } as unknown as SchedaOpis })],
+        [0],
+        null,
+        0,
+      );
+      const label = tooltipCallbacks(graph).label({ dataIndex: 0, parsed: { x: 0 } });
+      expect(label).toContain('Dati insufficienti (N/D)');
+    });
+
+    it('[TO_ACADEMIC_YEAR_GRAPH]: tooltip label returns "" when meta is missing', () => {
+      const graph = GraphMapper.toAcademicYearGraph([makeTeaching()], [1], null, 0);
+      expect(tooltipCallbacks(graph).label({ dataIndex: 99, parsed: { x: 0 } })).toBe('');
+    });
   });
 });

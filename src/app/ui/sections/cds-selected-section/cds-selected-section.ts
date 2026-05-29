@@ -10,13 +10,15 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GraphSelection } from '@enums/chart-typology.enum';
 import { GraphView, SelectOption } from '@interfaces/graph-config.interface';
 import { YearRangeSelection } from '@interfaces/year-range.interface';
+import { YearStats } from '@sections/year-stats/year-stats';
+import { AnalyticsService } from '@services/analytics/analytics.service';
 import { CdsService } from '@services/cds/cds.service';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
-import { YearStats } from '@sections/year-stats/year-stats';
 import { Graph } from '@shared-ui/graph/graph';
 import { IconComponent } from '@shared-ui/icon/icon';
 import { Loader } from '@shared-ui/loader/loader';
@@ -26,6 +28,7 @@ import { typedKeys } from '@utils/object-helpers.utils';
 import { GraphResolvers, SelectorResolvers } from '@values/graph-resolvers/graph-resolvers.value';
 import { GRAPH_DATA } from '@values/messages.value';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
+import { debounceTime, distinctUntilChanged, filter, map, Subject } from 'rxjs';
 
 /** Quiet window (ms) after the last resize before the graph is considered fully rendered. */
 const GRAPH_SETTLE_MS = 200;
@@ -41,6 +44,9 @@ export class CdsSelectedSection {
   private readonly _cdsService = inject(CdsService);
   private readonly _graphService = inject(GraphService);
   private readonly _teachingService = inject(TeachingService);
+  private readonly _analytics = inject(AnalyticsService);
+
+  private readonly _searchTracking$ = new Subject<string>();
 
   private readonly _graphDescrRef = viewChild<ElementRef>('graphDesc');
 
@@ -65,6 +71,7 @@ export class CdsSelectedSection {
   constructor() {
     this.resetTeachingGraph();
     this.trackMinHeight();
+    this.trackTeachingSearch();
   }
 
   protected readonly msgError = computed<string>(() => {
@@ -152,9 +159,17 @@ export class CdsSelectedSection {
       const teaching = this.infoCds.value()?.teachings.find((t) => t.id === option.value) ?? null;
       this._teachingService.selectedTeaching.set(teaching);
       this._graphService.yearRange.set(null);
+      this._analytics.trackEvent('select_teaching', {
+        teaching_id: option.value,
+        teaching_name: option.label,
+      });
     }
     if (graphKey === GraphSelection.YEAR || graphKey === GraphSelection.BOXPLOT) {
       this._graphService.selectedYear.set(option.value as AcademicYear);
+      this._analytics.trackEvent('select_year', {
+        academic_year: String(option.value),
+        context: 'per_anno',
+      });
     }
   }
 
@@ -165,6 +180,19 @@ export class CdsSelectedSection {
   protected onSearchInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this._graphService.teachingSearch.set(value);
+    this._searchTracking$.next(value);
+  }
+
+  private trackTeachingSearch(): void {
+    this._searchTracking$
+      .pipe(
+        debounceTime(600),
+        map((term) => term.trim()),
+        distinctUntilChanged(),
+        filter((term) => term.length > 0),
+        takeUntilDestroyed(),
+      )
+      .subscribe((term) => this._analytics.trackEvent('search_teaching', { search_term: term }));
   }
 
   protected toggleStats(): void {

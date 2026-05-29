@@ -23,6 +23,7 @@ import { Loader } from '@shared-ui/loader/loader';
 import { GraphService } from '@services/graph/graph.service';
 import { TeachingService } from '@services/teachings/teachings.service';
 import { GraphSelection, GraphSelectionType } from '@enums/chart-typology.enum';
+import { AnalyticsService } from '@services/analytics/analytics.service';
 import { Disclaimers } from '@cards/disclaimer/disclaimers';
 import { OpisGroup_Disclaimers } from '@values/disclaimers.value';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
@@ -48,6 +49,7 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
   private readonly _teachingService = inject(TeachingService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
+  private readonly _analytics = inject(AnalyticsService);
 
   private readonly departmentData = signal<Department | null>(null);
   private readonly _cdsRestored = signal(false);
@@ -200,6 +202,12 @@ export class DepartmentPageComponent implements OnInit, OnDestroy {
       this._graphService.selectedVIndex.set(0);
       this._graphService.teachingSearch.set('');
       this._teachingService.selectedTeaching.set(null);
+    } else {
+      this._analytics.trackEvent('select_cds', {
+        cds_id: newCds.id,
+        cds_name: newCds.nome,
+        cds_class: newCds.classe,
+      });
     }
 
     this._cdsService.cdsSelected.set(newCds);

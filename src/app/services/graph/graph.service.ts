@@ -10,6 +10,7 @@ import { YearInterval } from '@interfaces/year-range.interface';
 import { QuestionService } from '@services/questions/questions.service';
 import { typedKeys } from '@utils/object-helpers.utils';
 import { mean, round } from '@utils/statistics.utils/statistics.utils';
+import { MIN_VALID_SCHEDE } from '@values/opis-thresholds';
 import { CHART_BTNS } from '@values/selection-graph';
 import { ACADEMIC_YEARS, AcademicYear } from '@values/years';
 import { of } from 'rxjs';
@@ -46,7 +47,7 @@ export class GraphService {
     const questionsWeights = this._questionService.questionWeights;
     const { totale_schede, domande: questions } = scheda;
 
-    if (totale_schede < 5) return [0, 0, 0];
+    if (totale_schede < MIN_VALID_SCHEDE) return [0, 0, 0];
 
     const V: Record<OpisGroupType, number> = {
       [OpisGroup.Group1]: 0,
