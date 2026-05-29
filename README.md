@@ -14,6 +14,8 @@ The project is designed to work in conjunction with a backend service and provid
 The application is available online at:  
 👉 https://unict-dmi.github.io/OPIS-Manager/
 
+We are still keeping the old version via the following URL: https://unict-dmi.github.io/OPIS-Manager/old/
+
 ---
 
 ## 🧠 About
