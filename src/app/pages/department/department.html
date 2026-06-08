@@ -15,7 +15,7 @@
           </div>
 
           @if (isCdsSelected()) {
-            <div class="cds-title-graph btn-nav">
+            <div class="cds-title-graph btn-nav" style="overflow: auto">
               @for (graphBtn of graphBtns(); track $index) {
                 <button
                   [disabled]="isLoading()"
