@@ -1,0 +1,66 @@
+# OPIS-Manager
+
+> Angular single-page app that visualizes OPIS (Opinione Studenti) student course-evaluation results for the University of Catania (UNICT). Browse evaluations by academic year, department (Dipartimento), course (CDS), and teaching (Insegnamento); compare across years; and read the computed V1/V2/V3 quality scores via charts. Live: https://unict-dmi.github.io/OPIS-Manager/
+
+## Tech stack
+
+- Angular 21 with standalone components (no NgModules), signals, OnPush change detection
+- TypeScript 5.9, RxJS 7
+- Charts: ng2-charts + chart.js 4, boxplot plugin (@sgratzl/chartjs-chart-boxplot), chartjs-plugin-annotation
+- UI extras: @angular/cdk, @angular-slider/ngx-slider (year range), gsap (animations)
+- Tooling: Angular CLI 21 / @angular/build, Vitest (unit tests), ESLint 9 + @angular-eslint, Prettier
+- Node 24+
+
+## System context
+
+This is the frontend only. It is one piece of a three-repo system (sibling folders under `OPIS/`):
+- `opis-manager-core` - Laravel/PHP REST API serving OPIS data (this app's backend)
+- `opis-manager-scraper` - PHP scraper that pulls the official UNICT OPIS site into the database
+- `OPIS-Manager` (this repo) - Angular client
+
+API base is configured in `src/environment.ts` (`api_url`, default `https://open-job-dmi.unictdev.org/opis-api/api`). v2 endpoints used: `/v2/dipartimento`, `/v2/dipartimento/with-id/{id}/cds`, `/v2/cds/with-id/{id}/insegnamenti`, `/v2/cds/coarse/{unict_id}/schedeopis`, `/v2/insegnamento/coarse/{code}/schedeopis`, `/v2/questions`.
+
+## Architecture
+
+Standalone-component app. Routes in `src/app/app.routes.ts`: `''` (home / departments), `formula`, `info`, `login`, `department/:depsName`. Providers (HttpClient, Router, charts) in `src/app/app.config.ts`.
+
+Smart page components live in `src/app/pages/` (home, department, formula, info, login); the `department` page holds the bulk of the data-loading and chart logic. Presentational pieces are split into `src/app/ui/sections/` (header-nav, footer, year-section, year-stats, cds-selected-section), `src/app/ui/cards/`, and `src/app/ui/shared/` (graph, loader, select, year-range, animated logo, icon).
+
+Data access is in `src/app/services/` (departments, cds, teachings, questions, graph, auth, analytics, github, icon-registry). Scores: `graph` service computes V1/V2/V3 as weighted sums of questionnaire answer frequencies times per-question weights; question groups are defined in `src/app/enums/opis-group.enum.ts` and weights in `weights.enum.ts`. `src/app/mappers/graph.mapper.ts` reshapes API responses into per-year structures for the charts.
+
+Domain models are in `src/app/interfaces/` (department, cds, teaching, opis-record/SchedaOpis, question). Static config/constants in `src/app/values/` (academic years, thresholds, department id maps, chart button config, disclaimers, contributors).
+
+## Key paths
+
+- `src/app/app.routes.ts`, `src/app/app.config.ts`, `src/app/app.ts` - bootstrap, routing, providers
+- `src/app/pages/department/` - main detail view (CDS / teaching results, charts)
+- `src/app/services/` - API access + score computation (graph service is the formula engine)
+- `src/app/interfaces/` - domain models
+- `src/app/enums/` - chart typologies, V1/V2/V3 groups, answer weights
+- `src/app/mappers/graph.mapper.ts` - API -> grouped-by-year transform
+- `src/app/values/` - constants (years, thresholds, department maps, contributors)
+- `src/environment.ts` / `src/environment.development.ts` - API + GitHub URLs, GA config
+- TS path aliases: `@services`, `@interfaces`, `@sections`, `@shared-ui`, etc. (see tsconfig.json)
+
+## Commands
+
+```bash
+npm install
+npm start              # ng serve on :4200
+npm run build          # production build
+npm run watch          # dev build, watch mode
+npm test               # vitest (with coverage)
+npm run lint           # ng lint
+npm run lint:fix       # ng lint --fix
+npm run format         # prettier --write src
+```
+
+## Deployment
+
+GitHub Pages via CI (`.github/workflows/`). Push to `master` deploys the current app to the site root; the legacy `old` branch deploys under `/old/`. Coverage thresholds are enforced at 75%.
+
+## Conventions
+
+- Standalone components only; prefer signals and OnPush; use the configured TS path aliases for imports.
+- New API calls go through a service in `src/app/services/`, typed against an interface in `src/app/interfaces/`.
+- Tunable constants (academic years, score thresholds, department maps) belong in `src/app/values/`, not inline.
