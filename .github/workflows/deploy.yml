@@ -21,10 +21,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use Node.js 24.13.0
+      - name: Use Node.js 24.22.1
         uses: actions/setup-node@v1
         with:
-          node-version: '24.13.0'
+          node-version: '24.22.1'
 
       - name: Build Master 🔨
         if: github.ref == 'refs/heads/master'
